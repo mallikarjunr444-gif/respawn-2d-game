@@ -21,9 +21,9 @@ canvas{width:100%;height:100%;display:block;touch-action:none;background:#000;ou
 <div id="stage"><canvas id="c" width="960" height="540" tabindex="0" aria-label="Event Horizon game"></canvas></div>
 <div id="touch">
 <div class="grp"><button class="tb" data-k="left" aria-label="Move left">◀</button><button class="tb" data-k="right" aria-label="Move right">▶</button></div>
-<div class="grp"><button class="tb" data-k="use">USE</button><button class="tb" data-k="dash">DASH</button><button class="tb" data-k="atk">SLASH</button><button class="tb" data-k="jump">JUMP</button></div>
+<div class="grp"><button class="tb" data-k="use">USE</button><button class="tb" data-k="dash">DASH</button><button class="tb" data-k="atk">SLASH</button><button class="tb" data-k="shoot">SHOOT</button><button class="tb" data-k="shield">SHIELD</button><button class="tb" data-k="jump">JUMP</button></div>
 </div>
-<div id="keys"><b>A D</b> move · <b>Space</b> jump · <b>Shift</b> dash · <b>J</b> slash · <b>E</b> use · <b>M</b> sound</div>
+<div id="keys"><b>A D</b> move · <b>Space</b> jump · <b>Shift</b> dash · <b>J</b> slash · <b>K</b> shoot (hold to charge) · <b>Q</b> shield · <b>E</b> use · <b>M</b> sound</div>
 <script>
 (()=>{
 'use strict';
@@ -40,7 +40,7 @@ function txt(s,x,y,size,col,align,font,weight,ls){ctx.font=(weight||600)+' '+siz
 function store(k,v){try{if(v===undefined){return JSON.parse(localStorage.getItem(k)||'null');}localStorage.setItem(k,JSON.stringify(v));}catch(e){return null;}}
 
 /* ---------- input ---------- */
-const MAP={arrowleft:['left'],a:['left'],arrowright:['right'],d:['right'],arrowup:['jump','up'],w:['jump','up'],' ':['jump','enter'],arrowdown:['down'],s:['down'],shift:['dash'],l:['dash'],j:['atk'],x:['atk'],e:['use'],f:['use'],enter:['enter'],escape:['esc'],m:['mute'],h:['hint'],r:['retry'],'1':['n1'],'2':['n2']};
+const MAP={arrowleft:['left'],a:['left'],arrowright:['right'],d:['right'],arrowup:['jump','up'],w:['jump','up'],' ':['jump','enter'],arrowdown:['down'],s:['down'],shift:['dash'],l:['dash'],j:['atk'],x:['atk'],e:['use'],f:['use'],enter:['enter'],escape:['esc'],m:['mute'],h:['hint'],r:['retry'],'1':['n1'],'2':['n2'],'3':['n3'],q:['shield'],k:['shoot'],z:['shoot']};
 let held={},pq={};
 const pressed=a=>!!pq[a];
 function press(a){if(!held[a])pq[a]=true;held[a]=true;}

@@ -1,6 +1,6 @@
 
 /* ---------- gameplay ---------- */
-function hurt(n,fromX,force){const p=G.p;if(!force&&(p.inv>0||p.dashT>0))return;p.hp-=n;p.inv=1.2;p.vx=(p.x<fromX?-1:1)*320;p.vy=-300;p.on=false;G.shake=10;SFX.hurt();burst(p.x+14,p.y+24,10,C.pink,220,.5,true);if(p.hp<=0)die('SYSTEMS FAILURE');}
+function hurt(n,fromX,force){const p=G.p;if(!force&&(p.inv>0||p.dashT>0||G.shT>0))return;p.hp-=n;p.inv=1.2;p.vx=(p.x<fromX?-1:1)*320;p.vy=-300;p.on=false;G.shake=10;SFX.hurt();burst(p.x+14,p.y+24,10,C.pink,220,.5,true);if(p.hp<=0)die('SYSTEMS FAILURE');}
 function die(why){G.scene='dead';G.deadWhy=why;G.deadT=0;G.shake=16;SFX.boom();burst(G.p.x+14,G.p.y+24,30,C.cyan,300,.9,true);saveBest();}
 function spawnMeteor(){const p=G.p,L=G.lvl,tx=p.x+120+Math.random()*380;if(tx>L.L-60)return;if(!L.solids.some(s=>s.y===GY&&tx>s.x0+30&&tx<s.x1-30))return;G.meteors.push({tx,t:0,dur:1.05,sx:tx+260,sy:-80,boom:false,fade:.4});}
 function completeLevel(){saveBest();if(G.mode==='story'){G.scene='launch';G.lt=0;SFX.ok();}else{G.distBase+=G.lvl.L;G.sector++;const hp=G.p.hp;loadLevel(mkLevel('endless',G.sector),false);G.p.hp=Math.min(5,hp+1);G.fade=1;SFX.ok();}}
@@ -15,12 +15,13 @@ function updatePlay(dt){
  if(pressed('jump'))p.buf=.12;if(p.on){p.coy=.1;p.dashAir=false;}
  if(pressed('dash')&&p.dashCd<=0&&(p.on||!p.dashAir)){p.dashT=.17;p.dashCd=.65;p.dashDir=p.face;if(!p.on)p.dashAir=true;p.inv=Math.max(p.inv,.22);SFX.dash();}
  if(p.dashT>0){p.dashT-=dt;p.vx=p.dashDir*700;p.vy=0;spawn(p.x+14,p.y+24,0,0,.25,13,'rgba(61,240,255,.55)',0,true);}
- else{const tg=ax*270,ac=p.on?3200:2000;if(p.vx<tg)p.vx=Math.min(tg,p.vx+ac*dt);else p.vx=Math.max(tg,p.vx-ac*dt);p.vy=Math.min(900,p.vy+1900*dt);}
+ else{const tg=ax*270,ac=p.on?(L.slip?650:3200):2000;if(p.vx<tg)p.vx=Math.min(tg,p.vx+ac*dt);else p.vx=Math.max(tg,p.vx-ac*dt);p.vy=Math.min(900,p.vy+1900*dt);}
  if(p.buf>0&&p.coy>0){p.vy=-650;p.on=false;p.coy=0;p.buf=0;p.jumping=true;SFX.jump();burst(p.x+14,p.y+48,5,'#9aa3d8',90,.3);}
  if(p.jumping&&!held.jump&&p.vy<-250){p.vy*=.5;p.jumping=false;}if(p.vy>=0)p.jumping=false;
  if(pressed('atk')&&G.hasSword&&p.atkCd<=0){p.atkT=.28;p.atkCd=.38;p.swing=(p.swing||0)+1;SFX.swing();}
  if(p.atkT>0){p.atkT-=dt;const k=.28-p.atkT;if(k>.04&&k<.2){const bx=p.face>0?p.x+14:p.x+14-78,by=p.y-14,bw=78,bh=p.h+22;
   for(const e of L.enemies){if(e.dead||e.swing===p.swing)continue;if(e.sx+22>bx&&e.sx-22<bx+bw&&e.sy+22>by&&e.sy-22<by+bh){e.swing=p.swing;e.hp--;e.hitT=.2;SFX.hit();G.shake=5;burst(e.sx,e.sy,8,'#c59bff',200,.4,true);if(e.hp<=0){e.dead=true;G.kills++;burst(e.sx,e.sy,22,'#c59bff',280,.8,true);for(let i=0;i<2;i++)G.crystals++;SFX.gem();}}}
+  const BB=G.boss;if(BB&&!BB.dead&&BB.sw!==p.swing&&BB.x+46>bx&&BB.x-46<bx+bw&&BB.y+95>by&&BB.y-95<by+bh){BB.sw=p.swing;hitBoss(2);}
   if(L.barrierX&&G.barrierAlive&&L.barrierX+34>bx&&L.barrierX<bx+bw){G.barrierAlive=false;G.shake=14;SFX.boom();burst(L.barrierX+16,GY-100,50,C.cyan,380,1,true);burst(L.barrierX+16,GY-60,30,'#fff',300,.8,true);}}}
  p.x+=p.vx*dt;
  if(L.barrierX&&G.barrierAlive){const bx=L.barrierX,bw=34;if(p.x+p.w>bx&&p.x<bx+bw&&p.y+p.h>GY-210){if(p.x+p.w/2<bx+bw/2)p.x=bx-p.w;else p.x=bx+bw;p.vx=0;}}
@@ -35,7 +36,8 @@ function updatePlay(dt){
  for(const c of L.crystals)if(!c.got&&Math.hypot(c.x-(p.x+14),c.y-(p.y+24))<28){c.got=true;G.crystals++;SFX.gem();burst(c.x,c.y,6,C.cyan,120,.4,true);}
  for(const c of L.packs)if(!c.got&&Math.hypot(c.x-(p.x+14),c.y-(p.y+24))<28&&p.hp<5){c.got=true;p.hp++;SFX.ok();burst(c.x,c.y,10,C.green,160,.5,true);}
  if(L.forgeX&&!G.forgeDone&&p.on&&Math.abs(p.x+14-L.forgeX)<110&&pressed('use')){G.scene='puzzle';if(!G.pz)initPuzzle();G.pz.idle=0;SFX.click();}
- if(p.x+14>L.padX-30&&p.on&&(G.mode==='endless'||G.forgeDone)&&!(L.barrierX&&G.barrierAlive))completeLevel();
+ if(p.x+14>L.padX-30&&p.on&&(G.mode==='endless'||G.forgeDone)&&!(L.barrierX&&G.barrierAlive)&&!(G.boss&&!G.boss.dead))completeLevel();
+ updateExtras(dt);
  G.meteorT-=dt;if(G.meteorT<=0){G.meteorT=L.meteorEvery*(.7+Math.random()*.6);spawnMeteor();}
  for(let i=G.meteors.length-1;i>=0;i--){const m=G.meteors[i];if(!m.boom){m.t+=dt;if(m.t>=m.dur){m.boom=true;SFX.boom();G.shake=Math.max(G.shake,9);burst(m.tx,GY-10,20,C.ember,300,.7,true);if(Math.abs(p.x+14-m.tx)<64&&p.y+p.h>GY-80)hurt(1,m.tx);}}else{m.fade-=dt;if(m.fade<=0)G.meteors.splice(i,1);}}
  const sp=L.holeSpeed*(1+.15*clamp(p.x/L.L,0,1));G.hx+=sp*dt;const dl=G.hx+170,d=p.x+p.w/2-dl;
@@ -50,16 +52,16 @@ function updatePlay(dt){
 const PZ={cols:6,rows:5,cs:72,gx:70,gy:122,src:[0,3],tgt:[5,4],
  sol:{'3,3':'/','3,1':'/','5,1':'\\'},keys:['3,3','3,1','5,1'],
  init:{'3,3':'\\','3,1':'\\','5,1':'/','1,1':'/','4,3':'\\','1,4':'/','4,0':'\\'}};
-function initPuzzle(){G.pz={m:Object.assign({},PZ.init),idle:0,hint:null,hintT:0,solved:false,st:0};}
+function mirrorInit(){return{type:'mirror',m:Object.assign({},PZ.init),idle:0,hint:null,hintT:0,solved:false,st:0};}
 function pzTrace(m){const pts=[[PZ.src[0],PZ.src[1]]];let c=PZ.src[0],r=PZ.src[1],dx=1,dy=0,hit=false;
  for(let i=0;i<40;i++){c+=dx;r+=dy;pts.push([c,r]);if(c<0||c>=PZ.cols||r<0||r>=PZ.rows)break;if(c===PZ.tgt[0]&&r===PZ.tgt[1]){hit=true;break;}
   const mm=m[c+','+r];if(mm==='/'){const a=-dy,b=-dx;dx=a;dy=b;}else if(mm==='\\'){const a=dy,b=dx;dx=a;dy=b;}}
  return{pts,hit};}
-function pzHint(){const z=G.pz;for(const k of PZ.keys)if(z.m[k]!==PZ.sol[k]){z.hint=k;z.hintT=4;return;}}
-function pzClick(mx,my){const z=G.pz;if(!z||z.solved)return;const c=Math.floor((mx-PZ.gx)/PZ.cs),r=Math.floor((my-PZ.gy)/PZ.cs),k=c+','+r;
+function mirrorHint(){const z=G.pz;for(const k of PZ.keys)if(z.m[k]!==PZ.sol[k]){z.hint=k;z.hintT=4;return;}}
+function mirrorClick(mx,my){const z=G.pz;const c=Math.floor((mx-PZ.gx)/PZ.cs),r=Math.floor((my-PZ.gy)/PZ.cs),k=c+','+r;
  if(c<0||r<0||c>=PZ.cols||r>=PZ.rows||!z.m[k])return;z.m[k]=z.m[k]==='/'?'\\':'/';z.idle=0;z.hint=null;SFX.click();
  if(pzTrace(z.m).hit){z.solved=true;z.st=0;SFX.ok();G.shake=6;}}
-function updatePuzzle(dt){const z=G.pz;z.idle+=dt;z.hintT-=dt;if(z.hintT<=0)z.hint=null;if(z.idle>12&&!z.hint&&!z.solved)pzHint();
+function updatePuzzle(dt){const z=G.pz;z.idle+=dt;if(z.err>0)z.err-=dt;z.hintT-=dt;if(z.hintT<=0)z.hint=null;if(z.idle>12&&!z.hint&&!z.solved)pzHint();
  if(pressed('hint')&&!z.solved)pzHint();if(pressed('esc')&&!z.solved){G.scene='play';}
  G.shake=Math.max(0,G.shake-dt*30);updFx(dt);
- if(z.solved){z.st+=dt;if(z.st>1.5){G.forgeDone=true;G.hasSword=true;G.scene='play';G.toast={a:'ENERGY SWORD ACQUIRED',b:'Press J to slash — voidlings and crystal barriers break',t:4};burst(G.lvl.forgeX,GY-72,40,C.gold,320,1,true);G.p.inv=1;}}}
+ if(z.solved){z.st+=dt;if(z.st>1.5){G.forgeDone=true;G.scene='play';G.toast=grantReward();burst(G.lvl.forgeX,GY-72,40,C.gold,320,1,true);G.p.inv=1;}}}

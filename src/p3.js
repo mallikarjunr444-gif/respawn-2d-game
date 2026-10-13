@@ -51,7 +51,7 @@ function drawForge(L,cam,t){
  for(const px of[-46,46]){ctx.fillStyle='#252b5e';rr(x+px-9,GY-120,18,100,4);ctx.fill();ctx.fillStyle=on?C.cyan:C.gold;ctx.fillRect(x+px-3,GY-110+(Math.sin(t*3)*4),6,14);}
  const col=on?C.cyan:C.gold,gl=ctx.createRadialGradient(x,GY-72,4,x,GY-72,90);gl.addColorStop(0,col+(on?'88':'cc'));gl.addColorStop(1,'rgba(0,0,0,0)');ctx.fillStyle=gl;ctx.fillRect(x-100,GY-170,200,200);
  ctx.save();ctx.translate(x,GY-72+Math.sin(t*2)*4);ctx.rotate(t*.8);ctx.fillStyle=col;ctx.globalAlpha=on?.9:.6;ctx.beginPath();ctx.moveTo(0,-20);ctx.lineTo(14,0);ctx.lineTo(0,20);ctx.lineTo(-14,0);ctx.closePath();ctx.fill();ctx.restore();ctx.globalAlpha=1;
- if(on&&Math.abs(G.p.x+14-L.forgeX)<110){const w=ctx.measureText?150:150;rr(x-w/2,GY-170,w,30,6);ctx.fillStyle='rgba(7,10,26,.85)';ctx.fill();ctx.strokeStyle=C.cyan;ctx.lineWidth=1.5;ctx.stroke();txt('E  ACTIVATE FORGE',x,GY-150,13,C.cyan,'center',F_U,700,1);}
+ if(on&&Math.abs(G.p.x+14-L.forgeX)<110){const w=ctx.measureText?150:150;rr(x-w/2,GY-170,w,30,6);ctx.fillStyle='rgba(7,10,26,.85)';ctx.fill();ctx.strokeStyle=C.cyan;ctx.lineWidth=1.5;ctx.stroke();txt('E  '+(L.puzzle==='symbol'?'DECODE ARMORY':L.puzzle==='seq'?'WAKE THE ORBITS':'ACTIVATE FORGE'),x,GY-150,13,C.cyan,'center',F_U,700,1);}
 }
 function drawBarrier(L,cam,t){
  if(!G.barrierAlive)return;const x=L.barrierX-cam;if(x<-60||x>W+60)return;
@@ -94,8 +94,8 @@ function drawHUD(){
  if(k>.6){ctx.fillStyle='rgba(255,60,20,'+(.06+.05*Math.sin(G.t*10))+')';ctx.fillRect(0,0,W,H);}
  txt(L.name,W-20,26,12,C.dim,'right',F_U,700,2);
  const pr=clamp(p.x/L.L,0,1);ctx.fillStyle='rgba(255,255,255,.1)';rr(W-220,36,200,5,3);ctx.fill();ctx.fillStyle=C.gold;rr(W-220,36,200*pr,5,3);ctx.fill();txt(Math.floor(getDist()/10)+' KM',W-20,58,12,C.bone,'right',F_U,600,1);
- let obj;if(G.mode==='endless')obj='Reach the launch beacon';else if(!G.forgeDone)obj='Reach the energy forge';else if(G.barrierAlive)obj='Shatter the crystal barrier — J';else obj='Reach the escape pod';
+ let obj;if(G.mode==='endless')obj='Reach the launch beacon';else if(!G.forgeDone)obj=L.puzzle==='symbol'?'Reach the armory lock':L.puzzle==='seq'?'Reach the orbital lock':'Reach the energy forge';else if(L.barrierX&&G.barrierAlive)obj='Shatter the crystal barrier — J';else if(G.boss&&!G.boss.dead)obj='Defeat the '+G.boss.name;else obj=L.final?'Reach the Earth gate':'Reach the escape pod';
  txt(obj.toUpperCase(),480,H-18,12,C.cyan,'center',F_U,700,3);
- if(G.hint>0&&G.introT<=0)txt('A / D  MOVE     SPACE  JUMP     SHIFT  DASH (INVULNERABLE)',480,H-42,12,C.dim,'center',F_U,600,2);
+ if(G.hint>0&&G.introT<=0)txt('A / D  MOVE     SPACE  JUMP     SHIFT  DASH (INVULNERABLE)',480,H-72,12,C.dim,'center',F_U,600,2);
  const t=G.toast;if(t&&t.t>0){const a=clamp(Math.min(t.t,1),0,1);ctx.globalAlpha=a;txt(t.a,480,110,24,C.bone,'center',F_D,700,3);txt(t.b,480,136,14,C.cyan,'center',F_U,600,1);ctx.globalAlpha=1;}
 }

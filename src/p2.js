@@ -7,10 +7,16 @@ nebula:{name:'NEBULA EXPANSE',sky:['#12041f','#3a0f4f'],neb:['rgba(255,80,200,.3
 shatter:{name:'SHATTERED GALAXY',sky:['#150507','#3a1018'],neb:['rgba(255,90,40,.3)','rgba(255,200,80,.12)'],m1:'#2a0d10',m2:'#451a1c',rock:['#4a2a2a','#1a0d0d'],rim:'#ff9a5a',planet:'#ff7a4a'},
 ancient:{name:'ANCIENT EXPANSE',sky:['#03140f','#0b3a35'],neb:['rgba(60,255,200,.25)','rgba(255,220,100,.12)'],m1:'#08241f','m2':'#0f3b35',rock:['#1f4a44','#0a1f1c'],rim:'#6dffd8',planet:'#ffe08a'},
 horizon:{name:'EVENT HORIZON',sky:['#000000','#1a0a2e'],neb:['rgba(255,255,255,.12)','rgba(255,90,30,.35)'],m1:'#12061f',m2:'#22103a',rock:['#2b1a3a','#0a0610'],rim:'#ffb347',planet:'#ffffff'}};
+TH.aether={name:'AETHER-7',sky:['#031a1c','#0e4a52'],neb:['rgba(60,255,210,.3)','rgba(255,209,102,.18)'],m1:'#082e33',m2:'#0f4a50',rock:['#2a6a66','#0d2a2c'],rim:'#7dffe0',planet:'#ffd166'};
+TH.cinder={name:'CINDER MOON',sky:['#1a0503','#4a1208'],neb:['rgba(255,80,30,.35)','rgba(255,190,60,.15)'],m1:'#2a0b07',m2:'#4a160c',rock:['#5a2a20','#1c0a07'],rim:'#ff7a2e',planet:'#ff9a4a'};
+TH.cryos={name:'CRYOS',sky:['#04122a','#123c6a'],neb:['rgba(120,200,255,.3)','rgba(200,160,255,.15)'],m1:'#0b2447',m2:'#173b6a',rock:['#7fb2d8','#1d3a5a'],rim:'#d8f4ff',planet:'#b8e6ff'};
+TH.vortex={name:'VORTEX PRIME',sky:['#0a0220','#2a0a5a'],neb:['rgba(180,80,255,.4)','rgba(61,240,255,.2)'],m1:'#180646',m2:'#2c0f6a',rock:['#3a2570','#120a30'],rim:'#c58bff',planet:'#6a3fd0'};
+TH.earth={name:'EARTH',sky:['#0a1f4a','#3d86d0'],neb:['rgba(255,255,255,.18)','rgba(255,209,102,.18)'],m1:'#1a4a3a',m2:'#26664a',rock:['#3a6b4a','#14281c'],rim:'#9dffb8',planet:'#ffd166'};
 const ENDLESS=[TH.solar,TH.nebula,TH.shatter,TH.ancient,TH.horizon];
 const STARS=[70,50,30].map((n,l)=>{const r=rng(11+l);return Array.from({length:n},()=>({x:r()*(W+40),y:r()*H*.85,r:l===2?2.2:l===1?1.6:1.1,sp:1+r()*3,ph:r()*6}));});
 
 function mkLevel(kind,n){
+ if(kind==='story'&&n>0)return mkWorld(n);
  let L;
  if(kind==='story'){
   const r=rng(7);
@@ -44,14 +50,16 @@ function mkLevel(kind,n){
 
 /* ---------- state ---------- */
 const G={scene:'title',t:0,menu:0,char:'female',mx:-1,my:-1,cam:0,hx:-600,shake:0,fade:1,toast:null,meteors:[],muted:false,
- mode:'story',sector:0,crystals:0,kills:0,time:0,distBase:0,hasSword:false,forgeDone:false,barrierAlive:true,cp:0,introT:0,podBroken:false,lt:0,deadT:0,deadWhy:'',pz:null,lvl:null,p:null,safe:null,meteorT:3,hint:6};
+ mode:'story',sector:0,crystals:0,kills:0,time:0,distBase:0,hasSword:false,forgeDone:false,barrierAlive:true,cp:0,introT:0,podBroken:false,lt:0,deadT:0,deadWhy:'',pz:null,lvl:null,p:null,safe:null,meteorT:3,hint:6,world:0,hasBlaster:false,hasShield:false,hasLance:false,boss:null,ep:[],bolts:[],logs:0,chg:0,shT:0,shCd:0,bolCd:0};
 let UI=[];
 function newPlayer(x){return{x,y:GY-48,w:28,h:48,vx:0,vy:0,face:1,on:true,coy:0,buf:0,dashT:0,dashCd:0,dashDir:1,dashAir:false,atkT:0,atkCd:0,hp:5,inv:0,jumping:false,sol:null,anim:0};}
-function loadLevel(L,intro){G.lvl=L;G.p=newPlayer(L.startX);G.hx=L.startX-780;G.meteors=[];P.length=0;G.cp=0;G.cam=0;G.safe={x:L.startX,y:GY-48};G.introT=intro?2.6:0;G.podBroken=!intro;G.meteorT=5;G.hint=8;G.barrierAlive=true;
- G.toast={a:L.name,b:L.kind==='story'?'Outrun the Devourer. Find the energy forge.':'Reach the beacon before the Devourer does.',t:3.6};}
-function startStory(){G.mode='story';G.sector=0;G.crystals=0;G.kills=0;G.time=0;G.distBase=0;G.hasSword=false;G.forgeDone=false;G.pz=null;loadLevel(mkLevel('story'),true);G.scene='play';G.fade=1;SFX.click();}
-function startEndless(){G.mode='endless';G.sector=0;G.crystals=0;G.kills=0;G.time=0;G.distBase=0;G.hasSword=true;G.forgeDone=true;loadLevel(mkLevel('endless',0),false);G.scene='play';G.fade=1;SFX.click();}
-function respawnCP(){const L=G.lvl,cx=L.cps[G.cp]||L.startX,p=G.p;Object.assign(p,{x:cx,y:GY-48,vx:0,vy:0,hp:5,inv:1.5,dashT:0,atkT:0});G.hx=cx-780;G.meteors=[];G.safe={x:cx,y:GY-48};G.meteorT=3;G.scene='play';}
+function loadLevel(L,intro){G.lvl=L;G.p=newPlayer(L.startX);G.hx=L.startX-780;G.meteors=[];P.length=0;G.cp=0;G.cam=0;G.safe={x:L.startX,y:GY-48};G.introT=intro?2.6:0;G.podBroken=!intro;G.meteorT=5;G.hint=8;G.barrierAlive=true;G.ep=[];G.bolts=[];G.chg=0;G.shT=0;G.logs=0;G.boss=L.boss?mkBoss(L):null;if(L.kind==='story')G.forgeDone=!L.forgeX;G.pz=null;
+ G.toast={a:L.name,b:L.sub||(L.kind==='story'?'Outrun the Devourer. Find the energy forge.':'Reach the beacon before the Devourer does.'),t:3.8};}
+function setWeapons(w){G.hasSword=w>=1;G.hasBlaster=w>=3;G.hasShield=w>=4;G.hasLance=w>=5;}
+function startStory(w){w=(typeof w==='number')?w:0;G.mode='story';G.world=w;G.sector=0;G.crystals=0;G.kills=0;G.time=0;G.distBase=0;setWeapons(w);loadLevel(mkLevel('story',w),w===0);G.scene='play';G.fade=1;SFX.click();store('eh_save',{world:w});}
+function nextWorld(){const w=G.world+1;G.world=w;setWeapons(w);loadLevel(mkLevel('story',w),false);G.scene='play';G.fade=1;store('eh_save',{world:w});}
+function startEndless(){G.mode='endless';G.sector=0;G.crystals=0;G.kills=0;G.time=0;G.distBase=0;G.hasSword=G.hasBlaster=G.hasShield=G.hasLance=true;G.forgeDone=true;loadLevel(mkLevel('endless',0),false);G.scene='play';G.fade=1;SFX.click();}
+function respawnCP(){const L=G.lvl,cx=L.cps[G.cp]||L.startX,p=G.p;Object.assign(p,{x:cx,y:GY-48,vx:0,vy:0,hp:5,inv:1.5,dashT:0,atkT:0});G.hx=cx-780;G.meteors=[];G.ep=[];G.bolts=[];G.chg=0;G.safe={x:cx,y:GY-48};G.meteorT=3;G.scene='play';}
 function getDist(){return G.distBase+Math.max(0,G.p.x);}
 function saveBest(){const b=store('eh_best')||{dist:0,sector:0};b.dist=Math.max(b.dist,Math.floor(getDist()/10));if(G.mode==='endless')b.sector=Math.max(b.sector,G.sector+1);store('eh_best',b);}
 
