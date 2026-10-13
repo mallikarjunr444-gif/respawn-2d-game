@@ -1,0 +1,41 @@
+[gd_scene format=3 uid="uid://dm0938vkae790"]
+
+[ext_resource type="Script" path="res://scenes/game.gd" id="1_script"]
+[ext_resource type="Environment" uid="uid://cx4x27891evr2" path="res://default_env.tres" id="2_env"]
+[ext_resource type="PackedScene" uid="uid://cx4x27891evr5" path="res://scenes/ui/hud.tscn" id="3_hud"]
+[ext_resource type="PackedScene" uid="uid://cx4x27891evr6" path="res://scenes/ui/puzzle_modal.tscn" id="4_pz"]
+[ext_resource type="Texture2D" path="res://assets/planets/fractured_moon.svg" id="5_planet"]
+
+[node name="Game" type="Node2D"]
+script = ExtResource("1_script")
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = ExtResource("2_env")
+
+[node name="Camera2D" type="Camera2D" parent="."]
+position = Vector2(180, 480)
+zoom = Vector2(1.1, 1.1)
+
+[node name="ParallaxBackground" type="ParallaxBackground" parent="."]
+
+[node name="ParallaxLayerSky" type="ParallaxLayer" parent="ParallaxBackground"]
+motion_mirroring = Vector2(1280, 0)
+
+[node name="SkyRect" type="ColorRect" parent="ParallaxBackground/ParallaxLayerSky"]
+offset_left = -600.0
+offset_top = -600.0
+offset_right = 2400.0
+offset_bottom = 1200.0
+color = Color(0.04, 0.05, 0.12, 1)
+
+[node name="ParallaxLayerPlanet" type="ParallaxLayer" parent="ParallaxBackground"]
+motion_scale = Vector2(0.06, 0.06)
+
+[node name="PlanetSprite" type="Sprite2D" parent="ParallaxBackground/ParallaxLayerPlanet"]
+position = Vector2(800, 180)
+scale = Vector2(0.85, 0.85)
+texture = ExtResource("5_planet")
+
+[node name="HUD" parent="." instance=ExtResource("3_hud")]
+
+[node name="PuzzleModal" parent="." instance=ExtResource("4_pz")]
