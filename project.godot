@@ -10,8 +10,8 @@ config_version=5
 
 [application]
 
-config/name="Event Horizon - Last Run to Earth"
-config/description="A high-intensity 2D sci-fi survival platformer. Outrun the Devourer black hole, wield energy weapons, and survive across the cosmos."
+config/name="Space Odyssey"
+config/description="A planet-to-planet space survival adventure. Control a flying astronaut with a rocket booster, collect fuel, survive planetary hazards, and travel through space."
 run/main_scene="res://scenes/main_menu.tscn"
 config/features=PackedStringArray("4.7", "Forward Plus")
 boot_splash/bg_color=Color(0.02, 0.03, 0.08, 1)
