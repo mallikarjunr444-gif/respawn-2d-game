@@ -43,6 +43,7 @@ var level_bounds: Rect2 = Rect2(0, 0, 8000, 5000)
 # ── References ──
 @onready var sprite: Sprite2D = $Sprite2D
 @onready var rocket_sprite: Sprite2D = $RocketSprite
+@onready var ship_sprite: Sprite2D = $ShipSprite
 @onready var exhaust_particles: CPUParticles2D = $ExhaustParticles
 @onready var boost_particles: CPUParticles2D = $BoostParticles
 @onready var visor_light: PointLight2D = $VisorLight
@@ -50,6 +51,7 @@ var level_bounds: Rect2 = Rect2(0, 0, 8000, 5000)
 @onready var sword_arc: Polygon2D = $SwordArea/SwordArc
 @onready var shield_bubble: Area2D = $ShieldBubble
 
+var is_space_mode: bool = false
 var blaster_scene: PackedScene = preload("res://scenes/projectiles/blaster_bolt.tscn")
 var lance_scene: PackedScene = preload("res://scenes/projectiles/gravity_lance.tscn")
 
@@ -60,6 +62,15 @@ func _ready() -> void:
 	shield_bubble.monitoring = false
 	shield_bubble.visible = false
 	_update_character_appearance()
+
+func set_space_vehicle_mode(in_space: bool) -> void:
+	is_space_mode = in_space
+	if ship_sprite:
+		ship_sprite.visible = in_space
+	if sprite:
+		sprite.visible = not in_space
+	if rocket_sprite:
+		rocket_sprite.visible = not in_space
 
 func _update_character_appearance() -> void:
 	if GameState.selected_character == "mira":
@@ -123,20 +134,29 @@ func _physics_process(delta: float) -> void:
 			velocity += thrust_dir * (thrust_power * delta)
 			GameState.consume_fuel(GameState.FUEL_CONSUMPTION_RATE * delta)
 			exhaust_particles.emitting = true
-			rocket_sprite.modulate = Color(1.5, 1.2, 0.8, 1.0)
+			if is_space_mode:
+				ship_sprite.modulate = Color(1.3, 1.2, 1.0, 1.0)
+			else:
+				rocket_sprite.modulate = Color(1.5, 1.2, 0.8, 1.0)
 			visor_light.energy = 2.0
 		else:
 			# Emergency solar glide: low-power reserve thrust so astronaut is NEVER permanently stranded
 			velocity += thrust_dir * (thrust_power * 0.45 * delta)
 			exhaust_particles.emitting = true
-			rocket_sprite.modulate = Color(0.6, 1.0, 1.2, 0.8)
+			if is_space_mode:
+				ship_sprite.modulate = Color(0.7, 1.1, 1.3, 0.9)
+			else:
+				rocket_sprite.modulate = Color(0.6, 1.0, 1.2, 0.8)
 			visor_light.energy = 1.2
 
 		is_thrusting = true
 	else:
 		is_thrusting = false
 		exhaust_particles.emitting = false
-		rocket_sprite.modulate = Color(0.8, 0.8, 0.9, 1.0)
+		if is_space_mode:
+			ship_sprite.modulate = Color.WHITE
+		else:
+			rocket_sprite.modulate = Color(0.8, 0.8, 0.9, 1.0)
 		visor_light.energy = 1.0
 
 	# ── Braking / Reverse (Down Arrow / S) ──

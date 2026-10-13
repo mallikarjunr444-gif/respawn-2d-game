@@ -92,10 +92,13 @@ func _generate_level() -> void:
 	player = player_scene.instantiate()
 	var start_pos = world_info.get("player_start", Vector2(1200.0, 2000.0))
 	player.position = start_pos
-	player.facing_dir = 1.0
 	player.facing_angle = 0.0
 	player.velocity = Vector2(80.0, 0.0)
 	player.level_bounds = level_bounds
+
+	# Space mode: ONLY rocket in space; on planet: character
+	var is_in_space = world_info.get("is_space", false) or world_info.get("id") == "black_space"
+	player.set_space_vehicle_mode(is_in_space)
 
 	# Configure planetary environmental forces
 	var grav_val = world_info.get("gravity_strength", 200.0)

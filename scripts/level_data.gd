@@ -31,6 +31,7 @@ static func get_world_info(world_idx: int) -> Dictionary:
 			"id": "black_space",
 			"name": "LEVEL 1 — BLACK SPACE",
 			"subtitle": "Escape the gravitational pull. Learn to fly.",
+			"is_space": true,
 			"level_width": 6000.0,
 			"level_height": 4000.0,
 
@@ -49,10 +50,10 @@ static func get_world_info(world_idx: int) -> Dictionary:
 
 			# Black hole (Level 1 ONLY — Positioned BEHIND player on left)
 			"has_black_hole": true,
-			"black_hole_position": Vector2(300.0, 2000.0),
-			"black_hole_pull_radius": 1900.0,
-			"black_hole_pull_strength": 480.0,
-			"black_hole_kill_radius": 140.0,
+			"black_hole_position": Vector2(500.0, 2000.0),
+			"black_hole_pull_radius": 2200.0,
+			"black_hole_pull_strength": 420.0,
+			"black_hole_kill_radius": 180.0,
 
 			# Hazards
 			"hazard_type": HazardType.ASTEROIDS,
@@ -80,6 +81,7 @@ static func get_world_info(world_idx: int) -> Dictionary:
 			"id": "neptune",
 			"name": "LEVEL 2 — NEPTUNE",
 			"subtitle": "Azure atmosphere. Icy debris and high-velocity wind streams.",
+			"is_space": false,
 			"level_width": 7000.0,
 			"level_height": 4500.0,
 

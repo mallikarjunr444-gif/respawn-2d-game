@@ -2,6 +2,7 @@
 
 [ext_resource type="Script" path="res://scenes/player.gd" id="1_script"]
 [ext_resource type="Texture2D" path="res://assets/characters/arin_male.svg" id="2_arin"]
+[ext_resource type="Texture2D" path="res://assets/objects/rocket_ship.svg" id="3_ship"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_player"]
 size = Vector2(28, 54)
@@ -37,6 +38,12 @@ texture = ExtResource("2_arin")
 position = Vector2(0, 8)
 scale = Vector2(0.3, 0.3)
 modulate = Color(0.8, 0.8, 0.9, 1.0)
+
+[node name="ShipSprite" type="Sprite2D" parent="."]
+visible = false
+position = Vector2(0, -18)
+scale = Vector2(0.48, 0.48)
+texture = ExtResource("3_ship")
 
 [node name="ExhaustParticles" type="CPUParticles2D" parent="."]
 position = Vector2(0, 12)
