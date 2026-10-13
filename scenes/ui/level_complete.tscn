@@ -1,0 +1,160 @@
+[gd_scene format=3 uid="uid://level_complete_001"]
+
+[ext_resource type="Script" path="res://scenes/ui/level_complete.gd" id="1_script"]
+
+[node name="LevelComplete" type="CanvasLayer"]
+process_mode = 3
+layer = 9
+script = ExtResource("1_script")
+
+[node name="DimOverlay" type="ColorRect" parent="."]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.01, 0.02, 0.05, 0.8)
+
+[node name="Panel" type="PanelContainer" parent="."]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -260.0
+offset_top = -240.0
+offset_right = 260.0
+offset_bottom = 240.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VBox" type="VBoxContainer" parent="Panel"]
+layout_mode = 2
+theme_override_constants/separation = 12
+alignment = 1
+
+[node name="TitleLabel" type="Label" parent="Panel/VBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.2, 1, 0.5, 1)
+theme_override_font_sizes/font_size = 28
+text = "MISSION ACCOMPLISHED"
+horizontal_alignment = 1
+
+[node name="SubtitleLabel" type="Label" parent="Panel/VBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.4, 0.9, 1, 1)
+theme_override_font_sizes/font_size = 14
+text = "DESTINATION REACHED"
+horizontal_alignment = 1
+
+[node name="StatsBox" type="VBoxContainer" parent="Panel/VBox"]
+layout_mode = 2
+theme_override_constants/separation = 6
+
+[node name="FuelStat" type="Label" parent="Panel/VBox/StatsBox"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 14
+text = "Fuel Remaining: 45%"
+horizontal_alignment = 1
+
+[node name="CellsStat" type="Label" parent="Panel/VBox/StatsBox"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 14
+text = "Fuel Cells Collected: 18"
+horizontal_alignment = 1
+
+[node name="OrbsStat" type="Label" parent="Panel/VBox/StatsBox"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 14
+text = "Energy Orbs Collected: 4"
+horizontal_alignment = 1
+
+[node name="ScoreStat" type="Label" parent="Panel/VBox/StatsBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.85, 0.3, 1)
+theme_override_font_sizes/font_size = 16
+text = "Sector Score: 380"
+horizontal_alignment = 1
+
+[node name="TotalScoreStat" type="Label" parent="Panel/VBox/StatsBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.5, 1, 0.7, 1)
+theme_override_font_sizes/font_size = 16
+text = "Total Fleet Credits: 520"
+horizontal_alignment = 1
+
+[node name="ButtonBox" type="VBoxContainer" parent="Panel/VBox"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="NextBtn" type="Button" parent="Panel/VBox/ButtonBox"]
+custom_minimum_size = Vector2(0, 42)
+layout_mode = 2
+text = "WARP TO NEXT DESTINATION"
+
+[node name="UpgradeBtn" type="Button" parent="Panel/VBox/ButtonBox"]
+custom_minimum_size = Vector2(0, 36)
+layout_mode = 2
+text = "UPGRADE ROCKET"
+
+[node name="MenuBtn" type="Button" parent="Panel/VBox/ButtonBox"]
+custom_minimum_size = Vector2(0, 34)
+layout_mode = 2
+text = "RETURN TO ORBIT"
+
+[node name="UpgradePanel" type="PanelContainer" parent="."]
+visible = false
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -280.0
+offset_top = -220.0
+offset_right = 280.0
+offset_bottom = 220.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VBox" type="VBoxContainer" parent="UpgradePanel"]
+layout_mode = 2
+theme_override_constants/separation = 12
+alignment = 1
+
+[node name="Title" type="Label" parent="UpgradePanel/VBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.8, 0.2, 1)
+theme_override_font_sizes/font_size = 24
+text = "ROCKET UPGRADES"
+horizontal_alignment = 1
+
+[node name="CreditsLabel" type="Label" parent="UpgradePanel/VBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.3, 1, 0.6, 1)
+theme_override_font_sizes/font_size = 14
+text = "Available Credits: 0"
+horizontal_alignment = 1
+
+[node name="Grid" type="VBoxContainer" parent="UpgradePanel/VBox"]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="TankBtn" type="Button" parent="UpgradePanel/VBox/Grid"]
+custom_minimum_size = Vector2(0, 44)
+layout_mode = 2
+text = "Fuel Tank Capacity"
+
+[node name="ThrustBtn" type="Button" parent="UpgradePanel/VBox/Grid"]
+custom_minimum_size = Vector2(0, 44)
+layout_mode = 2
+text = "Rocket Thrust Power"
+
+[node name="EffBtn" type="Button" parent="UpgradePanel/VBox/Grid"]
+custom_minimum_size = Vector2(0, 44)
+layout_mode = 2
+text = "Engine Efficiency"
+
+[node name="CloseUpgradeBtn" type="Button" parent="UpgradePanel/VBox"]
+custom_minimum_size = Vector2(0, 38)
+layout_mode = 2
+text = "CONFIRM & CLOSE"
