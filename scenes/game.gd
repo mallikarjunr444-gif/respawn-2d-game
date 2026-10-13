@@ -4,6 +4,7 @@ extends Node2D
 @onready var camera: Camera2D = $Camera2D
 @onready var hud: CanvasLayer = $HUD
 @onready var puzzle_modal: CanvasLayer = $PuzzleModal
+var planet_selection_scene = preload("res://scenes/planet_selection.tscn")
 @onready var parallax_bg: ParallaxBackground = $ParallaxBackground
 @onready var planet_sprite: Sprite2D = $ParallaxBackground/ParallaxLayerPlanet/PlanetSprite
 @onready var sky_rect: ColorRect = $ParallaxBackground/ParallaxLayerSky/SkyRect
@@ -34,7 +35,8 @@ func _ready() -> void:
 	
 	GameState.level_completed.connect(_on_level_completed)
 	hud.set_sector_title(world_info["name"])
-	GameState.show_toast(world_info["name"], world_info["sub"], 4.5)
+	var planet_name = world_info["name"].split("—", false, 1)[1].strip_edges()
+	GameState.show_toast("DESTINATION IDENTIFIED", "PLANET: " + planet_name, 4.0)
 
 func _setup_environment() -> void:
 	sky_rect.color = world_info["sky_top"]
@@ -229,5 +231,29 @@ func _on_puzzle_solved() -> void:
 		if node.has_method("unlock_forge"):
 			node.unlock_forge()
 
+	# Open planet selection UI
+	var selection = planet_selection_scene.instantiate()
+	add_child(selection)
+	selection.connect("world_selected", Callable(self, "_on_world_selected"))
+	selection.connect("back_to_menu", Callable(self, "_on_back_to_menu"))
+	selection.visible = true
+	get_tree().paused = true
+
 func _on_level_completed() -> void:
 	hud.show_victory()
+
+func _on_world_selected(idx: int) -> void:
+	# Resume and start selected world
+	get_tree().paused = false
+	var sel = get_node_or_null("PlanetSelection")
+	if sel:
+		sel.queue_free()
+	GameState.start_story(idx, true)
+
+func _on_back_to_menu() -> void:
+	# Return to main menu
+	get_tree().paused = false
+	var sel = get_node_or_null("PlanetSelection")
+	if sel:
+		sel.queue_free()
+	get_tree().change_scene_to_file("res://scenes/main_menu.tscn")

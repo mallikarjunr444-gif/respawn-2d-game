@@ -27,6 +27,17 @@ texture = ExtResource("2_bg")
 expand_mode = 1
 stretch_mode = 6
 
+[node name="RouteBackdrop" type="ColorRect" parent="."]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(0.012, 0.026, 0.045, 1)
+
 [node name="CenterContainer" type="CenterContainer" parent="."]
 layout_mode = 1
 anchors_preset = 15
@@ -167,38 +178,64 @@ theme_override_constants/separation = 10
 layout_mode = 2
 theme_override_colors/font_color = Color(1, 0.85, 0.2, 1)
 theme_override_font_sizes/font_size = 20
-text = "SELECT SECTOR MISSION"
+text = "UNKNOWN TRANSMISSIONS"
 horizontal_alignment = 1
 
 [node name="W1Btn" type="Button" parent="WorldSelectModal/VBox"]
 layout_mode = 2
-text = "WORLD 1 — THE FRACTURED MOON"
+text = "[ O ]  UNKNOWN SIGNAL 01"
 
 [node name="W2Btn" type="Button" parent="WorldSelectModal/VBox"]
 layout_mode = 2
-text = "WORLD 2 — AETHER-7 (GUARDIAN)"
+text = "[ / ]  UNKNOWN SIGNAL 02"
 
 [node name="W3Btn" type="Button" parent="WorldSelectModal/VBox"]
 layout_mode = 2
-text = "WORLD 3 — CINDER MOON (VENTS)"
+text = "[ # ]  UNKNOWN SIGNAL 03"
 
 [node name="W4Btn" type="Button" parent="WorldSelectModal/VBox"]
 layout_mode = 2
-text = "WORLD 4 — CRYOS (ICE)"
+text = "[ ~ ]  UNKNOWN SIGNAL 04"
 
 [node name="W5Btn" type="Button" parent="WorldSelectModal/VBox"]
 layout_mode = 2
-text = "WORLD 5 — VORTEX PRIME (BOSS)"
+text = "[ + ]  UNKNOWN SIGNAL 05"
 
 [node name="W6Btn" type="Button" parent="WorldSelectModal/VBox"]
 layout_mode = 2
-text = "WORLD 6 — EARTH (FINAL ESCAPE)"
+text = "[ * ]  UNKNOWN SIGNAL 06"
+
+[node name="RouteStatus" type="Label" parent="WorldSelectModal/VBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.3, 0.94, 1, 1)
+text = "Destination unknown. Choose your trajectory."
+horizontal_alignment = 1
+
+[node name="RouteScanLine" type="ColorRect" parent="."]
+visible = false
+layout_mode = 1
+anchor_right = 1.0
+offset_bottom = 2.0
+mouse_filter = 2
+color = Color(0.3, 0.9, 1, 0.22)
 
 [node name="BackBtn" type="Button" parent="WorldSelectModal/VBox"]
 custom_minimum_size = Vector2(120, 32)
 layout_mode = 2
 size_flags_horizontal = 4
 text = "BACK"
+
+[node name="WarpOverlay" type="ColorRect" parent="."]
+visible = false
+modulate = Color(1, 1, 1, 0)
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(0.15, 0.85, 1, 1)
 
 [connection signal="pressed" from="CenterContainer/VBox/CharSelector/CharBtn" to="." method="_on_char_btn_pressed"]
 [connection signal="pressed" from="CenterContainer/VBox/MenuButtons/StoryBtn" to="." method="_on_story_btn_pressed"]

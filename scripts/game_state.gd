@@ -13,6 +13,8 @@ var selected_character: String = "arin" # "arin" or "mira"
 var game_mode: String = "story" # "story" or "endless"
 var current_world_idx: int = 0
 var sector_idx: int = 0
+var route_destinations: Array[int] = []
+var route_round_consumed: bool = false
 
 var crystals: int = 0
 var kills: int = 0
@@ -71,7 +73,11 @@ func _register_action(action_name: String, keys: Array[Key], joy_buttons: Array[
 		ev.button_index = mouse_btn
 		InputMap.action_add_event(action_name, ev)
 
-func start_story(world_index: int = 0) -> void:
+func start_story(world_index: int = 0, selected_from_route: bool = false) -> void:
+	if route_destinations.size() != 6:
+		begin_route_round()
+	if selected_from_route:
+		route_round_consumed = true
 	game_mode = "story"
 	current_world_idx = world_index
 	sector_idx = 0
@@ -88,6 +94,19 @@ func start_story(world_index: int = 0) -> void:
 	
 	weapons_changed.emit()
 	get_tree().change_scene_to_file("res://scenes/game.tscn")
+
+func begin_route_round() -> void:
+	# Shuffle once per selection round so each signal maps to a distinct world.
+	route_round_consumed = false
+	route_destinations.clear()
+	for world_idx in range(6):
+		route_destinations.append(world_idx)
+	route_destinations.shuffle()
+
+func get_route_destination(route_idx: int) -> int:
+	if route_destinations.size() != 6:
+		begin_route_round()
+	return route_destinations[clampi(route_idx, 0, route_destinations.size() - 1)]
 
 func start_endless() -> void:
 	game_mode = "endless"
