@@ -1,6 +1,7 @@
 78098b89c88a74ebe8c20117b8754620
-::res://::1791881515
+::res://::1791887899
 default_env.tres::Environment::6448498166503222897::1791876974::0::1::::<><><>0<>0<><>::
+firebase.json::JSON::-1::1791885314::0::1::::<><><>0<>0<><>::
 README.md::TextFile::-1::1791876974::0::1::::<><><>0<>0<><>::
 ::res://assets/::1791873443
 ::res://assets/backgrounds/::1791876974
@@ -41,6 +42,7 @@ energy_sword.svg::CompressedTexture2D::2591495429498884962::1791873443::17918769
 gravity_lance.svg::CompressedTexture2D::520325112997597121::1791873443::1791876974::1::::<><><>0<>0<>125d1758b0741660e99b332235f67bf5<>res://.godot/imported/gravity_lance.svg-a3c22cb641c3e1d2ca5c1cdfffbdab09.ctex::
 phase_shield.svg::CompressedTexture2D::2534288741810457087::1791873443::1791876974::1::::<><><>0<>0<>7cc5234d884cac0df27282d86ebc97de<>res://.godot/imported/phase_shield.svg-7e40277fe3c9480a1a88a406867eb99c.ctex::
 plasma_blaster.svg::CompressedTexture2D::5051122851767396059::1791873443::1791876974::1::::<><><>0<>0<>adab780fa10d3ab7c62498047d870f46<>res://.godot/imported/plasma_blaster.svg-f292fc369a45cefee80fcba1395c28e8.ctex::
+::res://public/::1791885295
 ::res://scenes/::1791876974
 devourer.gd::GDScript::2938043363687743114::1791876974::0::1::::<>Node2D<><>0<>0<><>::
 devourer.tscn::PackedScene::8073341775109853131::1791876974::0::1::::<><><>0<>0<><>::res://scenes/devourer.gd<>res://assets/planets/black_hole_devourer.svg
