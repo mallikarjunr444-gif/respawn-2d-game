@@ -1,0 +1,33 @@
+[gd_scene format=3 uid="uid://d3mop218a5krl"]
+
+[ext_resource type="Script" path="res://scenes/projectiles/blaster_bolt.gd" id="1_script"]
+[ext_resource type="Texture2D" path="res://assets/weapons/plasma_blaster.svg" id="2_tex"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_bolt"]
+radius = 12.0
+
+[sub_resource type="Gradient" id="Gradient_trail"]
+colors = PackedColorArray(0.24, 0.94, 1, 1, 0.1, 0.3, 0.8, 0)
+
+[node name="BlasterBolt" type="Area2D"]
+collision_layer = 8
+collision_mask = 6
+script = ExtResource("1_script")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("CircleShape2D_bolt")
+
+[node name="GlowSprite" type="Sprite2D" parent="."]
+modulate = Color(1.5, 3.5, 5.0, 1.0)
+scale = Vector2(0.35, 0.35)
+texture = ExtResource("2_tex")
+
+[node name="TrailParticles" type="CPUParticles2D" parent="."]
+amount = 18
+lifetime = 0.25
+gravity = Vector2(0, 0)
+initial_velocity_min = 10.0
+initial_velocity_max = 30.0
+scale_amount_min = 3.0
+scale_amount_max = 6.0
+color_ramp = SubResource("Gradient_trail")

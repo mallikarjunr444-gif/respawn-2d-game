@@ -1,0 +1,215 @@
+[gd_scene format=3 uid="uid://dm0938vkae791"]
+
+[ext_resource type="Script" path="res://scenes/main_menu.gd" id="1_script"]
+[ext_resource type="Texture2D" path="res://assets/backgrounds/world1_fractured_moon.svg" id="2_bg"]
+[ext_resource type="Environment" uid="uid://cx4x27891evr2" path="res://default_env.tres" id="3_env"]
+
+[node name="MainMenu" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_script")
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = ExtResource("3_env")
+
+[node name="Background" type="TextureRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("2_bg")
+expand_mode = 1
+stretch_mode = 6
+
+[node name="CenterContainer" type="CenterContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VBox" type="VBoxContainer" parent="CenterContainer"]
+layout_mode = 2
+theme_override_constants/separation = 24
+
+[node name="TitleBox" type="VBoxContainer" parent="CenterContainer/VBox"]
+layout_mode = 2
+theme_override_constants/separation = 6
+
+[node name="Title" type="Label" parent="CenterContainer/VBox/TitleBox"]
+modulate = Color(1.5, 3.0, 4.5, 1)
+layout_mode = 2
+theme_override_colors/font_color = Color(0.24, 0.94, 1, 1)
+theme_override_font_sizes/font_size = 56
+text = "EVENT HORIZON"
+horizontal_alignment = 1
+
+[node name="Subtitle" type="Label" parent="CenterContainer/VBox/TitleBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.85, 0.85, 1, 0.8)
+theme_override_font_sizes/font_size = 20
+text = "LAST RUN TO EARTH"
+horizontal_alignment = 1
+
+[node name="CharSelector" type="HBoxContainer" parent="CenterContainer/VBox"]
+layout_mode = 2
+alignment = 1
+theme_override_constants/separation = 12
+
+[node name="CharLabel" type="Label" parent="CenterContainer/VBox/CharSelector"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 16
+text = "CHARACTER: ARIN (CYAN SUIT)"
+
+[node name="CharBtn" type="Button" parent="CenterContainer/VBox/CharSelector"]
+custom_minimum_size = Vector2(90, 32)
+layout_mode = 2
+text = "SWITCH"
+
+[node name="MenuButtons" type="VBoxContainer" parent="CenterContainer/VBox"]
+custom_minimum_size = Vector2(280, 0)
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_constants/separation = 14
+
+[node name="StoryBtn" type="Button" parent="CenterContainer/VBox/MenuButtons"]
+custom_minimum_size = Vector2(0, 44)
+layout_mode = 2
+text = "STORY MISSION"
+
+[node name="EndlessBtn" type="Button" parent="CenterContainer/VBox/MenuButtons"]
+custom_minimum_size = Vector2(0, 44)
+layout_mode = 2
+text = "INFINITE FRONTIER"
+
+[node name="ControlsBtn" type="Button" parent="CenterContainer/VBox/MenuButtons"]
+custom_minimum_size = Vector2(0, 40)
+layout_mode = 2
+text = "HOW TO PLAY & CONTROLS"
+
+[node name="QuitBtn" type="Button" parent="CenterContainer/VBox/MenuButtons"]
+custom_minimum_size = Vector2(0, 40)
+layout_mode = 2
+text = "QUIT"
+
+[node name="ControlsModal" type="PanelContainer" parent="."]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -300.0
+offset_top = -220.0
+offset_right = 300.0
+offset_bottom = 220.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VBox" type="VBoxContainer" parent="ControlsModal"]
+layout_mode = 2
+alignment = 1
+theme_override_constants/separation = 12
+
+[node name="Title" type="Label" parent="ControlsModal/VBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.24, 0.94, 1, 1)
+theme_override_font_sizes/font_size = 22
+text = "PILOT MANUAL & CONTROLS"
+horizontal_alignment = 1
+
+[node name="ControlsText" type="Label" parent="ControlsModal/VBox"]
+layout_mode = 2
+text = "• MOVE: [A] / [D] or Left / Right Arrows
+• JUMP: [SPACE] or [W] (Hold for full height)
+• DASH: [SHIFT] (Air & Ground invulnerable boost)
+• SWORD SLASH: [J] or [Left Click] (Destroys voidlings & barriers)
+• PLASMA BLASTER: [K] or [Right Click] (Ranged energy bolts)
+• GRAVITY LANCE: [Hold K, release] (Piercing vortex shot)
+• PHASE SHIELD: [Q] (Absorbs incoming projectiles)
+• INTERACT: [E] (Forge terminals & devices)
+• RETRY: [R] | PAUSE: [ESC]"
+horizontal_alignment = 1
+
+[node name="CloseControlsBtn" type="Button" parent="ControlsModal/VBox"]
+custom_minimum_size = Vector2(140, 36)
+layout_mode = 2
+size_flags_horizontal = 4
+text = "BACK TO MENU"
+
+[node name="WorldSelectModal" type="PanelContainer" parent="."]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -280.0
+offset_top = -240.0
+offset_right = 280.0
+offset_bottom = 240.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VBox" type="VBoxContainer" parent="WorldSelectModal"]
+layout_mode = 2
+alignment = 1
+theme_override_constants/separation = 10
+
+[node name="Title" type="Label" parent="WorldSelectModal/VBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.85, 0.2, 1)
+theme_override_font_sizes/font_size = 20
+text = "SELECT SECTOR MISSION"
+horizontal_alignment = 1
+
+[node name="W1Btn" type="Button" parent="WorldSelectModal/VBox"]
+layout_mode = 2
+text = "WORLD 1 — THE FRACTURED MOON"
+
+[node name="W2Btn" type="Button" parent="WorldSelectModal/VBox"]
+layout_mode = 2
+text = "WORLD 2 — AETHER-7 (GUARDIAN)"
+
+[node name="W3Btn" type="Button" parent="WorldSelectModal/VBox"]
+layout_mode = 2
+text = "WORLD 3 — CINDER MOON (VENTS)"
+
+[node name="W4Btn" type="Button" parent="WorldSelectModal/VBox"]
+layout_mode = 2
+text = "WORLD 4 — CRYOS (ICE)"
+
+[node name="W5Btn" type="Button" parent="WorldSelectModal/VBox"]
+layout_mode = 2
+text = "WORLD 5 — VORTEX PRIME (BOSS)"
+
+[node name="W6Btn" type="Button" parent="WorldSelectModal/VBox"]
+layout_mode = 2
+text = "WORLD 6 — EARTH (FINAL ESCAPE)"
+
+[node name="BackBtn" type="Button" parent="WorldSelectModal/VBox"]
+custom_minimum_size = Vector2(120, 32)
+layout_mode = 2
+size_flags_horizontal = 4
+text = "BACK"
+
+[connection signal="pressed" from="CenterContainer/VBox/CharSelector/CharBtn" to="." method="_on_char_btn_pressed"]
+[connection signal="pressed" from="CenterContainer/VBox/MenuButtons/StoryBtn" to="." method="_on_story_btn_pressed"]
+[connection signal="pressed" from="CenterContainer/VBox/MenuButtons/EndlessBtn" to="." method="_on_endless_btn_pressed"]
+[connection signal="pressed" from="CenterContainer/VBox/MenuButtons/ControlsBtn" to="." method="_on_controls_btn_pressed"]
+[connection signal="pressed" from="CenterContainer/VBox/MenuButtons/QuitBtn" to="." method="_on_quit_btn_pressed"]
+[connection signal="pressed" from="ControlsModal/VBox/CloseControlsBtn" to="." method="_on_close_controls_pressed"]
+[connection signal="pressed" from="WorldSelectModal/VBox/W1Btn" to="." method="_on_world_btn_pressed" binds= [0]]
+[connection signal="pressed" from="WorldSelectModal/VBox/W2Btn" to="." method="_on_world_btn_pressed" binds= [1]]
+[connection signal="pressed" from="WorldSelectModal/VBox/W3Btn" to="." method="_on_world_btn_pressed" binds= [2]]
+[connection signal="pressed" from="WorldSelectModal/VBox/W4Btn" to="." method="_on_world_btn_pressed" binds= [3]]
+[connection signal="pressed" from="WorldSelectModal/VBox/W5Btn" to="." method="_on_world_btn_pressed" binds= [4]]
+[connection signal="pressed" from="WorldSelectModal/VBox/W6Btn" to="." method="_on_world_btn_pressed" binds= [5]]
+[connection signal="pressed" from="WorldSelectModal/VBox/BackBtn" to="." method="_on_close_world_select_pressed"]

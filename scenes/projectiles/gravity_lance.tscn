@@ -1,0 +1,38 @@
+[gd_scene format=3 uid="uid://cx4x27891evr3"]
+
+[ext_resource type="Script" path="res://scenes/projectiles/gravity_lance.gd" id="1_script"]
+[ext_resource type="Texture2D" path="res://assets/weapons/gravity_lance.svg" id="2_tex"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_lance"]
+radius = 28.0
+
+[sub_resource type="Gradient" id="Gradient_singularity"]
+colors = PackedColorArray(0.85, 0.4, 1, 1, 0.2, 0.05, 0.4, 0)
+
+[node name="GravityLance" type="Area2D"]
+collision_layer = 8
+collision_mask = 6
+script = ExtResource("1_script")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("CircleShape2D_lance")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+modulate = Color(2.0, 1.2, 3.5, 1.0)
+scale = Vector2(0.65, 0.65)
+texture = ExtResource("2_tex")
+
+[node name="SingularityParticles" type="CPUParticles2D" parent="."]
+amount = 32
+lifetime = 0.45
+emission_shape = 1
+emission_sphere_radius = 24.0
+spread = 180.0
+gravity = Vector2(0, 0)
+orbit_velocity_min = 2.0
+orbit_velocity_max = 4.0
+radial_accel_min = -120.0
+radial_accel_max = -80.0
+scale_amount_min = 4.0
+scale_amount_max = 8.0
+color_ramp = SubResource("Gradient_singularity")
