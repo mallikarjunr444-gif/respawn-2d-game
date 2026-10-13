@@ -27,16 +27,14 @@ texture = ExtResource("2_bg")
 expand_mode = 1
 stretch_mode = 6
 
-[node name="RouteBackdrop" type="ColorRect" parent="."]
-visible = false
+[node name="DarkFilter" type="ColorRect" parent="."]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-mouse_filter = 2
-color = Color(0.012, 0.026, 0.045, 1)
+color = Color(0.01, 0.02, 0.05, 0.65)
 
 [node name="CenterContainer" type="CenterContainer" parent="."]
 layout_mode = 1
@@ -48,25 +46,25 @@ grow_vertical = 2
 
 [node name="VBox" type="VBoxContainer" parent="CenterContainer"]
 layout_mode = 2
-theme_override_constants/separation = 24
+theme_override_constants/separation = 20
 
 [node name="TitleBox" type="VBoxContainer" parent="CenterContainer/VBox"]
 layout_mode = 2
 theme_override_constants/separation = 6
 
 [node name="Title" type="Label" parent="CenterContainer/VBox/TitleBox"]
-modulate = Color(1.5, 3.0, 4.5, 1)
+modulate = Color(1.2, 2.5, 3.8, 1)
 layout_mode = 2
-theme_override_colors/font_color = Color(0.24, 0.94, 1, 1)
+theme_override_colors/font_color = Color(0.3, 0.9, 1, 1)
 theme_override_font_sizes/font_size = 56
-text = "EVENT HORIZON"
+text = "SPACE ODYSSEY"
 horizontal_alignment = 1
 
 [node name="Subtitle" type="Label" parent="CenterContainer/VBox/TitleBox"]
 layout_mode = 2
-theme_override_colors/font_color = Color(0.85, 0.85, 1, 0.8)
-theme_override_font_sizes/font_size = 20
-text = "LAST RUN TO EARTH"
+theme_override_colors/font_color = Color(0.8, 0.9, 1, 0.85)
+theme_override_font_sizes/font_size = 18
+text = "PLANET-TO-PLANET SURVIVAL ADVENTURE"
 horizontal_alignment = 1
 
 [node name="CharSelector" type="HBoxContainer" parent="CenterContainer/VBox"]
@@ -76,8 +74,8 @@ theme_override_constants/separation = 12
 
 [node name="CharLabel" type="Label" parent="CenterContainer/VBox/CharSelector"]
 layout_mode = 2
-theme_override_font_sizes/font_size = 16
-text = "CHARACTER: ARIN (CYAN SUIT)"
+theme_override_font_sizes/font_size = 15
+text = "ASTRONAUT: ARIN (CYAN SUIT)"
 
 [node name="CharBtn" type="Button" parent="CenterContainer/VBox/CharSelector"]
 custom_minimum_size = Vector2(90, 32)
@@ -85,32 +83,33 @@ layout_mode = 2
 text = "SWITCH"
 
 [node name="MenuButtons" type="VBoxContainer" parent="CenterContainer/VBox"]
-custom_minimum_size = Vector2(280, 0)
+custom_minimum_size = Vector2(300, 0)
 layout_mode = 2
 size_flags_horizontal = 4
-theme_override_constants/separation = 14
+theme_override_constants/separation = 12
 
-[node name="StoryBtn" type="Button" parent="CenterContainer/VBox/MenuButtons"]
-custom_minimum_size = Vector2(0, 44)
+[node name="LaunchBtn" type="Button" parent="CenterContainer/VBox/MenuButtons"]
+custom_minimum_size = Vector2(0, 46)
 layout_mode = 2
-text = "STORY MISSION"
+text = "LAUNCH CAMPAIGN"
 
-[node name="EndlessBtn" type="Button" parent="CenterContainer/VBox/MenuButtons"]
-custom_minimum_size = Vector2(0, 44)
+[node name="PlanetsBtn" type="Button" parent="CenterContainer/VBox/MenuButtons"]
+custom_minimum_size = Vector2(0, 42)
 layout_mode = 2
-text = "INFINITE FRONTIER"
+text = "PLANET NAVIGATION (10 WORLDS)"
+
+[node name="UpgradesBtn" type="Button" parent="CenterContainer/VBox/MenuButtons"]
+custom_minimum_size = Vector2(0, 42)
+layout_mode = 2
+text = "ROCKET HANGAR & UPGRADES"
 
 [node name="ControlsBtn" type="Button" parent="CenterContainer/VBox/MenuButtons"]
 custom_minimum_size = Vector2(0, 40)
 layout_mode = 2
-text = "HOW TO PLAY & CONTROLS"
-
-[node name="QuitBtn" type="Button" parent="CenterContainer/VBox/MenuButtons"]
-custom_minimum_size = Vector2(0, 40)
-layout_mode = 2
-text = "QUIT"
+text = "FLIGHT MANUAL & CONTROLS"
 
 [node name="ControlsModal" type="PanelContainer" parent="."]
+visible = false
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
@@ -118,44 +117,50 @@ anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
 offset_left = -300.0
-offset_top = -220.0
+offset_top = -240.0
 offset_right = 300.0
-offset_bottom = 220.0
+offset_bottom = 240.0
 grow_horizontal = 2
 grow_vertical = 2
 
 [node name="VBox" type="VBoxContainer" parent="ControlsModal"]
 layout_mode = 2
-alignment = 1
 theme_override_constants/separation = 12
 
 [node name="Title" type="Label" parent="ControlsModal/VBox"]
 layout_mode = 2
-theme_override_colors/font_color = Color(0.24, 0.94, 1, 1)
+theme_override_colors/font_color = Color(0.3, 0.9, 1, 1)
 theme_override_font_sizes/font_size = 22
-text = "PILOT MANUAL & CONTROLS"
+text = "FLIGHT MANUAL & DIRECTIVES"
 horizontal_alignment = 1
 
-[node name="ControlsText" type="Label" parent="ControlsModal/VBox"]
+[node name="Content" type="RichTextLabel" parent="ControlsModal/VBox"]
 layout_mode = 2
-text = "• MOVE: [A] / [D] or Left / Right Arrows
-• JUMP: [SPACE] or [W] (Hold for full height)
-• DASH: [SHIFT] (Air & Ground invulnerable boost)
-• SWORD SLASH: [J] or [Left Click] (Destroys voidlings & barriers)
-• PLASMA BLASTER: [K] or [Right Click] (Ranged energy bolts)
-• GRAVITY LANCE: [Hold K, release] (Piercing vortex shot)
-• PHASE SHIELD: [Q] (Absorbs incoming projectiles)
-• INTERACT: [E] (Forge terminals & devices)
-• RETRY: [R] | PAUSE: [ESC]"
-horizontal_alignment = 1
+size_flags_vertical = 3
+bbcode_enabled = true
+text = "[color=#5cd6ff]FLIGHT CONTROLS[/color]
+• [b]W / A / S / D[/b] or [b]Arrow Keys[/b] — Steer Astronaut Flight Angle
+• [b]SPACEBAR[/b] — Fire Main Thruster (Consumes Fuel)
+• [b]SHIFT[/b] — Emergency Rocket Boost (High Speed Burst)
 
-[node name="CloseControlsBtn" type="Button" parent="ControlsModal/VBox"]
-custom_minimum_size = Vector2(140, 36)
+[color=#5cd6ff]MISSION OBJECTIVES[/color]
+• Collect [b]Fuel Cells[/b] & [b]Energy Orbs[/b] to replenish your tank.
+• Dodge planetary hazards (storms, wind currents, debris, heat zones).
+• Reach the [b]Launch Gate[/b] with enough fuel to warp to the next world!
+• Singularity gravity exists [b]only in Level 1 (Black Space)[/b].
+
+[color=#5cd6ff]COMBAT & RECOVERY[/color]
+• [b]J / LMB[/b] — Energy Sword | [b]K / RMB[/b] — Blaster
+• [b]Q[/b] — Phase Shield | [b]Hold K[/b] — Gravity Lance
+• Hull damage drains fuel as an emergency stabilization penalty."
+
+[node name="CloseBtn" type="Button" parent="ControlsModal/VBox"]
+custom_minimum_size = Vector2(0, 38)
 layout_mode = 2
-size_flags_horizontal = 4
-text = "BACK TO MENU"
+text = "ACKNOWLEDGED"
 
-[node name="WorldSelectModal" type="PanelContainer" parent="."]
+[node name="UpgradeModal" type="PanelContainer" parent="."]
+visible = false
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
@@ -163,90 +168,61 @@ anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
 offset_left = -280.0
-offset_top = -240.0
+offset_top = -220.0
 offset_right = 280.0
-offset_bottom = 240.0
+offset_bottom = 220.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="VBox" type="VBoxContainer" parent="WorldSelectModal"]
+[node name="VBox" type="VBoxContainer" parent="UpgradeModal"]
 layout_mode = 2
-alignment = 1
+theme_override_constants/separation = 12
+
+[node name="Title" type="Label" parent="UpgradeModal/VBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.8, 0.2, 1)
+theme_override_font_sizes/font_size = 24
+text = "ROCKET HANGAR UPGRADES"
+horizontal_alignment = 1
+
+[node name="CreditsLabel" type="Label" parent="UpgradeModal/VBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.3, 1, 0.6, 1)
+theme_override_font_sizes/font_size = 14
+text = "Fleet Credits Available: 0"
+horizontal_alignment = 1
+
+[node name="Grid" type="VBoxContainer" parent="UpgradeModal/VBox"]
+layout_mode = 2
 theme_override_constants/separation = 10
 
-[node name="Title" type="Label" parent="WorldSelectModal/VBox"]
+[node name="TankBtn" type="Button" parent="UpgradeModal/VBox/Grid"]
+custom_minimum_size = Vector2(0, 42)
 layout_mode = 2
-theme_override_colors/font_color = Color(1, 0.85, 0.2, 1)
-theme_override_font_sizes/font_size = 20
-text = "UNKNOWN TRANSMISSIONS"
-horizontal_alignment = 1
+text = "Fuel Tank Capacity"
 
-[node name="W1Btn" type="Button" parent="WorldSelectModal/VBox"]
+[node name="ThrustBtn" type="Button" parent="UpgradeModal/VBox/Grid"]
+custom_minimum_size = Vector2(0, 42)
 layout_mode = 2
-text = "[ O ]  UNKNOWN SIGNAL 01"
+text = "Rocket Thrust Power"
 
-[node name="W2Btn" type="Button" parent="WorldSelectModal/VBox"]
+[node name="EffBtn" type="Button" parent="UpgradeModal/VBox/Grid"]
+custom_minimum_size = Vector2(0, 42)
 layout_mode = 2
-text = "[ / ]  UNKNOWN SIGNAL 02"
+text = "Engine Efficiency"
 
-[node name="W3Btn" type="Button" parent="WorldSelectModal/VBox"]
+[node name="CloseUpgradeBtn" type="Button" parent="UpgradeModal/VBox"]
+custom_minimum_size = Vector2(0, 38)
 layout_mode = 2
-text = "[ # ]  UNKNOWN SIGNAL 03"
-
-[node name="W4Btn" type="Button" parent="WorldSelectModal/VBox"]
-layout_mode = 2
-text = "[ ~ ]  UNKNOWN SIGNAL 04"
-
-[node name="W5Btn" type="Button" parent="WorldSelectModal/VBox"]
-layout_mode = 2
-text = "[ + ]  UNKNOWN SIGNAL 05"
-
-[node name="W6Btn" type="Button" parent="WorldSelectModal/VBox"]
-layout_mode = 2
-text = "[ * ]  UNKNOWN SIGNAL 06"
-
-[node name="RouteStatus" type="Label" parent="WorldSelectModal/VBox"]
-layout_mode = 2
-theme_override_colors/font_color = Color(0.3, 0.94, 1, 1)
-text = "Destination unknown. Choose your trajectory."
-horizontal_alignment = 1
-
-[node name="RouteScanLine" type="ColorRect" parent="."]
-visible = false
-layout_mode = 1
-anchor_right = 1.0
-offset_bottom = 2.0
-mouse_filter = 2
-color = Color(0.3, 0.9, 1, 0.22)
-
-[node name="BackBtn" type="Button" parent="WorldSelectModal/VBox"]
-custom_minimum_size = Vector2(120, 32)
-layout_mode = 2
-size_flags_horizontal = 4
-text = "BACK"
-
-[node name="WarpOverlay" type="ColorRect" parent="."]
-visible = false
-modulate = Color(1, 1, 1, 0)
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-mouse_filter = 2
-color = Color(0.15, 0.85, 1, 1)
+text = "CLOSE HANGAR"
 
 [connection signal="pressed" from="CenterContainer/VBox/CharSelector/CharBtn" to="." method="_on_char_btn_pressed"]
-[connection signal="pressed" from="CenterContainer/VBox/MenuButtons/StoryBtn" to="." method="_on_story_btn_pressed"]
-[connection signal="pressed" from="CenterContainer/VBox/MenuButtons/EndlessBtn" to="." method="_on_endless_btn_pressed"]
+[connection signal="pressed" from="CenterContainer/VBox/MenuButtons/LaunchBtn" to="." method="_on_launch_btn_pressed"]
+[connection signal="pressed" from="CenterContainer/VBox/MenuButtons/PlanetsBtn" to="." method="_on_planets_btn_pressed"]
+[connection signal="pressed" from="CenterContainer/VBox/MenuButtons/UpgradesBtn" to="." method="_on_upgrades_btn_pressed"]
 [connection signal="pressed" from="CenterContainer/VBox/MenuButtons/ControlsBtn" to="." method="_on_controls_btn_pressed"]
-[connection signal="pressed" from="CenterContainer/VBox/MenuButtons/QuitBtn" to="." method="_on_quit_btn_pressed"]
-[connection signal="pressed" from="ControlsModal/VBox/CloseControlsBtn" to="." method="_on_close_controls_pressed"]
-[connection signal="pressed" from="WorldSelectModal/VBox/W1Btn" to="." method="_on_world_btn_pressed" binds= [0]]
-[connection signal="pressed" from="WorldSelectModal/VBox/W2Btn" to="." method="_on_world_btn_pressed" binds= [1]]
-[connection signal="pressed" from="WorldSelectModal/VBox/W3Btn" to="." method="_on_world_btn_pressed" binds= [2]]
-[connection signal="pressed" from="WorldSelectModal/VBox/W4Btn" to="." method="_on_world_btn_pressed" binds= [3]]
-[connection signal="pressed" from="WorldSelectModal/VBox/W5Btn" to="." method="_on_world_btn_pressed" binds= [4]]
-[connection signal="pressed" from="WorldSelectModal/VBox/W6Btn" to="." method="_on_world_btn_pressed" binds= [5]]
-[connection signal="pressed" from="WorldSelectModal/VBox/BackBtn" to="." method="_on_close_world_select_pressed"]
+[connection signal="pressed" from="ControlsModal/VBox/CloseBtn" to="." method="_on_close_controls_pressed"]
+[connection signal="pressed" from="UpgradeModal/VBox/Grid/TankBtn" to="." method="_on_upgrade_tank_pressed"]
+[connection signal="pressed" from="UpgradeModal/VBox/Grid/ThrustBtn" to="." method="_on_upgrade_thrust_pressed"]
+[connection signal="pressed" from="UpgradeModal/VBox/Grid/EffBtn" to="." method="_on_upgrade_eff_pressed"]
+[connection signal="pressed" from="UpgradeModal/VBox/CloseUpgradeBtn" to="." method="_on_close_upgrades_pressed"]
