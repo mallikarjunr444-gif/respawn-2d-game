@@ -1,7 +1,7 @@
 class_name LevelData
 extends RefCounted
 
-# Space Odyssey — 10 Planet Campaign Data
+# Space Odyssey — Continuous Planet Campaign Data
 # Each planet defines unique gravity, wind, hazards, visual themes, and gameplay.
 # Gas/ice giants are atmospheric flight courses, not solid-surface landings.
 
@@ -25,11 +25,11 @@ static func get_planet_count() -> int:
 static func get_world_info(world_idx: int) -> Dictionary:
 	var worlds = [
 		# ═══════════════════════════════════════════════════════════════
-		# LEVEL 1 — BLACK SPACE (Tutorial + Black Hole Mechanic)
+		# BLACK SPACE (Tutorial + Black Hole Mechanic)
 		# ═══════════════════════════════════════════════════════════════
 		{
 			"id": "black_space",
-			"name": "LEVEL 1 — BLACK SPACE",
+			"name": "BLACK SPACE",
 			"subtitle": "Escape the gravitational pull. Learn to fly.",
 			"is_space": true,
 			"level_width": 6000.0,
@@ -48,7 +48,7 @@ static func get_world_info(world_idx: int) -> Dictionary:
 			"wind_direction": Vector2.ZERO,
 			"drag_coefficient": 0.015,
 
-			# Black hole (Level 1 ONLY — Positioned BEHIND player on left)
+			# Black hole (opening space only — positioned behind player on left)
 			"has_black_hole": true,
 			"black_hole_position": Vector2(500.0, 2000.0),
 			"black_hole_pull_radius": 2200.0,
@@ -75,11 +75,11 @@ static func get_world_info(world_idx: int) -> Dictionary:
 		},
 
 		# ═══════════════════════════════════════════════════════════════
-		# LEVEL 2 — NEPTUNE (Azure Gas Giant)
+		# NEPTUNE (Azure Gas Giant)
 		# ═══════════════════════════════════════════════════════════════
 		{
 			"id": "neptune",
-			"name": "LEVEL 2 — NEPTUNE",
+			"name": "NEPTUNE",
 			"subtitle": "Azure atmosphere. Icy debris and high-velocity wind streams.",
 			"is_space": false,
 			"level_width": 7000.0,
@@ -117,11 +117,11 @@ static func get_world_info(world_idx: int) -> Dictionary:
 		},
 
 		# ═══════════════════════════════════════════════════════════════
-		# LEVEL 3 — MARS (Rust-Red Terrain)
+		# MARS (Rust-Red Terrain)
 		# ═══════════════════════════════════════════════════════════════
 		{
 			"id": "mars",
-			"name": "LEVEL 3 — MARS",
+			"name": "MARS",
 			"subtitle": "Dust storms and rocky canyons. Time your bursts.",
 			"level_width": 6500.0,
 			"level_height": 4000.0,
@@ -156,11 +156,11 @@ static func get_world_info(world_idx: int) -> Dictionary:
 		},
 
 		# ═══════════════════════════════════════════════════════════════
-		# LEVEL 4 — SATURN (Golden Rings)
+		# SATURN (Golden Rings)
 		# ═══════════════════════════════════════════════════════════════
 		{
 			"id": "saturn",
-			"name": "LEVEL 4 — SATURN",
+			"name": "SATURN",
 			"subtitle": "Fly through the golden rings. Dodge orbiting ice.",
 			"level_width": 8000.0,
 			"level_height": 5000.0,
@@ -195,11 +195,11 @@ static func get_world_info(world_idx: int) -> Dictionary:
 		},
 
 		# ═══════════════════════════════════════════════════════════════
-		# LEVEL 5 — JUPITER (Storms)
+		# JUPITER (Storms)
 		# ═══════════════════════════════════════════════════════════════
 		{
 			"id": "jupiter",
-			"name": "LEVEL 5 — JUPITER",
+			"name": "JUPITER",
 			"subtitle": "Powerful storms and crushing winds. Hold your course.",
 			"level_width": 8500.0,
 			"level_height": 5500.0,
@@ -234,11 +234,11 @@ static func get_world_info(world_idx: int) -> Dictionary:
 		},
 
 		# ═══════════════════════════════════════════════════════════════
-		# LEVEL 6 — EARTH (Recovery Checkpoint)
+		# EARTH (Recovery Checkpoint)
 		# ═══════════════════════════════════════════════════════════════
 		{
 			"id": "earth",
-			"name": "LEVEL 6 — EARTH",
+			"name": "EARTH",
 			"subtitle": "Home. Refuel, repair, and prepare for the outer rim.",
 			"level_width": 5500.0,
 			"level_height": 3500.0,
@@ -273,11 +273,11 @@ static func get_world_info(world_idx: int) -> Dictionary:
 		},
 
 		# ═══════════════════════════════════════════════════════════════
-		# LEVEL 7 — URANUS (Pale Cyan)
+		# URANUS (Pale Cyan)
 		# ═══════════════════════════════════════════════════════════════
 		{
 			"id": "uranus",
-			"name": "LEVEL 7 — URANUS",
+			"name": "URANUS",
 			"subtitle": "Sideways winds and narrow icy passages.",
 			"level_width": 7500.0,
 			"level_height": 5000.0,
@@ -312,11 +312,11 @@ static func get_world_info(world_idx: int) -> Dictionary:
 		},
 
 		# ═══════════════════════════════════════════════════════════════
-		# LEVEL 8 — MERCURY (Extreme Heat)
+		# MERCURY (Extreme Heat)
 		# ═══════════════════════════════════════════════════════════════
 		{
 			"id": "mercury",
-			"name": "LEVEL 8 — MERCURY",
+			"name": "MERCURY",
 			"subtitle": "Scorching sunlight and deep craters. Manage heat and fuel.",
 			"level_width": 6000.0,
 			"level_height": 4000.0,
@@ -352,11 +352,11 @@ static func get_world_info(world_idx: int) -> Dictionary:
 		},
 
 		# ═══════════════════════════════════════════════════════════════
-		# LEVEL 9 — VENUS (Turbulent Atmosphere)
+		# VENUS (Turbulent Atmosphere)
 		# ═══════════════════════════════════════════════════════════════
 		{
 			"id": "venus",
-			"name": "LEVEL 9 — VENUS",
+			"name": "VENUS",
 			"subtitle": "Corrosive clouds and violent air currents. Find the safe route.",
 			"level_width": 7000.0,
 			"level_height": 4500.0,
@@ -392,11 +392,11 @@ static func get_world_info(world_idx: int) -> Dictionary:
 		},
 
 		# ═══════════════════════════════════════════════════════════════
-		# LEVEL 10 — PLUTO (Endgame)
+		# PLUTO (Endgame)
 		# ═══════════════════════════════════════════════════════════════
 		{
 			"id": "pluto",
-			"name": "LEVEL 10 — PLUTO",
+			"name": "PLUTO",
 			"subtitle": "The frozen edge. Low gravity, icy caverns, the final portal.",
 			"level_width": 7500.0,
 			"level_height": 5000.0,

@@ -55,7 +55,7 @@ text = "RESUME FLIGHT"
 [node name="RestartBtn" type="Button" parent="Panel/VBox"]
 custom_minimum_size = Vector2(0, 38)
 layout_mode = 2
-text = "RESTART LEVEL"
+text = "RESTART PLANET"
 
 [node name="LevelSelectBtn" type="Button" parent="Panel/VBox"]
 custom_minimum_size = Vector2(0, 38)

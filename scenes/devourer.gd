@@ -1,7 +1,7 @@
 extends Node2D
 
 # ═══════════════════════════════════════════════════════════════
-# Devourer — Black Hole Singularity (Level 1 Black Space)
+# Devourer — Black Hole Singularity (Black Space)
 # Positioned behind the player, pulling the astronaut & debris
 # toward the singularity.
 # ═══════════════════════════════════════════════════════════════

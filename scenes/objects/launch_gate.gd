@@ -12,6 +12,7 @@ var is_launching: bool = false
 var launch_timer: float = 0.0
 var ring_rotation: float = 0.0
 var min_fuel_pct: float = 15.0
+var required_cells: int = 0
 var player_nearby: bool = false
 var target_player: Node2D = null
 
@@ -63,6 +64,9 @@ func _draw_gate() -> void:
 func set_min_fuel(pct: float) -> void:
 	min_fuel_pct = pct
 
+func set_required_cells(count: int) -> void:
+	required_cells = maxi(count, 0)
+
 func _process(delta: float) -> void:
 	if is_launching:
 		launch_timer += delta
@@ -86,11 +90,15 @@ func _process(delta: float) -> void:
 	if player_nearby and is_active:
 		var fuel_pct = GameState.get_fuel_percentage()
 		var has_fuel = fuel_pct >= min_fuel_pct
-		if has_fuel:
-			prompt_label.text = "LAUNCH GATE READY!\n[PRESS E OR ENTER TO WARP]"
+		var has_resources = GameState.fuel_cells_collected >= required_cells
+		if has_fuel and has_resources:
+			prompt_label.text = "ROCKET READY\n[PRESS E OR ENTER TO BOARD]"
 			prompt_label.modulate = Color(0.3, 1.0, 0.8)
+		elif not has_resources:
+			prompt_label.text = "MISSION RESOURCES REQUIRED\nCells: " + str(GameState.fuel_cells_collected) + "/" + str(required_cells)
+			prompt_label.modulate = Color(1.0, 0.8, 0.25)
 		else:
-			prompt_label.text = "NEED " + str(int(min_fuel_pct)) + "% FUEL TO WARP\nCurrent: " + str(int(fuel_pct)) + "%"
+			prompt_label.text = "NEED " + str(int(min_fuel_pct)) + "% FUEL TO LAUNCH\nCurrent: " + str(int(fuel_pct)) + "%"
 			prompt_label.modulate = Color(1.0, 0.4, 0.3)
 
 		# Auto-trigger if close to center, or on key press
@@ -99,7 +107,7 @@ func _process(delta: float) -> void:
 			dist_to_center = (target_player.global_position - global_position).length()
 
 		var key_pressed = Input.is_action_just_pressed("interact") or Input.is_key_pressed(KEY_E) or Input.is_key_pressed(KEY_ENTER)
-		if has_fuel and (key_pressed or dist_to_center < 55.0):
+		if has_fuel and has_resources and (key_pressed or dist_to_center < 55.0):
 			_trigger_launch()
 
 func _on_body_entered(body: Node2D) -> void:
@@ -121,7 +129,12 @@ func _trigger_launch() -> void:
 	gate_particles.emitting = true
 	SoundManager.play("portal", 0.05)
 	SoundManager.play("level_complete", 0.05)
-	GameState.show_toast("LAUNCH SEQUENCE INITIATED", "Warping to next destination...", 3.0)
+	var next_idx = GameState.current_world_idx + 1
+	var destination = "ORVEX hangar"
+	if next_idx < LevelData.get_planet_count():
+		var next_info = LevelData.get_world_info(next_idx)
+		destination = next_info.get("name", "deep space")
+	GameState.show_toast("BOARDING COMPLETE", "Ignition burn toward " + destination, 3.0)
 
 	# Dramatic scale-up
 	var tween = create_tween()

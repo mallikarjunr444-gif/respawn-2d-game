@@ -364,7 +364,7 @@ function drawFx(camX, camY){
 /* ──────── 10 Planetary Worlds Data ──────── */
 const PLANETS = [
   {
-    id: 'black_space', name: 'LEVEL 1 — BLACK SPACE', sub: 'Escape the Singularity gravity pull. Learn to fly.',
+    id: 'black_space', name: 'BLACK SPACE', sub: 'Escape the Singularity gravity pull. Learn to fly.',
     isSpace: true,
     width: 5800, height: 3200, sky: ['#02020a', '#080518'], accent: C.cyan, starCol: '#aaccff',
     hasHole: true, holePos: {x: 450, y: 1600}, holePullR: 2100, holeForce: 380, holeKillR: 150,
@@ -373,7 +373,7 @@ const PLANETS = [
     playerStart: {x: 1250, y: 1600}, gatePos: {x: 5200, y: 1600}
   },
   {
-    id: 'neptune', name: 'LEVEL 2 — NEPTUNE', sub: 'Deep-blue azure atmosphere. Cross wind currents and icy debris.',
+    id: 'neptune', name: 'NEPTUNE', sub: 'Deep-blue azure atmosphere. Cross wind currents and icy debris.',
     isSpace: false,
     width: 6200, height: 3600, sky: ['#02081c', '#081e4a'], accent: '#4da6ff', starCol: '#66b3ff',
     hasHole: false, gravity: 160, wind: {x: -140, y: 25}, drag: 0.025,
@@ -381,56 +381,56 @@ const PLANETS = [
     playerStart: {x: 550, y: 1800}, gatePos: {x: 5600, y: 1800}
   },
   {
-    id: 'mars', name: 'LEVEL 3 — MARS', sub: 'Rust-red terrain. Navigate rocky canyons and swirling dust storms.',
+    id: 'mars', name: 'MARS', sub: 'Rust-red terrain. Navigate rocky canyons and swirling dust storms.',
     width: 5800, height: 3400, sky: ['#1c0702', '#451608'], accent: '#ff6633', starCol: '#ffbb99',
     hasHole: false, gravity: 300, wind: {x: 100, y: 0}, drag: 0.025,
     minFuel: 25, cells: 26, orbs: 8, debris: 20, dustStorms: 4,
     playerStart: {x: 350, y: 2200}, gatePos: {x: 5300, y: 1000}
   },
   {
-    id: 'saturn', name: 'LEVEL 4 — SATURN', sub: 'Golden gas giant. Thread the needle through orbiting ring bands.',
+    id: 'saturn', name: 'SATURN', sub: 'Golden gas giant. Thread the needle through orbiting ring bands.',
     width: 6600, height: 3800, sky: ['#140d02', '#382607'], accent: '#ffcc44', starCol: '#ffe8a3',
     hasHole: false, gravity: 240, wind: {x: 0, y: -60}, drag: 0.02,
     minFuel: 20, cells: 32, orbs: 10, ringBands: 5, debris: 32,
     playerStart: {x: 350, y: 1900}, gatePos: {x: 6100, y: 1300}
   },
   {
-    id: 'jupiter', name: 'LEVEL 5 — JUPITER', sub: 'The Great Red Spot. Crushing gravity and violent wind gusts.',
+    id: 'jupiter', name: 'JUPITER', sub: 'The Great Red Spot. Crushing gravity and violent wind gusts.',
     width: 6800, height: 4200, sky: ['#1a0c02', '#422006'], accent: '#ff8833', starCol: '#ffd1a4',
     hasHole: false, gravity: 420, wind: {x: -220, y: -80}, drag: 0.045,
     minFuel: 30, cells: 30, orbs: 8, windZones: 6, debris: 20,
     playerStart: {x: 350, y: 2200}, gatePos: {x: 6300, y: 1200}
   },
   {
-    id: 'earth', name: 'LEVEL 6 — EARTH', sub: 'Orbital checkpoint! Salvage fuel and prepare for the outer rim.',
+    id: 'earth', name: 'EARTH', sub: 'Orbital checkpoint! Salvage fuel and prepare for the outer rim.',
     width: 4800, height: 3000, sky: ['#030c22', '#0c2e66'], accent: '#5ce6ff', starCol: '#d9f7ff',
     hasHole: false, gravity: 260, wind: {x: 40, y: 0}, drag: 0.025,
     minFuel: 15, cells: 42, orbs: 14, debris: 16,
     playerStart: {x: 350, y: 1500}, gatePos: {x: 4400, y: 900}
   },
   {
-    id: 'uranus', name: 'LEVEL 7 — URANUS', sub: 'Pale cyan atmosphere. Sideways vertical air currents and ice.',
+    id: 'uranus', name: 'URANUS', sub: 'Pale cyan atmosphere. Sideways vertical air currents and ice.',
     width: 6200, height: 3800, sky: ['#031418', '#0c3a44'], accent: '#66f5ff', starCol: '#b8fbff',
     hasHole: false, gravity: 220, wind: {x: 0, y: 180}, drag: 0.03,
     minFuel: 25, cells: 28, orbs: 8, windZones: 5, debris: 24,
     playerStart: {x: 350, y: 1900}, gatePos: {x: 5700, y: 1100}
   },
   {
-    id: 'mercury', name: 'LEVEL 8 — MERCURY', sub: 'Scorching solar radiation. Avoid heat zones that boil fuel.',
+    id: 'mercury', name: 'MERCURY', sub: 'Scorching solar radiation. Avoid heat zones that boil fuel.',
     width: 5400, height: 3400, sky: ['#120601', '#331203'], accent: '#ff7722', starCol: '#ffd5b8',
     hasHole: false, gravity: 320, wind: {x: 0, y: 0}, drag: 0.01,
     minFuel: 30, cells: 28, orbs: 7, heatZones: 6, debris: 22,
     playerStart: {x: 350, y: 1700}, gatePos: {x: 4900, y: 1000}
   },
   {
-    id: 'venus', name: 'LEVEL 9 — VENUS', sub: 'Corrosive acid clouds and dense air. Navigate the safe route.',
+    id: 'venus', name: 'VENUS', sub: 'Corrosive acid clouds and dense air. Navigate the safe route.',
     width: 6200, height: 3800, sky: ['#1c1002', '#442805'], accent: '#ffaa22', starCol: '#ffe8a3',
     hasHole: false, gravity: 290, wind: {x: -180, y: -60}, drag: 0.05,
     minFuel: 30, cells: 30, orbs: 8, acidZones: 6, debris: 18,
     playerStart: {x: 350, y: 1900}, gatePos: {x: 5700, y: 1000}
   },
   {
-    id: 'pluto', name: 'LEVEL 10 — PLUTO', sub: 'The frozen edge endgame! Low gravity, icy caverns, final warp gate.',
+    id: 'pluto', name: 'PLUTO', sub: 'The frozen edge endgame! Low gravity, icy caverns, final warp gate.',
     width: 6800, height: 4000, sky: ['#020308', '#090f26'], accent: '#a6c8ff', starCol: '#e0ecff',
     hasHole: false, gravity: 120, wind: {x: 30, y: -20}, drag: 0.01,
     minFuel: 35, cells: 26, orbs: 12, debris: 30,
@@ -703,7 +703,7 @@ function drawBackground(cfg, camX, camY, t){
   ctx.fill();
   ctx.restore();
 
-  // For Neptune (Level 2), render prominent azure ice giant planet with glowing atmosphere and icy rings
+  // For Neptune, render prominent azure ice giant planet with glowing atmosphere and icy rings
   if(cfg.id === 'neptune'){
     const nx = W * 0.76 - camX * 0.03, ny = H * 0.32 - camY * 0.03;
     ctx.save();
@@ -981,7 +981,7 @@ function drawGate(gate, camX, camY, t){
   ctx.restore();
 }
 
-/* ──────── Draw Black Hole (Level 1 ONLY) ──────── */
+/* ──────── Draw Black Hole (Opening Space Only) ──────── */
 function drawBlackHole(hole, camX, camY, t){
   const hx = hole.pos.x - camX, hy = hole.pos.y - camY;
   ctx.save();
@@ -1218,22 +1218,24 @@ function drawHUD(){
   const angleGate = Math.atan2(dy, dx);
   const arrow = getArrow(angleGate);
   const ready = pct >= LVL.minFuel;
+  const resourcesReady = G.cellsGot >= LVL.cells;
+  const missionReady = ready && resourcesReady;
   const reached = distGate < GATE.radius + 30;
   let statusCol, statusText;
   if(GATE.launching){
     statusCol = C.cyan;
-    statusText = '★ GATE ENGAGED! WARPING TO NEXT PLANET...';
+    statusText = '★ BOARDING COMPLETE! IGNITION TO NEXT PLANET...';
   } else if(reached){
-    statusCol = ready ? C.green : C.ember;
-    statusText = ready ? '✔ LAUNCH GATE REACHED — PRESS [E] OR CLICK WARP' : '[NEED ' + LVL.minFuel + '% FUEL TO WARP]';
+    statusCol = missionReady ? C.green : C.ember;
+    statusText = missionReady ? '✔ ROCKET REACHED — PRESS [E] OR CLICK BOARD' : '[CELLS ' + G.cellsGot + '/' + LVL.cells + ' | FUEL ' + Math.floor(pct) + '%]';
   } else {
-    statusCol = ready ? C.green : C.ember;
-    statusText = ready ? '[READY TO WARP]' : '[NEED ' + LVL.minFuel + '% FUEL]';
+    statusCol = missionReady ? C.green : C.ember;
+    statusText = missionReady ? '[READY TO BOARD]' : '[CELLS ' + G.cellsGot + '/' + LVL.cells + ' | NEED ' + LVL.minFuel + '% FUEL]';
   }
 
-  txt('LAUNCH GATE: ' + Math.floor(distGate) + 'm ' + arrow + ' ' + statusText, W/2, 42, 13, statusCol, 'center', F_U, 700, 1);
+  txt('ROCKET: ' + Math.floor(distGate) + 'm ' + arrow + ' ' + statusText, W/2, 42, 13, statusCol, 'center', F_U, 700, 1);
 
-  // Level 1 Black Hole Distance Warning & Escape indicator
+  // Opening singularity distance warning & escape indicator
   if(LVL.hasHole){
     const holeD = Math.hypot(LVL.holePos.x - PL.x, LVL.holePos.y - PL.y);
     if(holeD < 2000){
@@ -1446,7 +1448,7 @@ function renderUpgradesMenu(){
     ctx.stroke();
 
     txt(it.name, W/2 - 250, y + 32, 16, C.bone, 'left', F_U, 700);
-    txt('Level: ' + it.lv + ' / 3', W/2 - 250, y + 54, 13, C.dim, 'left', F_U, 600);
+    txt('Tier: ' + it.lv + ' / 3', W/2 - 250, y + 54, 13, C.dim, 'left', F_U, 600);
 
     const isMax = it.lv >= 3;
     const cost = isMax ? 0 : costs[it.lv];
@@ -1477,8 +1479,8 @@ function renderManual(){
     '• MAIN THRUSTER: SPACEBAR (or Touch THRUST) — Fires rocket booster. Burns fuel.',
     '• EMERGENCY BOOST: SHIFT (or Touch BOOST) — High-velocity burst with invulnerability.',
     '• REFUEL: Collect emerald Fuel Cells (+12%) and golden Energy Orbs (+25%).',
-    '• LAUNCH GATE: Reach the exit portal with required minimum fuel and press [E] to warp.',
-    '• SINGULARITY: Black Hole gravitational pull exists ONLY in Level 1 (Black Space).',
+    '• ROCKET BOARDING: Collect required cells, return with minimum fuel, then press [E] to launch.',
+    '• SINGULARITY: Black Hole gravity exists only in Black Space.',
     '• RECOVERY: Direct collision penalty drains 20 fuel to stabilize hull instead of instant death!'
   ];
 
@@ -1524,7 +1526,7 @@ function renderComplete(){
   ctx.fillRect(0, 0, W, H);
 
   txt('MISSION ACCOMPLISHED', W/2, 100, 32, C.green, 'center', F_D, 700, 4);
-  txt('DESTINATION REACHED: ' + LVL.name, W/2, 136, 16, C.cyan, 'center', F_U, 700);
+  txt('PLANET CLEARED: ' + LVL.name, W/2, 136, 16, C.cyan, 'center', F_U, 700);
 
   txt('Fuel Remaining: ' + Math.floor(getFuelPct()) + '%', W/2, 190, 15, C.bone, 'center', F_U, 600);
   txt('Fuel Cells Collected: ' + G.cellsGot, W/2, 218, 15, C.bone, 'center', F_U, 600);
@@ -1534,7 +1536,7 @@ function renderComplete(){
 
   const nextIdx = G.worldIdx + 1;
   if(nextIdx < 10){
-    uiButton('WARP TO NEXT DESTINATION', W/2 - 160, 350, 320, 46, () => {
+    uiButton('CONTINUE TO ' + PLANETS[nextIdx].name, W/2 - 160, 350, 320, 46, () => {
       SFX.click();
       initFlightLevel(nextIdx);
     }, {sel: true});
@@ -1716,7 +1718,7 @@ function updatePlay(dt){
   p.x = clamp(p.x, 30, cfg.width - 30);
   p.y = clamp(p.y, 30, cfg.height - 30);
 
-  // Black Hole Singularity Pull (Level 1 ONLY)
+  // Black Hole Singularity Pull (Opening Space Only)
   // Stable physics calculations, capped max pull force, safe minimum distance
   if(cfg.hasHole){
     const hx = cfg.holePos.x, hy = cfg.holePos.y;
@@ -1828,19 +1830,20 @@ function updatePlay(dt){
     }
   }
 
-  // Launch Gate interaction
+  // Rocket boarding interaction
   GATE.rot += dt * 0.8;
   const distGate = Math.hypot(p.x - GATE.x, p.y - GATE.y);
   const minFuelNeeded = cfg.minFuel || 15;
   const gateHasFuel = getFuelPct() >= minFuelNeeded;
+  const gateHasResources = G.cellsGot >= cfg.cells;
   if(distGate < GATE.radius + 30){
-    if(gateHasFuel && (pressed('use') || pressed('thrust') || distGate < 55 || GATE.launching)){
+    if(gateHasFuel && gateHasResources && (pressed('use') || pressed('thrust') || distGate < 55 || GATE.launching)){
       if(!GATE.launching){
         GATE.launching = true;
         GATE.launchT = 0;
         SFX.warp();
         const nextWorldName = PLANETS[G.worldIdx + 1]?.name || 'Next Sector';
-        G.toast = { a: 'WARP SEQUENCE INITIATED', b: 'Transit to ' + nextWorldName, t: 3 };
+        G.toast = { a: 'BOARDING COMPLETE', b: 'Ignition burn toward ' + nextWorldName, t: 3 };
       }
     }
   }
@@ -1922,7 +1925,12 @@ function completeLevel(){
   }
 
   saveData();
-  G.scene = 'level_complete';
+  if(next < 10){
+    G.toast = { a: 'MISSION COMPLETE', b: 'Next destination: ' + PLANETS[next].name, t: 2.0 };
+    initFlightLevel(next);
+  } else {
+    G.scene = 'level_complete';
+  }
 }
 
 /* ──────── Main Render Dispatcher ──────── */
@@ -1978,7 +1986,7 @@ function renderWorldPlay(){
 
   drawBackground(cfg, G.camX, G.camY, G.t);
 
-  // Level 1 Black Hole Singularity
+  // Opening Black Hole Singularity
   if(cfg.hasHole){
     drawBlackHole({pos: cfg.holePos, killR: cfg.holeKillR}, G.camX, G.camY, G.t);
   }

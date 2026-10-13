@@ -114,9 +114,10 @@ func _generate_level() -> void:
 	var gate_pos = world_info.get("launch_gate_position", Vector2(level_bounds.size.x - 500.0, 2000.0))
 	launch_gate.position = gate_pos
 	launch_gate.set_min_fuel(world_info.get("min_fuel_to_launch", 15.0))
+	launch_gate.set_required_cells(world_info.get("fuel_cell_count", 0))
 	add_child(launch_gate)
 
-	# 3. Spawn Black Hole (Level 1 ONLY — Positioned BEHIND the player on the left)
+	# 3. Spawn Black Hole (opening space only — positioned behind the player on the left)
 	if world_info.get("has_black_hole", false):
 		devourer = devourer_scene.instantiate()
 		devourer.position = world_info.get("black_hole_position", Vector2(500.0, 2000.0))
@@ -309,9 +310,11 @@ func _update_hud_radar() -> void:
 	var angle_gate = offset_to_gate.angle()
 	var min_fuel = world_info.get("min_fuel_to_launch", 25.0)
 	var has_min = GameState.get_fuel_percentage() >= min_fuel
+	var required_cells = world_info.get("fuel_cell_count", 0)
+	var has_resources = GameState.fuel_cells_collected >= required_cells
 
 	var dist_devourer = -1.0
 	if devourer and is_instance_valid(devourer):
 		dist_devourer = (devourer.position - player.position).length()
 
-	hud.update_radar(dist_gate, angle_gate, has_min, dist_devourer)
+	hud.update_radar(dist_gate, angle_gate, has_min and has_resources, dist_devourer, GameState.fuel_cells_collected, required_cells)

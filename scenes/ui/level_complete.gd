@@ -45,24 +45,24 @@ func _ready() -> void:
 		eff_btn.pressed.connect(func(): _buy_upgrade("efficiency"))
 
 func _on_level_completed() -> void:
-	visible = true
+	visible = false
 	var cur_info = LevelData.get_world_info(GameState.current_world_idx)
-	title_label.text = "MISSION ACCOMPLISHED"
-	subtitle_label.text = "DESTINATION: " + cur_info.get("name", "") + " CLEARED"
-
-	fuel_label.text = "Fuel Remaining: " + str(int(GameState.get_fuel_percentage())) + "%"
-	cells_label.text = "Fuel Cells Collected: " + str(GameState.fuel_cells_collected)
-	orbs_label.text = "Energy Orbs Collected: " + str(GameState.orbs_collected)
-	score_label.text = "Sector Score: " + str(GameState.level_score)
-	total_score_label.text = "Total Fleet Credits: " + str(GameState.total_score)
-
 	var next_idx = GameState.current_world_idx + 1
 	if next_idx >= LevelData.get_planet_count():
-		next_btn.text = "FINAL ODYSSEY VICTORY!"
+		visible = true
+		title_label.text = "ODYSSEY COMPLETE"
+		subtitle_label.text = cur_info.get("name", "") + " mission cleared"
+		fuel_label.text = "Fuel Remaining: " + str(int(GameState.get_fuel_percentage())) + "%"
+		cells_label.text = "Fuel Cells Collected: " + str(GameState.fuel_cells_collected)
+		orbs_label.text = "Energy Orbs Collected: " + str(GameState.orbs_collected)
+		score_label.text = "Sector Score: " + str(GameState.level_score)
+		total_score_label.text = "Total Fleet Credits: " + str(GameState.total_score)
+		next_btn.text = "RETURN TO ORVEX HANGAR"
 	else:
 		var next_info = LevelData.get_world_info(next_idx)
-		next_btn.text = "WARP TO " + next_info.get("name", "NEXT SECTOR")
-	next_btn.grab_focus()
+		GameState.show_toast("MISSION COMPLETE", "Next destination: " + next_info.get("name", "UNKNOWN"), 2.0)
+		await get_tree().create_timer(0.75).timeout
+		GameState.go_to_next_level()
 
 func _unhandled_input(event: InputEvent) -> void:
 	if not visible or (upgrade_panel and upgrade_panel.visible):

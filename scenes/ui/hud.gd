@@ -66,20 +66,20 @@ func _process(delta: float) -> void:
 		fuel_label.modulate = Color(0.3, 1.0, 0.8, 1.0) if pct > 50.0 else Color(1.0, 0.8, 0.3, 1.0)
 		fuel_bar.modulate = Color(0.3, 1.0, 0.8, 1.0) if pct > 50.0 else Color(1.0, 0.8, 0.3, 1.0)
 
-func update_radar(dist_to_gate: float, gate_angle: float, has_min_fuel: bool, dist_to_devourer: float = -1.0) -> void:
+func update_radar(dist_to_gate: float, gate_angle: float, mission_ready: bool, dist_to_devourer: float = -1.0, cells_collected: int = 0, cells_required: int = 0) -> void:
 	# Launch gate navigation
 	var arrow = _angle_to_arrow(gate_angle)
-	var fuel_status = "READY" if has_min_fuel else "LOW FUEL"
+	var fuel_status = "READY" if mission_ready else "RESOURCES " + str(cells_collected) + "/" + str(cells_required)
 	if dist_to_gate < 120.0:
-		if has_min_fuel:
-			gate_indicator.text = "LAUNCH GATE: " + str(int(dist_to_gate)) + "m ✔ [GATE REACHED - READY TO WARP]"
+		if mission_ready:
+			gate_indicator.text = "ROCKET: " + str(int(dist_to_gate)) + "m - BOARDING READY"
 			gate_indicator.modulate = Color(0.2, 1.0, 0.5)
 		else:
-			gate_indicator.text = "LAUNCH GATE: " + str(int(dist_to_gate)) + "m ⚠ [GATE REACHED - NEED FUEL]"
+			gate_indicator.text = "ROCKET: " + str(int(dist_to_gate)) + "m - COMPLETE RESOURCES"
 			gate_indicator.modulate = Color(1.0, 0.4, 0.2)
 	else:
-		gate_indicator.text = "LAUNCH GATE: " + str(int(dist_to_gate)) + "m " + arrow + " [" + fuel_status + "]"
-		gate_indicator.modulate = Color(0.3, 1.0, 0.6) if has_min_fuel else Color(1.0, 0.5, 0.3)
+		gate_indicator.text = "ROCKET: " + str(int(dist_to_gate)) + "m " + arrow + " [" + fuel_status + "]"
+		gate_indicator.modulate = Color(0.3, 1.0, 0.6) if mission_ready else Color(1.0, 0.5, 0.3)
 
 	# Devourer warning for level 1
 	if dist_to_devourer >= 0.0:

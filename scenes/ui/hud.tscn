@@ -78,14 +78,14 @@ size_flags_horizontal = 3
 layout_mode = 2
 theme_override_colors/font_color = Color(1, 1, 1, 1)
 theme_override_font_sizes/font_size = 16
-text = "LEVEL 1 — BLACK SPACE"
+text = "BLACK SPACE"
 horizontal_alignment = 1
 
 [node name="GateIndicator" type="Label" parent="Margin/TopBar/CenterInfo"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.3, 1, 0.6, 1)
 theme_override_font_sizes/font_size = 13
-text = "LAUNCH GATE: 5000m ➜ [READY]"
+text = "ROCKET: 5000m ➜ [READY]"
 horizontal_alignment = 1
 
 [node name="RadarLabel" type="Label" parent="Margin/TopBar/CenterInfo"]

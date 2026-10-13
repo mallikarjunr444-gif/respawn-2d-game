@@ -90,7 +90,7 @@ theme_override_constants/separation = 8
 [node name="NextBtn" type="Button" parent="Panel/VBox/ButtonBox"]
 custom_minimum_size = Vector2(0, 42)
 layout_mode = 2
-text = "WARP TO NEXT DESTINATION"
+text = "CONTINUE ODYSSEY"
 
 [node name="UpgradeBtn" type="Button" parent="Panel/VBox/ButtonBox"]
 custom_minimum_size = Vector2(0, 36)
