@@ -41,19 +41,26 @@ function renderPuzzle(){
  txt('Click or tap a mirror to flip it.',rx,208,13,C.dim,'left',F_U,600);txt('Mistakes cost nothing. Take your time —',rx,230,13,C.dim,'left',F_U,600);txt('the Devourer waits while you think.',rx,250,13,C.dim,'left',F_U,600);
  if(z.solved)txt('FORGE ONLINE',rx,320,22,C.gold,'left',F_D,700,2);else{btn('SHOW HINT  (H)',rx,300,200,44,()=>pzHint());btn('CLOSE  (ESC)',rx,356,200,44,()=>{G.scene='play';});}
 }
+const TITLE_LORE=['THE DEVOURER has consumed 14 star systems.','Your colony is gone. Earth is the last way out.','Escape. Survive. Reach home before the stars die.'];
 function renderTitle(){
  const t=G.t;drawBG(TH.moon,t*30,t);
  for(let i=0;i<4;i++){const rad=mod(t*60+i*90,360);ctx.strokeStyle='rgba(255,255,255,'+(.12*(1-rad/360)).toFixed(3)+')';ctx.lineWidth=2;ctx.beginPath();ctx.arc(700,260,rad,0,6.283);ctx.stroke();}
  drawHole(700+Math.sin(t*.4)*10,0,t);
- const g=ctx.createLinearGradient(0,0,W*.7,0);g.addColorStop(0,'rgba(5,7,26,.88)');g.addColorStop(1,'rgba(5,7,26,0)');ctx.fillStyle=g;ctx.fillRect(0,0,W,H);
- txt('EVENT',54,170,60,C.bone,'left',F_D,700,6);txt('HORIZON',54,236,60,C.cyan,'left',F_D,700,6);txt('LAST RUN TO EARTH',58,274,15,C.ember,'left',F_U,700,7);
+ const g=ctx.createLinearGradient(0,0,W*.7,0);g.addColorStop(0,'rgba(5,7,26,.92)');g.addColorStop(1,'rgba(5,7,26,0)');ctx.fillStyle=g;ctx.fillRect(0,0,W,H);
+ txt('EVENT',54,148,62,C.bone,'left',F_D,700,6);txt('HORIZON',54,218,62,C.cyan,'left',F_D,700,6);
+ const sub='LAST RUN TO EARTH',sp=Math.sin(t*1.8)*.5+.5;ctx.globalAlpha=.7+sp*.3;txt(sub,58,256,15,C.ember,'left',F_U,700,7);ctx.globalAlpha=1;
+ // Animated lore lines
+ const li=Math.floor(t/3.2)%TITLE_LORE.length,lp=(t%3.2)/3.2;
+ const la=lp<.15?lp/.15:lp>.75?(1-lp)/.25:1;
+ ctx.globalAlpha=la*.7;txt(TITLE_LORE[li],58,284,13,C.dim,'left',F_U,600,1);ctx.globalAlpha=1;
  const sv=store('eh_save'),sw=sv&&sv.world>0?sv.world:0;
+ const wnames=['FRACTURED MOON','AETHER-7','CINDER MOON','CRYOS','VORTEX PRIME','EARTH'];
  const items=[['STORY RUN',()=>{G.nextMode='story';G.startWorld=0;G.scene='select';}],['INFINITE FRONTIER',()=>{G.nextMode='endless';G.scene='select';}]];
- if(sw)items.push(['CONTINUE · WORLD '+(sw+1),()=>{G.nextMode='story';G.startWorld=sw;G.scene='select';}]);
+ if(sw)items.push(['CONTINUE · '+(wnames[sw]||'WORLD '+(sw+1)),()=>{G.nextMode='story';G.startWorld=sw;G.scene='select';}]);
  G.menuN=items.length;
- items.forEach((it,i)=>btn((i+1)+'   '+it[0],58,306+i*54,300,44,()=>{SFX.click();it[1]();},{sel:G.menu===i}));
- const b=store('eh_best');if(b)txt('BEST  '+b.dist+' KM'+(b.sector?'  ·  SECTOR '+b.sector:''),58,470,13,C.dim,'left',F_U,700,2);
- txt('A black hole is eating the stars. Earth is the last way out.',58,505,13,C.dim,'left',F_U,600,1);
+ items.forEach((it,i)=>btn((i+1)+'   '+it[0],58,310+i*54,304,44,()=>{SFX.click();it[1]();},{sel:G.menu===i}));
+ const b=store('eh_best');if(b)txt('BEST  '+b.dist+' KM'+(b.sector?'  ·  SECTOR '+b.sector:''),58,478,13,C.dim,'left',F_U,700,2);
+ txt('v1.0  ·  A / D  MOVE  ·  SPACE  JUMP  ·  SHIFT  DASH  ·  E  USE  ·  M  SOUND',58,520,11,C.dim,'left',F_U,400,1);
 }
 function renderSelect(){
  drawBG(TH.moon,G.t*20,G.t);ctx.fillStyle='rgba(5,7,26,.55)';ctx.fillRect(0,0,W,H);
@@ -72,6 +79,25 @@ function renderLaunch(){
  drawFlame(x,y,t,1.2);drawPod(x,y,0,false,t);
  const a=clamp((lt-2.3)/1.3,0,1);ctx.fillStyle='rgba(255,255,255,'+a+')';ctx.fillRect(0,0,W,H);
 }
+// ------- cinematic world-reveal scene -------
+const WORLD_REVEALS=[
+ null,
+ {title:'AETHER-7',lines:['A crystalline world orbiting a dying star.','Rumours of a weapon forge — and something guarding it.']},
+ {title:'CINDER MOON',lines:['The vents erupt without warning.','Decode the armory before the heat takes you.']},
+ {title:'CRYOS',lines:['Three research stations. All silent.','Logs recovered. They knew about the Devourer.']},
+ {title:'VORTEX PRIME',lines:['Gravity is wrong here. Platforms drift.','A Guardian stands between you and the last weapon.']},
+ {title:'EARTH',lines:['You made it.','But the signal in your pod made it first.']},
+];
+function renderReveal(){
+ const rv=G.reveal,t=G.revealT;if(!rv)return;
+ drawBG(G.lvl.theme,t*20,G.t);
+ ctx.fillStyle='rgba(3,5,16,.78)';ctx.fillRect(0,0,W,H);
+ const a=clamp(t/1.1,0,1);ctx.globalAlpha=a;
+ txt(rv.title,W/2,200,44,C.cyan,'center',F_D,700,4);
+ rv.lines.forEach((l,i)=>txt(l,W/2,268+i*30,17,C.bone,'center',F_U,600,1));
+ const prog=clamp((t-3.5)/.8,0,1);if(prog>0){txt('ENTERING SECTOR — STAND BY',W/2,370,13,C.ember,'center',F_U,700,3);ctx.fillStyle='rgba(255,255,255,.08)';rr(W/2-150,390,300,6,3);ctx.fill();ctx.fillStyle=C.ember;rr(W/2-150,390,300*prog,6,3);ctx.fill();}
+ ctx.globalAlpha=1;
+}
 function renderEnd(){
  const t=G.t;drawBG(TH.earth,t*10,t);const px=700,py=250;
  const g=ctx.createRadialGradient(px-40,py-40,10,px,py,150);g.addColorStop(0,'#bfe8ff');g.addColorStop(.5,'#2a6fc4');g.addColorStop(1,'#06142e');ctx.fillStyle=g;ctx.beginPath();ctx.arc(px,py,150,0,6.283);ctx.fill();
@@ -87,7 +113,7 @@ function renderEnd(){
 }
 function render(){
  ctx.setTransform(cv.width/W,0,0,cv.height/H,0,0);ctx.clearRect(0,0,W,H);UI=[];
- switch(G.scene){case'title':renderTitle();break;case'select':renderSelect();break;case'play':renderWorld(true);drawHUD();drawHUD2();break;case'puzzle':renderPuzzle();break;case'dead':renderDead();break;case'launch':renderLaunch();break;case'end':renderEnd();break;}
+ switch(G.scene){case'title':renderTitle();break;case'select':renderSelect();break;case'play':renderWorld(true);drawHUD();drawHUD2();drawMinimap();break;case'puzzle':renderPuzzle();break;case'dead':renderDead();break;case'launch':renderLaunch();break;case'reveal':renderReveal();break;case'end':renderEnd();break;}
  if(G.fade>0){ctx.fillStyle='rgba(0,0,0,'+clamp(G.fade,0,1)+')';ctx.fillRect(0,0,W,H);}
  if(G.muted)txt('MUTED',W-14,H-10,10,C.dim,'right',F_U,700,2);
 }
@@ -103,9 +129,18 @@ function update(dt){
   case'play':updatePlay(dt);break;
   case'puzzle':updatePuzzle(dt);break;
   case'dead':G.deadT+=dt;G.shake=Math.max(0,G.shake-dt*30);updFx(dt);if(G.deadT>.8&&(pressed('enter')||pressed('retry')))retry();break;
-  case'launch':G.lt+=dt;G.shake=Math.max(4,G.shake);for(let i=0;i<3;i++)spawn(G.lvl.padX+Math.random()*30-15,GY-8-G.lt*G.lt*90+10,Math.random()*80-40,120+Math.random()*100,.6,5,'#ff9a3c',0,true);updFx(dt);if(G.lt>4.1){if(G.lvl.final){G.scene='end';G.fade=1;}else nextWorld();}break;
+  case'launch':G.lt+=dt;G.shake=Math.max(4,G.shake);for(let i=0;i<3;i++)spawn(G.lvl.padX+Math.random()*30-15,GY-8-G.lt*G.lt*90+10,Math.random()*80-40,120+Math.random()*100,.6,5,'#ff9a3c',0,true);updFx(dt);if(G.lt>4.1){if(G.lvl.final){G.scene='end';G.fade=1;}else nextWorldReveal();}break;
+  case'reveal':G.revealT+=dt;if((G.revealT>5.2&&(pressed('enter')||pressed('esc')))||G.revealT>6.5){G.revealT=0;G.reveal=null;nextWorld();}break;
   case'end':G.fade=Math.max(0,G.fade-dt);break;
  }
+}
+function nextWorldReveal(){
+ const w=G.world+1;const rv=WORLD_REVEALS[w];
+ if(rv){G.reveal=rv;G.revealT=0;G.scene='reveal';// pre-load level theme for reveal background
+ const wc=({aether:TH.aether,cinder:TH.cinder,cryos:TH.cryos,vortex:TH.vortex,earth:TH.earth});
+ const wds=[null,{th:'aether'},{th:'cinder'},{th:'cryos'},{th:'vortex'},{th:'earth'}];
+ if(wds[w])G.lvl={...G.lvl,theme:wc[wds[w].th]};
+ }else nextWorld();
 }
 let last=0;
 function frame(ts){requestAnimationFrame(frame);const dt=Math.min(.033,(ts-last)/1000||0);last=ts;G.t+=dt;update(dt);render();pq={};}
