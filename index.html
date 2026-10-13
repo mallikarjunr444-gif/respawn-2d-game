@@ -62,6 +62,10 @@ background:radial-gradient(ellipse at center,#0d1433 0%,#070a1a 70%,#030510 100%
 #loader p{font:600 12px var(--ui);color:var(--dim);letter-spacing:4px;text-transform:uppercase}
 .load-bar{width:200px;height:3px;background:rgba(255,255,255,.08);border-radius:3px;overflow:hidden}
 .load-bar span{display:block;height:100%;width:0%;background:linear-gradient(90deg,var(--cyan),var(--ember));border-radius:3px;transition:width .3s ease}
+
+.godot-btn{display:flex;align-items:center;gap:6px;font:600 11px var(--ui);letter-spacing:1px;color:var(--cyan);background:rgba(61,240,255,.08);border:1px solid rgba(61,240,255,.2);padding:4px 10px;border-radius:6px;text-decoration:none;transition:all .15s ease}
+.godot-btn:hover{background:rgba(61,240,255,.18);border-color:var(--cyan);transform:scale(1.03);color:#fff}
+
 </style>
 </head>
 <body>
@@ -567,7 +571,11 @@ function seqClick(mx,my){const z=G.pz;for(let i=0;i<4;i++){const q=SEQ_PL[i],pp=
   else{z.lit=[];z.next=0;z.err=.5;SFX.hurt();}return;}}}
 
 /* ---------- rendering ---------- */
-function btn(label,x,y,w,h,fn,o){o=o||{};const hov=G.mx>=x&&G.mx<=x+w&&G.my>=y&&G.my<=y+h;const act=hov||o.sel;UI.push({x,y,w,h,fn});ctx.save();\nrr(x,y,w,h,8);const bg=ctx.createLinearGradient(x,y,x,y+h);if(act){bg.addColorStop(0,'rgba(61,240,255,.18)');bg.addColorStop(1,'rgba(13,20,51,.85)');}else{bg.addColorStop(0,'rgba(16,24,60,.8)');bg.addColorStop(1,'rgba(7,10,26,.9)');}\nctx.fillStyle=bg;ctx.fill();ctx.strokeStyle=act?C.cyan:'rgba(141,151,196,.35)';ctx.lineWidth=act?2:1;ctx.stroke();\nif(act){ctx.fillStyle='rgba(61,240,255,.12)';ctx.fillRect(x+4,y+1,w-8,2);ctx.shadowColor=C.cyan;ctx.shadowBlur=12;ctx.strokeStyle=C.cyan;ctx.lineWidth=1;rr(x,y,w,h,8);ctx.stroke();ctx.shadowBlur=0;}\nctx.restore();txt(label,x+w/2,y+h/2+6,o.size||16,act?C.cyan:C.bone,'center',F_U,700,2);}
+function btn(label,x,y,w,h,fn,o){o=o||{};const hov=G.mx>=x&&G.mx<=x+w&&G.my>=y&&G.my<=y+h;const act=hov||o.sel;UI.push({x,y,w,h,fn});ctx.save();
+rr(x,y,w,h,8);const bg=ctx.createLinearGradient(x,y,x,y+h);if(act){bg.addColorStop(0,'rgba(61,240,255,.18)');bg.addColorStop(1,'rgba(13,20,51,.85)');}else{bg.addColorStop(0,'rgba(16,24,60,.8)');bg.addColorStop(1,'rgba(7,10,26,.9)');}
+ctx.fillStyle=bg;ctx.fill();ctx.strokeStyle=act?C.cyan:'rgba(141,151,196,.35)';ctx.lineWidth=act?2:1;ctx.stroke();
+if(act){ctx.fillStyle='rgba(61,240,255,.12)';ctx.fillRect(x+4,y+1,w-8,2);ctx.shadowColor=C.cyan;ctx.shadowBlur=12;ctx.strokeStyle=C.cyan;ctx.lineWidth=1;rr(x,y,w,h,8);ctx.stroke();ctx.shadowBlur=0;}
+ctx.restore();txt(label,x+w/2,y+h/2+6,o.size||16,act?C.cyan:C.bone,'center',F_U,700,2);}
 function renderWorld(showPlayer){
  const L=G.lvl,p=G.p,th=L.theme,cam=G.cam,t=G.t;
  const sx=(Math.random()-.5)*G.shake,sy=(Math.random()-.5)*G.shake;
