@@ -361,80 +361,86 @@ function drawFx(camX, camY){
   ctx.restore();
 }
 
-/* ──────── 10 Planetary Worlds Data ──────── */
+const ASSET_IMAGES = {};
+[
+  'assets/planets/fractured_moon.svg',
+  'assets/planets/aether_7.svg',
+  'assets/planets/cinder_moon.svg',
+  'assets/planets/cryos.svg',
+  'assets/planets/vortex_prime.svg',
+  'assets/planets/earth.svg',
+  'assets/backgrounds/world1_fractured_moon.svg',
+  'assets/backgrounds/world2_aether7.svg',
+  'assets/backgrounds/world3_cinder_moon.svg',
+  'assets/backgrounds/world4_cryos.svg',
+  'assets/backgrounds/world5_vortex_prime.svg',
+  'assets/backgrounds/world6_earth.svg',
+  'assets/objects/rocket_ship.svg',
+  'assets/enemies/voidling.svg',
+  'assets/enemies/guardian_vortex.svg',
+  'assets/enemies/guardian_aether_sentinel.svg'
+].forEach(src => {
+  const img = new Image();
+  img.src = src;
+  ASSET_IMAGES[src] = img;
+});
+
+/* ──────── Existing Orvex Planet Data ──────── */
 const PLANETS = [
   {
-    id: 'black_space', name: 'BLACK SPACE', sub: 'Escape the Singularity gravity pull. Learn to fly.',
-    isSpace: true,
-    width: 5800, height: 3200, sky: ['#02020a', '#080518'], accent: C.cyan, starCol: '#aaccff',
-    hasHole: true, holePos: {x: 450, y: 1600}, holePullR: 2100, holeForce: 380, holeKillR: 150,
-    gravity: 90, wind: {x: 0, y: 0}, drag: 0.015,
-    minFuel: 15, cells: 32, orbs: 8, debris: 22,
-    playerStart: {x: 1250, y: 1600}, gatePos: {x: 5200, y: 1600}
+    id: 'fractured_moon', name: 'FRACTURED MOON', sub: 'Alien gravity ruins. Collect ancient artifacts before the void closes.',
+    width: 5200, height: 1900, groundY: 1550, sky: ['#07051a', '#24104d'], accent: '#ba68f8', starCol: '#d7c4ff',
+    planetArt: 'assets/planets/fractured_moon.svg', bgArt: 'assets/backgrounds/world1_fractured_moon.svg',
+    hasHole: true, holePos: {x: 260, y: 1180}, holePullR: 1300, holeForce: 210, holeKillR: 115,
+    gravity: 820, friction: 0.82, airDrag: 0.985, wind: {x: 0, y: 0},
+    minFuel: 15, cells: 7, orbs: 5, debris: 14, gravityZones: 5, enemies: 4,
+    resourceName: 'Ancient Artifacts', bonusName: 'Energy Shards',
+    playerStart: {x: 260, y: 1380}, gatePos: {x: 4920, y: 1420}
   },
   {
-    id: 'neptune', name: 'NEPTUNE', sub: 'Deep-blue azure atmosphere. Cross wind currents and icy debris.',
-    isSpace: false,
-    width: 6200, height: 3600, sky: ['#02081c', '#081e4a'], accent: '#4da6ff', starCol: '#66b3ff',
-    hasHole: false, gravity: 160, wind: {x: -140, y: 25}, drag: 0.025,
-    minFuel: 15, cells: 32, orbs: 8, debris: 24, windZones: 4,
-    playerStart: {x: 550, y: 1800}, gatePos: {x: 5600, y: 1800}
+    id: 'aether_7', name: 'AETHER 7', sub: 'Floating islands, updraft shafts, and drifting sky platforms.',
+    width: 5600, height: 2100, groundY: 1760, sky: ['#041429', '#17606a'], accent: '#62ffd1', starCol: '#c4fff4',
+    planetArt: 'assets/planets/aether_7.svg', bgArt: 'assets/backgrounds/world2_aether7.svg',
+    gravity: 720, friction: 0.86, airDrag: 0.99, wind: {x: 30, y: 0},
+    minFuel: 18, cells: 8, orbs: 6, debris: 8, updrafts: 6, movingPlatforms: 6, enemies: 3,
+    resourceName: 'Atmospheric Crystals', bonusName: 'Navigation Modules',
+    playerStart: {x: 260, y: 1580}, gatePos: {x: 5300, y: 860}
   },
   {
-    id: 'mars', name: 'MARS', sub: 'Rust-red terrain. Navigate rocky canyons and swirling dust storms.',
-    width: 5800, height: 3400, sky: ['#1c0702', '#451608'], accent: '#ff6633', starCol: '#ffbb99',
-    hasHole: false, gravity: 300, wind: {x: 100, y: 0}, drag: 0.025,
-    minFuel: 25, cells: 26, orbs: 8, debris: 20, dustStorms: 4,
-    playerStart: {x: 350, y: 2200}, gatePos: {x: 5300, y: 1000}
+    id: 'cinder_moon', name: 'CINDER MOON', sub: 'Lava trenches, fire jets, thermal cores, and falling hot rock.',
+    width: 5400, height: 1900, groundY: 1540, sky: ['#1b0602', '#5c1707'], accent: '#ff7a2e', starCol: '#ffd1a4',
+    planetArt: 'assets/planets/cinder_moon.svg', bgArt: 'assets/backgrounds/world3_cinder_moon.svg',
+    gravity: 900, friction: 0.83, airDrag: 0.982, wind: {x: 0, y: 0},
+    minFuel: 24, cells: 8, orbs: 5, debris: 18, lavaPits: 7, heatZones: 7, fireJets: 8, fallingRocks: true,
+    resourceName: 'Thermal Cores', bonusName: 'Rare Minerals',
+    playerStart: {x: 260, y: 1380}, gatePos: {x: 5120, y: 1380}
   },
   {
-    id: 'saturn', name: 'SATURN', sub: 'Golden gas giant. Thread the needle through orbiting ring bands.',
-    width: 6600, height: 3800, sky: ['#140d02', '#382607'], accent: '#ffcc44', starCol: '#ffe8a3',
-    hasHole: false, gravity: 240, wind: {x: 0, y: -60}, drag: 0.02,
-    minFuel: 20, cells: 32, orbs: 10, ringBands: 5, debris: 32,
-    playerStart: {x: 350, y: 1900}, gatePos: {x: 6100, y: 1300}
+    id: 'cryos', name: 'CRYOS', sub: 'Slippery ice caves, cracking platforms, and cold blue gusts.',
+    width: 5500, height: 1950, groundY: 1580, sky: ['#03122c', '#0b4d75'], accent: '#6be7ff', starCol: '#d7fbff',
+    planetArt: 'assets/planets/cryos.svg', bgArt: 'assets/backgrounds/world4_cryos.svg',
+    gravity: 760, friction: 0.35, airDrag: 0.992, wind: {x: -70, y: 0},
+    minFuel: 18, cells: 9, orbs: 5, debris: 12, iceGusts: 6, crackingPlatforms: 8,
+    resourceName: 'Frozen Samples', bonusName: 'Energy Cells',
+    playerStart: {x: 260, y: 1410}, gatePos: {x: 5200, y: 1350}
   },
   {
-    id: 'jupiter', name: 'JUPITER', sub: 'The Great Red Spot. Crushing gravity and violent wind gusts.',
-    width: 6800, height: 4200, sky: ['#1a0c02', '#422006'], accent: '#ff8833', starCol: '#ffd1a4',
-    hasHole: false, gravity: 420, wind: {x: -220, y: -80}, drag: 0.045,
-    minFuel: 30, cells: 30, orbs: 8, windZones: 6, debris: 20,
-    playerStart: {x: 350, y: 2200}, gatePos: {x: 6300, y: 1200}
+    id: 'vortex_prime', name: 'VORTEX PRIME', sub: 'Poison clouds, pressure winds, and vortex guardians.',
+    width: 5700, height: 2000, groundY: 1600, sky: ['#07100e', '#224219'], accent: '#b5ff40', starCol: '#eaffc7',
+    planetArt: 'assets/planets/vortex_prime.svg', bgArt: 'assets/backgrounds/world5_vortex_prime.svg',
+    gravity: 820, friction: 0.78, airDrag: 0.975, wind: {x: -140, y: 0},
+    minFuel: 25, cells: 9, orbs: 5, debris: 10, acidZones: 8, windZones: 5, oxygenDrain: 2.2, safeZones: 5, enemies: 5,
+    resourceName: 'Scientific Samples', bonusName: 'Rare Minerals',
+    playerStart: {x: 260, y: 1420}, gatePos: {x: 5400, y: 1420}
   },
   {
-    id: 'earth', name: 'EARTH', sub: 'Orbital checkpoint! Salvage fuel and prepare for the outer rim.',
-    width: 4800, height: 3000, sky: ['#030c22', '#0c2e66'], accent: '#5ce6ff', starCol: '#d9f7ff',
-    hasHole: false, gravity: 260, wind: {x: 40, y: 0}, drag: 0.025,
-    minFuel: 15, cells: 42, orbs: 14, debris: 16,
-    playerStart: {x: 350, y: 1500}, gatePos: {x: 4400, y: 900}
-  },
-  {
-    id: 'uranus', name: 'URANUS', sub: 'Pale cyan atmosphere. Sideways vertical air currents and ice.',
-    width: 6200, height: 3800, sky: ['#031418', '#0c3a44'], accent: '#66f5ff', starCol: '#b8fbff',
-    hasHole: false, gravity: 220, wind: {x: 0, y: 180}, drag: 0.03,
-    minFuel: 25, cells: 28, orbs: 8, windZones: 5, debris: 24,
-    playerStart: {x: 350, y: 1900}, gatePos: {x: 5700, y: 1100}
-  },
-  {
-    id: 'mercury', name: 'MERCURY', sub: 'Scorching solar radiation. Avoid heat zones that boil fuel.',
-    width: 5400, height: 3400, sky: ['#120601', '#331203'], accent: '#ff7722', starCol: '#ffd5b8',
-    hasHole: false, gravity: 320, wind: {x: 0, y: 0}, drag: 0.01,
-    minFuel: 30, cells: 28, orbs: 7, heatZones: 6, debris: 22,
-    playerStart: {x: 350, y: 1700}, gatePos: {x: 4900, y: 1000}
-  },
-  {
-    id: 'venus', name: 'VENUS', sub: 'Corrosive acid clouds and dense air. Navigate the safe route.',
-    width: 6200, height: 3800, sky: ['#1c1002', '#442805'], accent: '#ffaa22', starCol: '#ffe8a3',
-    hasHole: false, gravity: 290, wind: {x: -180, y: -60}, drag: 0.05,
-    minFuel: 30, cells: 30, orbs: 8, acidZones: 6, debris: 18,
-    playerStart: {x: 350, y: 1900}, gatePos: {x: 5700, y: 1000}
-  },
-  {
-    id: 'pluto', name: 'PLUTO', sub: 'The frozen edge endgame! Low gravity, icy caverns, final warp gate.',
-    width: 6800, height: 4000, sky: ['#020308', '#090f26'], accent: '#a6c8ff', starCol: '#e0ecff',
-    hasHole: false, gravity: 120, wind: {x: 30, y: -20}, drag: 0.01,
-    minFuel: 35, cells: 26, orbs: 12, debris: 30,
-    playerStart: {x: 350, y: 2000}, gatePos: {x: 6300, y: 1100}
+    id: 'earth', name: 'EARTH', sub: 'Recovery base. Salvage satellites and finish the route home.',
+    width: 5000, height: 1800, groundY: 1480, sky: ['#031633', '#0b4c94'], accent: '#4fd3ff', starCol: '#e8fbff',
+    planetArt: 'assets/planets/earth.svg', bgArt: 'assets/backgrounds/world6_earth.svg',
+    gravity: 860, friction: 0.88, airDrag: 0.985, wind: {x: 25, y: 0},
+    minFuel: 15, cells: 6, orbs: 8, debris: 12, satelliteFields: 5, healZones: 4,
+    resourceName: 'Navigation Modules', bonusName: 'Fuel Reserves',
+    playerStart: {x: 260, y: 1300}, gatePos: {x: 4700, y: 1300}
   }
 ];
 
@@ -511,6 +517,8 @@ let GATE = null;
 let CELLS = [];
 let ORBS = [];
 let DEBRIS = [];
+let PLATFORMS = [];
+let ENEMIES = [];
 let HAZARDS = []; // Wind zones, heat zones, dust storms
 let METEORS = [];
 let UI_BUTTONS = [];
@@ -528,9 +536,9 @@ function initFlightLevel(worldIdx){
   G.orbsGot = 0;
   G.shieldT = 0;
   G.shieldCd = 0;
-  G.hasSword = worldIdx >= 2;
-  G.hasBlaster = worldIdx >= 4;
-  G.hasShield = worldIdx >= 6;
+  G.hasSword = worldIdx >= 0;
+  G.hasBlaster = worldIdx >= 1;
+  G.hasShield = worldIdx >= 2;
 
   P.length = 0;
   METEORS = [];
@@ -547,7 +555,10 @@ function initFlightLevel(worldIdx){
     boostCd: 0,
     boostT: 0,
     inv: 1.0,
-    radius: 20
+    radius: 20,
+    onGround: false,
+    coyote: 0,
+    suit: 100
   };
 
   GATE = {
@@ -562,22 +573,33 @@ function initFlightLevel(worldIdx){
   // Generate Collectibles
   CELLS = [];
   ORBS = [];
-
-  // Guaranteed safety fuel cells right ahead of the gate
-  CELLS.push({ x: cfg.gatePos.x - 300, y: cfg.gatePos.y, got: false, rot: 0 });
-  CELLS.push({ x: cfg.gatePos.x - 160, y: cfg.gatePos.y, got: false, rot: 0 });
-  CELLS.push({ x: cfg.gatePos.x - 60, y: cfg.gatePos.y, got: false, rot: 0 });
-
-  // Risky bonus fuel cells near the Singularity for daring pilots
-  if(cfg.hasHole){
-    CELLS.push({ x: 750, y: 1550, got: false, rot: 0 });
-    CELLS.push({ x: 920, y: 1700, got: false, rot: 0 });
-    CELLS.push({ x: 1080, y: 1500, got: false, rot: 0 });
-  }
+  PLATFORMS = [];
+  ENEMIES = [];
 
   const r = rng(200 + worldIdx * 37);
   const dirX = cfg.gatePos.x - cfg.playerStart.x;
   const dirY = cfg.gatePos.y - cfg.playerStart.y;
+
+  PLATFORMS.push({x: 0, y: cfg.groundY, w: cfg.width, h: cfg.height - cfg.groundY, kind: 'ground'});
+  const platformCount = cfg.movingPlatforms ? 18 : 15;
+  for(let q=0; q<platformCount; q++){
+    const t = (q + 1) / (platformCount + 1);
+    const baseY = lerp(cfg.groundY - 100, cfg.gatePos.y - 80, t);
+    const py = clamp(baseY + (r() - 0.5) * 420, 520, cfg.groundY - 80);
+    const moving = cfg.movingPlatforms && q % 3 === 1;
+    const cracking = cfg.crackingPlatforms && q % 2 === 0;
+    PLATFORMS.push({
+      x: lerp(520, cfg.width - 720, t) + (r() - 0.5) * 160,
+      y: py,
+      w: 170 + r() * 120,
+      h: 22,
+      kind: cracking ? 'crack' : (moving ? 'move' : 'stone'),
+      ox: 0,
+      phase: r() * 6.28,
+      amp: moving ? 110 + r() * 90 : 0,
+      broke: false
+    });
+  }
 
   for(let i=0; i<cfg.cells; i++){
     const t = (i + 1) / (cfg.cells + 1);
@@ -585,9 +607,10 @@ function initFlightLevel(worldIdx){
     const by = cfg.playerStart.y + dirY * t;
     const ox = (r() - 0.5) * 600;
     const oy = (r() - 0.5) * 800;
+    const platform = PLATFORMS[1 + (i % (PLATFORMS.length - 1))];
     CELLS.push({
       x: clamp(bx + ox, 200, cfg.width - 200),
-      y: clamp(by + oy, 200, cfg.height - 200),
+      y: platform ? platform.y - 46 : clamp(by + oy, 200, cfg.height - 200),
       got: false,
       rot: r() * 6.28
     });
@@ -598,9 +621,10 @@ function initFlightLevel(worldIdx){
     const bx = cfg.playerStart.x + dirX * t;
     const by = cfg.playerStart.y + dirY * t;
     const alt = (j % 2 === 0 ? 1 : -1) * (600 + r() * 400);
+    const platform = PLATFORMS[1 + ((j * 3) % (PLATFORMS.length - 1))];
     ORBS.push({
-      x: clamp(bx, 200, cfg.width - 200),
-      y: clamp(by + alt, 200, cfg.height - 200),
+      x: platform ? platform.x + platform.w * 0.5 : clamp(bx, 200, cfg.width - 200),
+      y: platform ? platform.y - 88 : clamp(by + alt, 200, cfg.height - 200),
       got: false,
       rot: 0
     });
@@ -620,6 +644,28 @@ function initFlightLevel(worldIdx){
       });
     }
   }
+  if(cfg.updrafts){
+    for(let u=0; u<cfg.updrafts; u++){
+      HAZARDS.push({
+        type: u % 3 === 2 ? 'downdraft' : 'updraft',
+        x: lerp(700, cfg.width - 700, u / cfg.updrafts),
+        y: 950 + r() * 500,
+        w: 280,
+        h: 900,
+        fy: u % 3 === 2 ? 520 : -620
+      });
+    }
+  }
+  if(cfg.gravityZones){
+    for(let g=0; g<cfg.gravityZones; g++){
+      HAZARDS.push({
+        type: g % 2 ? 'lowgrav' : 'heavygrav',
+        x: lerp(650, cfg.width - 650, g / cfg.gravityZones),
+        y: 600 + r() * 580,
+        r: 210
+      });
+    }
+  }
   if(cfg.heatZones || cfg.acidZones){
     const hzCount = cfg.heatZones || cfg.acidZones;
     for(let h=0; h<hzCount; h++){
@@ -629,6 +675,49 @@ function initFlightLevel(worldIdx){
         y: 500 + r() * (cfg.height - 1000),
         r: 220,
         drain: 3.5
+      });
+    }
+  }
+  if(cfg.lavaPits){
+    for(let l=0; l<cfg.lavaPits; l++){
+      HAZARDS.push({
+        type: 'lava',
+        x: lerp(700, cfg.width - 600, l / cfg.lavaPits),
+        y: cfg.groundY + 18,
+        w: 260 + r() * 160,
+        h: 70
+      });
+    }
+  }
+  if(cfg.fireJets){
+    for(let f=0; f<cfg.fireJets; f++){
+      HAZARDS.push({
+        type: 'firejet',
+        x: lerp(800, cfg.width - 800, f / cfg.fireJets),
+        y: cfg.groundY,
+        phase: r() * 6.28
+      });
+    }
+  }
+  if(cfg.iceGusts){
+    for(let i=0; i<cfg.iceGusts; i++){
+      HAZARDS.push({
+        type: 'icegust',
+        x: lerp(700, cfg.width - 700, i / cfg.iceGusts),
+        y: 520 + r() * 820,
+        w: 420,
+        h: 260,
+        fx: -220
+      });
+    }
+  }
+  if(cfg.safeZones){
+    for(let s=0; s<cfg.safeZones; s++){
+      HAZARDS.push({
+        type: 'safe',
+        x: lerp(620, cfg.width - 760, s / cfg.safeZones),
+        y: cfg.groundY - 24,
+        r: 140
       });
     }
   }
@@ -654,6 +743,18 @@ function initFlightLevel(worldIdx){
       radius: 20 + r() * 16,
       rot: r() * 6.28,
       rotSpd: (r() - 0.5) * 1.5,
+      hp: 2
+    });
+  }
+
+  for(let e=0; e<(cfg.enemies || 0); e++){
+    const platform = PLATFORMS[1 + ((e * 4) % Math.max(1, PLATFORMS.length - 1))];
+    ENEMIES.push({
+      type: cfg.id === 'aether_7' ? 'sentinel' : (cfg.id === 'vortex_prime' ? 'vortex' : 'voidling'),
+      x: platform ? platform.x + platform.w * 0.5 : 900 + e * 650,
+      y: platform ? platform.y - 32 : cfg.groundY - 40,
+      baseX: platform ? platform.x + platform.w * 0.5 : 900 + e * 650,
+      phase: r() * 6.28,
       hp: 2
     });
   }
@@ -703,8 +804,23 @@ function drawBackground(cfg, camX, camY, t){
   ctx.fill();
   ctx.restore();
 
-  // For Neptune, render prominent azure ice giant planet with glowing atmosphere and icy rings
-  if(cfg.id === 'neptune'){
+  const bg = ASSET_IMAGES[cfg.bgArt];
+  if(bg && bg.complete && bg.naturalWidth){
+    ctx.save();
+    ctx.globalAlpha = 0.34;
+    ctx.drawImage(bg, -camX * 0.08, -camY * 0.04, W * 1.25, H * 1.25);
+    ctx.restore();
+  }
+
+  const art = ASSET_IMAGES[cfg.planetArt];
+  if(art && art.complete && art.naturalWidth){
+    ctx.save();
+    ctx.globalAlpha = 0.82;
+    ctx.drawImage(art, W * 0.68 - camX * 0.025, H * 0.12 - camY * 0.02, 210, 210);
+    ctx.restore();
+  }
+
+  if(cfg.id === 'cryos'){
     const nx = W * 0.76 - camX * 0.03, ny = H * 0.32 - camY * 0.03;
     ctx.save();
     // Ambient azure nebula cloud
@@ -746,6 +862,57 @@ function drawBackground(cfg, camX, camY, t){
 
     ctx.restore();
   }
+}
+
+function terrainColor(cfg){
+  return cfg.id === 'cinder_moon' ? '#5a1e10' :
+    cfg.id === 'cryos' ? '#1f6f9b' :
+    cfg.id === 'aether_7' ? '#19565c' :
+    cfg.id === 'vortex_prime' ? '#304a1e' :
+    cfg.id === 'earth' ? '#1f5931' : '#2b1850';
+}
+
+function drawTerrainAndPlatforms(cfg, camX, camY, t){
+  ctx.save();
+  const groundY = cfg.groundY - camY;
+  const grad = ctx.createLinearGradient(0, groundY - 80, 0, H);
+  grad.addColorStop(0, terrainColor(cfg));
+  grad.addColorStop(1, '#090914');
+  ctx.fillStyle = grad;
+  ctx.beginPath();
+  ctx.moveTo(-40, H + 40);
+  for(let x=-80; x<=W+120; x+=80){
+    const wx = x + camX;
+    const y = groundY + Math.sin(wx * 0.006) * 22 + Math.sin(wx * 0.017) * 9;
+    ctx.lineTo(x, y);
+  }
+  ctx.lineTo(W+60, H+40);
+  ctx.closePath();
+  ctx.fill();
+
+  for(const p of PLATFORMS){
+    if(p.kind === 'ground' || p.broke) continue;
+    const px = p.x + (p.ox || 0) - camX;
+    const py = p.y - camY;
+    if(px < -p.w || px > W + p.w || py < -80 || py > H + 80) continue;
+    ctx.fillStyle = p.kind === 'crack' ? '#bdefff' : (p.kind === 'move' ? cfg.accent : terrainColor(cfg));
+    ctx.globalAlpha = p.kind === 'crack' ? 0.82 : 0.9;
+    rr(px, py, p.w, p.h, 6);
+    ctx.fill();
+    ctx.globalAlpha = 1;
+    ctx.strokeStyle = cfg.accent;
+    ctx.lineWidth = 2;
+    ctx.stroke();
+    if(p.kind === 'crack'){
+      ctx.strokeStyle = 'rgba(4,6,20,0.45)';
+      ctx.beginPath();
+      ctx.moveTo(px + p.w * 0.25, py + 3);
+      ctx.lineTo(px + p.w * 0.42, py + p.h - 3);
+      ctx.lineTo(px + p.w * 0.58, py + 5);
+      ctx.stroke();
+    }
+  }
+  ctx.restore();
 }
 
 /* ──────── Draw Space Rocket Ship (Space Mode: ONLY ROCKET) ──────── */
@@ -928,6 +1095,35 @@ function drawPlayer(p, camX, camY, t){
 function drawGate(gate, camX, camY, t){
   const gx = gate.x - camX, gy = gate.y - camY;
   if(gx < -150 || gx > W+150 || gy < -150 || gy > H+150) return;
+
+  if(LVL && !LVL.isSpace){
+    const rocket = ASSET_IMAGES['assets/objects/rocket_ship.svg'];
+    ctx.save();
+    ctx.translate(gx, gy - 42);
+    ctx.rotate(-0.12);
+    if(rocket && rocket.complete && rocket.naturalWidth){
+      ctx.drawImage(rocket, -42, -74, 84, 126);
+    } else {
+      ctx.fillStyle = '#eaf0fc';
+      ctx.beginPath();
+      ctx.moveTo(0, -72); ctx.lineTo(28, 18); ctx.lineTo(-28, 18); ctx.closePath();
+      ctx.fill();
+      ctx.fillStyle = C.ember;
+      ctx.fillRect(-30, 10, 60, 22);
+    }
+    ctx.restore();
+    ctx.save();
+    ctx.globalCompositeOperation = 'lighter';
+    const gl = ctx.createRadialGradient(gx, gy, 10, gx, gy, 95);
+    gl.addColorStop(0, 'rgba(61,240,255,0.32)');
+    gl.addColorStop(1, 'rgba(0,0,0,0)');
+    ctx.fillStyle = gl;
+    ctx.beginPath();
+    ctx.arc(gx, gy, 95, 0, 6.283);
+    ctx.fill();
+    ctx.restore();
+    return;
+  }
 
   ctx.save();
   ctx.translate(gx, gy);
@@ -1142,6 +1338,77 @@ function drawHazards(haz, camX, camY, t){
       ctx.stroke();
       txt('WIND CURRENT ➔', hx, hy - h.h/2 + 24, 12, C.cyan, 'center', F_U, 700);
       ctx.restore();
+    } else if(h.type === 'updraft' || h.type === 'downdraft' || h.type === 'icegust'){
+      if(hx < -h.w || hx > W+h.w || hy < -h.h || hy > H+h.h) continue;
+      ctx.save();
+      ctx.globalCompositeOperation = 'lighter';
+      const col = h.type === 'downdraft' ? 'rgba(120,120,255,0.10)' : (h.type === 'icegust' ? 'rgba(120,230,255,0.12)' : 'rgba(120,255,210,0.12)');
+      ctx.fillStyle = col;
+      rr(hx - h.w/2, hy - h.h/2, h.w, h.h, 12);
+      ctx.fill();
+      for(let i=0; i<7; i++){
+        const yy = hy - h.h/2 + ((t*90 + i*110) % h.h);
+        ctx.strokeStyle = h.type === 'downdraft' ? '#8f8cff' : C.cyan;
+        ctx.beginPath();
+        ctx.moveTo(hx - h.w/2 + 30 + i*34, yy);
+        ctx.lineTo(hx - h.w/2 + 30 + i*34, yy + (h.type === 'downdraft' ? 55 : -55));
+        ctx.stroke();
+      }
+      ctx.restore();
+    } else if(h.type === 'lowgrav' || h.type === 'heavygrav'){
+      ctx.save();
+      ctx.globalCompositeOperation = 'lighter';
+      const col = h.type === 'lowgrav' ? 'rgba(186,104,248,0.26)' : 'rgba(255,122,46,0.22)';
+      const gl = ctx.createRadialGradient(hx, hy, 20, hx, hy, h.r);
+      gl.addColorStop(0, col);
+      gl.addColorStop(1, 'rgba(0,0,0,0)');
+      ctx.fillStyle = gl;
+      ctx.beginPath();
+      ctx.arc(hx, hy, h.r, 0, 6.283);
+      ctx.fill();
+      txt(h.type === 'lowgrav' ? 'LOW-G FIELD' : 'HEAVY-G FIELD', hx, hy - h.r + 20, 12, cfgColor(), 'center', F_U, 700);
+      ctx.restore();
+    } else if(h.type === 'lava'){
+      ctx.save();
+      ctx.globalCompositeOperation = 'lighter';
+      ctx.fillStyle = 'rgba(255,80,20,0.82)';
+      rr(hx - h.w/2, hy - h.h/2, h.w, h.h, 10);
+      ctx.fill();
+      ctx.fillStyle = 'rgba(255,210,60,0.45)';
+      for(let i=0;i<8;i++){
+        ctx.beginPath();
+        ctx.arc(hx - h.w/2 + i*h.w/7, hy - 12 + Math.sin(t*5+i)*8, 9, 0, 6.283);
+        ctx.fill();
+      }
+      ctx.restore();
+    } else if(h.type === 'firejet'){
+      const active = Math.sin(t * 2.8 + h.phase) > -0.2;
+      if(!active) continue;
+      ctx.save();
+      ctx.globalCompositeOperation = 'lighter';
+      const height = 150 + Math.sin(t*12+h.phase)*24;
+      const fg = ctx.createLinearGradient(hx, hy, hx, hy - height);
+      fg.addColorStop(0, 'rgba(255,230,80,0.85)');
+      fg.addColorStop(0.45, 'rgba(255,90,20,0.7)');
+      fg.addColorStop(1, 'rgba(255,20,60,0)');
+      ctx.fillStyle = fg;
+      ctx.beginPath();
+      ctx.moveTo(hx - 24, hy);
+      ctx.quadraticCurveTo(hx, hy - height - 20, hx + 24, hy);
+      ctx.closePath();
+      ctx.fill();
+      ctx.restore();
+    } else if(h.type === 'safe'){
+      ctx.save();
+      ctx.globalCompositeOperation = 'lighter';
+      const gl = ctx.createRadialGradient(hx, hy, 10, hx, hy, h.r);
+      gl.addColorStop(0, 'rgba(61,255,136,0.22)');
+      gl.addColorStop(1, 'rgba(0,0,0,0)');
+      ctx.fillStyle = gl;
+      ctx.beginPath();
+      ctx.arc(hx, hy, h.r, 0, 6.283);
+      ctx.fill();
+      ctx.restore();
     } else if(h.type === 'heat' || h.type === 'acid'){
       ctx.save();
       ctx.globalCompositeOperation = 'lighter';
@@ -1168,6 +1435,28 @@ function drawHazards(haz, camX, camY, t){
       txt('🌪️ DUST STORM', hx, hy - h.r + 20, 12, '#ffaa66', 'center', F_U, 700);
       ctx.restore();
     }
+  }
+}
+
+function cfgColor(){ return (LVL && LVL.accent) || C.cyan; }
+
+function drawEnemies(camX, camY, t){
+  for(const e of ENEMIES){
+    const ex = e.x - camX, ey = e.y - camY;
+    if(ex < -80 || ex > W+80 || ey < -80 || ey > H+80) continue;
+    const src = e.type === 'sentinel' ? 'assets/enemies/guardian_aether_sentinel.svg' : (e.type === 'vortex' ? 'assets/enemies/guardian_vortex.svg' : 'assets/enemies/voidling.svg');
+    const img = ASSET_IMAGES[src];
+    ctx.save();
+    ctx.translate(ex, ey + Math.sin(t*2 + e.phase) * 8);
+    if(img && img.complete && img.naturalWidth){
+      ctx.drawImage(img, -30, -30, 60, 60);
+    } else {
+      ctx.fillStyle = e.type === 'vortex' ? '#b5ff40' : '#7a4cff';
+      ctx.beginPath();
+      ctx.arc(0, 0, 24, 0, 6.283);
+      ctx.fill();
+    }
+    ctx.restore();
   }
 }
 
@@ -1600,9 +1889,34 @@ function updatePlay(dt){
   if(held.left) steerDir -= 1;
   if(held.right) steerDir += 1;
 
-  if(steerDir !== 0){
+  const isSurface = !cfg.isSpace;
+
+  if(!isSurface && steerDir !== 0){
     p.angle += steerDir * 3.8 * dt;
     p.face = Math.cos(p.angle) >= 0 ? 1 : -1;
+  }
+
+  if(isSurface){
+    p.angle = lerp(p.angle, 0, dt * 10);
+    p.coyote = p.onGround ? 0.12 : Math.max(0, p.coyote - dt);
+    const accel = p.onGround ? 1850 : 960;
+    if(steerDir !== 0){
+      p.vx += steerDir * accel * dt;
+      p.face = steerDir;
+    } else if(p.onGround){
+      p.vx *= Math.pow(cfg.friction || 0.82, dt * 18);
+    }
+    if((pressed('thrust') || pressed('up')) && (p.onGround || p.coyote > 0)){
+      p.vy = -520;
+      p.onGround = false;
+      p.coyote = 0;
+      SFX.boost();
+    }
+    if(held.thrust && !p.onGround && hasFuel){
+      p.vy -= 390 * dt;
+      G.fuel = Math.max(0, G.fuel - 1.35 * getBurnMult() * dt);
+      for(let i=0; i<2; i++) spawn(p.x - p.face*14, p.y + 18, -p.face*50 + (Math.random()-0.5)*40, 150 + Math.random()*60, 0.25, 3.5, C.cyan, 0, true);
+    }
   }
 
   // Forward thrust with Up / W or Space
@@ -1610,10 +1924,10 @@ function updatePlay(dt){
   const isBraking = held.down;
   const hasFuel = G.fuel > 0;
 
-  p.thrusting = wantThrust;
-  setThrusterRumble(wantThrust && hasFuel);
+  p.thrusting = wantThrust && !isSurface;
+  setThrusterRumble(wantThrust && hasFuel && !isSurface);
 
-  if(wantThrust){
+  if(wantThrust && !isSurface){
     const thrustPower = 760 * getThrustMult();
     const cosA = Math.cos(p.angle), sinA = Math.sin(p.angle);
 
@@ -1643,7 +1957,7 @@ function updatePlay(dt){
   }
 
   // Airbrake / Reverse (Down / S)
-  if(isBraking){
+  if(isBraking && !isSurface){
     p.vx *= (1.0 - 2.8 * dt);
     p.vy *= (1.0 - 2.8 * dt);
     const cosA = Math.cos(p.angle), sinA = Math.sin(p.angle);
@@ -1662,7 +1976,7 @@ function updatePlay(dt){
   }
   if(p.boostT > 0){
     p.boostT -= dt;
-    const cosA = Math.cos(p.angle), sinA = Math.sin(p.angle);
+    const cosA = isSurface ? p.face : Math.cos(p.angle), sinA = isSurface ? 0 : Math.sin(p.angle);
     p.vx += cosA * 1350 * dt;
     p.vy += sinA * 1350 * dt;
     // Strong rocket exhaust burst when boosting away
@@ -1683,7 +1997,7 @@ function updatePlay(dt){
 
   // Environmental forces
   // Gravity
-  p.vy += cfg.gravity * 0.45 * dt;
+  p.vy += cfg.gravity * (isSurface ? 1.0 : 0.45) * dt;
 
   // Planetary wind
   if(cfg.wind){
@@ -1692,12 +2006,12 @@ function updatePlay(dt){
   }
 
   // Atmospheric drag
-  p.vx *= (1 - cfg.drag);
-  p.vy *= (1 - cfg.drag);
+  p.vx *= isSurface ? (cfg.airDrag || 0.985) : (1 - (cfg.drag || 0.02));
+  p.vy *= isSurface ? (cfg.airDrag || 0.985) : (1 - (cfg.drag || 0.02));
 
   // Speed cap
   const spd = Math.hypot(p.vx, p.vy);
-  const maxSpd = 660;
+  const maxSpd = isSurface ? 520 : 660;
   if(spd > maxSpd){
     p.vx = (p.vx / spd) * maxSpd;
     p.vy = (p.vy / spd) * maxSpd;
