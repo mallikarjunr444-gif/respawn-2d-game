@@ -2,47 +2,71 @@
 
 [ext_resource type="Script" path="res://scenes/ui/hud.gd" id="1_script"]
 
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_bg"]
+bg_color = Color(0.1, 0.12, 0.16, 0.8)
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_fill"]
+bg_color = Color(0.2, 0.9, 0.6, 1)
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
+
 [node name="HUD" type="CanvasLayer"]
 script = ExtResource("1_script")
 
 [node name="Margin" type="MarginContainer" parent="."]
 anchors_preset = 10
 anchor_right = 1.0
-offset_bottom = 70.0
+offset_bottom = 80.0
 grow_horizontal = 2
-theme_override_constants/margin_left = 24
-theme_override_constants/margin_top = 16
-theme_override_constants/margin_right = 24
+theme_override_constants/margin_left = 20
+theme_override_constants/margin_top = 14
+theme_override_constants/margin_right = 20
 
 [node name="TopBar" type="HBoxContainer" parent="Margin"]
 layout_mode = 2
+theme_override_constants/separation = 16
+
+[node name="FuelBox" type="VBoxContainer" parent="Margin/TopBar"]
+custom_minimum_size = Vector2(180, 0)
+layout_mode = 2
+
+[node name="FuelLabel" type="Label" parent="Margin/TopBar/FuelBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.3, 1, 0.8, 1)
+theme_override_font_sizes/font_size = 14
+text = "FUEL: 100%"
+
+[node name="FuelBar" type="ProgressBar" parent="Margin/TopBar/FuelBox"]
+custom_minimum_size = Vector2(0, 14)
+layout_mode = 2
+theme_override_styles/background = SubResource("StyleBoxFlat_bg")
+theme_override_styles/fill = SubResource("StyleBoxFlat_fill")
+value = 100.0
+show_percentage = false
 
 [node name="HealthContainer" type="HBoxContainer" parent="Margin/TopBar"]
 layout_mode = 2
-theme_override_constants/separation = 8
+theme_override_constants/separation = 6
+alignment = 1
 
 [node name="Pip1" type="ColorRect" parent="Margin/TopBar/HealthContainer"]
-custom_minimum_size = Vector2(28, 16)
+custom_minimum_size = Vector2(24, 16)
 layout_mode = 2
 color = Color(0.24, 0.94, 1, 1)
 
 [node name="Pip2" type="ColorRect" parent="Margin/TopBar/HealthContainer"]
-custom_minimum_size = Vector2(28, 16)
+custom_minimum_size = Vector2(24, 16)
 layout_mode = 2
 color = Color(0.24, 0.94, 1, 1)
 
 [node name="Pip3" type="ColorRect" parent="Margin/TopBar/HealthContainer"]
-custom_minimum_size = Vector2(28, 16)
-layout_mode = 2
-color = Color(0.24, 0.94, 1, 1)
-
-[node name="Pip4" type="ColorRect" parent="Margin/TopBar/HealthContainer"]
-custom_minimum_size = Vector2(28, 16)
-layout_mode = 2
-color = Color(0.24, 0.94, 1, 1)
-
-[node name="Pip5" type="ColorRect" parent="Margin/TopBar/HealthContainer"]
-custom_minimum_size = Vector2(28, 16)
+custom_minimum_size = Vector2(24, 16)
 layout_mode = 2
 color = Color(0.24, 0.94, 1, 1)
 
@@ -53,59 +77,81 @@ size_flags_horizontal = 3
 [node name="SectorLabel" type="Label" parent="Margin/TopBar/CenterInfo"]
 layout_mode = 2
 theme_override_colors/font_color = Color(1, 1, 1, 1)
-theme_override_font_sizes/font_size = 18
-text = "WORLD 1 — THE FRACTURED MOON"
+theme_override_font_sizes/font_size = 16
+text = "LEVEL 1 — BLACK SPACE"
+horizontal_alignment = 1
+
+[node name="GateIndicator" type="Label" parent="Margin/TopBar/CenterInfo"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.3, 1, 0.6, 1)
+theme_override_font_sizes/font_size = 13
+text = "LAUNCH GATE: 5000m ➜ [READY]"
 horizontal_alignment = 1
 
 [node name="RadarLabel" type="Label" parent="Margin/TopBar/CenterInfo"]
+visible = false
 layout_mode = 2
-theme_override_colors/font_color = Color(0.4, 0.9, 1, 1)
-theme_override_font_sizes/font_size = 14
-text = "DEVOURER DISTANCE: 800m"
+theme_override_colors/font_color = Color(0.7, 0.4, 1, 1)
+theme_override_font_sizes/font_size = 12
+text = "BLACK HOLE DISTANCE: 1200m"
 horizontal_alignment = 1
 
-[node name="CrystalContainer" type="HBoxContainer" parent="Margin/TopBar"]
+[node name="ScoreBox" type="VBoxContainer" parent="Margin/TopBar"]
 layout_mode = 2
+alignment = 1
 
-[node name="CrystalLabel" type="Label" parent="Margin/TopBar/CrystalContainer"]
+[node name="ScoreLabel" type="Label" parent="Margin/TopBar/ScoreBox"]
 layout_mode = 2
-theme_override_colors/font_color = Color(0.3, 0.9, 1, 1)
-theme_override_font_sizes/font_size = 20
-text = "💎 0"
+theme_override_colors/font_color = Color(1, 0.85, 0.3, 1)
+theme_override_font_sizes/font_size = 15
+text = "SCORE: 0"
+horizontal_alignment = 2
+
+[node name="CellsLabel" type="Label" parent="Margin/TopBar/ScoreBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.4, 0.9, 1, 1)
+theme_override_font_sizes/font_size = 12
+text = "CELLS: 0 | ORBS: 0"
+horizontal_alignment = 2
+
+[node name="PauseBtn" type="Button" parent="Margin/TopBar"]
+custom_minimum_size = Vector2(36, 32)
+layout_mode = 2
+text = "⏸"
 
 [node name="BottomBar" type="MarginContainer" parent="."]
 anchors_preset = 12
 anchor_top = 1.0
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_top = -60.0
+offset_top = -50.0
 grow_horizontal = 2
 grow_vertical = 0
-theme_override_constants/margin_bottom = 16
+theme_override_constants/margin_bottom = 12
 
 [node name="WeaponBox" type="HBoxContainer" parent="BottomBar"]
 layout_mode = 2
 alignment = 1
-theme_override_constants/separation = 20
+theme_override_constants/separation = 18
 
 [node name="SwordLabel" type="Label" parent="BottomBar/WeaponBox"]
 layout_mode = 2
-theme_override_font_sizes/font_size = 16
+theme_override_font_sizes/font_size = 13
 text = "[J] SWORD"
 
 [node name="BlasterLabel" type="Label" parent="BottomBar/WeaponBox"]
 layout_mode = 2
-theme_override_font_sizes/font_size = 16
+theme_override_font_sizes/font_size = 13
 text = "[K] BLASTER"
 
 [node name="ShieldLabel" type="Label" parent="BottomBar/WeaponBox"]
 layout_mode = 2
-theme_override_font_sizes/font_size = 16
+theme_override_font_sizes/font_size = 13
 text = "[Q] SHIELD"
 
 [node name="LanceLabel" type="Label" parent="BottomBar/WeaponBox"]
 layout_mode = 2
-theme_override_font_sizes/font_size = 16
+theme_override_font_sizes/font_size = 13
 text = "[HOLD K] LANCE"
 
 [node name="ToastPanel" type="PanelContainer" parent="."]
@@ -114,10 +160,10 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -280.0
-offset_top = -200.0
-offset_right = 280.0
-offset_bottom = -120.0
+offset_left = -260.0
+offset_top = -180.0
+offset_right = 260.0
+offset_bottom = -110.0
 grow_horizontal = 2
 grow_vertical = 2
 
@@ -128,14 +174,14 @@ alignment = 1
 [node name="TitleLabel" type="Label" parent="ToastPanel/VBox"]
 layout_mode = 2
 theme_override_colors/font_color = Color(1, 0.85, 0.2, 1)
-theme_override_font_sizes/font_size = 18
+theme_override_font_sizes/font_size = 16
 text = "NOTICE"
 horizontal_alignment = 1
 
 [node name="SubLabel" type="Label" parent="ToastPanel/VBox"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.9, 0.9, 1, 1)
-theme_override_font_sizes/font_size = 14
+theme_override_font_sizes/font_size = 13
 text = "Description text here"
 horizontal_alignment = 1
 
@@ -146,72 +192,40 @@ anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
 offset_left = -240.0
-offset_top = -140.0
+offset_top = -130.0
 offset_right = 240.0
-offset_bottom = 140.0
+offset_bottom = 130.0
 grow_horizontal = 2
 grow_vertical = 2
 
 [node name="VBox" type="VBoxContainer" parent="GameOverPanel"]
 layout_mode = 2
 alignment = 1
-theme_override_constants/separation = 14
+theme_override_constants/separation = 12
 
 [node name="Title" type="Label" parent="GameOverPanel/VBox"]
 layout_mode = 2
 theme_override_colors/font_color = Color(1, 0.2, 0.2, 1)
-theme_override_font_sizes/font_size = 32
-text = "CRITICAL FAILURE"
+theme_override_font_sizes/font_size = 28
+text = "MISSION FAILED"
 horizontal_alignment = 1
 
 [node name="ReasonLabel" type="Label" parent="GameOverPanel/VBox"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.8, 0.8, 0.8, 1)
+theme_override_font_sizes/font_size = 14
 text = "LOST TO THE VOID"
 horizontal_alignment = 1
 
 [node name="RestartBtn" type="Button" parent="GameOverPanel/VBox"]
+custom_minimum_size = Vector2(0, 38)
 layout_mode = 2
-text = "RETRY SECTOR [R]"
+text = "RETRY FLIGHT [R]"
 
 [node name="MenuBtn" type="Button" parent="GameOverPanel/VBox"]
+custom_minimum_size = Vector2(0, 36)
 layout_mode = 2
 text = "RETURN TO ORBIT"
 
-[node name="VictoryPanel" type="PanelContainer" parent="."]
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -240.0
-offset_top = -140.0
-offset_right = 240.0
-offset_bottom = 140.0
-grow_horizontal = 2
-grow_vertical = 2
-
-[node name="VBox" type="VBoxContainer" parent="VictoryPanel"]
-layout_mode = 2
-alignment = 1
-theme_override_constants/separation = 14
-
-[node name="Title" type="Label" parent="VictoryPanel/VBox"]
-layout_mode = 2
-theme_override_colors/font_color = Color(0.2, 1, 0.4, 1)
-theme_override_font_sizes/font_size = 32
-text = "SECTOR ESCAPED"
-horizontal_alignment = 1
-
-[node name="NextBtn" type="Button" parent="VictoryPanel/VBox"]
-layout_mode = 2
-text = "PROCEED TO NEXT WORLD"
-
-[node name="MenuBtn" type="Button" parent="VictoryPanel/VBox"]
-layout_mode = 2
-text = "MAIN MENU"
-
 [connection signal="pressed" from="GameOverPanel/VBox/RestartBtn" to="." method="_on_restart_pressed"]
 [connection signal="pressed" from="GameOverPanel/VBox/MenuBtn" to="." method="_on_menu_pressed"]
-[connection signal="pressed" from="VictoryPanel/VBox/NextBtn" to="." method="_on_next_level_pressed"]
-[connection signal="pressed" from="VictoryPanel/VBox/MenuBtn" to="." method="_on_menu_pressed"]
