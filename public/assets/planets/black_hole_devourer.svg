@@ -1,0 +1,135 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 1600" width="1600" height="1600">
+  <defs>
+    <!-- Linear Gradients for the Accretion Disk Tracks -->
+    <linearGradient id="diskGradCrimson" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#5a0b12"/>
+      <stop offset="6%" stop-color="#9e1b23"/>
+      <stop offset="50%" stop-color="#b8202a"/>
+      <stop offset="94%" stop-color="#9e1b23"/>
+      <stop offset="100%" stop-color="#5a0b12"/>
+    </linearGradient>
+
+    <linearGradient id="diskGradOrange" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#7a141b"/>
+      <stop offset="10%" stop-color="#d9480f"/>
+      <stop offset="35%" stop-color="#f38350"/>
+      <stop offset="50%" stop-color="#fa9567"/>
+      <stop offset="65%" stop-color="#f38350"/>
+      <stop offset="90%" stop-color="#d9480f"/>
+      <stop offset="100%" stop-color="#7a141b"/>
+    </linearGradient>
+
+    <linearGradient id="diskGradYellow" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#b83818"/>
+      <stop offset="15%" stop-color="#f59f00"/>
+      <stop offset="35%" stop-color="#f8dc48"/>
+      <stop offset="50%" stop-color="#fdf18e"/>
+      <stop offset="65%" stop-color="#f8dc48"/>
+      <stop offset="85%" stop-color="#f59f00"/>
+      <stop offset="100%" stop-color="#b83818"/>
+    </linearGradient>
+
+    <linearGradient id="diskGradCore" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#d9480f"/>
+      <stop offset="20%" stop-color="#f8dc48"/>
+      <stop offset="42%" stop-color="#fff8bd"/>
+      <stop offset="50%" stop-color="#ffffff"/>
+      <stop offset="58%" stop-color="#fff8bd"/>
+      <stop offset="80%" stop-color="#f8dc48"/>
+      <stop offset="100%" stop-color="#d9480f"/>
+    </linearGradient>
+  </defs>
+
+  <!-- ═══════════════════════════════════════════════════════════ -->
+  <!-- 1. UPPER GRAVITATIONAL LENSING ARCH (BENT OVER TOP)        -->
+  <!-- ═══════════════════════════════════════════════════════════ -->
+  <g id="upper_lensing_arch">
+    <!-- Crimson Outer Arch -->
+    <path d="M 480,800 C 500,680 600,545 710,530 C 750,525 800,525 800,525 C 800,525 850,525 890,530 C 1000,545 1100,680 1120,800 C 1080,800 1010,720 940,645 C 885,585 830,578 800,578 C 770,578 715,585 660,645 C 590,720 520,800 480,800 Z" fill="#9e1b23"/>
+    
+    <!-- Orange Band Arch -->
+    <path d="M 510,790 C 530,685 620,565 718,546 C 752,540 800,540 800,540 C 800,540 848,540 882,546 C 980,565 1070,685 1090,790 C 1060,790 1000,720 935,645 C 882,590 830,584 800,584 C 770,584 718,590 665,645 C 600,720 540,790 510,790 Z" fill="#f38350"/>
+
+    <!-- Golden Yellow Band Arch -->
+    <path d="M 535,780 C 555,690 640,585 726,564 C 758,558 800,558 800,558 C 800,558 842,558 874,564 C 960,585 1045,690 1065,780 C 1040,780 990,718 930,645 C 878,595 830,590 800,590 C 770,590 722,595 670,645 C 610,718 560,780 535,780 Z" fill="#f8dc48"/>
+
+    <!-- Light Yellow / White-Hot Core Arch -->
+    <path d="M 565,770 C 585,695 660,608 735,584 C 762,578 800,576 800,576 C 800,576 838,578 865,584 C 940,608 1015,695 1035,770 C 1015,770 970,710 920,645 C 872,602 830,598 800,598 C 770,598 728,602 680,645 C 630,710 585,770 565,770 Z" fill="#fff5a0"/>
+
+    <!-- Innermost Glowing Border of Arch -->
+    <path d="M 610,755 C 645,690 710,622 800,618 C 890,622 955,690 990,755 C 965,745 920,650 800,642 C 680,642 635,745 610,755 Z" fill="#f8dc48" opacity="0.85"/>
+  </g>
+
+  <!-- ═══════════════════════════════════════════════════════════ -->
+  <!-- 2. LOWER GRAVITATIONAL LENSING ARCH (BENT UNDER BOTTOM)    -->
+  <!-- ═══════════════════════════════════════════════════════════ -->
+  <g id="lower_lensing_arch">
+    <!-- Crimson Outer Lower Arch -->
+    <path d="M 580,820 C 600,910 680,1010 750,1035 C 775,1043 800,1045 800,1045 C 800,1045 825,1043 850,1035 C 920,1010 1000,910 1020,820 C 980,880 910,965 845,980 C 825,985 800,985 800,985 C 800,985 775,985 755,980 C 690,965 620,880 580,820 Z" fill="#9e1b23"/>
+
+    <!-- Orange Lower Arch -->
+    <path d="M 605,825 C 625,905 695,998 755,1020 C 775,1028 800,1030 800,1030 C 800,1030 825,1028 845,1020 C 905,998 975,905 995,825 C 965,875 905,958 842,972 C 825,976 800,976 800,976 C 800,976 775,976 758,972 C 695,958 635,875 605,825 Z" fill="#f38350"/>
+
+    <!-- Golden Yellow Lower Arch -->
+    <path d="M 625,830 C 645,900 710,982 760,1002 C 778,1010 800,1012 800,1012 C 800,1012 822,1010 840,1002 C 890,982 955,900 975,830 C 950,870 898,948 838,960 C 822,964 800,964 800,964 C 800,964 778,964 762,960 C 702,948 650,870 625,830 Z" fill="#f8dc48"/>
+
+    <!-- Light Yellow Lower Arch Core -->
+    <path d="M 650,835 C 670,895 725,965 765,984 C 780,990 800,992 800,992 C 800,992 820,990 835,984 C 875,965 930,895 950,835 C 930,865 885,935 835,945 C 820,949 800,949 800,949 C 800,949 780,949 765,945 C 715,935 670,865 650,835 Z" fill="#fff5a0"/>
+  </g>
+
+  <!-- ═══════════════════════════════════════════════════════════ -->
+  <!-- 3. REAR HORIZONTAL DISK (ENTIRE EQUATORIAL ACCRETION DISK) -->
+  <!-- ═══════════════════════════════════════════════════════════ -->
+  <g id="horizontal_disk">
+    <!-- Outer Crimson Shell of Disk -->
+    <path d="M 60,800 C 240,735 500,715 800,715 C 1100,715 1360,735 1540,800 C 1360,865 1100,885 800,885 C 500,885 240,865 60,800 Z" fill="url(#diskGradCrimson)"/>
+
+    <!-- Orange Concentric Track -->
+    <path d="M 110,800 C 280,748 520,732 800,732 C 1080,732 1320,748 1490,800 C 1320,852 1080,868 800,868 C 520,868 280,852 110,800 Z" fill="url(#diskGradOrange)"/>
+
+    <!-- Golden Yellow Concentric Track -->
+    <path d="M 180,800 C 330,760 540,748 800,748 C 1060,748 1270,760 1420,800 C 1270,840 1060,852 800,852 C 540,852 330,840 180,800 Z" fill="url(#diskGradYellow)"/>
+
+    <!-- Luminous Pale Yellow Core Track -->
+    <path d="M 260,800 C 390,774 560,765 800,765 C 1040,765 1210,774 1340,800 C 1210,826 1040,835 800,835 C 560,835 390,826 260,800 Z" fill="url(#diskGradCore)"/>
+
+    <!-- Thin Crimson Accent Pinstripes in the Wings (Saturn/Interstellar tracks) -->
+    <ellipse cx="800" cy="800" rx="660" ry="50" fill="none" stroke="#6a0f18" stroke-width="2.5" opacity="0.75"/>
+    <ellipse cx="800" cy="800" rx="550" ry="42" fill="none" stroke="#7a141b" stroke-width="2.2" opacity="0.65"/>
+    <ellipse cx="800" cy="800" rx="420" ry="32" fill="none" stroke="#9e1b23" stroke-width="2.0" opacity="0.55"/>
+    <ellipse cx="800" cy="800" rx="280" ry="22" fill="none" stroke="#d9480f" stroke-width="1.8" opacity="0.5"/>
+  </g>
+
+  <!-- ═══════════════════════════════════════════════════════════ -->
+  <!-- 4. CENTRAL BLACK HOLE & INNER PHOTON RING                  -->
+  <!-- ═══════════════════════════════════════════════════════════ -->
+  <g id="black_hole_core">
+    <!-- Luminous Photon Ring (Caustic relativistic ring) -->
+    <circle cx="800" cy="800" r="148" fill="none" stroke="#fff4a0" stroke-width="5" opacity="0.95"/>
+    <circle cx="800" cy="800" r="144" fill="none" stroke="#ffffff" stroke-width="2.5"/>
+    <circle cx="800" cy="800" r="153" fill="none" stroke="#f8dc48" stroke-width="2" opacity="0.7"/>
+
+    <!-- Pure Pitch-Black Singularity Shadow (Event Horizon) -->
+    <circle cx="800" cy="800" r="140" fill="#000000"/>
+  </g>
+
+  <!-- ═══════════════════════════════════════════════════════════ -->
+  <!-- 5. FRONT ACCRETION DISK (PASSING IN FRONT OF BLACK HOLE)   -->
+  <!-- ═══════════════════════════════════════════════════════════ -->
+  <g id="front_accretion_disk">
+    <!-- Front Crimson Rim (Crosses the lower half of black hole) -->
+    <path d="M 380,800 C 500,816 640,838 800,842 C 960,838 1100,816 1220,800 C 1180,846 1000,885 800,888 C 600,885 420,846 380,800 Z" fill="#9e1b23"/>
+
+    <!-- Front Orange Stripe -->
+    <path d="M 410,800 C 520,814 650,834 800,838 C 950,834 1080,814 1190,800 C 1160,840 990,875 800,878 C 610,875 440,840 410,800 Z" fill="#f38350"/>
+
+    <!-- Front Golden Yellow Stripe -->
+    <path d="M 440,800 C 540,812 660,828 800,832 C 940,828 1060,812 1160,800 C 1135,834 980,864 800,867 C 620,864 465,834 440,800 Z" fill="#f8dc48"/>
+
+    <!-- Front Pale Light-Yellow / White-Hot Rim -->
+    <path d="M 470,800 C 560,810 670,822 800,826 C 930,822 1040,810 1130,800 C 1110,826 970,854 800,857 C 630,854 490,826 470,800 Z" fill="#fff5a0"/>
+
+    <!-- Crisp Top Highlight of the Front Edge -->
+    <path d="M 490,800 C 580,808 680,818 800,822 C 920,818 1020,808 1110,800 C 1090,818 960,842 800,845 C 640,842 510,818 490,800 Z" fill="#ffffff" opacity="0.95"/>
+  </g>
+</svg>
