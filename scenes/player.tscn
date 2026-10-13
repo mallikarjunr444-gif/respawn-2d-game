@@ -12,8 +12,11 @@ size = Vector2(56, 64)
 [sub_resource type="CircleShape2D" id="CircleShape2D_shield"]
 radius = 42.0
 
-[sub_resource type="Gradient" id="Gradient_thruster"]
-colors = PackedColorArray(0.24, 0.94, 1, 1, 0.1, 0.2, 0.6, 0)
+[sub_resource type="Gradient" id="Gradient_exhaust"]
+colors = PackedColorArray(1.0, 0.7, 0.2, 1, 1.0, 0.3, 0.05, 0.8, 0.2, 0.05, 0.8, 0)
+
+[sub_resource type="Gradient" id="Gradient_boost"]
+colors = PackedColorArray(0.4, 0.8, 1.0, 1, 0.1, 0.3, 1.0, 0.6, 0.05, 0.1, 0.5, 0)
 
 [node name="Player" type="CharacterBody2D"]
 collision_layer = 1
@@ -29,21 +32,42 @@ position = Vector2(0, -28)
 scale = Vector2(0.45, 0.45)
 texture = ExtResource("2_arin")
 
-[node name="ThrusterParticles" type="CPUParticles2D" parent="."]
-position = Vector2(0, -4)
+[node name="RocketSprite" type="Sprite2D" parent="."]
+position = Vector2(0, 8)
+scale = Vector2(0.3, 0.3)
+modulate = Color(0.8, 0.8, 0.9, 1.0)
+
+[node name="ExhaustParticles" type="CPUParticles2D" parent="."]
+position = Vector2(0, 12)
 emitting = false
-amount = 16
-lifetime = 0.2
-one_shot = true
-explosiveness = 0.8
+amount = 24
+lifetime = 0.35
+one_shot = false
+explosiveness = 0.3
 direction = Vector2(0, 1)
-spread = 35.0
+spread = 25.0
 gravity = Vector2(0, 0)
-initial_velocity_min = 90.0
-initial_velocity_max = 140.0
+initial_velocity_min = 120.0
+initial_velocity_max = 200.0
 scale_amount_min = 2.0
 scale_amount_max = 5.0
-color_ramp = SubResource("Gradient_thruster")
+color_ramp = SubResource("Gradient_exhaust")
+
+[node name="BoostParticles" type="CPUParticles2D" parent="."]
+position = Vector2(0, 12)
+emitting = false
+amount = 32
+lifetime = 0.25
+one_shot = false
+explosiveness = 0.6
+direction = Vector2(0, 1)
+spread = 40.0
+gravity = Vector2(0, 0)
+initial_velocity_min = 200.0
+initial_velocity_max = 350.0
+scale_amount_min = 3.0
+scale_amount_max = 8.0
+color_ramp = SubResource("Gradient_boost")
 
 [node name="SwordArea" type="Area2D" parent="."]
 position = Vector2(24, -28)
