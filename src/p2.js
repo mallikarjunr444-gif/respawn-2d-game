@@ -49,7 +49,7 @@ function mkLevel(kind,n){
 }
 
 /* ---------- state ---------- */
-const G={scene:'title',t:0,menu:0,char:'female',mx:-1,my:-1,cam:0,hx:-600,shake:0,fade:1,toast:null,meteors:[],muted:false,
+const G={scene:'title',t:0,menu:0,char:'female',mx:-1,my:-1,cam:0,hx:-600,shake:0,fade:0,toast:null,meteors:[],muted:false,
  mode:'story',sector:0,crystals:0,kills:0,time:0,distBase:0,hasSword:false,forgeDone:false,barrierAlive:true,cp:0,introT:0,podBroken:false,lt:0,deadT:0,deadWhy:'',pz:null,lvl:null,p:null,safe:null,meteorT:3,hint:6,world:0,hasBlaster:false,hasShield:false,hasLance:false,boss:null,ep:[],bolts:[],logs:0,chg:0,shT:0,shCd:0,bolCd:0,reveal:null,revealT:0};
 
 let UI=[];

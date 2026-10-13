@@ -115,7 +115,7 @@ function mkLevel(kind,n){
 }
 
 /* ---------- state ---------- */
-const G={scene:'title',t:0,menu:0,char:'female',mx:-1,my:-1,cam:0,hx:-600,shake:0,fade:1,toast:null,meteors:[],muted:false,
+const G={scene:'title',t:0,menu:0,char:'female',mx:-1,my:-1,cam:0,hx:-600,shake:0,fade:0,toast:null,meteors:[],muted:false,
  mode:'story',sector:0,crystals:0,kills:0,time:0,distBase:0,hasSword:false,forgeDone:false,barrierAlive:true,cp:0,introT:0,podBroken:false,lt:0,deadT:0,deadWhy:'',pz:null,lvl:null,p:null,safe:null,meteorT:3,hint:6,world:0,hasBlaster:false,hasShield:false,hasLance:false,boss:null,ep:[],bolts:[],logs:0,chg:0,shT:0,shCd:0,bolCd:0,reveal:null,revealT:0};
 
 let UI=[];
@@ -604,6 +604,7 @@ function render(){
 
 /* ---------- loop & pointer ---------- */
 function update(dt){
+ if(G.fade>0&&G.scene!=='launch')G.fade=Math.max(0,G.fade-dt*2);
  if(pressed('mute')){muted=!muted;G.muted=muted;if(master)master.gain.value=muted?0:.55;}
  switch(G.scene){
   case'title':{const n=G.menuN||2;if(pressed('down'))G.menu=Math.min(n-1,G.menu+1);if(pressed('up'))G.menu=Math.max(0,G.menu-1);if(pressed('n1'))G.menu=0;if(pressed('n2'))G.menu=1;if(pressed('n3')&&n>2)G.menu=2;

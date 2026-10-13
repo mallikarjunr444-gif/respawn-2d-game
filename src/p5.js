@@ -120,6 +120,7 @@ function render(){
 
 /* ---------- loop & pointer ---------- */
 function update(dt){
+ if(G.fade>0&&G.scene!=='launch')G.fade=Math.max(0,G.fade-dt*2);
  if(pressed('mute')){muted=!muted;G.muted=muted;if(master)master.gain.value=muted?0:.55;}
  switch(G.scene){
   case'title':{const n=G.menuN||2;if(pressed('down'))G.menu=Math.min(n-1,G.menu+1);if(pressed('up'))G.menu=Math.max(0,G.menu-1);if(pressed('n1'))G.menu=0;if(pressed('n2'))G.menu=1;if(pressed('n3')&&n>2)G.menu=2;
