@@ -43,12 +43,23 @@ func _draw_fuel_cell() -> void:
 	outline.width = 2.0
 	add_child(outline)
 
-func _process(_delta: float) -> void:
+func _process(delta: float) -> void:
 	if collected:
 		return
 	# Gentle floating bob
 	var bob = sin(Time.get_ticks_msec() * 0.003 + time_offset) * 6.0
-	position.y += bob * 0.02  # Micro movement per frame
+	position.y += bob * 0.02
+
+	# Magnetic collector attraction to player
+	var players = get_tree().get_nodes_in_group("player")
+	if players.size() > 0:
+		var p = players[0]
+		if is_instance_valid(p):
+			var d_vec = p.global_position - global_position
+			var dist = d_vec.length()
+			if dist < 160.0 and dist > 0.0:
+				global_position += d_vec.normalized() * (280.0 * delta)
+
 	# Pulse the glow
 	if glow:
 		glow.energy = 0.8 + sin(Time.get_ticks_msec() * 0.005 + time_offset) * 0.4

@@ -11,8 +11,9 @@ var is_active: bool = true
 var is_launching: bool = false
 var launch_timer: float = 0.0
 var ring_rotation: float = 0.0
-var min_fuel_pct: float = 25.0
+var min_fuel_pct: float = 15.0
 var player_nearby: bool = false
+var target_player: Node2D = null
 
 @onready var glow: PointLight2D = $GlowLight
 @onready var gate_particles: CPUParticles2D = $GateParticles
@@ -65,6 +66,10 @@ func set_min_fuel(pct: float) -> void:
 func _process(delta: float) -> void:
 	if is_launching:
 		launch_timer += delta
+		if target_player and is_instance_valid(target_player):
+			target_player.global_position = target_player.global_position.lerp(global_position, 5.0 * delta)
+			if "velocity" in target_player:
+				target_player.velocity = target_player.velocity * 0.88
 		if launch_timer >= 2.0:
 			is_launching = false
 			GameState.complete_level()
@@ -80,19 +85,27 @@ func _process(delta: float) -> void:
 	# Check if player can launch
 	if player_nearby and is_active:
 		var fuel_pct = GameState.get_fuel_percentage()
-		if fuel_pct >= min_fuel_pct:
-			prompt_label.text = "PRESS [E] TO LAUNCH\nFuel: " + str(int(fuel_pct)) + "%"
+		var has_fuel = fuel_pct >= min_fuel_pct
+		if has_fuel:
+			prompt_label.text = "LAUNCH GATE READY!\n[PRESS E OR ENTER TO WARP]"
 			prompt_label.modulate = Color(0.3, 1.0, 0.8)
 		else:
-			prompt_label.text = "NEED " + str(int(min_fuel_pct)) + "% FUEL\nCurrent: " + str(int(fuel_pct)) + "%"
+			prompt_label.text = "NEED " + str(int(min_fuel_pct)) + "% FUEL TO WARP\nCurrent: " + str(int(fuel_pct)) + "%"
 			prompt_label.modulate = Color(1.0, 0.4, 0.3)
 
-		if Input.is_action_just_pressed("interact") and fuel_pct >= min_fuel_pct:
+		# Auto-trigger if close to center, or on key press
+		var dist_to_center = 999.0
+		if target_player and is_instance_valid(target_player):
+			dist_to_center = (target_player.global_position - global_position).length()
+
+		var key_pressed = Input.is_action_just_pressed("interact") or Input.is_key_pressed(KEY_E) or Input.is_key_pressed(KEY_ENTER)
+		if has_fuel and (key_pressed or dist_to_center < 55.0):
 			_trigger_launch()
 
 func _on_body_entered(body: Node2D) -> void:
 	if body.is_in_group("player") and is_active:
 		player_nearby = true
+		target_player = body
 		prompt_label.visible = true
 		SoundManager.play("gate_open", 0.05)
 

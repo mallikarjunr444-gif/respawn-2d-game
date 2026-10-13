@@ -139,9 +139,11 @@ layout_mode = 2
 size_flags_vertical = 3
 bbcode_enabled = true
 text = "[color=#5cd6ff]FLIGHT CONTROLS[/color]
-• [b]W / A / S / D[/b] or [b]Arrow Keys[/b] — Steer Astronaut Flight Angle
-• [b]SPACEBAR[/b] — Fire Main Thruster (Consumes Fuel)
-• [b]SHIFT[/b] — Emergency Rocket Boost (High Speed Burst)
+• [b]UP / W[/b] or [b]SPACEBAR[/b] — Accelerate Forward (Main Thruster)
+• [b]LEFT / A[/b] and [b]RIGHT / D[/b] — Steer Rocket Flight Angle
+• [b]DOWN / S[/b] — Airbrake / Reverse
+• [b]SHIFT[/b] — Rocket Boost (High-Speed Burst)
+• [b]E / ENTER[/b] — Warp at Launch Gate (Requires Fuel)
 
 [color=#5cd6ff]MISSION OBJECTIVES[/color]
 • Collect [b]Fuel Cells[/b] & [b]Energy Orbs[/b] to replenish your tank.

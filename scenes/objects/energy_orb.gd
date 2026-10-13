@@ -48,6 +48,17 @@ func _process(delta: float) -> void:
 		return
 	# Orbital rotation
 	orbit_angle += delta * 1.5
+
+	# Magnetic collector attraction to player
+	var players = get_tree().get_nodes_in_group("player")
+	if players.size() > 0:
+		var p = players[0]
+		if is_instance_valid(p):
+			var d_vec = p.global_position - global_position
+			var dist = d_vec.length()
+			if dist < 160.0 and dist > 0.0:
+				global_position += d_vec.normalized() * (280.0 * delta)
+
 	# Pulse glow
 	if glow:
 		glow.energy = 1.5 + sin(Time.get_ticks_msec() * 0.004 + time_offset) * 0.6

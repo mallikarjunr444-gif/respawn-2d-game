@@ -52,14 +52,17 @@ func _ready() -> void:
 func _setup_visuals() -> void:
 	sky_rect.color = world_info.get("sky_color", Color(0.02, 0.03, 0.06, 1.0))
 	# Scale sky rect to cover expansive camera view
-	sky_rect.size = Vector2(level_bounds.size.x + 2000.0, level_bounds.size.y + 2000.0)
-	sky_rect.position = Vector2(-1000.0, -1000.0)
+	sky_rect.size = Vector2(level_bounds.size.x + 3000.0, level_bounds.size.y + 3000.0)
+	sky_rect.position = Vector2(-1500.0, -1500.0)
 
 	if planet_sprite:
 		var planet_tex = world_info.get("planet_texture", "")
 		if planet_tex != "" and ResourceLoader.exists(planet_tex):
 			planet_sprite.texture = load(planet_tex)
 			planet_sprite.modulate = world_info.get("accent_color", Color.WHITE)
+			var p_start = world_info.get("player_start", Vector2(1200.0, 2000.0))
+			planet_sprite.position = Vector2(p_start.x + 1300.0, p_start.y - 420.0)
+			planet_sprite.scale = Vector2(2.6, 2.6)
 			planet_sprite.visible = true
 		else:
 			planet_sprite.visible = false
@@ -85,34 +88,38 @@ func _create_starfield() -> void:
 	add_child(particles)
 
 func _generate_level() -> void:
-	# 1. Spawn Player
+	# 1. Spawn Player (Facing right, escaping away from black hole)
 	player = player_scene.instantiate()
-	var start_pos = world_info.get("player_start", Vector2(400.0, 2000.0))
+	var start_pos = world_info.get("player_start", Vector2(1200.0, 2000.0))
 	player.position = start_pos
+	player.facing_dir = 1.0
+	player.facing_angle = 0.0
+	player.velocity = Vector2(80.0, 0.0)
+	player.level_bounds = level_bounds
 
 	# Configure planetary environmental forces
-	var grav_val = world_info.get("gravity_strength", 400.0)
-	player.level_gravity = Vector2(0.0, grav_val * 0.35) # Smooth flight gravity
+	var grav_val = world_info.get("gravity_strength", 200.0)
+	player.level_gravity = Vector2(0.0, grav_val * 0.15) # Smooth flight gravity
 	var wind_dir = world_info.get("wind_direction", Vector2.ZERO)
 	var wind_str = world_info.get("wind_strength", 0.0)
 	player.level_wind = wind_dir * wind_str
-	player.level_drag = world_info.get("drag_coefficient", 0.02)
+	player.level_drag = world_info.get("drag_coefficient", 0.015)
 	add_child(player)
 
 	# 2. Spawn Launch Gate
 	launch_gate = launch_gate_scene.instantiate()
-	var gate_pos = world_info.get("launch_gate_position", Vector2(level_bounds.size.x - 600.0, 1500.0))
+	var gate_pos = world_info.get("launch_gate_position", Vector2(level_bounds.size.x - 500.0, 2000.0))
 	launch_gate.position = gate_pos
-	launch_gate.set_min_fuel(world_info.get("min_fuel_to_launch", 25.0))
+	launch_gate.set_min_fuel(world_info.get("min_fuel_to_launch", 15.0))
 	add_child(launch_gate)
 
-	# 3. Spawn Black Hole (Level 1 ONLY)
+	# 3. Spawn Black Hole (Level 1 ONLY — Positioned BEHIND the player on the left)
 	if world_info.get("has_black_hole", false):
 		devourer = devourer_scene.instantiate()
-		devourer.position = world_info.get("black_hole_position", Vector2(800.0, 2000.0))
-		devourer.pull_radius = world_info.get("black_hole_pull_radius", 1200.0)
-		devourer.pull_strength = world_info.get("black_hole_pull_strength", 600.0)
-		devourer.kill_radius = world_info.get("black_hole_kill_radius", 120.0)
+		devourer.position = world_info.get("black_hole_position", Vector2(500.0, 2000.0))
+		devourer.pull_radius = world_info.get("black_hole_pull_radius", 2200.0)
+		devourer.pull_strength = world_info.get("black_hole_pull_strength", 420.0)
+		devourer.kill_radius = world_info.get("black_hole_kill_radius", 180.0)
 		devourer.target_player = player
 		add_child(devourer)
 
@@ -126,19 +133,30 @@ func _generate_level() -> void:
 	camera.position = player.position
 
 func _spawn_collectibles(start_pos: Vector2, gate_pos: Vector2) -> void:
-	var cell_count = world_info.get("fuel_cell_count", 25)
-	var orb_count = world_info.get("energy_orb_count", 6)
+	# Risky pickups near the black hole for daring pilots
+	if world_info.get("has_black_hole", false):
+		var risky_positions = [
+			Vector2(750.0, 1950.0),
+			Vector2(950.0, 2120.0),
+			Vector2(1100.0, 1880.0)
+		]
+		for r_pos in risky_positions:
+			var r_cell = fuel_cell_scene.instantiate()
+			r_cell.position = r_pos
+			add_child(r_cell)
+
+	var cell_count = world_info.get("fuel_cell_count", 28)
+	var orb_count = world_info.get("energy_orb_count", 7)
 
 	var dir_to_gate = (gate_pos - start_pos)
 	var dist = dir_to_gate.length()
 
-	# Main flight path fuel cells
+	# Main flight path fuel cells - clustered along flight corridor
 	for i in range(cell_count):
 		var t = float(i + 1) / float(cell_count + 1)
 		var base_pos = start_pos + dir_to_gate * t
-		# Disperse perpendicular to path
 		var perp = Vector2(-dir_to_gate.y, dir_to_gate.x).normalized()
-		var offset = perp * randf_range(-600.0, 600.0)
+		var offset = perp * randf_range(-160.0, 160.0)
 		var cell_pos = base_pos + offset
 
 		cell_pos.x = clampf(cell_pos.x, 200.0, level_bounds.size.x - 200.0)
@@ -148,11 +166,19 @@ func _spawn_collectibles(start_pos: Vector2, gate_pos: Vector2) -> void:
 		cell.position = cell_pos
 		add_child(cell)
 
-	# Bonus route energy orbs (tucked in high or low altitudes with extra value)
+	# Guaranteed safety fuel cells right ahead of the gate
+	var norm_dir = dir_to_gate.normalized()
+	var safety_offsets = [320.0, 180.0, 70.0]
+	for s_dist in safety_offsets:
+		var safe_cell = fuel_cell_scene.instantiate()
+		safe_cell.position = gate_pos - norm_dir * s_dist
+		add_child(safe_cell)
+
+	# Bonus route energy orbs
 	for j in range(orb_count):
 		var t = float(j + 1) / float(orb_count + 1)
 		var base_pos = start_pos + dir_to_gate * t
-		var alt_offset = Vector2(0.0, randf_range(700.0, 1100.0) * (1.0 if j % 2 == 0 else -1.0))
+		var alt_offset = Vector2(0.0, randf_range(450.0, 750.0) * (1.0 if j % 2 == 0 else -1.0))
 		var orb_pos = base_pos + alt_offset
 
 		orb_pos.x = clampf(orb_pos.x, 200.0, level_bounds.size.x - 200.0)
@@ -166,6 +192,29 @@ func _spawn_hazards(start_pos: Vector2, gate_pos: Vector2) -> void:
 	var hazard_type = world_info.get("hazard_type", LevelData.HazardType.NONE)
 
 	match hazard_type:
+		LevelData.HazardType.ICY_DEBRIS:
+			# Neptune icy debris in flight corridor + strong headwind streams
+			var ice_count = world_info.get("ice_chunk_count", 24)
+			for i in range(ice_count):
+				var debris = ring_debris_scene.instantiate()
+				var dx = randf_range(start_pos.x + 350.0, gate_pos.x - 200.0)
+				var dy = randf_range(start_pos.y - 320.0, start_pos.y + 320.0)
+				debris.position = Vector2(dx, dy)
+				debris.drift_velocity = Vector2(randf_range(-80.0, -20.0), randf_range(-25.0, 25.0))
+				add_child(debris)
+				if "poly" in debris and is_instance_valid(debris.poly):
+					debris.poly.color = Color(0.4, 0.85, 1.0, 0.9)
+
+			# Neptune wind streams
+			var stream_count = 4
+			for w in range(stream_count):
+				var zone = wind_zone_scene.instantiate()
+				var wx = lerpf(start_pos.x + 800.0, gate_pos.x - 600.0, float(w) / float(stream_count))
+				var wy = randf_range(start_pos.y - 400.0, start_pos.y + 400.0)
+				zone.position = Vector2(wx, wy)
+				zone.wind_force = Vector2(-160.0, 30.0)
+				add_child(zone)
+
 		LevelData.HazardType.STORM_WINDS, LevelData.HazardType.SIDEWAYS_WIND:
 			var zone_count = 5
 			for i in range(zone_count):

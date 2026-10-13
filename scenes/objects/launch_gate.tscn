@@ -3,7 +3,7 @@
 [ext_resource type="Script" path="res://scenes/objects/launch_gate.gd" id="1_script"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_gate"]
-radius = 70.0
+radius = 95.0
 
 [sub_resource type="Gradient" id="Gradient_gate"]
 colors = PackedColorArray(0.3, 0.9, 1, 1, 0.1, 0.4, 1, 0)

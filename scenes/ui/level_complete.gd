@@ -62,6 +62,14 @@ func _on_level_completed() -> void:
 	else:
 		var next_info = LevelData.get_world_info(next_idx)
 		next_btn.text = "WARP TO " + next_info.get("name", "NEXT SECTOR")
+	next_btn.grab_focus()
+
+func _unhandled_input(event: InputEvent) -> void:
+	if not visible or (upgrade_panel and upgrade_panel.visible):
+		return
+	if event.is_action_pressed("interact") or event.is_action_pressed("thrust") or event.is_action_pressed("ui_accept"):
+		get_viewport().set_input_as_handled()
+		_on_next_pressed()
 
 func _on_next_pressed() -> void:
 	visible = false

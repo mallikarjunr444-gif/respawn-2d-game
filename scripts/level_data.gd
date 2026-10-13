@@ -42,17 +42,17 @@ static func get_world_info(world_idx: int) -> Dictionary:
 			"atmosphere_particles": Color(0.4, 0.1, 0.8, 0.15),
 
 			# Physics
-			"gravity_strength": 400.0,    # Base gravity pull downward
+			"gravity_strength": 200.0,    # Gentle cosmic downward drift
 			"wind_strength": 0.0,
 			"wind_direction": Vector2.ZERO,
-			"drag_coefficient": 0.02,
+			"drag_coefficient": 0.015,
 
-			# Black hole (Level 1 ONLY)
+			# Black hole (Level 1 ONLY — Positioned BEHIND player on left)
 			"has_black_hole": true,
-			"black_hole_position": Vector2(800.0, 2000.0),
-			"black_hole_pull_radius": 1200.0,
-			"black_hole_pull_strength": 600.0,
-			"black_hole_kill_radius": 120.0,
+			"black_hole_position": Vector2(300.0, 2000.0),
+			"black_hole_pull_radius": 1900.0,
+			"black_hole_pull_strength": 480.0,
+			"black_hole_kill_radius": 140.0,
 
 			# Hazards
 			"hazard_type": HazardType.ASTEROIDS,
@@ -65,51 +65,53 @@ static func get_world_info(world_idx: int) -> Dictionary:
 			"energy_orb_count": 8,
 			"bonus_fuel_route": true,
 
-			# Gate
-			"launch_gate_position": Vector2(5400.0, 1000.0),
-			"min_fuel_to_launch": 25.0,  # Percentage
+			# Gate — Escape Route to the RIGHT
+			"launch_gate_position": Vector2(5500.0, 2000.0),
+			"min_fuel_to_launch": 15.0,  # Forgiving percentage to avoid stranding
 
-			# Spawn
-			"player_start": Vector2(400.0, 2000.0),
+			# Spawn — Astronaut starts 900px to the RIGHT of black hole, facing RIGHT
+			"player_start": Vector2(1200.0, 2000.0),
 		},
 
 		# ═══════════════════════════════════════════════════════════════
-		# LEVEL 2 — NEPTUNE (Blue World)
+		# LEVEL 2 — NEPTUNE (Azure Gas Giant)
 		# ═══════════════════════════════════════════════════════════════
 		{
 			"id": "neptune",
 			"name": "LEVEL 2 — NEPTUNE",
-			"subtitle": "Navigate the deep-blue nebula. Wind currents and icy debris.",
+			"subtitle": "Azure atmosphere. Icy debris and high-velocity wind streams.",
 			"level_width": 7000.0,
 			"level_height": 4500.0,
 
-			"sky_color": Color(0.02, 0.04, 0.18, 1.0),
-			"nebula_color": Color(0.1, 0.2, 0.6, 0.4),
-			"star_color": Color(0.5, 0.6, 1.0, 0.6),
-			"accent_color": Color(0.2, 0.5, 1.0),
-			"atmosphere_particles": Color(0.15, 0.25, 0.8, 0.2),
+			"sky_color": Color(0.01, 0.04, 0.18, 1.0),
+			"nebula_color": Color(0.12, 0.28, 0.75, 0.4),
+			"star_color": Color(0.6, 0.8, 1.0, 0.7),
+			"accent_color": Color(0.25, 0.65, 1.0),
+			"planet_texture": "res://assets/planets/cryos.svg",
+			"background_texture": "res://assets/backgrounds/world4_cryos.svg",
+			"atmosphere_particles": Color(0.2, 0.6, 1.0, 0.35),
 
-			"gravity_strength": 350.0,
-			"wind_strength": 180.0,
-			"wind_direction": Vector2(-1.0, 0.3).normalized(),
-			"drag_coefficient": 0.04,  # Thicker atmosphere
+			"gravity_strength": 220.0,
+			"wind_strength": 140.0,
+			"wind_direction": Vector2(-1.0, 0.2).normalized(),
+			"drag_coefficient": 0.02,
 
 			"has_black_hole": false,
 
 			"hazard_type": HazardType.ICY_DEBRIS,
-			"asteroid_count": 18,
+			"asteroid_count": 20,
 			"comet_count": 0,
 			"meteor_rate": 5.0,
-			"ice_chunk_count": 20,
-			"visibility_range": 600.0,  # Limited visibility
+			"ice_chunk_count": 22,
+			"visibility_range": 750.0,
 
-			"fuel_cell_count": 28,
-			"energy_orb_count": 6,
+			"fuel_cell_count": 32,
+			"energy_orb_count": 8,
 			"bonus_fuel_route": true,
 
-			"launch_gate_position": Vector2(6400.0, 1200.0),
-			"min_fuel_to_launch": 20.0,
-			"player_start": Vector2(400.0, 2200.0),
+			"launch_gate_position": Vector2(6200.0, 2200.0),
+			"min_fuel_to_launch": 15.0,
+			"player_start": Vector2(600.0, 2200.0),
 		},
 
 		# ═══════════════════════════════════════════════════════════════

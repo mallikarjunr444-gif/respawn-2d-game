@@ -124,34 +124,46 @@ anchors_preset = 12
 anchor_top = 1.0
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_top = -50.0
+offset_top = -68.0
 grow_horizontal = 2
 grow_vertical = 0
-theme_override_constants/margin_bottom = 12
+theme_override_constants/margin_bottom = 8
 
-[node name="WeaponBox" type="HBoxContainer" parent="BottomBar"]
+[node name="VBox" type="VBoxContainer" parent="BottomBar"]
+layout_mode = 2
+theme_override_constants/separation = 4
+alignment = 1
+
+[node name="ControlsLabel" type="Label" parent="BottomBar/VBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.7, 0.9, 1, 0.8)
+theme_override_font_sizes/font_size = 12
+text = "UP / W / SPACE: Thrust · LEFT / RIGHT / A / D: Steer · DOWN / S: Brake · SHIFT: Boost · E / ENTER: Warp"
+horizontal_alignment = 1
+
+[node name="WeaponBox" type="HBoxContainer" parent="BottomBar/VBox"]
 layout_mode = 2
 alignment = 1
 theme_override_constants/separation = 18
 
-[node name="SwordLabel" type="Label" parent="BottomBar/WeaponBox"]
+[node name="SwordLabel" type="Label" parent="BottomBar/VBox/WeaponBox"]
 layout_mode = 2
-theme_override_font_sizes/font_size = 13
+theme_override_font_sizes/font_size = 12
 text = "[J] SWORD"
 
-[node name="BlasterLabel" type="Label" parent="BottomBar/WeaponBox"]
+[node name="BlasterLabel" type="Label" parent="BottomBar/VBox/WeaponBox"]
 layout_mode = 2
-theme_override_font_sizes/font_size = 13
+theme_override_font_sizes/font_size = 12
 text = "[K] BLASTER"
 
-[node name="ShieldLabel" type="Label" parent="BottomBar/WeaponBox"]
+[node name="ShieldLabel" type="Label" parent="BottomBar/VBox/WeaponBox"]
 layout_mode = 2
-theme_override_font_sizes/font_size = 13
+theme_override_font_sizes/font_size = 12
 text = "[Q] SHIELD"
 
-[node name="LanceLabel" type="Label" parent="BottomBar/WeaponBox"]
+[node name="LanceLabel" type="Label" parent="BottomBar/VBox/WeaponBox"]
 layout_mode = 2
-theme_override_font_sizes/font_size = 13
+theme_override_font_sizes/font_size = 12
 text = "[HOLD K] LANCE"
 
 [node name="ToastPanel" type="PanelContainer" parent="."]

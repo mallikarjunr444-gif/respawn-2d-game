@@ -16,6 +16,8 @@ const MAX_PLAYERS = 16
 var sounds: Dictionary = {}
 var music_volume_db: float = -12.0
 var sfx_volume_db: float = 0.0
+var music_volume: float = 0.8
+var sfx_volume: float = 1.0
 var music_enabled: bool = true
 var sfx_enabled: bool = true
 
@@ -100,26 +102,38 @@ func start_thrust_sound() -> void:
 func stop_thrust_sound() -> void:
 	thrust_player.stop()
 
-func set_music_volume(db: float) -> void:
-	music_volume_db = db
-	music_player.volume_db = db
-	ambient_player.volume_db = db - 6.0
+func set_music_volume(val: float) -> void:
+	music_volume = clampf(val, 0.0, 1.0)
+	music_volume_db = linear_to_db(music_volume) if music_volume > 0.0 else -80.0
+	if music_player:
+		music_player.volume_db = music_volume_db
+	if ambient_player:
+		ambient_player.volume_db = music_volume_db - 6.0
 
-func set_sfx_volume(db: float) -> void:
-	sfx_volume_db = db
+func set_sfx_volume(val: float) -> void:
+	sfx_volume = clampf(val, 0.0, 1.0)
+	sfx_volume_db = linear_to_db(sfx_volume) if sfx_volume > 0.0 else -80.0
+
+func set_music_enabled(enabled: bool) -> void:
+	toggle_music(enabled)
+
+func set_sfx_enabled(enabled: bool) -> void:
+	toggle_sfx(enabled)
 
 func toggle_music(enabled: bool) -> void:
 	music_enabled = enabled
-	if not enabled:
+	if not enabled and music_player and ambient_player:
 		music_player.stop()
 		ambient_player.stop()
 
 func toggle_sfx(enabled: bool) -> void:
 	sfx_enabled = enabled
 	if not enabled:
-		thrust_player.stop()
+		if thrust_player:
+			thrust_player.stop()
 		for p in sfx_players:
-			p.stop()
+			if p:
+				p.stop()
 
 # ═══════════════════════════════════════════════════════════════
 # AUDIO SYNTHESIS — 22050Hz 16-bit mono PCM

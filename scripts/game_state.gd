@@ -26,10 +26,10 @@ var is_paused: bool = false
 # ── Fuel System ──
 var fuel: float = 100.0
 var max_fuel: float = 100.0
-const FUEL_CONSUMPTION_RATE: float = 8.0    # Per second while thrusting
+const FUEL_CONSUMPTION_RATE: float = 3.2    # Per second while thrusting (allows 30+ seconds continuous flight)
 const FUEL_IDLE_DRAIN: float = 0.0          # No idle drain
-const FUEL_CELL_VALUE: float = 12.0         # Each fuel cell gives this much
-const ENERGY_ORB_VALUE: float = 25.0        # Energy orbs give more
+const FUEL_CELL_VALUE: float = 16.0         # Each fuel cell gives generous fuel
+const ENERGY_ORB_VALUE: float = 35.0        # Energy orbs give massive refill
 const LOW_FUEL_THRESHOLD: float = 25.0      # Warning below this %
 var fuel_warning_active: bool = false
 
@@ -148,6 +148,7 @@ func consume_fuel(amount: float) -> bool:
 	if pct <= LOW_FUEL_THRESHOLD and not fuel_warning_active:
 		fuel_warning_active = true
 		SoundManager.play("low_fuel", 0.05)
+		show_toast("LOW FUEL WARNING", "Emergency solar glide engaged! Collect fuel cells.", 3.5)
 	elif pct > LOW_FUEL_THRESHOLD:
 		fuel_warning_active = false
 
@@ -276,7 +277,8 @@ func force_unpause() -> void:
 func start_level(world_index: int) -> void:
 	game_mode = "story"
 	current_world_idx = world_index
-	fuel = get_effective_max_fuel()
+	# Preserve collected fuel progression, ensuring player starts with at least 55% tank
+	fuel = maxf(fuel, get_effective_max_fuel() * 0.55)
 	fuel_warning_active = false
 	player_hp = MAX_HP
 	level_score = 0

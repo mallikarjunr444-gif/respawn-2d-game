@@ -129,7 +129,7 @@ canvas{width:100%;height:100%;display:block;touch-action:none;background:#000;ou
 </div>
 
 <div id="keys">
-  <b>WASD / Arrows</b> Steer Angle · <b>Space</b> Main Thruster · <b>Shift</b> Rocket Boost · <b>E</b> Launch Gate · <b>Q</b> Shield · <b>J / K</b> Combat · <b>P</b> Pause
+  <b>UP / W / SPACE</b> Accelerate Forward · <b>LEFT / RIGHT / A / D</b> Steer Rocket · <b>DOWN / S</b> Airbrake · <b>SHIFT</b> Boost · <b>E / ENTER</b> Warp at Gate · <b>P</b> Pause
 </div>
 
 <script>
@@ -364,18 +364,18 @@ function drawFx(camX, camY){
 const PLANETS = [
   {
     id: 'black_space', name: 'LEVEL 1 — BLACK SPACE', sub: 'Escape the Singularity gravity pull. Learn to fly.',
-    width: 5200, height: 3200, sky: ['#02020a', '#080518'], accent: C.cyan, starCol: '#aaccff',
-    hasHole: true, holePos: {x: 700, y: 1600}, holePullR: 1200, holeForce: 420, holeKillR: 110,
-    gravity: 160, wind: {x: 0, y: 0}, drag: 0.015,
-    minFuel: 25, cells: 28, orbs: 6, debris: 22,
-    playerStart: {x: 350, y: 1600}, gatePos: {x: 4800, y: 1100}
+    width: 5800, height: 3200, sky: ['#02020a', '#080518'], accent: C.cyan, starCol: '#aaccff',
+    hasHole: true, holePos: {x: 450, y: 1600}, holePullR: 2100, holeForce: 380, holeKillR: 150,
+    gravity: 90, wind: {x: 0, y: 0}, drag: 0.015,
+    minFuel: 15, cells: 32, orbs: 8, debris: 22,
+    playerStart: {x: 1250, y: 1600}, gatePos: {x: 5200, y: 1600}
   },
   {
-    id: 'neptune', name: 'LEVEL 2 — NEPTUNE', sub: 'Deep-blue nebula atmosphere. Cross wind currents and ice.',
-    width: 6000, height: 3600, sky: ['#02081c', '#081e4a'], accent: '#4da6ff', starCol: '#66b3ff',
-    hasHole: false, gravity: 220, wind: {x: -160, y: 30}, drag: 0.035,
-    minFuel: 20, cells: 28, orbs: 7, debris: 24, windZones: 4,
-    playerStart: {x: 350, y: 1800}, gatePos: {x: 5500, y: 1200}
+    id: 'neptune', name: 'LEVEL 2 — NEPTUNE', sub: 'Deep-blue azure atmosphere. Cross wind currents and icy debris.',
+    width: 6200, height: 3600, sky: ['#02081c', '#081e4a'], accent: '#4da6ff', starCol: '#66b3ff',
+    hasHole: false, gravity: 160, wind: {x: -140, y: 25}, drag: 0.025,
+    minFuel: 15, cells: 32, orbs: 8, debris: 24, windZones: 4,
+    playerStart: {x: 550, y: 1800}, gatePos: {x: 5600, y: 1800}
   },
   {
     id: 'mars', name: 'LEVEL 3 — MARS', sub: 'Rust-red terrain. Navigate rocky canyons and swirling dust storms.',
@@ -517,7 +517,8 @@ function initFlightLevel(worldIdx){
   const cfg = PLANETS[worldIdx];
   LVL = cfg;
 
-  G.fuel = getMaxFuel();
+  // Preserve collected fuel across levels (guarantee at least 55% for next sector)
+  G.fuel = Math.max(G.fuel || 0, getMaxFuel() * 0.55);
   G.hp = 3;
   G.score = 0;
   G.cellsGot = 0;
@@ -534,7 +535,7 @@ function initFlightLevel(worldIdx){
   PL = {
     x: cfg.playerStart.x,
     y: cfg.playerStart.y,
-    vx: 0,
+    vx: 80,
     vy: 0,
     angle: 0,
     face: 1,
@@ -558,6 +559,19 @@ function initFlightLevel(worldIdx){
   // Generate Collectibles
   CELLS = [];
   ORBS = [];
+
+  // Guaranteed safety fuel cells right ahead of the gate
+  CELLS.push({ x: cfg.gatePos.x - 300, y: cfg.gatePos.y, got: false, rot: 0 });
+  CELLS.push({ x: cfg.gatePos.x - 160, y: cfg.gatePos.y, got: false, rot: 0 });
+  CELLS.push({ x: cfg.gatePos.x - 60, y: cfg.gatePos.y, got: false, rot: 0 });
+
+  // Risky bonus fuel cells near the Singularity for daring pilots
+  if(cfg.hasHole){
+    CELLS.push({ x: 750, y: 1550, got: false, rot: 0 });
+    CELLS.push({ x: 920, y: 1700, got: false, rot: 0 });
+    CELLS.push({ x: 1080, y: 1500, got: false, rot: 0 });
+  }
+
   const r = rng(200 + worldIdx * 37);
   const dirX = cfg.gatePos.x - cfg.playerStart.x;
   const dirY = cfg.gatePos.y - cfg.playerStart.y;
@@ -685,6 +699,50 @@ function drawBackground(cfg, camX, camY, t){
   ctx.arc(px, py, 260, 0, 6.283);
   ctx.fill();
   ctx.restore();
+
+  // For Neptune (Level 2), render prominent azure ice giant planet with glowing atmosphere and icy rings
+  if(cfg.id === 'neptune'){
+    const nx = W * 0.76 - camX * 0.03, ny = H * 0.32 - camY * 0.03;
+    ctx.save();
+    // Ambient azure nebula cloud
+    const neb = ctx.createRadialGradient(nx, ny, 30, nx, ny, 300);
+    neb.addColorStop(0, 'rgba(40,130,255,0.28)');
+    neb.addColorStop(0.5, 'rgba(20,80,200,0.14)');
+    neb.addColorStop(1, 'rgba(0,0,0,0)');
+    ctx.fillStyle = neb;
+    ctx.beginPath();
+    ctx.arc(nx, ny, 300, 0, 6.283);
+    ctx.fill();
+
+    // Neptune Gas Giant Body
+    const plGrad = ctx.createRadialGradient(nx - 28, ny - 28, 12, nx, ny, 90);
+    plGrad.addColorStop(0, '#7ce8ff');
+    plGrad.addColorStop(0.35, '#2680eb');
+    plGrad.addColorStop(0.8, '#0a2e7a');
+    plGrad.addColorStop(1, '#041133');
+    ctx.fillStyle = plGrad;
+    ctx.beginPath();
+    ctx.arc(nx, ny, 90, 0, 6.283);
+    ctx.fill();
+
+    // Atmospheric rim glow
+    ctx.strokeStyle = 'rgba(140,225,255,0.85)';
+    ctx.lineWidth = 2.5;
+    ctx.stroke();
+
+    // Tilted thin faint icy ring
+    ctx.save();
+    ctx.translate(nx, ny);
+    ctx.rotate(-0.35);
+    ctx.strokeStyle = 'rgba(160,230,255,0.4)';
+    ctx.lineWidth = 4;
+    ctx.beginPath();
+    ctx.ellipse(0, 0, 150, 24, 0, 0, 6.283);
+    ctx.stroke();
+    ctx.restore();
+
+    ctx.restore();
+  }
 }
 
 /* ──────── Draw Astronaut Hero ──────── */
@@ -812,38 +870,51 @@ function drawBlackHole(hole, camX, camY, t){
   ctx.save();
   ctx.translate(hx, hy);
 
-  // Gravitational accretion vortex
+  // Outer gravitational lensing glow & distortion halo
   ctx.globalCompositeOperation = 'lighter';
-  const gl = ctx.createRadialGradient(0, 0, 80, 0, 0, 420);
-  gl.addColorStop(0, 'rgba(255,122,46,0.6)');
-  gl.addColorStop(0.4, 'rgba(186,104,248,0.25)');
+  const gl = ctx.createRadialGradient(0, 0, hole.killR * 0.8, 0, 0, 560);
+  gl.addColorStop(0, 'rgba(255,140,40,0.85)');
+  gl.addColorStop(0.2, 'rgba(255,70,160,0.5)');
+  gl.addColorStop(0.5, 'rgba(130,40,255,0.22)');
   gl.addColorStop(1, 'rgba(0,0,0,0)');
   ctx.fillStyle = gl;
   ctx.beginPath();
-  ctx.arc(0, 0, 420, 0, 6.283);
+  ctx.arc(0, 0, 560, 0, 6.283);
   ctx.fill();
 
-  // Accretion disk rings
-  ctx.rotate(-t * 0.7);
-  for(let i=0; i<4; i++){
-    ctx.strokeStyle = ['#ff7a2e','#ff5fa8','#a25eff','#ffd166'][i];
-    ctx.lineWidth = 14 - i*2.5;
+  // Swirling accretion disk rings
+  ctx.save();
+  ctx.rotate(-t * 0.65);
+  const ringColors = ['#ff8833','#ff3388','#b044ff','#ffd700','#3df0ff'];
+  for(let i=0; i<5; i++){
+    ctx.strokeStyle = ringColors[i];
+    ctx.lineWidth = 16 - i * 2.2;
     ctx.beginPath();
-    ctx.ellipse(0, 0, 140 + i*32, 45 + i*10, 0, 0, 6.283);
+    ctx.ellipse(0, 0, 160 + i*42, 50 + i*14, 0, 0, 6.283);
     ctx.stroke();
   }
+  ctx.restore();
+
+  // Relativistic gravitational lensing photon ring
+  ctx.strokeStyle = 'rgba(255,235,190,0.75)';
+  ctx.lineWidth = 9;
+  ctx.beginPath();
+  ctx.arc(0, 0, hole.killR + 14, 0, 6.283);
+  ctx.stroke();
+
   ctx.globalCompositeOperation = 'source-over';
 
-  // Black singularity core
-  ctx.fillStyle = '#000';
+  // Pitch-black singularity core (never transparent)
+  ctx.fillStyle = '#010105';
   ctx.beginPath();
   ctx.arc(0, 0, hole.killR, 0, 6.283);
   ctx.fill();
 
-  ctx.strokeStyle = '#fff';
-  ctx.lineWidth = 3;
+  // Event horizon razor-sharp luminous boundary
+  ctx.strokeStyle = '#ffffff';
+  ctx.lineWidth = 3.5;
   ctx.beginPath();
-  ctx.arc(0, 0, hole.killR + 2, 0, 6.283);
+  ctx.arc(0, 0, hole.killR, 0, 6.283);
   ctx.stroke();
 
   ctx.restore();
@@ -1030,17 +1101,28 @@ function drawHUD(){
   const angleGate = Math.atan2(dy, dx);
   const arrow = getArrow(angleGate);
   const ready = pct >= LVL.minFuel;
-  const statusCol = ready ? C.green : C.ember;
-  const statusText = ready ? '[READY TO WARP]' : '[NEED ' + LVL.minFuel + '% FUEL]';
+  const reached = distGate < GATE.radius + 30;
+  let statusCol, statusText;
+  if(GATE.launching){
+    statusCol = C.cyan;
+    statusText = '★ GATE ENGAGED! WARPING TO NEXT PLANET...';
+  } else if(reached){
+    statusCol = ready ? C.green : C.ember;
+    statusText = ready ? '✔ LAUNCH GATE REACHED — PRESS [E] OR CLICK WARP' : '[NEED ' + LVL.minFuel + '% FUEL TO WARP]';
+  } else {
+    statusCol = ready ? C.green : C.ember;
+    statusText = ready ? '[READY TO WARP]' : '[NEED ' + LVL.minFuel + '% FUEL]';
+  }
 
   txt('LAUNCH GATE: ' + Math.floor(distGate) + 'm ' + arrow + ' ' + statusText, W/2, 42, 13, statusCol, 'center', F_U, 700, 1);
 
-  // Level 1 Black Hole Distance Warning
+  // Level 1 Black Hole Distance Warning & Escape indicator
   if(LVL.hasHole){
     const holeD = Math.hypot(LVL.holePos.x - PL.x, LVL.holePos.y - PL.y);
-    if(holeD < 1400){
-      const warnColor = holeD < 500 ? (Math.sin(G.t*12)>0 ? C.red : '#fff') : C.purple;
-      txt('⚠️ SINGULARITY WARNING: ' + Math.floor(holeD) + 'm', W/2, 60, 12, warnColor, 'center', F_U, 700);
+    if(holeD < 2000){
+      const warnColor = holeD < 500 ? (Math.sin(G.t*12)>0 ? C.red : '#fff') : (holeD < 1000 ? C.ember : C.purple);
+      const escapeHint = PL.x >= LVL.holePos.x ? '➔ ESCAPE DIRECTION: EAST (FLY RIGHT)' : '➔ ESCAPE: FLY EAST AWAY FROM HOLE';
+      txt('⚠️ SINGULARITY BEHIND: ' + Math.floor(holeD) + 'm | ' + escapeHint, W/2, 60, 12, warnColor, 'center', F_U, 700);
     }
   }
 
@@ -1387,37 +1469,67 @@ function updatePlay(dt){
   G.shieldCd -= dt;
   if(G.shieldT > 0) G.shieldT -= dt;
 
-  // Steering angle
-  let steerX = (held.right?1:0) - (held.left?1:0);
-  let steerY = (held.down?1:0) - (held.up?1:0);
+  // Directional Steering & Thrust Controls
+  // Up / W: Accelerate forward in facing direction
+  // Left / A: Steer rocket angle counter-clockwise
+  // Right / D: Steer rocket angle clockwise
+  // Down / S: Airbrake / Reverse
+  // Space: Main thruster
+  // Shift: Rocket boost
 
-  if(steerX !== 0 || steerY !== 0){
-    const targetAngle = Math.atan2(steerY, steerX);
-    p.angle = targetAngle;
-    p.face = steerX >= 0 ? 1 : -1;
+  let steerDir = 0;
+  if(held.left) steerDir -= 1;
+  if(held.right) steerDir += 1;
+
+  if(steerDir !== 0){
+    p.angle += steerDir * 3.8 * dt;
+    p.face = Math.cos(p.angle) >= 0 ? 1 : -1;
   }
 
-  // Main Thruster
-  const canThrust = (held.thrust || pressed('thrust')) && G.fuel > 0;
-  p.thrusting = canThrust;
-  setThrusterRumble(canThrust);
+  // Forward thrust with Up / W or Space
+  const wantThrust = held.up || held.thrust || pressed('thrust');
+  const isBraking = held.down;
+  const hasFuel = G.fuel > 0;
 
-  if(canThrust){
-    const thrustForce = 620 * getThrustMult();
+  p.thrusting = wantThrust;
+  setThrusterRumble(wantThrust && hasFuel);
+
+  if(wantThrust){
+    const thrustPower = 760 * getThrustMult();
     const cosA = Math.cos(p.angle), sinA = Math.sin(p.angle);
-    p.vx += cosA * thrustForce * dt;
-    p.vy += sinA * thrustForce * dt;
 
-    // Fuel Burn
-    const burn = 8.0 * getBurnMult() * dt;
-    G.fuel = Math.max(0, G.fuel - burn);
-
-    // Rocket exhaust flame particles
-    for(let i=0; i<2; i++){
-      const ex = p.x - cosA * 18 + (Math.random()-0.5)*4;
-      const ey = p.y - sinA * 18 + (Math.random()-0.5)*4;
-      spawn(ex, ey, -cosA * 220 + (Math.random()-0.5)*50, -sinA * 220 + (Math.random()-0.5)*50, 0.25, 4, Math.random()<0.5?'#ffaa22':'#ff5511', 0, true);
+    if(hasFuel){
+      p.vx += cosA * thrustPower * dt;
+      p.vy += sinA * thrustPower * dt;
+      // Rebalanced burn rate (3.2/s instead of 8.0/s)
+      const burn = 3.2 * getBurnMult() * dt;
+      G.fuel = Math.max(0, G.fuel - burn);
+    } else {
+      // Emergency solar glide: low-power reserve thrust so astronaut is NEVER permanently stranded
+      p.vx += cosA * (thrustPower * 0.45) * dt;
+      p.vy += sinA * (thrustPower * 0.45) * dt;
     }
+
+    // Rocket exhaust flame particles pointing backward
+    for(let i=0; i<3; i++){
+      const ex = p.x - cosA * 20 + (Math.random()-0.5)*5;
+      const ey = p.y - sinA * 20 + (Math.random()-0.5)*5;
+      const col = hasFuel ? (Math.random()<0.4 ? '#ffea00' : (Math.random()<0.7 ? '#ff6600' : '#ff1144')) : '#5ce6ff';
+      spawn(ex, ey, -cosA * 260 + (Math.random()-0.5)*50, -sinA * 260 + (Math.random()-0.5)*50, 0.3, 4.5, col, 0, true);
+    }
+    // Extra ion wake when escaping black hole
+    if(cfg.hasHole && p.vx > 0){
+      spawn(p.x - cosA * 24, p.y - sinA * 24, -cosA * 320, -sinA * 320, 0.25, 3.5, C.cyan, 0, true);
+    }
+  }
+
+  // Airbrake / Reverse (Down / S)
+  if(isBraking){
+    p.vx *= (1.0 - 2.8 * dt);
+    p.vy *= (1.0 - 2.8 * dt);
+    const cosA = Math.cos(p.angle), sinA = Math.sin(p.angle);
+    p.vx -= cosA * 240 * dt;
+    p.vy -= sinA * 240 * dt;
   }
 
   // Rocket Boost
@@ -1425,17 +1537,21 @@ function updatePlay(dt){
     p.boostCd = 1.4;
     p.boostT = 0.35;
     G.fuel -= 8;
-    p.inv = Math.max(p.inv, 0.4);
+    p.inv = Math.max(p.inv, 0.45);
     SFX.boost();
-    G.shake = 6;
+    G.shake = 7;
   }
   if(p.boostT > 0){
     p.boostT -= dt;
     const cosA = Math.cos(p.angle), sinA = Math.sin(p.angle);
-    p.vx += cosA * 1100 * dt;
-    p.vy += sinA * 1100 * dt;
-    for(let i=0; i<3; i++){
-      spawn(p.x - cosA*20, p.y - sinA*20, -cosA * 350, -sinA * 350, 0.3, 5, C.cyan, 0, true);
+    p.vx += cosA * 1350 * dt;
+    p.vy += sinA * 1350 * dt;
+    // Strong rocket exhaust burst when boosting away
+    for(let i=0; i<4; i++){
+      const ex = p.x - cosA*22 + (Math.random()-0.5)*6;
+      const ey = p.y - sinA*22 + (Math.random()-0.5)*6;
+      spawn(ex, ey, -cosA * 420 + (Math.random()-0.5)*70, -sinA * 420 + (Math.random()-0.5)*70, 0.4, 5.5, Math.random()<0.5?C.cyan:'#ffffff', 0, true);
+      spawn(ex, ey, -cosA * 300, -sinA * 300, 0.28, 3.5, '#7b2cbf', 0, true);
     }
   }
 
@@ -1462,7 +1578,7 @@ function updatePlay(dt){
 
   // Speed cap
   const spd = Math.hypot(p.vx, p.vy);
-  const maxSpd = 520;
+  const maxSpd = 660;
   if(spd > maxSpd){
     p.vx = (p.vx / spd) * maxSpd;
     p.vy = (p.vy / spd) * maxSpd;
@@ -1484,15 +1600,19 @@ function updatePlay(dt){
   p.y = clamp(p.y, 30, cfg.height - 30);
 
   // Black Hole Singularity Pull (Level 1 ONLY)
+  // Stable physics calculations, capped max pull force, safe minimum distance
   if(cfg.hasHole){
     const hx = cfg.holePos.x, hy = cfg.holePos.y;
     const distHole = Math.hypot(hx - p.x, hy - p.y);
     if(distHole < cfg.holePullR && distHole > 0){
-      const pullFactor = 1 - (distHole / cfg.holePullR);
+      const safeDist = Math.max(distHole, 120.0);
+      const pullFactor = Math.pow(Math.max(0, 1.0 - (distHole / cfg.holePullR)), 1.35);
+      const rawForce = cfg.holeForce * pullFactor;
+      const cappedForce = Math.min(rawForce, 440.0);
       const pullDirX = (hx - p.x) / distHole;
       const pullDirY = (hy - p.y) / distHole;
-      p.vx += pullDirX * cfg.holeForce * pullFactor * dt;
-      p.vy += pullDirY * cfg.holeForce * pullFactor * dt;
+      p.vx += pullDirX * cappedForce * dt;
+      p.vy += pullDirY * cappedForce * dt;
     }
     if(distHole <= cfg.holeKillR){
       die('CONSUMED BY THE EVENT HORIZON');
@@ -1524,9 +1644,22 @@ function updatePlay(dt){
     }
   }
 
-  // Debris collision
+  // Debris physics & black hole gravitational curve
   for(let k=0; k<DEBRIS.length; k++){
     const d = DEBRIS[k];
+    if(cfg.hasHole){
+      const dhx = cfg.holePos.x - d.x;
+      const dhy = cfg.holePos.y - d.y;
+      const distD = Math.hypot(dhx, dhy);
+      if(distD < cfg.holePullR * 1.25 && distD > 50){
+        const pullF = Math.min(300, (1.0 - distD / (cfg.holePullR * 1.25)) * 260);
+        d.vx += (dhx / distD) * pullF * dt;
+        d.vy += (dhy / distD) * pullF * dt;
+        // Tangential orbital swirl curving debris around singularity
+        d.vx += (-dhy / distD) * (pullF * 0.35) * dt;
+        d.vy += (dhx / distD) * (pullF * 0.35) * dt;
+      }
+    }
     d.x += d.vx * dt;
     d.y += d.vy * dt;
     d.rot += d.rotSpd * dt;
@@ -1538,43 +1671,59 @@ function updatePlay(dt){
     }
   }
 
-  // Collect Fuel Cells
+  // Collect Fuel Cells (with magnetic pull)
   for(let i=0; i<CELLS.length; i++){
     const c = CELLS[i];
-    if(!c.got && Math.hypot(p.x - c.x, p.y - c.y) < 32){
-      c.got = true;
-      G.fuel = Math.min(getMaxFuel(), G.fuel + 12);
-      G.score += 10;
-      G.cellsGot++;
-      SFX.fuel();
-      burst(c.x, c.y, 12, C.green, 160, 0.5, true);
+    if(!c.got){
+      const d = Math.hypot(p.x - c.x, p.y - c.y);
+      if(d < 180 && d > 0){
+        c.x = lerp(c.x, p.x, dt * 5.0);
+        c.y = lerp(c.y, p.y, dt * 5.0);
+      }
+      if(d < 38){
+        c.got = true;
+        G.fuel = Math.min(getMaxFuel(), G.fuel + 16);
+        G.score += 15;
+        G.cellsGot++;
+        SFX.fuel();
+        burst(c.x, c.y, 12, C.green, 160, 0.5, true);
+      }
     }
   }
 
-  // Collect Energy Orbs
+  // Collect Energy Orbs (with magnetic pull)
   for(let j=0; j<ORBS.length; j++){
     const o = ORBS[j];
-    if(!o.got && Math.hypot(p.x - o.x, p.y - o.y) < 36){
-      o.got = true;
-      G.fuel = Math.min(getMaxFuel(), G.fuel + 25);
-      G.score += 50;
-      G.orbsGot++;
-      SFX.orb();
-      burst(o.x, o.y, 20, C.gold, 220, 0.7, true);
+    if(!o.got){
+      const d = Math.hypot(p.x - o.x, p.y - o.y);
+      if(d < 180 && d > 0){
+        o.x = lerp(o.x, p.x, dt * 5.0);
+        o.y = lerp(o.y, p.y, dt * 5.0);
+      }
+      if(d < 42){
+        o.got = true;
+        G.fuel = Math.min(getMaxFuel(), G.fuel + 35);
+        G.score += 50;
+        G.orbsGot++;
+        SFX.orb();
+        burst(o.x, o.y, 20, C.gold, 220, 0.7, true);
+      }
     }
   }
 
   // Launch Gate interaction
   GATE.rot += dt * 0.8;
   const distGate = Math.hypot(p.x - GATE.x, p.y - GATE.y);
-  if(distGate < GATE.radius + 20){
-    const hasFuel = getFuelPct() >= cfg.minFuel;
-    if(hasFuel && (pressed('use') || GATE.launching)){
+  const minFuelNeeded = cfg.minFuel || 15;
+  const hasFuel = getFuelPct() >= minFuelNeeded;
+  if(distGate < GATE.radius + 30){
+    if(hasFuel && (pressed('use') || pressed('thrust') || distGate < 55 || GATE.launching)){
       if(!GATE.launching){
         GATE.launching = true;
         GATE.launchT = 0;
         SFX.warp();
-        G.toast = { a: 'WARP SEQUENCE INITIATED', b: 'Transit to next planetary sector', t: 3 };
+        const nextWorldName = PLANETS[G.worldIdx + 1]?.name || 'Next Sector';
+        G.toast = { a: 'WARP SEQUENCE INITIATED', b: 'Transit to ' + nextWorldName, t: 3 };
       }
     }
   }
@@ -1754,6 +1903,16 @@ function frame(ts){
 
   if(G.scene === 'play'){
     updatePlay(dt);
+  } else if(G.scene === 'level_complete'){
+    G.completeTimer = (G.completeTimer || 0) + dt;
+    const nextIdx = G.worldIdx + 1;
+    if(nextIdx < 10){
+      if(pressed('use') || pressed('thrust') || pressed('fire') || G.completeTimer >= 4.0){
+        G.completeTimer = 0;
+        SFX.click();
+        initFlightLevel(nextIdx);
+      }
+    }
   }
 
   render();

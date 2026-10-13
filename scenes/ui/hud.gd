@@ -22,11 +22,11 @@ extends CanvasLayer
 @onready var game_over_panel: PanelContainer = $GameOverPanel
 @onready var game_over_reason: Label = $GameOverPanel/VBox/ReasonLabel
 
-@onready var weapon_box: HBoxContainer = $BottomBar/WeaponBox
-@onready var sword_icon: Label = $BottomBar/WeaponBox/SwordLabel
-@onready var blaster_icon: Label = $BottomBar/WeaponBox/BlasterLabel
-@onready var shield_icon: Label = $BottomBar/WeaponBox/ShieldLabel
-@onready var lance_icon: Label = $BottomBar/WeaponBox/LanceLabel
+@onready var weapon_box: HBoxContainer = $BottomBar/VBox/WeaponBox
+@onready var sword_icon: Label = $BottomBar/VBox/WeaponBox/SwordLabel
+@onready var blaster_icon: Label = $BottomBar/VBox/WeaponBox/BlasterLabel
+@onready var shield_icon: Label = $BottomBar/VBox/WeaponBox/ShieldLabel
+@onready var lance_icon: Label = $BottomBar/VBox/WeaponBox/LanceLabel
 
 var toast_timer: float = 0.0
 var warning_flash: float = 0.0
@@ -70,18 +70,26 @@ func update_radar(dist_to_gate: float, gate_angle: float, has_min_fuel: bool, di
 	# Launch gate navigation
 	var arrow = _angle_to_arrow(gate_angle)
 	var fuel_status = "READY" if has_min_fuel else "LOW FUEL"
-	gate_indicator.text = "LAUNCH GATE: " + str(int(dist_to_gate)) + "m " + arrow + " [" + fuel_status + "]"
-	gate_indicator.modulate = Color(0.3, 1.0, 0.6) if has_min_fuel else Color(1.0, 0.5, 0.3)
+	if dist_to_gate < 120.0:
+		if has_min_fuel:
+			gate_indicator.text = "LAUNCH GATE: " + str(int(dist_to_gate)) + "m ✔ [GATE REACHED - READY TO WARP]"
+			gate_indicator.modulate = Color(0.2, 1.0, 0.5)
+		else:
+			gate_indicator.text = "LAUNCH GATE: " + str(int(dist_to_gate)) + "m ⚠ [GATE REACHED - NEED FUEL]"
+			gate_indicator.modulate = Color(1.0, 0.4, 0.2)
+	else:
+		gate_indicator.text = "LAUNCH GATE: " + str(int(dist_to_gate)) + "m " + arrow + " [" + fuel_status + "]"
+		gate_indicator.modulate = Color(0.3, 1.0, 0.6) if has_min_fuel else Color(1.0, 0.5, 0.3)
 
 	# Devourer warning for level 1
 	if dist_to_devourer >= 0.0:
 		radar_label.visible = true
-		if dist_to_devourer < 500.0:
-			radar_label.text = "⚠️ SINGULARITY EVENT: " + str(int(dist_to_devourer)) + "m"
-			radar_label.modulate = Color(1.0, 0.2, 0.2)
+		if dist_to_devourer < 600.0:
+			radar_label.text = "⚠️ SINGULARITY EVENT HORIZON: " + str(int(dist_to_devourer)) + "m BEHIND"
+			radar_label.modulate = Color(1.0, 0.2, 0.2) if sin(warning_flash) > 0.0 else Color(1.0, 0.7, 0.2)
 		else:
-			radar_label.text = "BLACK HOLE DISTANCE: " + str(int(dist_to_devourer)) + "m"
-			radar_label.modulate = Color(0.7, 0.4, 1.0)
+			radar_label.text = "SINGULARITY BEHIND: " + str(int(dist_to_devourer)) + "m (BOOST EAST TO ESCAPE)"
+			radar_label.modulate = Color(0.75, 0.5, 1.0)
 	else:
 		radar_label.visible = false
 

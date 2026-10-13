@@ -12,9 +12,13 @@ extends Area2D
 @onready var poly: Polygon2D = $Polygon2D
 
 func _ready() -> void:
+	add_to_group("debris")
 	body_entered.connect(_on_body_entered)
 	rot_speed = randf_range(-1.2, 1.2)
 	_generate_rock_shape()
+
+func apply_external_force(force: Vector2) -> void:
+	drift_velocity += force
 
 func _generate_rock_shape() -> void:
 	var pts: PackedVector2Array = []

@@ -10,9 +10,9 @@ signal health_updated(hp: int, max_hp: int)
 signal died(reason: String)
 
 # ── Flight Physics ──
-@export var thrust_force: float = 650.0
-@export var boost_force: float = 1200.0
-@export var max_speed: float = 520.0
+@export var thrust_force: float = 750.0
+@export var boost_force: float = 1400.0
+@export var max_speed: float = 680.0
 @export var rotation_speed: float = 4.5
 @export var brake_deceleration: float = 300.0
 
@@ -38,6 +38,7 @@ var lance_charge_time: float = 0.0
 var level_gravity: Vector2 = Vector2(0, 400.0)
 var level_wind: Vector2 = Vector2.ZERO
 var level_drag: float = 0.02
+var level_bounds: Rect2 = Rect2(0, 0, 8000, 5000)
 
 # ── References ──
 @onready var sprite: Sprite2D = $Sprite2D
@@ -88,70 +89,76 @@ func _physics_process(delta: float) -> void:
 			shield_bubble.visible = false
 			shield_bubble.monitoring = false
 
-	# ── Directional Input ──
-	var input_dir = Vector2.ZERO
-	input_dir.x = Input.get_axis("move_left", "move_right")
-	input_dir.y = Input.get_axis("move_up", "move_down")
+	# ── Directional Steering & Rotation (Left/Right or A/D) ──
+	var steer_input = 0.0
+	if Input.is_action_pressed("move_left"):
+		steer_input -= 1.0
+	if Input.is_action_pressed("move_right"):
+		steer_input += 1.0
 
-	# Update facing direction for sprite flipping
-	if input_dir.x != 0.0:
-		facing_dir = signf(input_dir.x)
-		sprite.flip_h = facing_dir < 0.0
-		rocket_sprite.flip_h = facing_dir < 0.0
+	# Steer or rotate the rocket smoothly
+	if steer_input != 0.0:
+		facing_angle += steer_input * rotation_speed * delta
+		facing_dir = signf(cos(facing_angle))
+		if facing_dir == 0.0:
+			facing_dir = 1.0
 
-	# Calculate facing angle from input
-	if input_dir.length_squared() > 0.01:
-		var target_angle = input_dir.angle()
-		facing_angle = lerp_angle(facing_angle, target_angle, rotation_speed * delta)
+	# Rotate astronaut and rocket to point in facing flight direction
+	# In Sprite2D space, head is at -Y and feet/rocket are at +Y, so +PI/2 aligns facing_angle 0 with +X
+	rotation = lerp_angle(rotation, facing_angle + PI * 0.5, 12.0 * delta)
 
-	# ── Thrust ──
-	is_thrusting = Input.is_action_pressed("thrust") and not GameState.is_fuel_empty()
-	is_boosting = false
+	# ── Forward Thrust (Up Arrow / W / Space) ──
+	var is_forward_pressed = Input.is_action_pressed("move_up")
+	var is_space_pressed = Input.is_action_pressed("thrust")
+	var is_brake_pressed = Input.is_action_pressed("move_down")
 
-	if is_thrusting:
-		var thrust_dir: Vector2
-		if input_dir.length_squared() > 0.01:
-			thrust_dir = input_dir.normalized()
+	var want_thrust = is_forward_pressed or is_space_pressed
+	var has_fuel = not GameState.is_fuel_empty()
+
+	if want_thrust:
+		var thrust_dir = Vector2.from_angle(facing_angle)
+		var thrust_power = thrust_force * GameState.get_thrust_multiplier()
+
+		if has_fuel:
+			velocity += thrust_dir * (thrust_power * delta)
+			GameState.consume_fuel(GameState.FUEL_CONSUMPTION_RATE * delta)
+			exhaust_particles.emitting = true
+			rocket_sprite.modulate = Color(1.5, 1.2, 0.8, 1.0)
+			visor_light.energy = 2.0
 		else:
-			thrust_dir = Vector2(facing_dir, 0.0)
+			# Emergency solar glide: low-power reserve thrust so astronaut is NEVER permanently stranded
+			velocity += thrust_dir * (thrust_power * 0.45 * delta)
+			exhaust_particles.emitting = true
+			rocket_sprite.modulate = Color(0.6, 1.0, 1.2, 0.8)
+			visor_light.energy = 1.2
 
-		var effective_thrust = thrust_force * GameState.get_thrust_multiplier()
-		velocity += thrust_dir * effective_thrust * delta
-
-		# Fuel consumption
-		GameState.consume_fuel(GameState.FUEL_CONSUMPTION_RATE * delta)
-
-		# Exhaust visuals
-		exhaust_particles.emitting = true
-		# Point exhaust opposite to thrust direction
-		exhaust_particles.direction = -thrust_dir
-		exhaust_particles.rotation = thrust_dir.angle()
-
-		# Rocket glow
-		rocket_sprite.modulate = Color(1.5, 1.2, 0.8, 1.0)
-		visor_light.energy = 2.0
+		is_thrusting = true
 	else:
+		is_thrusting = false
 		exhaust_particles.emitting = false
 		rocket_sprite.modulate = Color(0.8, 0.8, 0.9, 1.0)
 		visor_light.energy = 1.0
 
-	# ── Boost ──
-	if Input.is_action_just_pressed("boost") and boost_cooldown <= 0.0 and not GameState.is_fuel_empty():
-		is_boosting = true
-		boost_duration = BOOST_MAX_DURATION
-		boost_cooldown = BOOST_COOLDOWN_TIME
-		GameState.consume_fuel(BOOST_FUEL_COST)
-		SoundManager.play("boost", 0.1)
-		invulnerable_timer = maxf(invulnerable_timer, 0.3)
+	# ── Braking / Reverse (Down Arrow / S) ──
+	if is_brake_pressed:
+		velocity = velocity.move_toward(Vector2.ZERO, brake_deceleration * 2.5 * delta)
+		var reverse_dir = -Vector2.from_angle(facing_angle)
+		velocity += reverse_dir * (thrust_force * 0.35 * delta)
+
+	# ── Rocket Boost (Shift) ──
+	if Input.is_action_just_pressed("boost") and boost_cooldown <= 0.0:
+		if has_fuel:
+			is_boosting = true
+			boost_duration = BOOST_MAX_DURATION
+			boost_cooldown = BOOST_COOLDOWN_TIME
+			GameState.consume_fuel(BOOST_FUEL_COST)
+			SoundManager.play("boost", 0.1)
+			invulnerable_timer = maxf(invulnerable_timer, 0.45)
 
 	if boost_duration > 0.0:
 		boost_duration -= delta
-		var boost_dir: Vector2
-		if input_dir.length_squared() > 0.01:
-			boost_dir = input_dir.normalized()
-		else:
-			boost_dir = Vector2(facing_dir, 0.0)
-		velocity += boost_dir * boost_force * delta
+		var boost_dir = Vector2.from_angle(facing_angle)
+		velocity += boost_dir * (boost_force * delta)
 		boost_particles.emitting = true
 	else:
 		boost_particles.emitting = false
@@ -163,16 +170,16 @@ func _physics_process(delta: float) -> void:
 	# Wind
 	velocity += level_wind * delta
 
-	# Drag (air resistance / space friction for gameplay)
-	velocity *= (1.0 - level_drag)
+	# Space momentum drag / friction
+	velocity *= (1.0 - level_drag * delta * 60.0)
 
-	# Speed cap
+	# Speed limits
 	if velocity.length() > max_speed:
 		velocity = velocity.normalized() * max_speed
 
-	# ── Braking (no input + no thrust = gentle deceleration) ──
-	if input_dir.length_squared() < 0.01 and not is_thrusting:
-		velocity = velocity.move_toward(Vector2.ZERO, brake_deceleration * delta)
+	# Natural glide friction when no thrust is applied
+	if not want_thrust and not is_brake_pressed and boost_duration <= 0.0:
+		velocity = velocity.move_toward(Vector2.ZERO, (brake_deceleration * 0.15) * delta)
 
 	# ── Weapons ──
 	# Melee Attack (Energy Sword)
@@ -199,10 +206,26 @@ func _physics_process(delta: float) -> void:
 	# ── Move ──
 	move_and_slide()
 
-	# ── Rotate rocket sprite to face velocity direction ──
-	if velocity.length() > 30.0:
-		var vel_angle = velocity.angle()
-		rocket_sprite.rotation = lerp_angle(rocket_sprite.rotation, vel_angle, 6.0 * delta)
+	# Constrain astronaut safely within level bounds to avoid getting lost outside camera
+	var min_x = level_bounds.position.x + 40.0
+	var max_x = level_bounds.position.x + level_bounds.size.x - 40.0
+	var min_y = level_bounds.position.y + 40.0
+	var max_y = level_bounds.position.y + level_bounds.size.y - 40.0
+
+	if position.x < min_x:
+		position.x = min_x
+		if velocity.x < 0.0: velocity.x = 0.0
+	elif position.x > max_x:
+		position.x = max_x
+		if velocity.x > 0.0: velocity.x = 0.0
+
+	if position.y < min_y:
+		position.y = min_y
+		if velocity.y < 0.0: velocity.y = 0.0
+	elif position.y > max_y:
+		position.y = max_y
+		if velocity.y > 0.0: velocity.y = -30.0
+
 
 # ═══════════════════════════════════════════════════════════════
 # COMBAT

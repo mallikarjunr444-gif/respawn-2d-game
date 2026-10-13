@@ -3,7 +3,7 @@
 [ext_resource type="Script" path="res://scenes/objects/fuel_cell.gd" id="1_script"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_fuel"]
-radius = 18.0
+radius = 32.0
 
 [sub_resource type="Gradient" id="Gradient_sparkle"]
 colors = PackedColorArray(0.3, 1.0, 0.5, 1, 0.1, 0.8, 0.3, 0)
