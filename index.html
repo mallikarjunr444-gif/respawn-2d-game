@@ -89,7 +89,8 @@ canvas{width:100%;height:100%;display:block;touch-action:none;background:#000;ou
 <div id="loader">
   <h1>SPACE ODYSSEY</h1>
   <div class="load-bar"><span id="lbar"></span></div>
-  <p>Calibrating thrusters & navigation...</p>
+  <p id="ltext">Calibrating thrusters & navigation... 0%</p>
+  <button id="lretry" onclick="location.reload()" style="display:none;margin-top:14px;padding:9px 24px;background:#3df0ff;color:#040614;font:700 13px 'Chakra Petch',sans-serif;border:none;border-radius:4px;letter-spacing:1px;cursor:pointer">RETRY FLIGHT</button>
 </div>
 
 <header id="orvex-header">
@@ -1831,9 +1832,9 @@ function updatePlay(dt){
   GATE.rot += dt * 0.8;
   const distGate = Math.hypot(p.x - GATE.x, p.y - GATE.y);
   const minFuelNeeded = cfg.minFuel || 15;
-  const hasFuel = getFuelPct() >= minFuelNeeded;
+  const gateHasFuel = getFuelPct() >= minFuelNeeded;
   if(distGate < GATE.radius + 30){
-    if(hasFuel && (pressed('use') || pressed('thrust') || distGate < 55 || GATE.launching)){
+    if(gateHasFuel && (pressed('use') || pressed('thrust') || distGate < 55 || GATE.launching)){
       if(!GATE.launching){
         GATE.launching = true;
         GATE.launchT = 0;
@@ -2059,26 +2060,46 @@ cv.addEventListener('pointerdown', e => {
   }
 });
 
-// Loading screen tick
+// Global error reporter on loader
+window.addEventListener('error', e => {
+  const lt = document.getElementById('ltext');
+  const lr = document.getElementById('lretry');
+  if(lt) lt.textContent = 'INITIALIZATION ALERT: ' + (e.message || 'System error');
+  if(lr) lr.style.display = 'inline-block';
+});
+
+// Loading screen tick with clear progress tracking
 let loadProg = 0;
 function tickLoad(){
-  loadProg = Math.min(100, loadProg + 6 + (Math.random()*10|0));
+  loadProg = Math.min(100, loadProg + 8 + (Math.random()*12|0));
   const lb = document.getElementById('lbar');
+  const lt = document.getElementById('ltext');
   if(lb) lb.style.width = loadProg + '%';
+  if(lt && loadProg < 100) lt.textContent = 'Calibrating thrusters & navigation... ' + loadProg + '%';
   if(loadProg >= 100){
+    if(lt) lt.textContent = 'FLIGHT SYSTEMS ONLINE';
     setTimeout(() => {
       const ld = document.getElementById('loader');
       if(ld) ld.classList.add('done');
       setTimeout(() => {
         if(ld) ld.style.display = 'none';
         cv.focus();
-      }, 600);
-    }, 250);
+      }, 500);
+    }, 200);
   } else {
-    setTimeout(tickLoad, 60);
+    setTimeout(tickLoad, 45);
   }
 }
 tickLoad();
+
+// Hard fail-safe: dismiss loader after 3.0s under all circumstances so the game is never permanently stuck
+setTimeout(() => {
+  const ld = document.getElementById('loader');
+  if(ld && !ld.classList.contains('done')){
+    ld.classList.add('done');
+    setTimeout(() => { if(ld) ld.style.display = 'none'; cv.focus(); }, 400);
+  }
+}, 3000);
 
 requestAnimationFrame(frame);
 
