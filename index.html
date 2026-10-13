@@ -1889,6 +1889,9 @@ function updatePlay(dt){
   if(held.left) steerDir -= 1;
   if(held.right) steerDir += 1;
 
+  const wantThrust = held.up || held.thrust || pressed('thrust');
+  const isBraking = held.down;
+  const hasFuel = G.fuel > 0;
   const isSurface = !cfg.isSpace;
 
   if(!isSurface && steerDir !== 0){
@@ -1918,11 +1921,6 @@ function updatePlay(dt){
       for(let i=0; i<2; i++) spawn(p.x - p.face*14, p.y + 18, -p.face*50 + (Math.random()-0.5)*40, 150 + Math.random()*60, 0.25, 3.5, C.cyan, 0, true);
     }
   }
-
-  // Forward thrust with Up / W or Space
-  const wantThrust = held.up || held.thrust || pressed('thrust');
-  const isBraking = held.down;
-  const hasFuel = G.fuel > 0;
 
   p.thrusting = wantThrust && !isSurface;
   setThrusterRumble(wantThrust && hasFuel && !isSurface);
@@ -2025,8 +2023,35 @@ function updatePlay(dt){
   }
 
   // Position update
+  const prevY = p.y;
   p.x += p.vx * dt;
   p.y += p.vy * dt;
+
+  if(isSurface){
+    for(const plat of PLATFORMS){
+      if(plat.kind === 'move') plat.ox = Math.sin(G.t * 1.4 + plat.phase) * plat.amp;
+    }
+    p.onGround = false;
+    for(const plat of PLATFORMS){
+      if(plat.broke) continue;
+      const px = plat.x + (plat.ox || 0);
+      const withinX = p.x + p.radius > px && p.x - p.radius < px + plat.w;
+      const crossedTop = prevY + p.radius <= plat.y && p.y + p.radius >= plat.y;
+      if(withinX && crossedTop && p.vy >= 0){
+        p.y = plat.y - p.radius;
+        p.vy = 0;
+        p.onGround = true;
+        if(plat.kind === 'move') p.x += Math.cos(G.t * 1.4 + plat.phase) * plat.amp * 1.4 * dt;
+        if(plat.kind === 'crack'){
+          plat.crackT = (plat.crackT || 0) + dt;
+          if(plat.crackT > 0.75){
+            plat.broke = true;
+            burst(p.x, p.y + 18, 18, '#bdefff', 180, 0.55, true);
+          }
+        }
+      }
+    }
+  }
 
   // Level boundaries clamping
   p.x = clamp(p.x, 30, cfg.width - 30);
@@ -2060,13 +2085,38 @@ function updatePlay(dt){
         p.vx += h.fx * dt;
         p.vy += h.fy * dt;
       }
+    } else if(h.type === 'updraft' || h.type === 'downdraft' || h.type === 'icegust'){
+      if(Math.abs(p.x - h.x) < h.w/2 && Math.abs(p.y - h.y) < h.h/2){
+        p.vy += (h.fy || 0) * dt;
+        p.vx += (h.fx || 0) * dt;
+      }
+    } else if(h.type === 'lowgrav' || h.type === 'heavygrav'){
+      const d = Math.hypot(p.x - h.x, p.y - h.y);
+      if(d < h.r){
+        p.vy += (h.type === 'lowgrav' ? -cfg.gravity * 0.72 : cfg.gravity * 0.95) * dt;
+      }
     } else if(h.type === 'heat' || h.type === 'acid'){
       const d = Math.hypot(p.x - h.x, p.y - h.y);
       if(d < h.r){
         G.fuel = Math.max(0, G.fuel - h.drain * dt);
+        if(h.type === 'acid') p.suit = Math.max(0, p.suit - (cfg.oxygenDrain || 1.5) * dt);
         if(G.fuel <= 0 && p.inv <= 0){
           hurt(1, 'THERMAL HULL COLLAPSE');
         }
+      }
+    } else if(h.type === 'lava'){
+      if(Math.abs(p.x - h.x) < h.w/2 && Math.abs(p.y - h.y) < h.h/2 && p.inv <= 0){
+        hurt(1, 'LAVA BREACH');
+      }
+    } else if(h.type === 'firejet'){
+      const active = Math.sin(G.t * 2.8 + h.phase) > -0.2;
+      if(active && Math.abs(p.x - h.x) < 34 && p.y > h.y - 180 && p.y < h.y + 20 && p.inv <= 0){
+        hurt(1, 'FIRE JET IMPACT');
+      }
+    } else if(h.type === 'safe'){
+      const d = Math.hypot(p.x - h.x, p.y - h.y);
+      if(d < h.r){
+        p.suit = Math.min(100, p.suit + 18 * dt);
       }
     } else if(h.type === 'storm'){
       const d = Math.hypot(p.x - h.x, p.y - h.y);
@@ -2075,6 +2125,25 @@ function updatePlay(dt){
         p.vy += (Math.random()-0.5) * 140 * dt;
       }
     }
+  }
+
+  if(cfg.oxygenDrain && !HAZARDS.some(h => h.type === 'safe' && Math.hypot(p.x - h.x, p.y - h.y) < h.r)){
+    p.suit = Math.max(0, p.suit - cfg.oxygenDrain * dt);
+    if(p.suit <= 0 && p.inv <= 0) hurt(1, 'SUIT PROTECTION DEPLETED');
+  }
+
+  if(cfg.fallingRocks && Math.floor(G.t * 1.8) !== Math.floor((G.t - dt) * 1.8)){
+    DEBRIS.push({
+      x: clamp(p.x + (Math.random() - 0.5) * 760, 200, cfg.width - 200),
+      y: Math.max(80, p.y - 720),
+      vx: (Math.random() - 0.5) * 90,
+      vy: 180 + Math.random() * 120,
+      radius: 18 + Math.random() * 18,
+      rot: Math.random() * 6.28,
+      rotSpd: (Math.random() - 0.5) * 3,
+      hp: 1,
+      hot: true
+    });
   }
 
   // Debris physics & black hole gravitational curve
@@ -2098,8 +2167,24 @@ function updatePlay(dt){
     d.rot += d.rotSpd * dt;
     if(Math.hypot(p.x - d.x, p.y - d.y) < p.radius + d.radius){
       if(p.inv <= 0 && G.shieldT <= 0){
-        hurt(1, 'DEBRIS IMPACT');
-        burst(d.x, d.y, 16, '#9c9282', 180, 0.4);
+        hurt(1, d.hot ? 'HOT ROCK IMPACT' : 'DEBRIS IMPACT');
+        burst(d.x, d.y, 16, d.hot ? C.ember : '#9c9282', 180, 0.4);
+      }
+    }
+  }
+
+  for(let e=ENEMIES.length-1; e>=0; e--){
+    const enemy = ENEMIES[e];
+    enemy.x = enemy.baseX + Math.sin(G.t * 1.4 + enemy.phase) * 90;
+    enemy.y += Math.sin(G.t * 2.1 + enemy.phase) * 0.35;
+    const d = Math.hypot(p.x - enemy.x, p.y - enemy.y);
+    if(d < p.radius + 30){
+      if(p.boostT > 0 || G.shieldT > 0){
+        ENEMIES.splice(e, 1);
+        G.score += 60;
+        burst(enemy.x, enemy.y, 24, cfg.accent, 220, 0.55, true);
+      } else if(p.inv <= 0){
+        hurt(1, enemy.type === 'vortex' ? 'VORTEX GUARDIAN STRIKE' : 'HOSTILE CONTACT');
       }
     }
   }
