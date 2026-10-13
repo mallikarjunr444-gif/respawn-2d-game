@@ -78,6 +78,71 @@ save('objects/forge_terminal.svg', 200, 200,
 shards = ''.join(f'<path d="M{20+i*14} 220 L{26+i*14} {220-60-(i*37)%110} L{34+i*14} 220 Z" fill="{"#7c6cff" if i%2 else "#78f0ff"}" fill-opacity=".8" stroke="#fff" stroke-opacity=".6"/>' for i in range(7))
 save('objects/crystal_barrier.svg', 160, 230, shards)
 
+# --- comet (120x64) ---
+comet_defs = rg('ct', [(0, '#fff', 1), (.3, '#ffe480', 1), (1, '#ff5f30', .0)])
+comet_body = (
+    # tail glow (widening gradient trail)
+    '<ellipse cx="30" cy="32" rx="30" ry="14" fill="#ff9a3c" fill-opacity=".18"/>'
+    '<path d="M80 32 Q55 24 6 30 Q55 40 80 32 Z" fill="#ffe480" fill-opacity=".35"/>'
+    '<path d="M80 32 Q60 28 20 30 Q60 36 80 32 Z" fill="#ffe480" fill-opacity=".55"/>'
+    # core
+    '<circle cx="80" cy="32" r="14" fill="url(#ct)"/>'
+    '<circle cx="80" cy="32" r="8" fill="#fff"/>'
+    # sparkle highlights
+    '<circle cx="72" cy="28" r="2" fill="#fff" fill-opacity=".7"/>'
+    '<circle cx="66" cy="34" r="1.4" fill="#ffe480" fill-opacity=".5"/>'
+)
+save('objects/comet.svg', 120, 64, comet_body, comet_defs)
+
+# --- asteroid (80x80) – irregular rocky shape with craters ---
+asteroid_defs = rg('ast', [(0, '#a89080', 1), (.6, '#6e5c52', 1), (1, '#3a2e28', 1)])
+asteroid_body = (
+    # irregular rocky outline
+    '<path d="M40 6 L58 10 L72 22 L76 40 L70 58 L54 72 L36 76 L18 66 L6 50 L8 30 L20 12 Z" '
+    'fill="url(#ast)" stroke="#4a3e38" stroke-width="2"/>'
+    # craters
+    '<circle cx="34" cy="30" r="8" fill="#5a4e44" fill-opacity=".6"/>'
+    '<circle cx="36" cy="28" r="3" fill="#8a7a6e" fill-opacity=".5"/>'
+    '<circle cx="52" cy="50" r="6" fill="#4a3e38" fill-opacity=".5"/>'
+    '<circle cx="54" cy="48" r="2.2" fill="#7a6e64" fill-opacity=".4"/>'
+    '<circle cx="24" cy="54" r="4.5" fill="#5a4e44" fill-opacity=".5"/>'
+    # surface highlights
+    '<path d="M22 16 L34 12" stroke="#c4b4a4" stroke-width="1.2" stroke-opacity=".5" stroke-linecap="round"/>'
+    '<path d="M60 30 L68 36" stroke="#c4b4a4" stroke-width="1" stroke-opacity=".4" stroke-linecap="round"/>'
+)
+save('objects/asteroid.svg', 80, 80, asteroid_body, asteroid_defs)
+
+# --- satellite (128x96) – orbiting satellite with solar panels ---
+sat_defs = lg('spnl', '#2244aa', '#3366dd', 0, 0, 1, 0)
+sat_body = (
+    # solar panel left
+    '<rect x="8" y="30" width="36" height="20" rx="2" fill="url(#spnl)" stroke="#5588ee" stroke-width="1.5"/>'
+    '<line x1="20" y1="30" x2="20" y2="50" stroke="#5588ee" stroke-width="1" stroke-opacity=".6"/>'
+    '<line x1="32" y1="30" x2="32" y2="50" stroke="#5588ee" stroke-width="1" stroke-opacity=".6"/>'
+    '<line x1="8" y1="40" x2="44" y2="40" stroke="#5588ee" stroke-width="1" stroke-opacity=".6"/>'
+    # solar panel right
+    '<rect x="84" y="30" width="36" height="20" rx="2" fill="url(#spnl)" stroke="#5588ee" stroke-width="1.5"/>'
+    '<line x1="96" y1="30" x2="96" y2="50" stroke="#5588ee" stroke-width="1" stroke-opacity=".6"/>'
+    '<line x1="108" y1="30" x2="108" y2="50" stroke="#5588ee" stroke-width="1" stroke-opacity=".6"/>'
+    '<line x1="84" y1="40" x2="120" y2="40" stroke="#5588ee" stroke-width="1" stroke-opacity=".6"/>'
+    # struts
+    '<line x1="44" y1="40" x2="50" y2="40" stroke="#cfd6f5" stroke-width="3"/>'
+    '<line x1="78" y1="40" x2="84" y2="40" stroke="#cfd6f5" stroke-width="3"/>'
+    # main body
+    '<rect x="50" y="28" width="28" height="24" rx="4" fill="#cfd6f5" stroke="#8a93bd" stroke-width="2"/>'
+    '<rect x="54" y="32" width="8" height="8" rx="1" fill="#3df0ff" fill-opacity=".6"/>'
+    '<circle cx="70" cy="36" r="2.5" fill="#ff5fa8"/>'
+    '<circle cx="70" cy="44" r="1.8" fill="#5dffb0"/>'
+    # antenna dish
+    '<line x1="64" y1="28" x2="64" y2="14" stroke="#cfd6f5" stroke-width="2"/>'
+    '<path d="M56 14 Q64 6 72 14" fill="none" stroke="#cfd6f5" stroke-width="2.5" stroke-linecap="round"/>'
+    '<circle cx="64" cy="14" r="2" fill="#3df0ff"/>'
+    # signal rings
+    '<path d="M54 10 Q64 0 74 10" fill="none" stroke="#3df0ff" stroke-width="1" stroke-opacity=".4"/>'
+    '<path d="M50 8 Q64 -4 78 8" fill="none" stroke="#3df0ff" stroke-width=".8" stroke-opacity=".25"/>'
+)
+save('objects/satellite.svg', 128, 96, sat_body, sat_defs)
+
 # ---------- weapons (icons) ----------
 save('weapons/energy_sword.svg', 128, 128, '<g transform="rotate(-40 64 64)"><rect x="60" y="8" width="8" height="82" rx="4" fill="#3df0ff"/><rect x="62" y="12" width="4" height="74" fill="#fff"/><rect x="50" y="90" width="28" height="6" rx="3" fill="#ffd166"/><rect x="60" y="96" width="8" height="22" rx="3" fill="#3b2a7a"/></g>')
 save('weapons/plasma_blaster.svg', 128, 128, '<path d="M14 62 H84 L100 54 H116 V78 H100 L90 86 H64 L56 108 H40 L46 86 H14 Z" fill="#cfd6f5" stroke="#16264f" stroke-width="3"/><rect x="92" y="60" width="18" height="12" fill="#3df0ff"/><circle cx="120" cy="66" r="6" fill="#3df0ff" fill-opacity=".5"/>')
