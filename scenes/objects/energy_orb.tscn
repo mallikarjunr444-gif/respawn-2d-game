@@ -1,0 +1,37 @@
+[gd_scene format=3 uid="uid://energy_orb_001"]
+
+[ext_resource type="Script" path="res://scenes/objects/energy_orb.gd" id="1_script"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_orb"]
+radius = 24.0
+
+[sub_resource type="Gradient" id="Gradient_orb"]
+colors = PackedColorArray(1.0, 0.95, 0.4, 1, 1.0, 0.7, 0.1, 0)
+
+[node name="EnergyOrb" type="Area2D"]
+collision_layer = 4
+collision_mask = 1
+script = ExtResource("1_script")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("CircleShape2D_orb")
+
+[node name="GlowLight" type="PointLight2D" parent="."]
+color = Color(1.0, 0.9, 0.3, 1)
+energy = 1.5
+texture_scale = 1.0
+
+[node name="OrbParticles" type="CPUParticles2D" parent="."]
+emitting = false
+amount = 20
+lifetime = 0.5
+one_shot = true
+explosiveness = 0.9
+direction = Vector2(0, 0)
+spread = 180.0
+gravity = Vector2(0, 0)
+initial_velocity_min = 60.0
+initial_velocity_max = 140.0
+scale_amount_min = 2.0
+scale_amount_max = 5.0
+color_ramp = SubResource("Gradient_orb")
