@@ -49,8 +49,9 @@ function mkLevel(kind,n){
 }
 
 /* ---------- state ---------- */
-const G={scene:'title',t:0,menu:0,char:'female',mx:-1,my:-1,cam:0,hx:-600,shake:0,fade:1,toast:null,meteors:[],muted:false,
- mode:'story',sector:0,crystals:0,kills:0,time:0,distBase:0,hasSword:false,forgeDone:false,barrierAlive:true,cp:0,introT:0,podBroken:false,lt:0,deadT:0,deadWhy:'',pz:null,lvl:null,p:null,safe:null,meteorT:3,hint:6,world:0,hasBlaster:false,hasShield:false,hasLance:false,boss:null,ep:[],bolts:[],logs:0,chg:0,shT:0,shCd:0,bolCd:0};
+const G={scene:'title',t:0,menu:0,char:'female',mx:-1,my:-1,cam:0,hx:-600,shake:0,fade:0,toast:null,meteors:[],muted:false,
+ mode:'story',sector:0,crystals:0,kills:0,time:0,distBase:0,hasSword:false,forgeDone:false,barrierAlive:true,cp:0,introT:0,podBroken:false,lt:0,deadT:0,deadWhy:'',pz:null,lvl:null,p:null,safe:null,meteorT:3,hint:6,world:0,hasBlaster:false,hasShield:false,hasLance:false,boss:null,ep:[],bolts:[],logs:0,chg:0,shT:0,shCd:0,bolCd:0,reveal:null,revealT:0};
+
 let UI=[];
 function newPlayer(x){return{x,y:GY-48,w:28,h:48,vx:0,vy:0,face:1,on:true,coy:0,buf:0,dashT:0,dashCd:0,dashDir:1,dashAir:false,atkT:0,atkCd:0,hp:5,inv:0,jumping:false,sol:null,anim:0};}
 function loadLevel(L,intro){G.lvl=L;G.p=newPlayer(L.startX);G.hx=L.startX-780;G.meteors=[];P.length=0;G.cp=0;G.cam=0;G.safe={x:L.startX,y:GY-48};G.introT=intro?2.6:0;G.podBroken=!intro;G.meteorT=5;G.hint=8;G.barrierAlive=true;G.ep=[];G.bolts=[];G.chg=0;G.shT=0;G.logs=0;G.boss=L.boss?mkBoss(L):null;if(L.kind==='story')G.forgeDone=!L.forgeX;G.pz=null;

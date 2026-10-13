@@ -62,6 +62,10 @@ background:radial-gradient(ellipse at center,#0d1433 0%,#070a1a 70%,#030510 100%
 #loader p{font:600 12px var(--ui);color:var(--dim);letter-spacing:4px;text-transform:uppercase}
 .load-bar{width:200px;height:3px;background:rgba(255,255,255,.08);border-radius:3px;overflow:hidden}
 .load-bar span{display:block;height:100%;width:0%;background:linear-gradient(90deg,var(--cyan),var(--ember));border-radius:3px;transition:width .3s ease}
+
+.godot-btn{display:flex;align-items:center;gap:6px;font:600 11px var(--ui);letter-spacing:1px;color:var(--cyan);background:rgba(61,240,255,.08);border:1px solid rgba(61,240,255,.2);padding:4px 10px;border-radius:6px;text-decoration:none;transition:all .15s ease}
+.godot-btn:hover{background:rgba(61,240,255,.18);border-color:var(--cyan);transform:scale(1.03);color:#fff}
+
 </style>
 </head>
 <body>
@@ -183,8 +187,9 @@ function mkLevel(kind,n){
 }
 
 /* ---------- state ---------- */
-const G={scene:'title',t:0,menu:0,char:'female',mx:-1,my:-1,cam:0,hx:-600,shake:0,fade:1,toast:null,meteors:[],muted:false,
- mode:'story',sector:0,crystals:0,kills:0,time:0,distBase:0,hasSword:false,forgeDone:false,barrierAlive:true,cp:0,introT:0,podBroken:false,lt:0,deadT:0,deadWhy:'',pz:null,lvl:null,p:null,safe:null,meteorT:3,hint:6,world:0,hasBlaster:false,hasShield:false,hasLance:false,boss:null,ep:[],bolts:[],logs:0,chg:0,shT:0,shCd:0,bolCd:0};
+const G={scene:'title',t:0,menu:0,char:'female',mx:-1,my:-1,cam:0,hx:-600,shake:0,fade:0,toast:null,meteors:[],muted:false,
+ mode:'story',sector:0,crystals:0,kills:0,time:0,distBase:0,hasSword:false,forgeDone:false,barrierAlive:true,cp:0,introT:0,podBroken:false,lt:0,deadT:0,deadWhy:'',pz:null,lvl:null,p:null,safe:null,meteorT:3,hint:6,world:0,hasBlaster:false,hasShield:false,hasLance:false,boss:null,ep:[],bolts:[],logs:0,chg:0,shT:0,shCd:0,bolCd:0,reveal:null,revealT:0};
+
 let UI=[];
 function newPlayer(x){return{x,y:GY-48,w:28,h:48,vx:0,vy:0,face:1,on:true,coy:0,buf:0,dashT:0,dashCd:0,dashDir:1,dashAir:false,atkT:0,atkCd:0,hp:5,inv:0,jumping:false,sol:null,anim:0};}
 function loadLevel(L,intro){G.lvl=L;G.p=newPlayer(L.startX);G.hx=L.startX-780;G.meteors=[];P.length=0;G.cp=0;G.cam=0;G.safe={x:L.startX,y:GY-48};G.introT=intro?2.6:0;G.podBroken=!intro;G.meteorT=5;G.hint=8;G.barrierAlive=true;G.ep=[];G.bolts=[];G.chg=0;G.shT=0;G.logs=0;G.boss=L.boss?mkBoss(L):null;if(L.kind==='story')G.forgeDone=!L.forgeX;G.pz=null;
@@ -364,6 +369,25 @@ function drawHUD2(){
   txt(it[1],x+8,H-32,11,C.bone,'left',F_U,700,1);txt(it[0],x+w-8,H-32,10,C.cyan,'right',F_U,700,1);x+=w+6;});
  if(G.chg>.25&&G.hasLance){const bx=p.x+14-G.cam-24;ctx.fillStyle='rgba(255,255,255,.15)';rr(bx,p.y-18,48,6,3);ctx.fill();ctx.fillStyle=G.chg>=.7?'#c58bff':C.cyan;rr(bx,p.y-18,48*clamp(G.chg/.7,0,1),6,3);ctx.fill();}
  const B=G.boss;if(B&&!B.dead&&Math.abs(p.x-B.x)<1000){txt(B.name,480,76,12,C.ember,'center',F_U,700,3);ctx.fillStyle='rgba(255,255,255,.12)';rr(280,82,400,9,4);ctx.fill();ctx.fillStyle=C.ember;rr(280,82,400*clamp(B.hp/B.max,0,1),9,4);ctx.fill();}
+}
+function drawMinimap(){
+ const L=G.lvl,p=G.p;
+ const mx=W/2-180,mw=360,my=H-14,mh=5,r=5;
+ // Background bar
+ ctx.fillStyle='rgba(3,5,22,.75)';rr(mx-2,my-2,mw+4,mh+4,3);ctx.fill();
+ ctx.fillStyle='rgba(255,255,255,.07)';rr(mx,my,mw,mh,2);ctx.fill();
+ const sc=v=>mx+clamp(v/L.L,0,1)*mw;
+ // Devourer zone (red fill from left)
+ const devR=clamp((G.hx+340)/L.L,0,1);
+ ctx.fillStyle='rgba(255,60,20,.35)';rr(mx,my,devR*mw,mh,2);ctx.fill();
+ // Forge dot (cyan)
+ if(L.forgeX&&!G.forgeDone){ctx.fillStyle=C.cyan;ctx.beginPath();ctx.arc(sc(L.forgeX),my+mh/2,r*.9,0,6.283);ctx.fill();}
+ // Pad dot (gold)
+ ctx.fillStyle=C.gold;ctx.beginPath();ctx.arc(sc(L.padX),my+mh/2,r*.9,0,6.283);ctx.fill();
+ // Player dot (white)
+ const px=sc(p.x+14);ctx.fillStyle='#fff';ctx.beginPath();ctx.arc(px,my+mh/2,r,0,6.283);ctx.fill();
+ // Devourer edge tick
+ const dx=sc(G.hx+170);ctx.strokeStyle='#ff4a2a';ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(dx,my-2);ctx.lineTo(dx,my+mh+2);ctx.stroke();
 }
 const SYMCOL=['#3df0ff','#ff5fa8','#ffd166','#5dffb0'];
 function drawSym(s,x,y,r,col){ctx.fillStyle=col;ctx.beginPath();
@@ -547,7 +571,11 @@ function seqClick(mx,my){const z=G.pz;for(let i=0;i<4;i++){const q=SEQ_PL[i],pp=
   else{z.lit=[];z.next=0;z.err=.5;SFX.hurt();}return;}}}
 
 /* ---------- rendering ---------- */
-function btn(label,x,y,w,h,fn,o){o=o||{};const hov=G.mx>=x&&G.mx<=x+w&&G.my>=y&&G.my<=y+h;const act=hov||o.sel;UI.push({x,y,w,h,fn});ctx.save();\nrr(x,y,w,h,8);const bg=ctx.createLinearGradient(x,y,x,y+h);if(act){bg.addColorStop(0,'rgba(61,240,255,.18)');bg.addColorStop(1,'rgba(13,20,51,.85)');}else{bg.addColorStop(0,'rgba(16,24,60,.8)');bg.addColorStop(1,'rgba(7,10,26,.9)');}\nctx.fillStyle=bg;ctx.fill();ctx.strokeStyle=act?C.cyan:'rgba(141,151,196,.35)';ctx.lineWidth=act?2:1;ctx.stroke();\nif(act){ctx.fillStyle='rgba(61,240,255,.12)';ctx.fillRect(x+4,y+1,w-8,2);ctx.shadowColor=C.cyan;ctx.shadowBlur=12;ctx.strokeStyle=C.cyan;ctx.lineWidth=1;rr(x,y,w,h,8);ctx.stroke();ctx.shadowBlur=0;}\nctx.restore();txt(label,x+w/2,y+h/2+6,o.size||16,act?C.cyan:C.bone,'center',F_U,700,2);}
+function btn(label,x,y,w,h,fn,o){o=o||{};const hov=G.mx>=x&&G.mx<=x+w&&G.my>=y&&G.my<=y+h;const act=hov||o.sel;UI.push({x,y,w,h,fn});ctx.save();
+rr(x,y,w,h,8);const bg=ctx.createLinearGradient(x,y,x,y+h);if(act){bg.addColorStop(0,'rgba(61,240,255,.18)');bg.addColorStop(1,'rgba(13,20,51,.85)');}else{bg.addColorStop(0,'rgba(16,24,60,.8)');bg.addColorStop(1,'rgba(7,10,26,.9)');}
+ctx.fillStyle=bg;ctx.fill();ctx.strokeStyle=act?C.cyan:'rgba(141,151,196,.35)';ctx.lineWidth=act?2:1;ctx.stroke();
+if(act){ctx.fillStyle='rgba(61,240,255,.12)';ctx.fillRect(x+4,y+1,w-8,2);ctx.shadowColor=C.cyan;ctx.shadowBlur=12;ctx.strokeStyle=C.cyan;ctx.lineWidth=1;rr(x,y,w,h,8);ctx.stroke();ctx.shadowBlur=0;}
+ctx.restore();txt(label,x+w/2,y+h/2+6,o.size||16,act?C.cyan:C.bone,'center',F_U,700,2);}
 function renderWorld(showPlayer){
  const L=G.lvl,p=G.p,th=L.theme,cam=G.cam,t=G.t;
  const sx=(Math.random()-.5)*G.shake,sy=(Math.random()-.5)*G.shake;
@@ -594,6 +622,7 @@ function renderPuzzle(){
  txt('Click or tap a mirror to flip it.',rx,208,13,C.dim,'left',F_U,600);txt('Mistakes cost nothing. Take your time —',rx,230,13,C.dim,'left',F_U,600);txt('the Devourer waits while you think.',rx,250,13,C.dim,'left',F_U,600);
  if(z.solved)txt('FORGE ONLINE',rx,320,22,C.gold,'left',F_D,700,2);else{btn('SHOW HINT  (H)',rx,300,200,44,()=>pzHint());btn('CLOSE  (ESC)',rx,356,200,44,()=>{G.scene='play';});}
 }
+const TITLE_LORE=['THE DEVOURER has consumed 14 star systems.','Your colony is gone. Earth is the last way out.','Escape. Survive. Reach home before the stars die.'];
 function renderTitle(){
  const t=G.t;drawBG(TH.moon,t*30,t);
  /* enhanced concentric pulse rings */
@@ -612,16 +641,21 @@ function renderTitle(){
  ctx.save();ctx.globalCompositeOperation='lighter';ctx.globalAlpha=.08;
  const sh=ctx.createLinearGradient(shx,0,shx+100,0);sh.addColorStop(0,'rgba(255,255,255,0)');sh.addColorStop(.5,'rgba(255,255,255,1)');sh.addColorStop(1,'rgba(255,255,255,0)');
  ctx.fillStyle=sh;ctx.fillRect(54,100,500,150);ctx.globalAlpha=1;ctx.globalCompositeOperation='source-over';ctx.restore();
- txt('LAST RUN TO EARTH',58,268,14,C.ember,'left',F_U,700,8);
+ const sub='LAST RUN TO EARTH',sp=Math.sin(t*1.8)*.5+.5;ctx.globalAlpha=.7+sp*.3;txt(sub,58,268,14,C.ember,'left',F_U,700,8);ctx.globalAlpha=1;
  /* divider line */
- ctx.strokeStyle='rgba(61,240,255,.15)';ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(58,282);ctx.lineTo(340,282);ctx.stroke();
+ ctx.strokeStyle='rgba(61,240,255,.15)';ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(58,280);ctx.lineTo(340,280);ctx.stroke();
+ // Animated lore lines
+ const li=Math.floor(t/3.2)%TITLE_LORE.length,lp=(t%3.2)/3.2;
+ const la=lp<.15?lp/.15:lp>.75?(1-lp)/.25:1;
+ ctx.globalAlpha=la*.7;txt(TITLE_LORE[li],58,296,12,C.dim,'left',F_U,600,1);ctx.globalAlpha=1;
  const sv=store('eh_save'),sw=sv&&sv.world>0?sv.world:0;
+ const wnames=['FRACTURED MOON','AETHER-7','CINDER MOON','CRYOS','VORTEX PRIME','EARTH'];
  const items=[['STORY RUN',()=>{G.nextMode='story';G.startWorld=0;G.scene='select';}],['INFINITE FRONTIER',()=>{G.nextMode='endless';G.scene='select';}]];
- if(sw)items.push(['CONTINUE · WORLD '+(sw+1),()=>{G.nextMode='story';G.startWorld=sw;G.scene='select';}]);
+ if(sw)items.push(['CONTINUE · '+(wnames[sw]||'WORLD '+(sw+1)),()=>{G.nextMode='story';G.startWorld=sw;G.scene='select';}]);
  G.menuN=items.length;
- items.forEach((it,i)=>btn((i+1)+'   '+it[0],58,298+i*54,310,46,()=>{SFX.click();it[1]();},{sel:G.menu===i}));
- const b=store('eh_best');if(b)txt('BEST  '+b.dist+' KM'+(b.sector?'  ·  SECTOR '+b.sector:''),58,468,13,C.dim,'left',F_U,700,2);
- txt('A black hole is eating the stars. Earth is the last way out.',58,498,13,C.dim,'left',F_U,600,1);
+ items.forEach((it,i)=>btn((i+1)+'   '+it[0],58,312+i*50,310,42,()=>{SFX.click();it[1]();},{sel:G.menu===i}));
+ const b=store('eh_best');if(b)txt('BEST  '+b.dist+' KM'+(b.sector?'  ·  SECTOR '+b.sector:''),58,476,13,C.dim,'left',F_U,700,2);
+ txt('v1.0  ·  A / D  MOVE  ·  SPACE  JUMP  ·  SHIFT  DASH  ·  E  USE  ·  M  SOUND',58,512,11,C.dim,'left',F_U,400,1);
  applyBloom();
  /* title vignette */
  const vig=ctx.createRadialGradient(W/2,H/2,H*.3,W/2,H/2,H*.9);vig.addColorStop(0,'rgba(0,0,0,0)');vig.addColorStop(1,'rgba(0,0,0,.35)');ctx.fillStyle=vig;ctx.fillRect(0,0,W,H);
@@ -643,6 +677,25 @@ function renderLaunch(){
  drawFlame(x,y,t,1.2);drawPod(x,y,0,false,t);
  const a=clamp((lt-2.3)/1.3,0,1);ctx.fillStyle='rgba(255,255,255,'+a+')';ctx.fillRect(0,0,W,H);
 }
+// ------- cinematic world-reveal scene -------
+const WORLD_REVEALS=[
+ null,
+ {title:'AETHER-7',lines:['A crystalline world orbiting a dying star.','Rumours of a weapon forge — and something guarding it.']},
+ {title:'CINDER MOON',lines:['The vents erupt without warning.','Decode the armory before the heat takes you.']},
+ {title:'CRYOS',lines:['Three research stations. All silent.','Logs recovered. They knew about the Devourer.']},
+ {title:'VORTEX PRIME',lines:['Gravity is wrong here. Platforms drift.','A Guardian stands between you and the last weapon.']},
+ {title:'EARTH',lines:['You made it.','But the signal in your pod made it first.']},
+];
+function renderReveal(){
+ const rv=G.reveal,t=G.revealT;if(!rv)return;
+ drawBG(G.lvl.theme,t*20,G.t);
+ ctx.fillStyle='rgba(3,5,16,.78)';ctx.fillRect(0,0,W,H);
+ const a=clamp(t/1.1,0,1);ctx.globalAlpha=a;
+ txt(rv.title,W/2,200,44,C.cyan,'center',F_D,700,4);
+ rv.lines.forEach((l,i)=>txt(l,W/2,268+i*30,17,C.bone,'center',F_U,600,1));
+ const prog=clamp((t-3.5)/.8,0,1);if(prog>0){txt('ENTERING SECTOR — STAND BY',W/2,370,13,C.ember,'center',F_U,700,3);ctx.fillStyle='rgba(255,255,255,.08)';rr(W/2-150,390,300,6,3);ctx.fill();ctx.fillStyle=C.ember;rr(W/2-150,390,300*prog,6,3);ctx.fill();}
+ ctx.globalAlpha=1;
+}
 function renderEnd(){
  const t=G.t;drawBG(TH.earth,t*10,t);const px=700,py=250;
  const g=ctx.createRadialGradient(px-40,py-40,10,px,py,150);g.addColorStop(0,'#bfe8ff');g.addColorStop(.5,'#2a6fc4');g.addColorStop(1,'#06142e');ctx.fillStyle=g;ctx.beginPath();ctx.arc(px,py,150,0,6.283);ctx.fill();
@@ -658,7 +711,7 @@ function renderEnd(){
 }
 function render(){
  ctx.setTransform(cv.width/W,0,0,cv.height/H,0,0);ctx.clearRect(0,0,W,H);UI=[];
- switch(G.scene){case'title':renderTitle();break;case'select':renderSelect();break;case'play':renderWorld(true);drawHUD();drawHUD2();break;case'puzzle':renderPuzzle();break;case'dead':renderDead();break;case'launch':renderLaunch();break;case'end':renderEnd();break;}
+ switch(G.scene){case'title':renderTitle();break;case'select':renderSelect();break;case'play':renderWorld(true);drawHUD();drawHUD2();drawMinimap();break;case'puzzle':renderPuzzle();break;case'dead':renderDead();break;case'launch':renderLaunch();break;case'reveal':renderReveal();break;case'end':renderEnd();break;}
  if(G.fade>0){ctx.fillStyle='rgba(0,0,0,'+clamp(G.fade,0,1)+')';ctx.fillRect(0,0,W,H);}
  if(G.muted){rr(W-80,H-24,70,18,4);ctx.fillStyle='rgba(13,20,51,.7)';ctx.fill();ctx.strokeStyle='rgba(141,151,196,.3)';ctx.lineWidth=1;ctx.stroke();txt('MUTED',W-45,H-10,10,C.dim,'center',F_U,700,2);}
  /* subtle scanline overlay for CRT feel */
@@ -667,6 +720,7 @@ function render(){
 
 /* ---------- loop & pointer ---------- */
 function update(dt){
+ if(G.fade>0&&G.scene!=='launch')G.fade=Math.max(0,G.fade-dt*2);
  if(pressed('mute')){muted=!muted;G.muted=muted;if(master)master.gain.value=muted?0:.55;}
  switch(G.scene){
   case'title':{const n=G.menuN||2;if(pressed('down'))G.menu=Math.min(n-1,G.menu+1);if(pressed('up'))G.menu=Math.max(0,G.menu-1);if(pressed('n1'))G.menu=0;if(pressed('n2'))G.menu=1;if(pressed('n3')&&n>2)G.menu=2;
@@ -676,9 +730,18 @@ function update(dt){
   case'play':updatePlay(dt);break;
   case'puzzle':updatePuzzle(dt);break;
   case'dead':G.deadT+=dt;G.shake=Math.max(0,G.shake-dt*30);updFx(dt);if(G.deadT>.8&&(pressed('enter')||pressed('retry')))retry();break;
-  case'launch':G.lt+=dt;G.shake=Math.max(4,G.shake);for(let i=0;i<3;i++)spawn(G.lvl.padX+Math.random()*30-15,GY-8-G.lt*G.lt*90+10,Math.random()*80-40,120+Math.random()*100,.6,5,'#ff9a3c',0,true);updFx(dt);if(G.lt>4.1){if(G.lvl.final){G.scene='end';G.fade=1;}else nextWorld();}break;
+  case'launch':G.lt+=dt;G.shake=Math.max(4,G.shake);for(let i=0;i<3;i++)spawn(G.lvl.padX+Math.random()*30-15,GY-8-G.lt*G.lt*90+10,Math.random()*80-40,120+Math.random()*100,.6,5,'#ff9a3c',0,true);updFx(dt);if(G.lt>4.1){if(G.lvl.final){G.scene='end';G.fade=1;}else nextWorldReveal();}break;
+  case'reveal':G.revealT+=dt;if((G.revealT>5.2&&(pressed('enter')||pressed('esc')))||G.revealT>6.5){G.revealT=0;G.reveal=null;nextWorld();}break;
   case'end':G.fade=Math.max(0,G.fade-dt);break;
  }
+}
+function nextWorldReveal(){
+ const w=G.world+1;const rv=WORLD_REVEALS[w];
+ if(rv){G.reveal=rv;G.revealT=0;G.scene='reveal';// pre-load level theme for reveal background
+ const wc=({aether:TH.aether,cinder:TH.cinder,cryos:TH.cryos,vortex:TH.vortex,earth:TH.earth});
+ const wds=[null,{th:'aether'},{th:'cinder'},{th:'cryos'},{th:'vortex'},{th:'earth'}];
+ if(wds[w])G.lvl={...G.lvl,theme:wc[wds[w].th]};
+ }else nextWorld();
 }
 let last=0;
 function frame(ts){requestAnimationFrame(frame);const dt=Math.min(.033,(ts-last)/1000||0);last=ts;G.t+=dt;update(dt);render();pq={};}
