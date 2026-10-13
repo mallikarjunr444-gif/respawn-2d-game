@@ -1,0 +1,30 @@
+[gd_scene format=3 uid="uid://b5mop218a5krl"]
+
+[ext_resource type="Script" path="res://scenes/projectiles/boss_bolt.gd" id="1_script"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_bolt"]
+radius = 10.0
+
+[sub_resource type="Gradient" id="Gradient_enemy_glow"]
+colors = PackedColorArray(1, 0.4, 0.2, 1, 0.6, 0.1, 0.05, 0)
+
+[node name="BossBolt" type="Area2D"]
+collision_layer = 16
+collision_mask = 5
+script = ExtResource("1_script")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("CircleShape2D_bolt")
+
+[node name="Polygon2D" type="Polygon2D" parent="."]
+modulate = Color(2.5, 1.2, 0.5, 1.0)
+color = Color(1, 0.5, 0.2, 1)
+polygon = PackedVector2Array(-8, -8, 8, -8, 8, 8, -8, 8)
+
+[node name="Particles" type="CPUParticles2D" parent="."]
+amount = 12
+lifetime = 0.2
+gravity = Vector2(0, 0)
+scale_amount_min = 2.0
+scale_amount_max = 5.0
+color_ramp = SubResource("Gradient_enemy_glow")
