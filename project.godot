@@ -12,6 +12,11 @@ run/main_scene="res://scenes/main_menu.tscn"
 config/features=PackedStringArray("4.7", "Forward Plus")
 boot_splash/bg_color=Color(0.02, 0.03, 0.08, 1)
 
+[autoload]
+
+GameState="*res://scripts/game_state.gd"
+SoundManager="*res://scripts/sound_manager.gd"
+
 [display]
 
 window/size/viewport_width=1280
