@@ -1,0 +1,58 @@
+[gd_scene format=3 uid="uid://dm0938vkae785"]
+
+[ext_resource type="Script" path="res://scenes/objects/meteor.gd" id="1_script"]
+[ext_resource type="Texture2D" path="res://assets/objects/meteor.svg" id="2_tex"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_blast"]
+radius = 48.0
+
+[sub_resource type="Gradient" id="Gradient_fire"]
+colors = PackedColorArray(1, 0.45, 0.1, 1, 0.4, 0.1, 0.05, 0)
+
+[sub_resource type="Gradient" id="Gradient_explosion"]
+colors = PackedColorArray(1, 0.8, 0.2, 1, 0.8, 0.2, 0.05, 0)
+
+[node name="Meteor" type="Node2D"]
+script = ExtResource("1_script")
+
+[node name="WarningLine" type="Line2D" parent="."]
+width = 2.0
+default_color = Color(1, 0.2, 0.1, 0.35)
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+modulate = Color(2.5, 1.2, 0.6, 1.0)
+scale = Vector2(0.5, 0.5)
+texture = ExtResource("2_tex")
+
+[node name="TrailParticles" type="CPUParticles2D" parent="."]
+amount = 24
+lifetime = 0.3
+direction = Vector2(0, -1)
+spread = 20.0
+gravity = Vector2(0, 0)
+initial_velocity_min = 80.0
+initial_velocity_max = 140.0
+scale_amount_min = 3.0
+scale_amount_max = 7.0
+color_ramp = SubResource("Gradient_fire")
+
+[node name="ExplosionParticles" type="CPUParticles2D" parent="."]
+emitting = false
+amount = 36
+lifetime = 0.45
+one_shot = true
+explosiveness = 0.95
+spread = 180.0
+gravity = Vector2(0, 100)
+initial_velocity_min = 120.0
+initial_velocity_max = 280.0
+scale_amount_min = 4.0
+scale_amount_max = 10.0
+color_ramp = SubResource("Gradient_explosion")
+
+[node name="BlastArea" type="Area2D" parent="."]
+collision_layer = 16
+collision_mask = 1
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="BlastArea"]
+shape = SubResource("CircleShape2D_blast")

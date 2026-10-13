@@ -1,0 +1,40 @@
+[gd_scene format=3 uid="uid://dm0938vkae786"]
+
+[ext_resource type="Script" path="res://scenes/objects/barrier.gd" id="1_script"]
+[ext_resource type="Texture2D" path="res://assets/objects/crystal_barrier.svg" id="2_tex"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_b"]
+size = Vector2(32, 180)
+
+[sub_resource type="Gradient" id="Gradient_crystal_shatter"]
+colors = PackedColorArray(0.24, 0.94, 1, 1, 0.8, 0.4, 1, 0)
+
+[node name="CrystalBarrier" type="StaticBody2D"]
+collision_layer = 2
+collision_mask = 9
+script = ExtResource("1_script")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(0, -90)
+shape = SubResource("RectangleShape2D_b")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+modulate = Color(1.5, 2.5, 4.0, 1.0)
+position = Vector2(0, -90)
+scale = Vector2(0.7, 0.7)
+texture = ExtResource("2_tex")
+
+[node name="BreakParticles" type="CPUParticles2D" parent="."]
+position = Vector2(0, -90)
+emitting = false
+amount = 40
+lifetime = 0.5
+one_shot = true
+explosiveness = 0.95
+spread = 180.0
+gravity = Vector2(0, 300)
+initial_velocity_min = 120.0
+initial_velocity_max = 300.0
+scale_amount_min = 4.0
+scale_amount_max = 8.0
+color_ramp = SubResource("Gradient_crystal_shatter")

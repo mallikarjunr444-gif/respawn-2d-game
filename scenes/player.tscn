@@ -1,0 +1,86 @@
+[gd_scene format=3 uid="uid://d3718vkae819b"]
+
+[ext_resource type="Script" path="res://scenes/player.gd" id="1_script"]
+[ext_resource type="Texture2D" path="res://assets/characters/arin_male.svg" id="2_arin"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_player"]
+size = Vector2(28, 54)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_sword"]
+size = Vector2(56, 64)
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_shield"]
+radius = 42.0
+
+[sub_resource type="Gradient" id="Gradient_thruster"]
+colors = PackedColorArray(0.24, 0.94, 1, 1, 0.1, 0.2, 0.6, 0)
+
+[node name="Player" type="CharacterBody2D"]
+collision_layer = 1
+collision_mask = 6
+script = ExtResource("1_script")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(0, -27)
+shape = SubResource("RectangleShape2D_player")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+position = Vector2(0, -28)
+scale = Vector2(0.45, 0.45)
+texture = ExtResource("2_arin")
+
+[node name="ThrusterParticles" type="CPUParticles2D" parent="."]
+position = Vector2(0, -4)
+emitting = false
+amount = 16
+lifetime = 0.2
+one_shot = true
+explosiveness = 0.8
+direction = Vector2(0, 1)
+spread = 35.0
+gravity = Vector2(0, 0)
+initial_velocity_min = 90.0
+initial_velocity_max = 140.0
+scale_amount_min = 2.0
+scale_amount_max = 5.0
+color_ramp = SubResource("Gradient_thruster")
+
+[node name="SwordArea" type="Area2D" parent="."]
+position = Vector2(24, -28)
+collision_layer = 8
+collision_mask = 22
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="SwordArea"]
+shape = SubResource("RectangleShape2D_sword")
+
+[node name="SwordArc" type="Polygon2D" parent="SwordArea"]
+modulate = Color(1.8, 3.2, 4.0, 1.0)
+color = Color(0.24, 0.94, 1, 0.75)
+polygon = PackedVector2Array(0, -32, 28, -24, 38, 0, 28, 24, 0, 32, 8, 0)
+
+[node name="ShieldBubble" type="Area2D" parent="." groups=["shield"]]
+position = Vector2(0, -27)
+collision_layer = 32
+collision_mask = 16
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="ShieldBubble"]
+shape = SubResource("CircleShape2D_shield")
+
+[node name="ShieldPolygon" type="Polygon2D" parent="ShieldBubble"]
+modulate = Color(1.2, 2.5, 3.0, 0.45)
+color = Color(0.24, 0.94, 1, 0.5)
+polygon = PackedVector2Array(-36, -20, 0, -42, 36, -20, 36, 20, 0, 42, -36, 20)
+
+[node name="ShieldBorder" type="Line2D" parent="ShieldBubble"]
+modulate = Color(2.0, 3.5, 4.5, 1.0)
+points = PackedVector2Array(-36, -20, 0, -42, 36, -20, 36, 20, 0, 42, -36, 20, -36, -20)
+width = 3.0
+default_color = Color(0.4, 0.9, 1, 1)
+
+[node name="VisorLight" type="PointLight2D" parent="."]
+position = Vector2(4, -40)
+color = Color(0.24, 0.94, 1, 1)
+energy = 1.4
+texture_scale = 1.2
+
+[connection signal="area_entered" from="SwordArea" to="." method="_on_sword_area_entered"]
