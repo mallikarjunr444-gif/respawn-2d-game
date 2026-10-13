@@ -8,8 +8,8 @@ extends CanvasLayer
 @onready var restart_btn: Button = $Panel/VBox/RestartBtn
 @onready var level_select_btn: Button = $Panel/VBox/LevelSelectBtn
 @onready var menu_btn: Button = $Panel/VBox/MenuBtn
-@onready var music_slider: HSlider = $Panel/VBox/AudioBox/MusicSlider
-@onready var sfx_slider: HSlider = $Panel/VBox/AudioBox/SfxSlider
+@onready var music_slider: HSlider = $Panel/VBox/AudioBox/MusicBox/MusicSlider
+@onready var sfx_slider: HSlider = $Panel/VBox/AudioBox/SfxBox/SfxSlider
 @onready var music_check: CheckBox = $Panel/VBox/AudioBox/MusicCheck
 @onready var sfx_check: CheckBox = $Panel/VBox/AudioBox/SfxCheck
 
