@@ -1,0 +1,32 @@
+[gd_scene format=3 uid="uid://dust_storm_001"]
+
+[ext_resource type="Script" path="res://scenes/objects/dust_storm.gd" id="1_script"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_dust"]
+radius = 350.0
+
+[sub_resource type="Gradient" id="Gradient_dust"]
+colors = PackedColorArray(0.8, 0.3, 0.1, 0.4, 0.5, 0.15, 0.05, 0)
+
+[node name="DustStorm" type="Area2D"]
+collision_layer = 0
+collision_mask = 1
+script = ExtResource("1_script")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("CircleShape2D_dust")
+
+[node name="StormParticles" type="CPUParticles2D" parent="."]
+amount = 40
+lifetime = 2.0
+emission_shape = 2
+emission_sphere_radius = 320.0
+spread = 180.0
+gravity = Vector2(50, 20)
+orbit_velocity_min = 0.5
+orbit_velocity_max = 1.2
+initial_velocity_min = 40.0
+initial_velocity_max = 80.0
+scale_amount_min = 3.0
+scale_amount_max = 7.0
+color_ramp = SubResource("Gradient_dust")
