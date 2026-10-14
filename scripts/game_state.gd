@@ -9,12 +9,22 @@ signal player_died(reason: String)
 signal level_completed()
 signal toast_requested(title: String, subtitle: String, duration: float)
 
+const ROUTE_SCENES = [
+	"res://scenes/planets/aether7.tscn",
+	"res://scenes/planets/cinder.tscn",
+	"res://scenes/planets/cryos.tscn",
+	"res://scenes/planets/vortex.tscn",
+	"res://scenes/planets/sylva.tscn",
+	"res://scenes/planets/obsidian.tscn"
+]
+
 var selected_character: String = "arin" # "arin" or "mira"
 var game_mode: String = "story" # "story" or "endless"
 var current_world_idx: int = 0
 var sector_idx: int = 0
 var route_destinations: Array[int] = []
 var route_round_consumed: bool = false
+var intro_puzzle_completed: bool = false
 
 var crystals: int = 0
 var kills: int = 0
@@ -74,8 +84,14 @@ func _register_action(action_name: String, keys: Array[Key], joy_buttons: Array[
 		InputMap.action_add_event(action_name, ev)
 
 func start_story(world_index: int = 0, selected_from_route: bool = false) -> void:
-	if route_destinations.size() != 6:
-		begin_route_round()
+	if world_index < 0 or world_index >= ROUTE_SCENES.size():
+		push_error("Invalid route index: %d" % world_index)
+		return
+	var scene_path: String = get_route_scene_path(world_index)
+	if scene_path.is_empty() or not ResourceLoader.exists(scene_path):
+		push_error("Route %d has no valid destination scene: %s" % [world_index + 1, scene_path])
+		show_toast("ROUTE UNAVAILABLE", "The selected signal has no valid destination.", 4.0)
+		return
 	if selected_from_route:
 		route_round_consumed = true
 	game_mode = "story"
@@ -86,27 +102,56 @@ func start_story(world_index: int = 0, selected_from_route: bool = false) -> voi
 	distance_traveled = 0.0
 	player_hp = MAX_HP
 	
-	# Unlock weapons according to world progression
-	has_sword = world_index >= 1
-	has_blaster = world_index >= 3
-	has_shield = world_index >= 4
-	has_lance = world_index >= 5
-	
-	weapons_changed.emit()
-	get_tree().change_scene_to_file("res://scenes/game.tscn")
+	var change_error := get_tree().change_scene_to_file(scene_path)
+	if change_error != OK:
+		push_error("Could not load route scene %s (error %d)" % [scene_path, change_error])
+		show_toast("ROUTE UNAVAILABLE", "The destination scene could not be loaded.", 4.0)
 
 func begin_route_round() -> void:
-	# Shuffle once per selection round so each signal maps to a distinct world.
 	route_round_consumed = false
 	route_destinations.clear()
-	for world_idx in range(6):
-		route_destinations.append(world_idx)
-	route_destinations.shuffle()
+	for route_idx in range(ROUTE_SCENES.size()):
+		route_destinations.append(route_idx)
 
 func get_route_destination(route_idx: int) -> int:
-	if route_destinations.size() != 6:
-		begin_route_round()
-	return route_destinations[clampi(route_idx, 0, route_destinations.size() - 1)]
+	if route_idx < 0 or route_idx >= ROUTE_SCENES.size():
+		return -1
+	return route_idx
+
+func get_route_scene_path(route_idx: int) -> String:
+	if route_idx < 0 or route_idx >= ROUTE_SCENES.size():
+		return ""
+	return ROUTE_SCENES[route_idx]
+
+func grant_weapon(weapon_id: String) -> bool:
+	var weapon_name := ""
+	match weapon_id:
+		"sword":
+			if has_sword:
+				return false
+			has_sword = true
+			weapon_name = "ENERGY SWORD"
+		"blaster":
+			if has_blaster:
+				return false
+			has_blaster = true
+			weapon_name = "PLASMA BLASTER"
+		"shield":
+			if has_shield:
+				return false
+			has_shield = true
+			weapon_name = "PHASE SHIELD"
+		"lance":
+			if has_lance:
+				return false
+			has_lance = true
+			weapon_name = "GRAVITY LANCE"
+		_:
+			push_error("Unknown weapon reward: %s" % weapon_id)
+			return false
+	weapons_changed.emit()
+	show_toast("WEAPON UNLOCKED", weapon_name, 4.0)
+	return true
 
 func start_endless() -> void:
 	game_mode = "endless"

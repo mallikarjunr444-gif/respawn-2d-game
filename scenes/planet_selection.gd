@@ -3,12 +3,12 @@ extends Control
 signal world_selected(idx: int)
 signal back_to_menu()
 
-@onready var w1_btn: Button = $Center/Panel/VBox/W1Btn
-@onready var w2_btn: Button = $Center/Panel/VBox/W2Btn
-@onready var w3_btn: Button = $Center/Panel/VBox/W3Btn
-@onready var w4_btn: Button = $Center/Panel/VBox/W4Btn
-@onready var w5_btn: Button = $Center/Panel/VBox/W5Btn
-@onready var w6_btn: Button = $Center/Panel/VBox/W6Btn
+@onready var w1_btn: Button = $Center/Panel/VBox/RouteGrid/W1Btn
+@onready var w2_btn: Button = $Center/Panel/VBox/RouteGrid/W2Btn
+@onready var w3_btn: Button = $Center/Panel/VBox/RouteGrid/W3Btn
+@onready var w4_btn: Button = $Center/Panel/VBox/RouteGrid/W4Btn
+@onready var w5_btn: Button = $Center/Panel/VBox/RouteGrid/W5Btn
+@onready var w6_btn: Button = $Center/Panel/VBox/RouteGrid/W6Btn
 @onready var back_btn: Button = $Center/Panel/VBox/BackBtn
 @onready var status_label: Label = $Center/Panel/VBox/Status
 @onready var warp_overlay: ColorRect = $WarpOverlay
@@ -26,6 +26,8 @@ func _ready() -> void:
     route_buttons = [w1_btn, w2_btn, w3_btn, w4_btn, w5_btn, w6_btn]
     for button_idx in range(route_buttons.size()):
         route_buttons[button_idx].modulate = route_signatures[button_idx]
+        var scene_path := GameState.get_route_scene_path(button_idx)
+        route_buttons[button_idx].disabled = scene_path.is_empty() or not ResourceLoader.exists(scene_path)
     w1_btn.pressed.connect(_on_world_pressed.bind(0))
     w2_btn.pressed.connect(_on_world_pressed.bind(1))
     w3_btn.pressed.connect(_on_world_pressed.bind(2))
@@ -38,6 +40,11 @@ func _process(delta: float) -> void:
 
 func _on_world_pressed(idx: int) -> void:
     if transitioning:
+        return
+    var scene_path := GameState.get_route_scene_path(idx)
+    if scene_path.is_empty() or not ResourceLoader.exists(scene_path):
+        status_label.text = "SIGNAL %02d UNAVAILABLE. No alternate route was loaded." % (idx + 1)
+        status_label.modulate = Color(1.0, 0.35, 0.3)
         return
     transitioning = true
     SoundManager.play("click", 0.05)
@@ -52,7 +59,11 @@ func _on_world_pressed(idx: int) -> void:
     warp_tween.tween_property(warp_overlay, "modulate:a", 1.0, 0.35)
     await warp_tween.finished
     await get_tree().create_timer(0.25, true).timeout
-    emit_signal("world_selected", GameState.get_route_destination(idx))
+    emit_signal("world_selected", idx)
+
+func set_status(message: String) -> void:
+    status_label.text = message
+    status_label.modulate = Color(0.3, 0.94, 1.0)
 
 func _on_back_pressed() -> void:
     emit_signal("back_to_menu")

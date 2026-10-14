@@ -8,6 +8,7 @@ var music_player: AudioStreamPlayer
 const MAX_PLAYERS = 16
 
 var sounds: Dictionary = {}
+var muted: bool = false
 
 func _ready() -> void:
 	process_mode = Node.PROCESS_MODE_ALWAYS
@@ -37,7 +38,13 @@ func _bake_sounds() -> void:
 	sounds["heal"] = _create_heal(0.35)
 	sounds["victory"] = _create_fanfare(0.8)
 
+func toggle_mute() -> void:
+	muted = not muted
+	AudioServer.set_bus_mute(0, muted)
+
 func play(sfx_name: String, pitch_range: float = 0.08, vol_db: float = 0.0) -> void:
+	if muted:
+		return
 	if not sounds.has(sfx_name):
 		return
 	var stream: AudioStreamWAV = sounds[sfx_name]

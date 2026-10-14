@@ -5,12 +5,12 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="Event Horizon">
+<meta name="apple-mobile-web-app-title" content="Space Odyssey">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="format-detection" content="telephone=no">
 <meta name="description" content="Event Horizon — Last Run to Earth. A 2D sci-fi survival platformer. Outrun the Devourer across six alien worlds and reach Earth.">
 <meta name="theme-color" content="#070a1a">
-<title>Event Horizon — Last Run to Earth | Orvex Games</title>
+<title>Space Odyssey — Interplanetary Expedition | Orvex Games</title>
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ccircle cx='16' cy='16' r='14' fill='%23070a1a' stroke='%233df0ff' stroke-width='2'/%3E%3Ccircle cx='16' cy='16' r='6' fill='%23ff7a2e'/%3E%3Cpath d='M16 2v6M16 24v6M2 16h6M24 16h6' stroke='%233df0ff' stroke-width='2'/%3E%3C/svg%3E">
 <meta property="og:site_name" content="Orvex Games">
 <meta property="og:title" content="Event Horizon — Last Run to Earth | Orvex Games">
@@ -137,14 +137,14 @@ body{padding:env(safe-area-inset-top,6px) env(safe-area-inset-right,10px) env(sa
 </style>
 </head>
 <body>
-<div id="loader"><h1>EVENT HORIZON</h1><div class="load-bar"><span id="lbar"></span></div><p>Initializing systems</p></div>
+<div id="loader"><h1>SPACE ODYSSEY</h1><div class="load-bar"><span id="lbar"></span></div><p>Initializing systems</p></div>
 
 <header id="orvex-header">
   <a href="https://orvexgames.me" class="brand" title="Orvex Games">
     <svg class="brand-glyph" viewBox="0 0 24 24" width="18" height="18" fill="none"><circle cx="12" cy="12" r="9" stroke="#3df0ff" stroke-width="2"/><circle cx="12" cy="12" r="3.5" fill="#ff7a2e"/><path d="M12 3v3M12 18v3M3 12h3M18 12h3" stroke="#3df0ff" stroke-width="2"/></svg>
-    <span>ORVEX<b>GAMES</b></span>
+    <span>SPACE<b>ODYSSEY</b></span>
   </a>
-  <div class="title-pill">EVENT HORIZON</div>
+  <div class="title-pill">INTERPLANETARY ODYSSEY</div>
   <div class="actions">
     <a href="https://github.com/mallikarjunr444-gif/respawn-2d-game" target="_blank" rel="noopener" class="godot-btn" title="Godot Project Source">
       <svg viewBox="0 0 24 24" width="13" height="13" fill="currentColor"><path d="M12 2A10 10 0 0 0 2 12c0 4.42 2.87 8.17 6.84 9.5.5.08.66-.23.66-.5v-1.69c-2.77.6-3.36-1.34-3.36-1.34-.46-1.16-1.11-1.47-1.11-1.47-.91-.62.07-.6.07-.6 1 .07 1.53 1.03 1.53 1.03.87 1.52 2.34 1.07 2.91.83.1-.65.35-1.09.63-1.34-2.22-.25-4.55-1.11-4.55-4.92 0-1.11.38-2 1.03-2.71-.1-.25-.45-1.29.1-2.64 0 0 .84-.27 2.75 1.02.79-.22 1.65-.33 2.5-.33.85 0 1.71.11 2.5.33 1.91-1.29 2.75-1.02 2.75-1.02.55 1.35.2 2.39.1 2.64.65.71 1.03 1.6 1.03 2.71 0 3.82-2.34 4.66-4.57 4.91.36.31.69.92.69 1.85V21c0 .27.16.59.67.5C19.14 20.16 22 16.42 22 12A10 10 0 0 0 12 2z"/></svg>
@@ -153,7 +153,7 @@ body{padding:env(safe-area-inset-top,6px) env(safe-area-inset-right,10px) env(sa
     <button id="fs-btn" aria-label="Toggle Fullscreen" title="Toggle Fullscreen">⛶</button>
   </div>
 </header>
-<div id="stage"><canvas id="c" width="960" height="540" tabindex="0" aria-label="Event Horizon — Last Run to Earth"></canvas></div>
+<div id="stage"><canvas id="c" width="960" height="540" tabindex="0" aria-label="Space Odyssey — Interplanetary Expedition"></canvas></div>
 <div id="rot-hint">📱 Rotate for widescreen arcade mode</div>
 <div id="touch">
   <div class="pad-left">
@@ -174,7 +174,7 @@ body{padding:env(safe-area-inset-top,6px) env(safe-area-inset-right,10px) env(sa
     </div>
   </div>
 </div>
-<div id="keys"><b>A D</b> move · <b>Space</b> jump · <b>Shift</b> dash · <b>J</b> slash · <b>K</b> shoot (hold to charge) · <b>Q</b> shield · <b>E</b> use · <b>M</b> sound</div>
+<div id="keys"><b>A / D / ARROWS</b> Move · <b>W / SPACE</b> Jump · <b>SHIFT</b> Dash · <b>J</b> Sword · <b>K</b> Blaster · <b>Q</b> Shield · <b>E</b> Use · <b>ESC</b> Pause · <b>R</b> Retry · <b>M</b> Sound</div>
 <script>
 (()=>{
 'use strict';
@@ -330,7 +330,7 @@ function mkLevel(kind,n){
 }
 
 /* ---------- state ---------- */
-const G={scene:'title',t:0,menu:0,char:'female',mx:-1,my:-1,cam:0,hx:-600,shake:0,fade:0,toast:null,meteors:[],muted:false,
+const G={scene:'title',t:0,menu:0,char:'male',mx:-1,my:-1,cam:0,hx:-600,shake:0,fade:0,toast:null,meteors:[],muted:false,dashPanel:null,
  mode:'story',sector:0,crystals:0,kills:0,time:0,distBase:0,hasSword:false,forgeDone:false,barrierAlive:true,cp:0,introT:0,podBroken:false,lt:0,deadT:0,deadWhy:'',pz:null,lvl:null,p:null,safe:null,meteorT:3,hint:6,world:0,hasBlaster:false,hasShield:false,hasLance:false,boss:null,ep:[],bolts:[],logs:0,chg:0,shT:0,shCd:0,bolCd:0,reveal:null,revealT:0};
 
 let UI=[];
@@ -765,43 +765,81 @@ function renderPuzzle(){
  txt('Click or tap a mirror to flip it.',rx,208,13,C.dim,'left',F_U,600);txt('Mistakes cost nothing. Take your time —',rx,230,13,C.dim,'left',F_U,600);txt('the Devourer waits while you think.',rx,250,13,C.dim,'left',F_U,600);
  if(z.solved)txt('FORGE ONLINE',rx,320,22,C.gold,'left',F_D,700,2);else{btn('SHOW HINT  (H)',rx,300,200,44,()=>pzHint());btn('CLOSE  (ESC)',rx,356,200,44,()=>{G.scene='play';});}
 }
-const TITLE_LORE=['THE DEVOURER has consumed 14 star systems.','Your colony is gone. Earth is the last way out.','Escape. Survive. Reach home before the stars die.'];
+const TITLE_LORE=['Six worlds. One rocket. The Devourer never sleeps.','Switch pilots, arm the hangar, then launch your expedition.','Forge weapons in story. Infinite Frontier launches fully armed.'];
+function drawDashPlanet(px,py,t){
+ for(let i=0;i<6;i++){const rad=mod(t*42+i*48,280);const a=Math.max(0,.16*(1-rad/280));ctx.strokeStyle='rgba(61,240,255,'+a.toFixed(3)+')';ctx.lineWidth=1.4+i*.25;ctx.beginPath();ctx.arc(px,py,rad,0,6.283);ctx.stroke();}
+ ctx.save();ctx.globalCompositeOperation='lighter';
+ const atm=ctx.createRadialGradient(px,py,40,px,py,168);atm.addColorStop(0,'rgba(140,80,255,.28)');atm.addColorStop(1,'rgba(0,0,0,0)');ctx.fillStyle=atm;ctx.beginPath();ctx.arc(px,py,168,0,6.283);ctx.fill();
+ ctx.restore();
+ const rings=[[190,48,'rgba(255,255,255,.9)',3.2],[210,54,'rgba(61,240,255,.8)',2.8],[232,60,'rgba(255,95,168,.78)',2.6],[254,66,'rgba(255,209,102,.72)',2.4],[276,72,'rgba(255,122,46,.62)',2.1]];
+ rings.forEach(r=>{ctx.save();ctx.translate(px,py);ctx.rotate(-.42+Math.sin(t*.2)*.04);ctx.strokeStyle=r[2];ctx.lineWidth=r[3];ctx.beginPath();ctx.ellipse(0,0,r[0],r[1],0,0,6.283);ctx.stroke();ctx.restore();});
+ const pg=ctx.createRadialGradient(px-22,py-26,8,px,py,78);pg.addColorStop(0,'#c98bff');pg.addColorStop(.45,'#6a3488');pg.addColorStop(1,'#1a0a28');ctx.fillStyle=pg;ctx.beginPath();ctx.arc(px,py,78,0,6.283);ctx.fill();
+ ctx.save();ctx.beginPath();ctx.arc(px,py,78,0,6.283);ctx.clip();ctx.fillStyle='rgba(20,8,28,.35)';ctx.fillRect(px-78,py-8,156,16);ctx.fillRect(px-78,py+22,156,10);ctx.fillStyle='rgba(255,255,255,.16)';ctx.beginPath();ctx.arc(px-18,py-22,22,0,6.283);ctx.fill();ctx.restore();
+ ctx.strokeStyle='rgba(255,255,255,.55)';ctx.lineWidth=2.2;ctx.beginPath();ctx.arc(px,py,78,0,6.283);ctx.stroke();
+}
+function dashOverlay(title,lines,closeFn){
+ ctx.fillStyle='rgba(3,5,16,.78)';ctx.fillRect(0,0,W,H);
+ rr(80,48,800,444,12);ctx.fillStyle='rgba(10,16,40,.96)';ctx.fill();ctx.strokeStyle=C.cyan;ctx.lineWidth=1.6;ctx.stroke();
+ txt(title,480,90,20,C.cyan,'center',F_D,700,3);
+ lines.forEach((l,i)=>txt(l,120,124+i*24,14,C.bone,'left',F_U,600,1));
+ btn('RETURN TO BRIDGE',360,432,240,40,()=>{SFX.click();closeFn();},{sel:true});
+}
 function renderTitle(){
- const t=G.t;drawBG(TH.moon,t*30,t);
- /* enhanced concentric pulse rings */
- for(let i=0;i<6;i++){const rad=mod(t*50+i*60,420);const a=Math.max(0,.14*(1-rad/420));ctx.strokeStyle='rgba(61,240,255,'+a.toFixed(3)+')';ctx.lineWidth=1.5+i*.3;ctx.beginPath();ctx.arc(700,260,rad,0,6.283);ctx.stroke();}
- drawHole(700+Math.sin(t*.4)*10,0,t);
- /* deeper gradient overlay */
- const g=ctx.createLinearGradient(0,0,W*.65,0);g.addColorStop(0,'rgba(5,7,26,.92)');g.addColorStop(.7,'rgba(5,7,26,.3)');g.addColorStop(1,'rgba(5,7,26,0)');ctx.fillStyle=g;ctx.fillRect(0,0,W,H);
- /* premium title text with glow */
- ctx.save();ctx.shadowColor='rgba(61,240,255,.6)';ctx.shadowBlur=20;
- txt('EVENT',54,160,64,C.bone,'left',F_D,700,8);
- ctx.shadowColor='rgba(61,240,255,.8)';ctx.shadowBlur=30;
- txt('HORIZON',54,232,64,C.cyan,'left',F_D,700,8);
+ const t=G.t;drawBG(TH.moon,t*26,t);
+ const veil=ctx.createLinearGradient(0,0,W*.62,0);veil.addColorStop(0,'rgba(8,6,24,.9)');veil.addColorStop(.7,'rgba(8,6,24,.28)');veil.addColorStop(1,'rgba(8,6,24,0)');ctx.fillStyle=veil;ctx.fillRect(0,0,W,H);
+ drawDashPlanet(700,250,t);
+ ctx.save();ctx.shadowColor='rgba(61,240,255,.55)';ctx.shadowBlur=18;
+ txt('SPACE',48,118,52,C.bone,'left',F_D,700,7);
+ ctx.shadowColor='rgba(61,240,255,.85)';ctx.shadowBlur=28;
+ txt('ODYSSEY',48,176,52,C.cyan,'left',F_D,700,7);
  ctx.shadowBlur=0;ctx.restore();
- /* animated shimmer on title */
- const shx=mod(t*120,600)-100;
- ctx.save();ctx.globalCompositeOperation='lighter';ctx.globalAlpha=.08;
- const sh=ctx.createLinearGradient(shx,0,shx+100,0);sh.addColorStop(0,'rgba(255,255,255,0)');sh.addColorStop(.5,'rgba(255,255,255,1)');sh.addColorStop(1,'rgba(255,255,255,0)');
- ctx.fillStyle=sh;ctx.fillRect(54,100,500,150);ctx.globalAlpha=1;ctx.globalCompositeOperation='source-over';ctx.restore();
- const sub='LAST RUN TO EARTH',sp=Math.sin(t*1.8)*.5+.5;ctx.globalAlpha=.7+sp*.3;txt(sub,58,268,14,C.ember,'left',F_U,700,8);ctx.globalAlpha=1;
- /* divider line */
- ctx.strokeStyle='rgba(61,240,255,.15)';ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(58,280);ctx.lineTo(340,280);ctx.stroke();
- // Animated lore lines
- const li=Math.floor(t/3.2)%TITLE_LORE.length,lp=(t%3.2)/3.2;
- const la=lp<.15?lp/.15:lp>.75?(1-lp)/.25:1;
- ctx.globalAlpha=la*.7;txt(TITLE_LORE[li],58,296,12,C.dim,'left',F_U,600,1);ctx.globalAlpha=1;
+ const sub='PLANET-TO-PLANET CONTINUOUS SURVIVAL ADVENTURE',sp=Math.sin(t*1.8)*.5+.5;ctx.globalAlpha=.72+sp*.28;txt(sub,50,206,13,C.ember,'left',F_U,700,4);ctx.globalAlpha=1;
+ const fem=G.char==='female';
+ txt(fem?'PILOT: MIRA (VIOLET SUIT)':'PILOT: ARIN (CYAN SUIT)',50,238,15,fem?C.pink:C.cyan,'left',F_U,700,1);
+ btn('SWITCH PILOT',300,216,128,30,()=>{G.char=fem?'male':'female';SFX.click();},{size:12});
  const sv=store('eh_save'),sw=sv&&sv.world>0?sv.world:0;
  const wnames=['FRACTURED MOON','AETHER-7','CINDER MOON','CRYOS','VORTEX PRIME','EARTH'];
- const items=[['STORY RUN',()=>{G.nextMode='story';G.startWorld=0;G.scene='select';}],['INFINITE FRONTIER',()=>{G.nextMode='endless';G.scene='select';}]];
- if(sw)items.push(['CONTINUE · '+(wnames[sw]||'WORLD '+(sw+1)),()=>{G.nextMode='story';G.startWorld=sw;G.scene='select';}]);
- G.menuN=items.length;
- items.forEach((it,i)=>btn((i+1)+'   '+it[0],58,312+i*50,310,42,()=>{SFX.click();it[1]();},{sel:G.menu===i}));
- const b=store('eh_best');if(b)txt('BEST  '+b.dist+' KM'+(b.sector?'  ·  SECTOR '+b.sector:''),58,476,13,C.dim,'left',F_U,700,2);
- txt('v1.0  ·  A / D  MOVE  ·  SPACE  JUMP  ·  SHIFT  DASH  ·  E  USE  ·  M  SOUND',58,512,11,C.dim,'left',F_U,400,1);
+ const items=[
+  ['LAUNCH EXPEDITION',()=>{G.nextMode='story';G.startWorld=0;G.scene='select';}],
+  ['INFINITE FRONTIER',()=>{G.nextMode='endless';G.scene='select';}],
+  ['ROCKET HANGAR & UPGRADES',()=>{G.dashPanel='hangar';}],
+  ['EXPEDITION DIRECTIVES & MANUAL',()=>{G.dashPanel='manual';}]
+ ];
+ if(sw)items.splice(1,0,['CONTINUE · '+(wnames[sw]||('WORLD '+(sw+1))),()=>{G.nextMode='story';G.startWorld=sw;G.scene='select';}]);
+ G.menuN=items.length;G.menuActs=items;
+ items.forEach((it,i)=>btn(it[0],48,262+i*46,340,40,()=>{SFX.click();it[1]();},{sel:G.menu===i}));
+ const b=store('eh_best');
+ txt((b?'BEST  '+b.dist+' KM'+(b.sector?'  ·  SECTOR '+b.sector:'  ')+' ·  ':'')+'6 DISCOVERED WORLDS  ·  SOUND: [M]',50,H-22,12,C.dim,'left',F_U,700,1);
+ txt('SEAMLESS PLANETARY ADVENTURE',W-28,H-22,12,C.dim,'right',F_U,600,1);
+ if(G.dashPanel==='hangar'){
+  const weps=[['Energy Sword','Forge on first expedition'],['Plasma Blaster','Cinder / later forges'],['Phase Shield','Cryos / later forges'],['Gravity Lance','Vortex / later forges']];
+  dashOverlay('ROCKET HANGAR & UPGRADES',[
+   'Active pilot: '+(fem?'Mira — Navigator':'Arin — Colony engineer'),
+   b?('Record: '+b.dist+' km'+(b.sector?'  ·  Infinite sector '+b.sector:'')):'No distance record yet.',
+   '',
+   'WEAPON BAY',
+   ...weps.map(w=>w[0]+'  —  unlock via '+w[1]),
+   '',
+   'Story expeditions arm weapons at forge terminals.',
+   'Infinite Frontier launches with the full loadout online.'
+  ],()=>{G.dashPanel=null;});
+ }
+ if(G.dashPanel==='manual'){
+  dashOverlay('EXPEDITION DIRECTIVES & MANUAL',[
+   'Launch Expedition — story route across six unknown worlds.',
+   'Infinite Frontier — endless survival with every weapon armed.',
+   'Rocket Hangar — review loadout, records, and unlock paths.',
+   '',
+   'A / D or Arrows  move    W / Space  jump    Shift  dash',
+   'J  sword slash    K  blaster (hold to charge Gravity Lance)',
+   'Q  phase shield    E  interact / board rocket',
+   'Esc  pause    R  retry    M  sound',
+   '',
+   'Outrun the Devourer. Reach the escape rocket. Survive.'
+  ],()=>{G.dashPanel=null;});
+ }
  applyBloom();
- /* title vignette */
- const vig=ctx.createRadialGradient(W/2,H/2,H*.3,W/2,H/2,H*.9);vig.addColorStop(0,'rgba(0,0,0,0)');vig.addColorStop(1,'rgba(0,0,0,.35)');ctx.fillStyle=vig;ctx.fillRect(0,0,W,H);
+ const vig=ctx.createRadialGradient(W/2,H/2,H*.3,W/2,H/2,H*.9);vig.addColorStop(0,'rgba(0,0,0,0)');vig.addColorStop(1,'rgba(0,0,0,.32)');ctx.fillStyle=vig;ctx.fillRect(0,0,W,H);
 }
 function renderSelect(){
  drawBG(TH.moon,G.t*20,G.t);ctx.fillStyle='rgba(5,7,26,.55)';ctx.fillRect(0,0,W,H);
@@ -866,8 +904,10 @@ function update(dt){
  if(G.fade>0&&G.scene!=='launch')G.fade=Math.max(0,G.fade-dt*2);
  if(pressed('mute')){muted=!muted;G.muted=muted;if(master)master.gain.value=muted?0:.55;}
  switch(G.scene){
-  case'title':{const n=G.menuN||2;if(pressed('down'))G.menu=Math.min(n-1,G.menu+1);if(pressed('up'))G.menu=Math.max(0,G.menu-1);if(pressed('n1'))G.menu=0;if(pressed('n2'))G.menu=1;if(pressed('n3')&&n>2)G.menu=2;
-   if(pressed('enter')||pressed('n1')||pressed('n2')||(pressed('n3')&&n>2)){const sv=store('eh_save');G.nextMode=G.menu===1?'endless':'story';G.startWorld=G.menu===2&&sv?sv.world:0;G.scene='select';SFX.click();}break;}
+  case'title':{if(G.dashPanel){if(pressed('esc')||pressed('enter'))G.dashPanel=null;break;}
+   const n=G.menuN||4;if(pressed('down'))G.menu=Math.min(n-1,G.menu+1);if(pressed('up'))G.menu=Math.max(0,G.menu-1);
+   if(pressed('n1'))G.menu=0;if(pressed('n2'))G.menu=1;if(pressed('n3')&&n>2)G.menu=2;
+   if(pressed('enter')){const act=(G.menuActs&&G.menuActs[G.menu]);if(act){SFX.click();act[1]();}}break;}
   case'select':if(pressed('left'))G.char='male';if(pressed('right'))G.char='female';if(pressed('esc')){G.scene='title';}
    if(pressed('enter')){if(G.nextMode==='endless')startEndless();else startStory(G.startWorld||0);}break;
   case'play':updatePlay(dt);break;

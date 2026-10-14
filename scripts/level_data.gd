@@ -163,6 +163,46 @@ static func get_world_info(world_idx: int) -> Dictionary:
 		}
 	]
 	
-	if world_idx < 0 or world_idx >= worlds.size():
-		return worlds[0]
-	return worlds[world_idx]
+	if world_idx < 0 or world_idx >= 6:
+		return {}
+
+	var route_order: Array[int] = [1, 2, 3, 4, 5, 0]
+	var info: Dictionary = worlds[route_order[world_idx]].duplicate()
+	var route_names: Array[String] = ["AETHER-7", "CINDER", "CRYOS", "VORTEX", "SYLVA", "OBSIDIAN"]
+	var forge_rewards: Array[String] = ["blaster", "shield", "lance", "blaster", "shield", "lance"]
+	info["id"] = route_names[world_idx].to_lower()
+	info["name"] = "WORLD %d — %s" % [world_idx + 1, route_names[world_idx]]
+	info["has_forge"] = true
+	info["forge_x"] = [1450.0, 1600.0, 1500.0, 1650.0, 1400.0, 1550.0][world_idx]
+	info["forge_reward"] = forge_rewards[world_idx]
+
+	if world_idx == 0:
+		info["sub"] = "A crystal world humming with a signal beneath its broken spires."
+	elif world_idx == 1:
+		info["sub"] = "A volcanic moon where thermal vents erupt across the black glass."
+	elif world_idx == 2:
+		info["sub"] = "Cross slick glacial shelves beneath the Cryos stormfront."
+	elif world_idx == 3:
+		info["sub"] = "Gravity folds the Vortex terrain around a guarded extraction route."
+	elif world_idx == 4:
+		info["sub"] = "An alien canopy surrounds the overgrown remnants of a lost colony."
+		info["sky_top"] = Color("071b16")
+		info["sky_bottom"] = Color("174c36")
+		info["nebula_color"] = Color(0.24, 0.92, 0.48, 0.3)
+		info["rock_color"] = Color("28533a")
+		info["rim_color"] = Color("9dff9a")
+		info["planet_color"] = Color("a8f28c")
+		info["has_vents"] = false
+	else:
+		info["sub"] = "Ancient obsidian ruins conceal a final route through the fractured dark."
+		info["sky_top"] = Color("090c16")
+		info["sky_bottom"] = Color("29243a")
+		info["nebula_color"] = Color(0.62, 0.52, 0.72, 0.28)
+		info["rock_color"] = Color("34313c")
+		info["rim_color"] = Color("d1b8ff")
+		info["planet_color"] = Color("b6a4c8")
+		info["has_vents"] = false
+		info["has_barrier"] = true
+		info["barrier_x"] = 3400.0
+		info["has_boss"] = false
+	return info

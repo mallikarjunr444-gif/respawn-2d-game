@@ -29,13 +29,13 @@ grow_horizontal = 2
 grow_vertical = 2
 
 [node name="Panel" type="PanelContainer" parent="Center"]
-custom_minimum_size = Vector2(560, 540)
+custom_minimum_size = Vector2(700, 560)
 layout_mode = 2
 
 [node name="VBox" type="VBoxContainer" parent="Center/Panel"]
 layout_mode = 2
 alignment = 1
-theme_override_constants/separation = 16
+theme_override_constants/separation = 10
 theme_override_constants/margin_left = 28
 theme_override_constants/margin_top = 24
 theme_override_constants/margin_right = 28
@@ -55,35 +55,41 @@ theme_override_colors/font_color = Color(0.65, 0.82, 0.9, 0.9)
 text = "Destination unknown. Choose your trajectory."
 horizontal_alignment = 1
 
-# Buttons for six worlds
-[node name="W1Btn" type="Button" parent="Center/Panel/VBox"]
+# Six distinct, simultaneously visible route portals
+[node name="RouteGrid" type="GridContainer" parent="Center/Panel/VBox"]
 layout_mode = 2
-custom_minimum_size = Vector2(0, 44)
+columns = 2
+theme_override_constants/h_separation = 16
+theme_override_constants/v_separation = 12
+
+[node name="W1Btn" type="Button" parent="Center/Panel/VBox/RouteGrid"]
+layout_mode = 2
+custom_minimum_size = Vector2(300, 82)
 text = "[ O ]  UNKNOWN SIGNAL 01"
 
-[node name="W2Btn" type="Button" parent="Center/Panel/VBox"]
+[node name="W2Btn" type="Button" parent="Center/Panel/VBox/RouteGrid"]
 layout_mode = 2
-custom_minimum_size = Vector2(0, 44)
+custom_minimum_size = Vector2(300, 82)
 text = "[ / ]  UNKNOWN SIGNAL 02"
 
-[node name="W3Btn" type="Button" parent="Center/Panel/VBox"]
+[node name="W3Btn" type="Button" parent="Center/Panel/VBox/RouteGrid"]
 layout_mode = 2
-custom_minimum_size = Vector2(0, 44)
+custom_minimum_size = Vector2(300, 82)
 text = "[ # ]  UNKNOWN SIGNAL 03"
 
-[node name="W4Btn" type="Button" parent="Center/Panel/VBox"]
+[node name="W4Btn" type="Button" parent="Center/Panel/VBox/RouteGrid"]
 layout_mode = 2
-custom_minimum_size = Vector2(0, 44)
+custom_minimum_size = Vector2(300, 82)
 text = "[ ~ ]  UNKNOWN SIGNAL 04"
 
-[node name="W5Btn" type="Button" parent="Center/Panel/VBox"]
+[node name="W5Btn" type="Button" parent="Center/Panel/VBox/RouteGrid"]
 layout_mode = 2
-custom_minimum_size = Vector2(0, 44)
+custom_minimum_size = Vector2(300, 82)
 text = "[ + ]  UNKNOWN SIGNAL 05"
 
-[node name="W6Btn" type="Button" parent="Center/Panel/VBox"]
+[node name="W6Btn" type="Button" parent="Center/Panel/VBox/RouteGrid"]
 layout_mode = 2
-custom_minimum_size = Vector2(0, 44)
+custom_minimum_size = Vector2(300, 82)
 text = "[ * ]  UNKNOWN SIGNAL 06"
 
 [node name="Status" type="Label" parent="Center/Panel/VBox"]
