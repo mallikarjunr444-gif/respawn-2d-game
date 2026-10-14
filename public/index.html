@@ -272,7 +272,8 @@ const SFX = {
   land(){ tone(130, 0.3, 'sine', 0.25, 0.4); noise(0.35, 0.2, 450); },
   takeoff(){ noise(0.95, 0.38, 260); tone(75, 0.85, 'sawtooth', 0.28, 3.5); },
   door(){ tone(340, 0.14, 'sine', 0.12, 1.5); noise(0.18, 0.1, 950); },
-  resource(){ tone(520, 0.12, 'sine', 0.16, 1.4); setTimeout(()=>tone(780, 0.16, 'sine', 0.16, 1.3), 80); setTimeout(()=>tone(1100, 0.22, 'triangle', 0.18), 160); }
+  resource(){ tone(520, 0.12, 'sine', 0.16, 1.4); setTimeout(()=>tone(780, 0.16, 'sine', 0.16, 1.3), 80); setTimeout(()=>tone(1100, 0.22, 'triangle', 0.18), 160); },
+  rcs(){ noise(0.09, 0.08, 2200); tone(85, 0.08, 'sine', 0.06); }
 };
 
 /* ──────── Input System ──────── */
@@ -582,6 +583,7 @@ function initPlanet(worldIdx){
   document.getElementById('header-planet-title').textContent = cfg.name + ' · ' + cfg.type;
 
   G.fuel = Math.max(G.fuel || 0, getMaxFuel() * 0.65);
+  G.oxygen = 100;
   G.hp = 3;
   G.cellsGot = 0;
   G.orbsGot = 0;
@@ -601,6 +603,9 @@ function initPlanet(worldIdx){
     angle: cfg.rocketStart.angle || 0,
     face: 1,
     thrusting: false,
+    thrustingUp: false,
+    thrustingDown: false,
+    thrustingHoriz: 0,
     boosting: false,
     boostCd: 0,
     boostT: 0,
@@ -609,6 +614,9 @@ function initPlanet(worldIdx){
     onGround: false,
     coyote: 0,
     suit: 100,
+    oxygen: 100,
+    walkCycle: 0,
+    bodyTilt: 0,
     atkT: 0,
     atkCd: 0,
     shootCd: 0
@@ -1102,86 +1110,364 @@ function drawDepartureRocket(cfg, camX, camY, t){
   ctx.restore();
 }
 
-/* ──────── Draw Astronaut Hero ──────── */
+/* ──────── Draw Astronaut Hero (High-Tech 2D EVA Space Suit) ──────── */
 function drawAstronautCharacter(p, camX, camY, t){
+  const cfg = LVL;
   const sx = p.x - camX, sy = p.y - camY;
+
+  // 1. Umbilical Life-Support Docking Tether to Lander (within 480px)
+  if(cfg && cfg.landingPad){
+    const landerX = cfg.landingPad.x, landerY = cfg.landingPad.y - 18;
+    const distToPad = Math.hypot(p.x - landerX, p.y - landerY);
+    if(distToPad < 480){
+      const lx = landerX - camX, ly = landerY - camY;
+      ctx.save();
+      const tetherAlpha = clamp(1.0 - distToPad / 480, 0, 0.7);
+      ctx.strokeStyle = `rgba(61,240,255,${tetherAlpha * 0.75})`;
+      ctx.lineWidth = 1.6;
+      ctx.setLineDash([6, 4]);
+      ctx.lineDashOffset = -t * 18;
+      ctx.beginPath();
+      ctx.moveTo(lx, ly);
+      const midX = (lx + sx) * 0.5, midY = Math.max(ly, sy) + distToPad * 0.12;
+      ctx.quadraticCurveTo(midX, midY, sx - p.face * 14, sy - 8);
+      ctx.stroke();
+      ctx.setLineDash([]);
+      const prog = (t * 1.5) % 1.0;
+      const nodeX = (1 - prog) * (1 - prog) * lx + 2 * (1 - prog) * prog * midX + prog * prog * (sx - p.face * 14);
+      const nodeY = (1 - prog) * (1 - prog) * ly + 2 * (1 - prog) * prog * midY + prog * prog * (sy - 8);
+      ctx.fillStyle = C.cyan;
+      ctx.beginPath();
+      ctx.arc(nodeX, nodeY, 2.5, 0, 6.283);
+      ctx.fill();
+      ctx.restore();
+    }
+  }
+
   ctx.save();
-  ctx.translate(sx, sy);
+  const floatBob = p.onGround ? 0 : Math.sin(t * 3.4) * 2.8;
+  const bodyTilt = p.onGround ? (p.vx * 0.0003) : clamp(p.vx * 0.0012, -0.42, 0.42);
+
+  ctx.translate(sx, sy + floatBob);
   ctx.scale(p.face, 1);
+  ctx.rotate(bodyTilt * p.face);
 
   const fem = G.char === 'mira';
-  const suit = fem ? '#f0e6ff' : '#d8edff';
-  const dark = fem ? '#281a44' : '#14244c';
-  const acc = fem ? '#ff66cc' : C.cyan;
+  const suitWhite = fem ? '#f5eefc' : '#ebf3ff';
+  const suitShade = fem ? '#b8a6d4' : '#9bb5db';
+  const jointDark = fem ? '#24143a' : '#101d3b';
+  const accColor  = fem ? '#ff5ec4' : C.cyan;
+  const accDark   = fem ? '#b82088' : '#0b7da8';
 
-  // Maneuvering Booster Pack
-  ctx.fillStyle = '#44506c';
-  rr(-14, -12, 10, 22, 3);
+  // 2. Volumetric Helmet Headlight Beam
+  ctx.save();
+  const beamGrad = ctx.createRadialGradient(16, -14, 4, 140, -10, 160);
+  beamGrad.addColorStop(0, 'rgba(61,240,255,0.22)');
+  beamGrad.addColorStop(0.3, 'rgba(61,240,255,0.08)');
+  beamGrad.addColorStop(1, 'rgba(61,240,255,0)');
+  ctx.fillStyle = beamGrad;
+  ctx.beginPath();
+  ctx.moveTo(14, -14);
+  ctx.lineTo(190, -65);
+  ctx.lineTo(210, 35);
+  ctx.closePath();
   ctx.fill();
+  ctx.restore();
+
+  // 3. MMU / SAFER Propulsion Backpack
+  ctx.fillStyle = jointDark;
+  rr(-22, -18, 14, 32, 4);
+  ctx.fill();
+  ctx.strokeStyle = '#34476c';
+  ctx.lineWidth = 1;
+  ctx.stroke();
+
+  // Twin Nitrogen / RCS Propellant Tanks
+  const tankGrad = ctx.createLinearGradient(-21, -16, -9, -16);
+  tankGrad.addColorStop(0, '#5a6e94');
+  tankGrad.addColorStop(0.5, '#b0c6ea');
+  tankGrad.addColorStop(1, '#334466');
+  ctx.fillStyle = tankGrad;
+  rr(-20, -16, 5, 26, 2.5); ctx.fill();
+  rr(-14, -16, 5, 26, 2.5); ctx.fill();
+
+  // Safety Yellow Ring bands
+  ctx.fillStyle = C.gold;
+  rr(-20, -10, 5, 2.5, 0.5); ctx.fill();
+  rr(-14, -10, 5, 2.5, 0.5); ctx.fill();
+  rr(-20, -1, 5, 2.5, 0.5); ctx.fill();
+  rr(-14, -1, 5, 2.5, 0.5); ctx.fill();
+
+  // Antenna on backpack
+  ctx.strokeStyle = '#8fa3c7';
+  ctx.lineWidth = 1.5;
+  ctx.beginPath();
+  ctx.moveTo(-16, -18); ctx.lineTo(-21, -30);
+  ctx.stroke();
+  ctx.fillStyle = Math.sin(t * 8) > 0 ? C.cyan : '#122544';
+  ctx.beginPath();
+  ctx.arc(-21, -30, 2.5, 0, 6.283);
+  ctx.fill();
+
+  // Dynamic RCS Thruster Plumes
+  // A. Bottom Main Thruster (fires downward when lifting/hovering)
+  const isUpThrust = (p.thrustingUp || held.up || held.thrust || (G.fuel > 0 && !p.onGround && p.vy < -40));
+  if(isUpThrust && G.fuel > 0){
+    const pLen = 22 + Math.random() * 14;
+    const pGrad = ctx.createLinearGradient(-15, 14, -15, 14 + pLen);
+    pGrad.addColorStop(0, '#ffffff');
+    pGrad.addColorStop(0.2, C.cyan);
+    pGrad.addColorStop(0.7, '#1b5fff');
+    pGrad.addColorStop(1, 'rgba(27,95,255,0)');
+    ctx.fillStyle = pGrad;
+    ctx.beginPath();
+    ctx.moveTo(-20, 14); ctx.lineTo(-9, 14); ctx.lineTo(-14.5, 14 + pLen);
+    ctx.closePath();
+    ctx.fill();
+    ctx.fillStyle = '#ffffff';
+    ctx.beginPath();
+    ctx.moveTo(-18, 14); ctx.lineTo(-11, 14); ctx.lineTo(-14.5, 14 + pLen * 0.45);
+    ctx.closePath();
+    ctx.fill();
+  }
+
+  // B. Top Reverse RCS Nozzles (fires upward when descending/braking)
+  const isDownThrust = (held.down && !p.onGround);
+  if(isDownThrust && G.fuel > 0){
+    ctx.fillStyle = 'rgba(61,240,255,0.85)';
+    ctx.beginPath();
+    ctx.moveTo(-19, -18); ctx.lineTo(-11, -18); ctx.lineTo(-15, -30 - Math.random() * 8);
+    ctx.closePath();
+    ctx.fill();
+  }
+
+  // C. Lateral RCS Thruster Nozzles
+  if(Math.abs(p.vx) > 80 && !p.onGround && G.fuel > 0){
+    ctx.fillStyle = 'rgba(61,240,255,0.7)';
+    ctx.beginPath();
+    ctx.moveTo(-22, -4); ctx.lineTo(-22, 4); ctx.lineTo(-32 - Math.random() * 6, 0);
+    ctx.closePath();
+    ctx.fill();
+  }
+
+  // D. Tactical Boost Flare
+  if(p.boostT > 0){
+    ctx.save();
+    ctx.globalCompositeOperation = 'lighter';
+    const bGrad = ctx.createRadialGradient(-16, 0, 2, -16, 0, 48);
+    bGrad.addColorStop(0, '#ffffff');
+    bGrad.addColorStop(0.3, accColor);
+    bGrad.addColorStop(0.7, '#ff7a2e');
+    bGrad.addColorStop(1, 'rgba(0,0,0,0)');
+    ctx.fillStyle = bGrad;
+    ctx.beginPath();
+    ctx.arc(-16, 0, 48, 0, 6.283);
+    ctx.fill();
+    ctx.restore();
+  }
+
+  // 4. Back Leg & Boot
+  const walk = p.walkCycle || 0;
+  const legSwing = p.onGround ? Math.sin(walk) * 8 : (Math.sin(t * 2.5) * 3 + 4);
+  const backLegX = -4 - legSwing * 0.6;
+  const backLegY = 12 + Math.abs(legSwing) * 0.3;
+
+  ctx.fillStyle = suitShade;
+  rr(backLegX - 4, backLegY, 8, 14, 4); ctx.fill();
+  ctx.fillStyle = jointDark;
+  rr(backLegX - 3, backLegY + 8, 6, 3, 1); ctx.fill();
+  ctx.fillStyle = '#223254';
+  rr(backLegX - 5, backLegY + 12, 11, 7, 2.5); ctx.fill();
+  ctx.fillStyle = accDark;
+  rr(backLegX - 5, backLegY + 17, 11, 2, 0.5); ctx.fill();
+
+  // 5. Torso
+  const torsoGrad = ctx.createLinearGradient(-10, -14, 12, 14);
+  torsoGrad.addColorStop(0, suitWhite);
+  torsoGrad.addColorStop(0.65, suitWhite);
+  torsoGrad.addColorStop(1, suitShade);
+  ctx.fillStyle = torsoGrad;
+  rr(-9, -15, 21, 27, 6);
+  ctx.fill();
+  ctx.strokeStyle = '#8fa3cc';
+  ctx.lineWidth = 1;
+  ctx.stroke();
+
+  // Mission Accent Stripes
+  ctx.fillStyle = accColor;
+  rr(-3, -15, 4, 27, 2); ctx.fill();
+  rr(4, -15, 2, 27, 1); ctx.fill();
+
+  // 6. Chest Display & Control Module (DCM)
+  ctx.fillStyle = jointDark;
+  rr(-2, -8, 14, 16, 3);
+  ctx.fill();
+  ctx.strokeStyle = '#3e527a';
+  ctx.lineWidth = 1;
+  ctx.stroke();
+
+  // ECG Heartbeat / Oxygen Monitor Screen
+  ctx.fillStyle = '#05111d';
+  rr(0, -6, 10, 7, 1.5);
+  ctx.fill();
+  ctx.strokeStyle = G.oxygen > 25 ? '#3dff88' : C.red;
+  ctx.lineWidth = 1.2;
+  ctx.beginPath();
+  ctx.moveTo(1, -2.5);
+  ctx.lineTo(3, -2.5);
+  ctx.lineTo(4.5, -5);
+  ctx.lineTo(6, -0.5);
+  ctx.lineTo(7.5, -2.5);
+  ctx.lineTo(9, -2.5);
+  ctx.stroke();
+
+  // DCM Status LEDs
+  ctx.fillStyle = C.green;
+  ctx.beginPath(); ctx.arc(1, 4, 1.2, 0, 6.283); ctx.fill();
+  ctx.fillStyle = accColor;
+  ctx.beginPath(); ctx.arc(5, 4, 1.2, 0, 6.283); ctx.fill();
+  ctx.fillStyle = C.gold;
+  ctx.beginPath(); ctx.arc(9, 4, 1.2, 0, 6.283); ctx.fill();
+
+  // Umbilical Hoses to Helmet
+  ctx.strokeStyle = '#62769c';
+  ctx.lineWidth = 2;
+  ctx.beginPath();
+  ctx.moveTo(8, -8); ctx.quadraticCurveTo(12, -12, 10, -16);
+  ctx.stroke();
+
+  // 7. Front Leg & Boot
+  const frontLegSwing = p.onGround ? -Math.sin(walk) * 8 : (-Math.sin(t * 2.5) * 3 - 3);
+  const frontLegX = 4 + frontLegSwing * 0.6;
+  const frontLegY = 12 + Math.abs(frontLegSwing) * 0.3;
+
+  ctx.fillStyle = suitWhite;
+  rr(frontLegX - 4, frontLegY, 8, 14, 4); ctx.fill();
+  ctx.strokeStyle = '#8fa3cc'; ctx.lineWidth = 1; ctx.stroke();
+  ctx.fillStyle = jointDark;
+  rr(frontLegX - 3, frontLegY + 8, 6, 3, 1); ctx.fill();
+  ctx.fillStyle = '#1c2844';
+  rr(frontLegX - 5, frontLegY + 12, 12, 7, 2.5); ctx.fill();
+  ctx.fillStyle = accColor;
+  rr(frontLegX - 5, frontLegY + 17, 12, 2.5, 0.8); ctx.fill();
+  if(p.onGround){
+    ctx.fillStyle = 'rgba(61,240,255,0.4)';
+    rr(frontLegX - 7, frontLegY + 19, 16, 2, 1); ctx.fill();
+  }
+
+  // 8. Helmet & Gold Specular Visor
+  ctx.fillStyle = jointDark;
+  rr(2, -18, 15, 4, 1.5); ctx.fill();
+
+  const helmGrad = ctx.createRadialGradient(9, -24, 3, 10, -22, 13);
+  helmGrad.addColorStop(0, '#ffffff');
+  helmGrad.addColorStop(0.7, suitWhite);
+  helmGrad.addColorStop(1, suitShade);
+  ctx.fillStyle = helmGrad;
+  ctx.beginPath();
+  ctx.arc(10, -22, 11.5, 0, 6.283);
+  ctx.fill();
+  ctx.strokeStyle = '#8ea4cb';
+  ctx.lineWidth = 1.2;
+  ctx.stroke();
+
+  const visorGrad = ctx.createLinearGradient(7, -30, 19, -15);
+  visorGrad.addColorStop(0, '#fff4a3');
+  visorGrad.addColorStop(0.25, '#ffc02e');
+  visorGrad.addColorStop(0.65, '#0a4275');
+  visorGrad.addColorStop(1, '#03142e');
+  ctx.fillStyle = visorGrad;
+  ctx.beginPath();
+  ctx.ellipse(13.5, -22, 7.5, 8.5, 0.1, 0, 6.283);
+  ctx.fill();
+  ctx.strokeStyle = '#ffe485';
+  ctx.lineWidth = 1;
+  ctx.stroke();
+
+  // Visor Specular Reflection Crescent
+  ctx.strokeStyle = 'rgba(255,255,255,0.85)';
+  ctx.lineWidth = 1.8;
+  ctx.beginPath();
+  ctx.arc(12.5, -23, 6, -1.8, -0.4);
+  ctx.stroke();
+
+  // Interior HUD Reticle Glow
+  ctx.fillStyle = 'rgba(61,240,255,0.6)';
+  ctx.beginPath();
+  ctx.arc(15, -22, 1.5, 0, 6.283);
+  ctx.fill();
+
+  // Headlight Bezel
   ctx.fillStyle = '#ff7a2e';
-  rr(-16, -6, 4, 12, 2);
-  ctx.fill();
+  rr(16, -16, 3, 3, 1); ctx.fill();
 
-  // Planetary Suit Body
-  ctx.fillStyle = suit;
-  rr(-8, -14, 20, 26, 6);
-  ctx.fill();
+  // 9. Arm & EVA Glove
+  const armAngle = p.atkT > 0 ? 0 : (p.onGround ? Math.sin(walk) * 0.4 : -0.2);
+  ctx.save();
+  ctx.translate(2, -8);
+  ctx.rotate(armAngle);
+  ctx.fillStyle = suitWhite;
+  ctx.beginPath(); ctx.arc(0, 0, 5, 0, 6.283); ctx.fill();
+  ctx.fillStyle = accColor;
+  ctx.beginPath(); ctx.arc(0, 0, 2, 0, 6.283); ctx.fill();
+  rr(-2, 0, 5, 12, 2.5); ctx.fill();
+  ctx.fillStyle = jointDark;
+  rr(-3, 9, 7, 6, 2); ctx.fill();
+  ctx.restore();
 
-  // Accent Band
-  ctx.fillStyle = acc;
-  rr(-4, -14, 5, 26, 2);
-  ctx.fill();
-
-  // Helmet
-  ctx.fillStyle = suit;
-  ctx.beginPath();
-  ctx.arc(8, -4, 10, 0, 6.283);
-  ctx.fill();
-
-  // Glowing Visor
-  const vg = ctx.createLinearGradient(8, -9, 16, 2);
-  vg.addColorStop(0, C.cyan);
-  vg.addColorStop(1, '#0b1e4a');
-  ctx.fillStyle = vg;
-  ctx.beginPath();
-  ctx.ellipse(11, -4, 6, 7, 0, 0, 6.283);
-  ctx.fill();
-
-  // Weapon attack animation (Energy Sword swing arc)
+  // 10. Energy Sword Attack
   if(p.atkT > 0){
     const swingProg = 1 - p.atkT / 0.22;
-    const a = lerp(-1.6, 1.2, swingProg);
+    const a = lerp(-1.8, 1.4, swingProg);
     ctx.save();
-    ctx.translate(6, 0);
+    ctx.translate(6, -2);
     ctx.rotate(a);
-    ctx.strokeStyle = C.cyan;
-    ctx.lineWidth = 5;
+
+    ctx.fillStyle = jointDark;
+    rr(0, -3, 10, 6, 2); ctx.fill();
+    ctx.fillStyle = accColor;
+    rr(8, -5, 3, 10, 1.5); ctx.fill();
+
+    ctx.strokeStyle = accColor;
+    ctx.lineWidth = 6;
     ctx.beginPath();
-    ctx.moveTo(0, 0); ctx.lineTo(36, 0);
+    ctx.moveTo(10, 0); ctx.lineTo(44, 0);
     ctx.stroke();
+
     ctx.strokeStyle = '#ffffff';
-    ctx.lineWidth = 2;
+    ctx.lineWidth = 2.5;
     ctx.beginPath();
-    ctx.moveTo(0, 0); ctx.lineTo(34, 0);
+    ctx.moveTo(10, 0); ctx.lineTo(42, 0);
     ctx.stroke();
+
     ctx.globalCompositeOperation = 'lighter';
-    ctx.strokeStyle = 'rgba(61,240,255,0.6)';
-    ctx.lineWidth = 14;
+    ctx.strokeStyle = `rgba(${fem ? '255,94,196' : '61,240,255'},0.65)`;
+    ctx.lineWidth = 18;
     ctx.beginPath();
-    ctx.arc(0, 0, 36, -0.6, 0.4);
+    ctx.arc(0, 0, 42, -0.7, 0.5);
     ctx.stroke();
     ctx.restore();
   }
 
-  // Phase Shield Bubble
+  // 11. Phase Shield Hex Bubble
   if(G.shieldT > 0){
     ctx.save();
     ctx.globalCompositeOperation = 'lighter';
+    const sGrad = ctx.createRadialGradient(0, 0, 10, 0, 0, 36);
+    sGrad.addColorStop(0, 'rgba(61,240,255,0.08)');
+    sGrad.addColorStop(0.75, 'rgba(61,240,255,0.28)');
+    sGrad.addColorStop(1, 'rgba(180,104,248,0.7)');
+    ctx.fillStyle = sGrad;
     ctx.strokeStyle = C.cyan;
-    ctx.lineWidth = 3;
-    ctx.fillStyle = 'rgba(61,240,255,0.2)';
+    ctx.lineWidth = 2.5;
     ctx.beginPath();
-    ctx.arc(0, 0, 32, 0, 6.283);
+    for(let a=0; a<6; a++){
+      const ang = (a * 60 + t * 45) * Math.PI / 180;
+      const hx = Math.cos(ang) * 36, hy = Math.sin(ang) * 36;
+      if(a === 0) ctx.moveTo(hx, hy);
+      else ctx.lineTo(hx, hy);
+    }
+    ctx.closePath();
     ctx.fill();
     ctx.stroke();
     ctx.restore();
@@ -1454,32 +1740,43 @@ function drawDebris(d, camX, camY){
   ctx.restore();
 }
 
-/* ──────── Planet-Specific HUD (No Level Numbers) ──────── */
+/* ──────── Planet-Specific HUD (Realistic Space Telemetry) ──────── */
 function drawHUD(){
   const cfg = LVL;
   const pct = getFuelPct();
+  const oxy = G.oxygen !== undefined ? G.oxygen : 100;
 
-  // Top Left: Fuel Gauge
-  const fx = 24, fy = 18, fw = 210, fh = 14;
-  ctx.fillStyle = 'rgba(7,10,26,0.85)';
-  rr(fx-4, fy-4, fw+8, fh+24, 6);
+  // Top Left: RCS Propellant & Oxygen Life Support
+  const fx = 24, fy = 16, fw = 185, fh = 10;
+  ctx.fillStyle = 'rgba(7,10,26,0.88)';
+  rr(fx-6, fy-4, fw+12, fh*2+30, 6);
   ctx.fill();
-  ctx.strokeStyle = 'rgba(61,240,255,0.2)';
+  ctx.strokeStyle = 'rgba(61,240,255,0.25)';
   ctx.lineWidth = 1;
   ctx.stroke();
 
-  rr(fx, fy+14, fw, fh, 3);
+  // Fuel bar
+  rr(fx, fy+11, fw, fh, 2.5);
   ctx.fillStyle = 'rgba(255,255,255,0.1)';
   ctx.fill();
-
   const fuelColor = pct > 50 ? C.green : pct > 25 ? C.gold : C.red;
   ctx.fillStyle = fuelColor;
-  rr(fx, fy+14, fw * clamp(pct/100, 0, 1), fh, 3);
+  rr(fx, fy+11, fw * clamp(pct/100, 0, 1), fh, 2.5);
   ctx.fill();
-  txt('PROPULSION FUEL: ' + Math.floor(pct) + '%', fx, fy+9, 11, fuelColor, 'left', F_U, 700);
+  txt('RCS PROPELLANT: ' + Math.floor(pct) + '%', fx, fy+8, 10, fuelColor, 'left', F_U, 700);
+
+  // Oxygen bar
+  const oxyColor = oxy > 40 ? C.cyan : oxy > 20 ? C.gold : C.red;
+  rr(fx, fy+32, fw, fh, 2.5);
+  ctx.fillStyle = 'rgba(255,255,255,0.1)';
+  ctx.fill();
+  ctx.fillStyle = oxyColor;
+  rr(fx, fy+32, fw * clamp(oxy/100, 0, 1), fh, 2.5);
+  ctx.fill();
+  txt('SUIT OXYGEN: ' + Math.floor(oxy) + '%', fx, fy+29, 10, oxyColor, 'left', F_U, 700);
 
   // Hull / Shield Integrity Pips
-  const px = 260, py = 24;
+  const px = 245, py = 24;
   for(let i=0; i<3; i++){
     ctx.fillStyle = i < G.hp ? C.cyan : 'rgba(255,255,255,0.15)';
     rr(px + i*24, py, 18, 12, 3);
@@ -1487,38 +1784,45 @@ function drawHUD(){
   }
   txt('HULL INTEGRITY', px, py - 6, 10, C.dim, 'left', F_U, 600);
 
-  // Center: Planet Name & Dynamic Objective Tracker
-  txt(cfg.name + ' · ' + cfg.type, W/2, 22, 14, cfg.accent, 'center', F_O, 700, 2);
+  // Center: Planet Name, Gravity & Dynamic Objective Tracker
+  const gravG = (cfg.gravity / 980).toFixed(2);
+  txt(cfg.name + ' · ' + cfg.type + ' [' + gravG + 'G]', W/2, 22, 14, cfg.accent, 'center', F_O, 700, 2);
 
   const allSecured = G.cellsGot >= cfg.mandatoryCount;
   const objColor = allSecured ? C.green : C.gold;
   const objText = (allSecured ? '✔ ALL OBJECTIVES SECURED' : cfg.mandatoryName.toUpperCase() + ': ' + G.cellsGot + ' / ' + cfg.mandatoryCount) + ' | FLEET CREDITS: ' + G.credits;
   txt(objText, W/2, 40, 12, objColor, 'center', F_U, 700, 1);
 
-  // Environmental Hazard Indicator
-  let envText = '';
-  let envColor = C.cyan;
-  if(cfg.id === 'fractured_moon'){
-    envText = 'GRAVITY DISTORTION: ANOMALIES ACTIVE';
-    envColor = C.purple;
-  } else if(cfg.id === 'aether_7'){
-    envText = 'VERTICAL UPDRAFT CHANNELS DETECTED';
-    envColor = C.teal;
-  } else if(cfg.id === 'cinder_moon'){
-    envText = 'VOLCANIC HEAT & LAVA HAZARD ACTIVE';
-    envColor = C.ember;
-  } else if(cfg.id === 'cryos'){
-    envText = 'GLACIAL TRACTION: SUB-ZERO SLIPPERY ICE';
-    envColor = C.ice;
-  } else if(cfg.id === 'vortex_prime'){
-    const suitPct = Math.floor(PL.suit);
-    envText = 'SUIT PROTECTION: ' + suitPct + '% (SEEK SAFE DOMES)';
-    envColor = suitPct > 35 ? C.toxic : C.red;
-  } else if(cfg.id === 'earth'){
-    envText = 'ATMOSPHERIC WIND: ➔ 165 KM/H GUST FORCE';
-    envColor = C.cyan;
+  // Check Life Support Docking Tether
+  const distLander = Math.hypot(PL.x - cfg.landingPad.x, PL.y - cfg.landingPad.y);
+  if(distLander < 140 && G.phase === 'explore'){
+    txt('⚡ LIFE-SUPPORT TETHER DOCKED [RECHARGING]', W/2, 58, 11, C.green, 'center', F_U, 700);
+  } else {
+    // Environmental Hazard Indicator
+    let envText = '';
+    let envColor = C.cyan;
+    if(cfg.id === 'fractured_moon'){
+      envText = 'GRAVITY DISTORTION: ANOMALIES ACTIVE';
+      envColor = C.purple;
+    } else if(cfg.id === 'aether_7'){
+      envText = 'VERTICAL UPDRAFT CHANNELS DETECTED';
+      envColor = C.teal;
+    } else if(cfg.id === 'cinder_moon'){
+      envText = 'VOLCANIC HEAT & LAVA HAZARD ACTIVE';
+      envColor = C.ember;
+    } else if(cfg.id === 'cryos'){
+      envText = 'GLACIAL TRACTION: SUB-ZERO SLIPPERY ICE';
+      envColor = C.ice;
+    } else if(cfg.id === 'vortex_prime'){
+      const suitPct = Math.floor(PL.suit);
+      envText = 'SUIT PROTECTION: ' + suitPct + '% (SEEK SAFE DOMES)';
+      envColor = suitPct > 35 ? C.toxic : C.red;
+    } else if(cfg.id === 'earth'){
+      envText = 'ATMOSPHERIC WIND: ➔ 165 KM/H GUST FORCE';
+      envColor = C.cyan;
+    }
+    txt(envText, W/2, 58, 11, envColor, 'center', F_U, 700);
   }
-  txt(envText, W/2, 58, 11, envColor, 'center', F_U, 700);
 
   // Top Right: Distance & Radar to Departure Rocket
   const targetX = G.phase === 'flight' ? cfg.landingPad.x : cfg.departureRocket.x;
@@ -1703,48 +2007,119 @@ function updatePlay(dt){
     }
   }
 
-  // 4. PHASE: PLANET EXPLORATION & OBJECTIVES (Side-Scrolling Astronaut)
+  // 4. PHASE: PLANET EXPLORATION & OBJECTIVES (Realistic 2D Space Flight & Surface EVA)
   else if(G.phase === 'explore'){
-    p.angle = 0;
     p.coyote = p.onGround ? 0.12 : Math.max(0, p.coyote - dt);
+    p.thrustingUp = false;
+    p.thrustingDown = false;
+    p.thrustingHoriz = 0;
 
-    // Planet-specific ground acceleration & traction
-    const friction = cfg.friction || 0.82;
-    const accel = p.onGround ? (cfg.id === 'cryos' ? 700 : 1900) : 980;
+    // A. Life Support System (Oxygen & Tether Docking)
+    G.oxygen = G.oxygen !== undefined ? G.oxygen : 100;
+    const o2Drain = (cfg.oxygenDrain || 0.45) * dt;
+    G.oxygen = Math.max(0, G.oxygen - o2Drain);
 
-    if(steerDir !== 0){
-      p.vx += steerDir * accel * dt;
-      p.face = steerDir;
-    } else if(p.onGround){
-      p.vx *= Math.pow(friction, dt * 18);
+    // Tether Docking with Lander (automatic oxygen & propellant replenishment within 140px)
+    const distLander = Math.hypot(p.x - cfg.landingPad.x, p.y - (cfg.landingPad.y - 18));
+    if(distLander < 140){
+      G.oxygen = Math.min(100, G.oxygen + 35 * dt);
+      G.fuel = Math.min(getMaxFuel(), G.fuel + 28 * dt);
+      if(Math.random() < 0.08) spawn(cfg.landingPad.x + (Math.random()-0.5)*30, cfg.landingPad.y - 20, 0, -30, 0.3, 2, C.cyan, 0, true);
     }
 
-    // Jump
-    if((pressed('up') || pressed('thrust')) && (p.onGround || p.coyote > 0)){
-      p.vy = -540;
-      p.onGround = false;
-      p.coyote = 0;
-      SFX.boost();
-      burst(p.x, p.y + 14, 8, '#ffffff', 100, 0.3);
+    // Critical Oxygen Asphyxiation Warning
+    if(G.oxygen <= 0){
+      p.o2DmgT = (p.o2DmgT || 0) + dt;
+      if(p.o2DmgT > 2.0){
+        p.o2DmgT = 0;
+        G.hp -= 1;
+        SFX.hit();
+        G.shake = 8;
+        G.toast = { a: 'CRITICAL LIFE SUPPORT', b: 'SUIT OXYGEN DEPLETED IN VACUUM!', t: 2.2 };
+        if(G.hp <= 0) { die('SUIT OXYGEN DEPLETED IN THE VACUUM'); return; }
+      }
     }
 
-    // Mid-air Jetpack Hover (Hold space)
-    if(held.thrust && !p.onGround && hasFuel && p.vy > -320){
-      p.vy -= 420 * dt;
-      G.fuel = Math.max(0, G.fuel - 1.4 * getBurnMult() * dt);
-      spawn(p.x - p.face*12, p.y + 14, -p.face*40 + (Math.random()-0.5)*30, 140 + Math.random()*50, 0.22, 3.5, C.cyan, 0, true);
+    // B. Ground Walking vs Space Flight Kinematics
+    if(p.onGround){
+      // Surface locomotion
+      p.walkCycle = (p.walkCycle || 0) + Math.abs(p.vx) * dt * 0.022;
+      const friction = cfg.friction || 0.82;
+      const accel = cfg.id === 'cryos' ? 750 : 2100;
+
+      if(steerDir !== 0){
+        p.vx += steerDir * accel * dt;
+        p.face = steerDir;
+      } else {
+        p.vx *= Math.pow(friction, dt * 18);
+      }
+      p.vx = clamp(p.vx, -450, 450);
+
+      // Surface Jump / Liftoff into Space Flight
+      if((pressed('up') || pressed('thrust')) && (p.onGround || p.coyote > 0)){
+        p.vy = -540;
+        p.onGround = false;
+        p.coyote = 0;
+        SFX.boost();
+        burst(p.x, p.y + 16, 12, '#ffffff', 120, 0.35);
+      }
+    } else {
+      // Free Space Flight / Microgravity EVA with MMU Thruster Pack
+      p.walkCycle = (p.walkCycle || 0) + dt * 2.0;
+
+      // 1. Upward Thrusters (Counteract gravity / Fly upward)
+      if(wantThrust && hasFuel){
+        p.thrustingUp = true;
+        const upPower = 940 * getThrustMult();
+        p.vy -= upPower * dt;
+        G.fuel = Math.max(0, G.fuel - 1.8 * getBurnMult() * dt);
+        if(Math.random() < 0.7){
+          SFX.rcs();
+          spawn(p.x - p.face*14, p.y + 14, -p.face*30 + (Math.random()-0.5)*40, 160 + Math.random()*70, 0.25, 4, C.cyan, 0, true);
+        }
+      }
+
+      // 2. Downward Reverse RCS (Altitude descent control)
+      if(held.down && hasFuel){
+        p.thrustingDown = true;
+        p.vy += 650 * getThrustMult() * dt;
+        G.fuel = Math.max(0, G.fuel - 1.2 * getBurnMult() * dt);
+        if(Math.random() < 0.6){
+          SFX.rcs();
+          spawn(p.x - p.face*14, p.y - 18, -p.face*20 + (Math.random()-0.5)*30, -140 - Math.random()*60, 0.2, 3, C.cyan, 0, true);
+        }
+      }
+
+      // 3. Lateral RCS Thrusters (Horizontal space maneuvering)
+      if(steerDir !== 0 && hasFuel){
+        p.thrustingHoriz = steerDir;
+        p.vx += steerDir * 840 * dt;
+        p.face = steerDir;
+        G.fuel = Math.max(0, G.fuel - 0.7 * getBurnMult() * dt);
+      } else {
+        // Space Momentum Conservation (Newton's 1st Law)
+        if(held.down){ // Active Retrograde Braking / SAS
+          p.vx *= (1.0 - 4.2 * dt);
+        } else {
+          // Low drag vacuum drift
+          p.vx *= Math.pow(cfg.airDrag || 0.994, dt * 60);
+        }
+      }
+
+      p.vx = clamp(p.vx, -620, 620);
+      p.vy = clamp(p.vy, -660, 660);
     }
 
-    // Tactical Dash (Shift)
+    // Tactical Dash / Emergency MMU Burn (Shift)
     if(pressed('boost') && p.boostCd <= 0 && G.fuel >= 6){
       p.boostCd = 1.2;
       p.boostT = 0.28;
       G.fuel -= 6;
       p.inv = Math.max(p.inv, 0.4);
-      p.vx = p.face * 780;
+      p.vx = p.face * 820;
       SFX.boost();
       G.shake = 6;
-      burst(p.x, p.y, 16, C.cyan, 180, 0.45, true);
+      burst(p.x, p.y, 18, C.cyan, 200, 0.5, true);
     }
 
     // Energy Sword Melee Attack (J / X / Left Click)
@@ -1979,6 +2354,7 @@ function updatePlay(dt){
         if(d < 42){
           c.got = true;
           G.cellsGot++;
+          G.oxygen = Math.min(100, (G.oxygen || 100) + 15);
           G.score += 25;
           G.credits += 20;
           SFX.resource();
@@ -2008,6 +2384,7 @@ function updatePlay(dt){
           o.got = true;
           G.orbsGot++;
           G.fuel = Math.min(getMaxFuel(), G.fuel + 35);
+          G.oxygen = Math.min(100, (G.oxygen || 100) + 25);
           G.score += 40;
           G.credits += 15;
           SFX.orb();

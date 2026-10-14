@@ -144,6 +144,15 @@ func _physics_process(delta: float) -> void:
 	if (Input.is_action_just_released("thrust") or Input.is_action_just_released("move_up")) and velocity.y < 0.0:
 		velocity.y *= 0.5
 
+	# ── Mid-Air Space EVA Jetpack Propulsion ──
+	if not is_on_floor() and (Input.is_action_pressed("thrust") or Input.is_action_pressed("move_up")):
+		var thruster_accel = 640.0
+		if _has_effect(PlanetConfig.EnvEffect.LOW_GRAVITY):
+			thruster_accel = 820.0
+		velocity.y -= thruster_accel * delta
+		if dust_particles:
+			dust_particles.emitting = true
+
 	# ── Wind ──
 	if wind_force.length() > 0.0:
 		wind_timer += delta
