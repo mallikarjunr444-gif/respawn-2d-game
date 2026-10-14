@@ -394,20 +394,24 @@ const PLANETS = [
     id: 'fractured_moon',
     name: 'FRACTURED MOON',
     type: 'ALIEN GRAVITY PLANET',
-    sub: 'Gravitational anomaly fields. Collect Ancient Artifacts across lunar ruins.',
+    sub: 'Quantum gravity inversion fields & crystal reflection prisms.',
     width: 5300, height: 1950, groundY: 1560,
     sky: ['#07051a', '#24104d'], accent: '#ba68f8', starCol: '#d7c4ff',
     planetArt: 'assets/planets/fractured_moon.svg',
     bgArt: 'assets/backgrounds/world1_fractured_moon.svg',
     enemyType: 'voidling',
     hasHole: true, holePos: {x: 180, y: 1240}, holePullR: 1250, holeForce: 190, holeKillR: 110,
-    gravity: 780, friction: 0.82, airDrag: 0.985, wind: {x: 0, y: 0},
+    bhSpeed: 42, bhPullForce: 240,
+    gravity: 420, friction: 0.82, airDrag: 0.985, wind: {x: 0, y: 0},
     mandatoryName: 'Ancient Artifacts', mandatoryCount: 7,
     bonusName: 'Alien Energy Cores', bonusCount: 5,
-    gravityZones: 5, movingPlatforms: 5, enemies: 5,
-    landingPad: {x: 650, y: 1530, w: 220, h: 22},
-    rocketStart: {x: 200, y: 480, vx: 200, vy: 40, angle: 0.22},
-    departureRocket: {x: 4950, y: 1500, w: 90, h: 140}
+    gravityZones: 5, movingPlatforms: 5, enemies: 6,
+    landingPad: {x: 680, y: 1340, w: 260, h: 26}, // Elevated landing line, never below screen!
+    rocketStart: {x: 200, y: 260, vx: 200, vy: 40, angle: 0.22},
+    departureRocket: {x: 4950, y: 1500, w: 90, h: 140},
+    mathFeature: 'QUANTUM GRAVITY & SPECULAR REFLECTION',
+    weaponReward: 'sword',
+    weaponName: 'VIBRO-ENERGY SWORD (DEFLECT & PARRY)'
   },
   {
     id: 'aether_7',
@@ -423,8 +427,12 @@ const PLANETS = [
     mandatoryName: 'Atmospheric Crystals', mandatoryCount: 8,
     bonusName: 'Navigation Modules', bonusCount: 6,
     updrafts: 6, downdrafts: 2, movingPlatforms: 8, enemies: 4,
-    landingPad: {x: 650, y: 1790, w: 220, h: 22},
-    rocketStart: {x: 220, y: 550, vx: 210, vy: 45, angle: 0.2},
+    bhSpeed: 50, bhPullForce: 260, holeKillR: 115,
+    landingPad: {x: 740, y: 1560, w: 260, h: 26},
+    rocketStart: {x: 220, y: 280, vx: 210, vy: 45, angle: 0.2},
+    mathFeature: 'AERODYNAMIC TENSOR FORCES: W(t) = <Ax sin ωt, Ay cos ωt>',
+    weaponReward: 'dual_blaster',
+    weaponName: 'DUAL PLASMA REPEATER (TWIN RICOCHET)',
     departureRocket: {x: 5450, y: 1120, w: 90, h: 140}
   },
   {
@@ -440,8 +448,12 @@ const PLANETS = [
     mandatoryName: 'Thermal Cores', mandatoryCount: 8,
     bonusName: 'Rare Minerals', bonusCount: 5,
     lavaPits: 7, fireJets: 8, heatZones: 6, fallingRocks: true, debris: 12,
-    landingPad: {x: 650, y: 1570, w: 220, h: 22},
-    rocketStart: {x: 200, y: 520, vx: 200, vy: 50, angle: 0.22},
+    bhSpeed: 58, bhPullForce: 280, holeKillR: 120,
+    landingPad: {x: 700, y: 1380, w: 260, h: 26},
+    rocketStart: {x: 200, y: 270, vx: 200, vy: 50, angle: 0.22},
+    mathFeature: 'PARABOLIC BALLISTIC ARCS: r(t) = r0 + v0 t + 1/2 g t^2',
+    weaponReward: 'thermobaric',
+    weaponName: 'THERMOBARIC CANNON (HIGH-EXPLOSIVE LOB)',
     departureRocket: {x: 5250, y: 1540, w: 90, h: 140}
   },
   {
@@ -457,8 +469,12 @@ const PLANETS = [
     mandatoryName: 'Frozen Samples', mandatoryCount: 9,
     bonusName: 'Cryo Energy Cells', bonusCount: 5,
     iceGusts: 6, crackingPlatforms: 9, enemies: 4,
-    landingPad: {x: 650, y: 1610, w: 220, h: 22},
-    rocketStart: {x: 200, y: 540, vx: 200, vy: 45, angle: 0.22},
+    bhSpeed: 64, bhPullForce: 300, holeKillR: 120,
+    landingPad: {x: 760, y: 1420, w: 260, h: 26},
+    rocketStart: {x: 200, y: 280, vx: 200, vy: 45, angle: 0.22},
+    mathFeature: 'CONSERVATION OF MOMENTUM (μ=0.04) & SPECULAR ICE REFLECTION',
+    weaponReward: 'lance',
+    weaponName: 'SINGULARITY GRAVITY LANCE (VORTEX CRUSH)',
     departureRocket: {x: 5350, y: 1580, w: 90, h: 140}
   },
   {
@@ -475,8 +491,12 @@ const PLANETS = [
     mandatoryName: 'Scientific Samples', mandatoryCount: 9,
     bonusName: 'Rare Toxic Minerals', bonusCount: 5,
     oxygenDrain: 2.6, safeZones: 5, acidZones: 7, enemies: 5,
-    landingPad: {x: 650, y: 1630, w: 220, h: 22},
-    rocketStart: {x: 200, y: 550, vx: 200, vy: 45, angle: 0.22},
+    bhSpeed: 70, bhPullForce: 330, holeKillR: 125,
+    landingPad: {x: 720, y: 1440, w: 260, h: 26},
+    rocketStart: {x: 200, y: 290, vx: 200, vy: 45, angle: 0.22},
+    mathFeature: 'MULTI-BODY N-GRAVITY SUMMATION: F = Σ (G Mi / ri^2) r^i',
+    weaponReward: 'lance',
+    weaponName: 'GRAVITON VORTEX OVERCLOCK (INFINITE COMPRESSION)',
     departureRocket: {x: 5550, y: 1600, w: 90, h: 140}
   },
   {
@@ -492,8 +512,12 @@ const PLANETS = [
     mandatoryName: 'Energy Crystals', mandatoryCount: 6,
     bonusName: 'Fuel Reserves', bonusCount: 8,
     dustStorms: true, windBuffet: true, satelliteFields: 5,
-    landingPad: {x: 650, y: 1470, w: 220, h: 22},
-    rocketStart: {x: 200, y: 500, vx: 200, vy: 40, angle: 0.22},
+    bhSpeed: 78, bhPullForce: 360, holeKillR: 130,
+    landingPad: {x: 700, y: 1280, w: 260, h: 26},
+    rocketStart: {x: 200, y: 260, vx: 200, vy: 40, angle: 0.22},
+    mathFeature: 'RE-ENTRY VECTOR NAVIGATION & GEODESIC TRAJECTORY LOCK',
+    weaponReward: 'master',
+    weaponName: 'COSMIC ODYSSEY SUPREME PILOT ACCREDITATION',
     departureRocket: {x: 4950, y: 1440, w: 90, h: 140}
   }
 ];
@@ -526,12 +550,25 @@ const G = {
   camX: 0,
   camY: 0,
 
-  // Combat & abilities
-  hasSword: true,
+  // Combat & abilities (1 Shield per level, weapons unlocked after fights)
+  hasSword: false,
   hasBlaster: true,
   hasShield: true,
+  hasDualBlaster: false,
+  hasLance: false,
+  shieldCharges: 1, // Exactly 1 Shield in each level
   shieldT: 0,
   shieldCd: 0,
+  shieldMaxT: 3.5,
+
+  // Mathematical & Telemetry Navigation
+  isEndless: false,
+  endlessSector: 1,
+  bhX: -650,
+  bhPullN: 0,
+  autoLandActive: true, // Fully automated descent on atmospheric entry
+  welcomeBanner: null,
+  recentRicochets: [],
 
   phaseTimer: 0,
   totalPlayTime: 0,
@@ -575,25 +612,55 @@ let BULLETS = [];
 let UI_BUTTONS = [];
 
 /* ──────── Planet Level Initializer ──────── */
-function initPlanet(worldIdx){
+function initPlanet(worldIdx, isEndless = false){
   G.worldIdx = worldIdx;
-  const cfg = PLANETS[worldIdx];
+  G.isEndless = isEndless;
+  if(!isEndless) G.endlessSector = 1;
+
+  let cfg = Object.assign({}, PLANETS[worldIdx % PLANETS.length]);
+  if(isEndless){
+    cfg.name = `SECTOR ${G.endlessSector} · DEEP COSMOS`;
+    cfg.sub = 'Endless procedural void. Relentless Black Hole pursuit acceleration.';
+    cfg.bhSpeed = 50 + G.endlessSector * 10;
+    cfg.bhPullForce = 260 + G.endlessSector * 20;
+    cfg.mandatoryCount = 6 + (G.endlessSector % 5);
+  }
   LVL = cfg;
 
   document.getElementById('header-planet-title').textContent = cfg.name + ' · ' + cfg.type;
 
-  G.fuel = Math.max(G.fuel || 0, getMaxFuel() * 0.65);
+  G.fuel = Math.max(G.fuel || 0, getMaxFuel() * 0.85);
   G.oxygen = 100;
   G.hp = 3;
   G.cellsGot = 0;
   G.orbsGot = 0;
+  G.shieldCharges = 1; // EXACTLY 1 SHIELD IN EACH LEVEL
   G.shieldT = 0;
   G.shieldCd = 0;
   G.phase = 'flight';
   G.phaseTimer = 0;
+  G.bhX = -650;
+  G.autoLandActive = true; // Fully automated descent on atmospheric entry!
+  G.recentRicochets = [];
 
   P.length = 0;
   BULLETS = [];
+
+  // Randomize initial insertion vector & elevated landing line position (Different positions each run!)
+  const seed = (worldIdx * 73 + (isEndless ? G.endlessSector * 137 : 19) + Date.now() % 1000) | 0;
+  const r = rng(seed);
+
+  const padX = 600 + r() * 260;
+  const padY = cfg.groundY - 180 - r() * 80; // Elevated landing line, never below screen!
+  cfg.landingPad = { x: padX, y: padY, w: 260, h: 26 };
+
+  const startX = 180 + r() * 160;
+  const startY = 180 + r() * 140;
+  const startVx = 160 + r() * 80;
+  const startVy = 30 + r() * 30;
+  const startAngle = 0.18 + (r() - 0.5) * 0.15;
+
+  cfg.rocketStart = { x: startX, y: startY, vx: startVx, vy: startVy, angle: startAngle };
 
   PL = {
     x: cfg.rocketStart.x,
@@ -629,8 +696,7 @@ function initPlanet(worldIdx){
   HAZARDS = [];
   DEBRIS = [];
 
-  const r = rng(310 + worldIdx * 43);
-
+  // Level generation using randomized seed
   // Ground solid base
   PLATFORMS.push({x: 0, y: cfg.groundY, w: cfg.width, h: cfg.height - cfg.groundY, kind: 'ground'});
 
@@ -822,14 +888,36 @@ function initPlanet(worldIdx){
     });
   }
 
+  // Mini-Boss Planetary Guardian for weapon unlocks!
+  ENEMIES.push({
+    id: 99,
+    isBoss: true,
+    faction: 'guardian',
+    type: cfg.id === 'aether_7' ? 'sentinel' : (cfg.id === 'vortex_prime' ? 'vortex' : 'voidling'),
+    x: cfg.departureRocket.x - 520,
+    y: cfg.groundY - 80,
+    baseX: cfg.departureRocket.x - 520,
+    phase: 0,
+    hp: 8,
+    maxHp: 8,
+    facing: -1,
+    shootCd: 1.5
+  });
+
   G.camX = PL.x - W/2;
   G.camY = PL.y - H/2;
   G.scene = 'play';
-  G.toast = {
-    a: cfg.name + ' · ' + cfg.type,
-    b: 'ROCKET FLIGHT: Steer & touch down onto the Landing Beacon.',
-    t: 4.5
+
+  // Cinematic "WELCOME TO [PLANET NAME]" Banner on arrival/pass!
+  G.welcomeBanner = {
+    title: 'WELCOME TO ' + cfg.name,
+    type: cfg.type,
+    sub: cfg.sub,
+    math: cfg.mathFeature || 'VECTORS, RICOCHETS & GRAVITY FORCES',
+    reward: cfg.weaponName || 'ARSENAL EXPANSION',
+    t: 5.0
   };
+  SFX.orb();
 }
 
 /* ──────── Draw Background & Sky Parallax ──────── */
@@ -940,13 +1028,39 @@ function drawTerrain(cfg, camX, camY){
     if(px < -p.w || px > W + p.w || py < -80 || py > H + 80) continue;
 
     if(p.kind === 'landing_pad'){
-      ctx.fillStyle = '#18244c';
+      // Elevated structural stanchions extending downward
+      ctx.strokeStyle = '#324268';
+      ctx.lineWidth = 4;
+      ctx.beginPath();
+      ctx.moveTo(px + 20, py + p.h); ctx.lineTo(px + 20, py + p.h + 240);
+      ctx.moveTo(px + p.w - 20, py + p.h); ctx.lineTo(px + p.w - 20, py + p.h + 240);
+      ctx.stroke();
+
+      ctx.fillStyle = '#101c3e';
       rr(px, py, p.w, p.h, 6);
       ctx.fill();
       ctx.strokeStyle = C.cyan;
       ctx.lineWidth = 2.5;
       ctx.stroke();
-      txt('▲ LANDING ZONE ▲', px + p.w * 0.5, py + 18, 12, C.cyan, 'center', F_U, 700, 2);
+
+      // BRIGHT HOLOGRAPHIC LANDING LINE ON TOP (Land on line, not below screen!)
+      ctx.save();
+      ctx.shadowColor = C.green;
+      ctx.shadowBlur = 14;
+      ctx.strokeStyle = C.green;
+      ctx.lineWidth = 4;
+      ctx.beginPath();
+      ctx.moveTo(px, py);
+      ctx.lineTo(px + p.w, py);
+      ctx.stroke();
+      ctx.restore();
+
+      // Elevation Guide Beacons
+      ctx.fillStyle = Math.sin(G.t * 8) > 0 ? C.green : C.cyan;
+      ctx.beginPath(); ctx.arc(px, py - 6, 4, 0, 6.283); ctx.fill();
+      ctx.beginPath(); ctx.arc(px + p.w, py - 6, 4, 0, 6.283); ctx.fill();
+
+      txt('═══ AUTO-LAND LINE ═══', px + p.w * 0.5, py + 18, 11, C.green, 'center', F_O, 700, 1.5);
       continue;
     }
 
@@ -1677,6 +1791,19 @@ function drawBlackHole(pos, killR, camX, camY, t){
   }
   ctx.restore();
 
+  // Relativistic accretion suction stream vectors (visualizing gravitational pull)
+  ctx.strokeStyle = 'rgba(61,240,255,0.45)';
+  ctx.lineWidth = 1.5;
+  for(let k=0; k<14; k++){
+    const ang = k * (6.283 / 14) + t * 0.5;
+    const rStart = killR + 320;
+    const rEnd = killR + 25;
+    ctx.beginPath();
+    ctx.moveTo(Math.cos(ang) * rStart, Math.sin(ang) * rStart);
+    ctx.quadraticCurveTo(Math.cos(ang + 0.6) * (killR + 130), Math.sin(ang + 0.6) * (killR + 130), Math.cos(ang + 1.2) * rEnd, Math.sin(ang + 1.2) * rEnd);
+    ctx.stroke();
+  }
+
   ctx.strokeStyle = 'rgba(255,235,190,0.75)';
   ctx.lineWidth = 8;
   ctx.beginPath(); ctx.arc(0, 0, killR + 12, 0, 6.283); ctx.stroke();
@@ -1740,6 +1867,111 @@ function drawDebris(d, camX, camY){
   ctx.restore();
 }
 
+/* ──────── Core Mathematical & Geometric Visualizations ──────── */
+function drawMathematicalGeometry(p, camX, camY){
+  const sx = p.x - camX, sy = p.y - camY;
+
+  // 1. Dynamic Velocity Vector Arrow (v = <vx, vy>)
+  const speed = Math.hypot(p.vx, p.vy);
+  if(speed > 15){
+    const vLen = clamp(speed * 0.22, 25, 120);
+    const ang = Math.atan2(p.vy, p.vx);
+    const ex = sx + Math.cos(ang) * vLen;
+    const ey = sy + Math.sin(ang) * vLen;
+
+    ctx.save();
+    ctx.strokeStyle = C.cyan;
+    ctx.lineWidth = 2.5;
+    ctx.beginPath();
+    ctx.moveTo(sx, sy);
+    ctx.lineTo(ex, ey);
+    ctx.stroke();
+
+    const arrSize = 8;
+    ctx.fillStyle = C.cyan;
+    ctx.beginPath();
+    ctx.moveTo(ex, ey);
+    ctx.lineTo(ex - Math.cos(ang - 0.45) * arrSize, ey - Math.sin(ang - 0.45) * arrSize);
+    ctx.lineTo(ex - Math.cos(ang + 0.45) * arrSize, ey - Math.sin(ang + 0.45) * arrSize);
+    ctx.closePath();
+    ctx.fill();
+
+    const deg = Math.round(ang * 180 / Math.PI);
+    txt(`v: ${Math.round(speed)}m/s ∠${deg}°`, ex + 8, ey + 4, 10, C.cyan, 'left', F_U, 700);
+    ctx.restore();
+  }
+
+  // 2. Parabolic Ballistic Trajectory Predictor: r(t) = r0 + v0*t + 0.5*g*t^2
+  if(G.phase === 'flight' || (G.phase === 'explore' && !p.onGround)){
+    ctx.save();
+    ctx.fillStyle = C.cyan;
+    const dtStep = 0.08;
+    let trajX = p.x, trajY = p.y;
+    let trajVx = p.vx, trajVy = p.vy;
+
+    for(let step=1; step<=12; step++){
+      trajVy += LVL.gravity * (G.phase === 'flight' ? 0.45 : 1.0) * dtStep;
+      if(LVL.wind) trajVx += LVL.wind.x * dtStep;
+      trajX += trajVx * dtStep;
+      trajY += trajVy * dtStep;
+
+      const px = trajX - camX, py = trajY - camY;
+      if(px < -20 || px > W+20 || py < -20 || py > H+20) break;
+
+      ctx.beginPath();
+      ctx.arc(px, py, 2.2, 0, 6.283);
+      ctx.fill();
+    }
+    ctx.restore();
+  }
+
+  // 3. Auto-Land Guidance Target Vector Line
+  if(G.phase === 'flight' && LVL.landingPad){
+    const pad = LVL.landingPad;
+    const padX = pad.x + pad.w*0.5 - camX;
+    const padY = pad.y - camY;
+
+    ctx.save();
+    ctx.strokeStyle = C.green;
+    ctx.lineWidth = 1.5;
+    ctx.setLineDash([6, 6]);
+    ctx.beginPath();
+    ctx.moveTo(sx, sy);
+    ctx.lineTo(padX, padY);
+    ctx.stroke();
+    ctx.setLineDash([]);
+
+    ctx.strokeStyle = C.green;
+    ctx.beginPath();
+    ctx.arc(padX, padY, 14 + Math.sin(G.t * 8)*3, 0, 6.283);
+    ctx.stroke();
+    ctx.restore();
+  }
+
+  // 4. Specular Ricochet Angle Rays & Degrees Annotations
+  if(G.recentRicochets){
+    ctx.save();
+    for(let i=G.recentRicochets.length-1; i>=0; i--){
+      const r = G.recentRicochets[i];
+      r.life -= 0.016;
+      if(r.life <= 0){ G.recentRicochets.splice(i, 1); continue; }
+
+      const rx = r.x - camX, ry = r.y - camY;
+      ctx.globalAlpha = clamp(r.life, 0, 1);
+
+      ctx.strokeStyle = C.gold; ctx.lineWidth = 2;
+      ctx.beginPath(); ctx.moveTo(rx, ry); ctx.lineTo(rx + r.nx * 26, ry + r.ny * 26); ctx.stroke();
+
+      ctx.strokeStyle = C.green;
+      ctx.beginPath(); ctx.moveTo(rx, ry); ctx.lineTo(rx + r.rx * 28, ry + r.ry * 28); ctx.stroke();
+
+      txt(`θr=${Math.round(r.deg)}°`, rx + 6, ry - 8, 10, C.green, 'left', F_U, 700);
+    }
+    ctx.globalAlpha = 1;
+    ctx.restore();
+  }
+}
+
 /* ──────── Planet-Specific HUD (Realistic Space Telemetry) ──────── */
 function drawHUD(){
   const cfg = LVL;
@@ -1784,6 +2016,11 @@ function drawHUD(){
   }
   txt('HULL INTEGRITY', px, py - 6, 10, C.dim, 'left', F_U, 600);
 
+  // 1 Shield in each level indicator
+  const shCol = G.shieldCharges > 0 ? C.green : (G.shieldT > 0 ? C.cyan : C.dim);
+  const shTxt = G.shieldT > 0 ? `SHIELD ACTIVE (${G.shieldT.toFixed(1)}s)` : (G.shieldCharges > 0 ? 'PHASE SHIELD: 1/1 [Q]' : 'PHASE SHIELD: DEPLETED');
+  txt(shTxt, px + 95, py + 10, 11, shCol, 'left', F_U, 700);
+
   // Center: Planet Name, Gravity & Dynamic Objective Tracker
   const gravG = (cfg.gravity / 980).toFixed(2);
   txt(cfg.name + ' · ' + cfg.type + ' [' + gravG + 'G]', W/2, 22, 14, cfg.accent, 'center', F_O, 700, 2);
@@ -1824,22 +2061,40 @@ function drawHUD(){
     txt(envText, W/2, 58, 11, envColor, 'center', F_U, 700);
   }
 
-  // Top Right: Distance & Radar to Departure Rocket
-  const targetX = G.phase === 'flight' ? cfg.landingPad.x : cfg.departureRocket.x;
-  const targetY = G.phase === 'flight' ? cfg.landingPad.y : cfg.departureRocket.y;
-  const dx = targetX - PL.x, dy = targetY - PL.y;
-  const dist = Math.hypot(dx, dy);
-  const arrow = getArrow(Math.atan2(dy, dx));
+  // Top Right: Mathematical Readout Matrix
+  const vSpeed = Math.round(Math.hypot(PL.vx, PL.vy));
+  const vAngle = Math.round(Math.atan2(PL.vy, PL.vx) * 180 / Math.PI);
+  const bhDist = Math.max(0, Math.round(PL.x - G.bhX));
+  const landDist = Math.round(Math.hypot(cfg.landingPad.x + cfg.landingPad.w*0.5 - PL.x, cfg.landingPad.y - PL.y));
 
-  let radarText = '';
-  if(G.phase === 'flight'){
-    radarText = 'LANDING BEACON: ' + Math.floor(dist) + 'm ' + arrow;
-  } else if(!allSecured){
-    radarText = 'DEPARTURE ROCKET: ' + Math.floor(dist) + 'm ' + arrow + ' [LOCKED]';
-  } else {
-    radarText = 'DEPARTURE ROCKET: ' + Math.floor(dist) + 'm ' + arrow + ' [READY TO BOARD]';
+  ctx.fillStyle = 'rgba(7,10,26,0.92)';
+  rr(W - 275, 12, 260, 58, 6); ctx.fill();
+  ctx.strokeStyle = 'rgba(61,240,255,0.25)'; ctx.stroke();
+
+  txt(`VELOCITY: <${Math.round(PL.vx)}, ${Math.round(PL.vy)}> | ${vSpeed}m/s ∠${vAngle}°`, W - 265, 28, 10, C.cyan, 'left', F_U, 700);
+  txt(`DEVOURER BH PULL: -${Math.round(G.bhPullN || 0)}N [DIST: ${bhDist}m]`, W - 265, 44, 10, bhDist < 600 ? C.red : C.ember, 'left', F_U, 700);
+  txt(G.phase === 'flight' ? `AUTONOMOUS DESCENT: ${landDist}m [LINE LOCKED]` : `DEPARTURE ROCKET: ${Math.round(Math.hypot(cfg.departureRocket.x - PL.x, cfg.departureRocket.y - PL.y))}m`, W - 265, 60, 10, C.green, 'left', F_U, 700);
+
+  // Cinematic "WELCOME TO [PLANET NAME]" Modal Banner on Pass / Arrival
+  if(G.welcomeBanner && G.welcomeBanner.t > 0){
+    const wb = G.welcomeBanner;
+    wb.t -= 0.016;
+    const a = clamp(wb.t, 0, 1);
+    ctx.save();
+    ctx.globalAlpha = a;
+    ctx.fillStyle = 'rgba(7,12,32,0.92)';
+    rr(W/2 - 320, 95, 640, 110, 8);
+    ctx.fill();
+    ctx.strokeStyle = cfg.accent;
+    ctx.lineWidth = 2;
+    ctx.stroke();
+
+    txt(wb.title, W/2, 125, 20, cfg.accent, 'center', F_O, 900, 3);
+    txt(wb.type + ' · ' + wb.sub, W/2, 148, 12, C.bone, 'center', F_U, 600);
+    txt('CORE MATHEMATICS: ' + wb.math, W/2, 170, 11, C.cyan, 'center', F_U, 700);
+    txt('REWARD UNLOCKED: ' + wb.reward, W/2, 192, 11, C.gold, 'center', F_U, 700);
+    ctx.restore();
   }
-  txt(radarText, W - 24, 26, 12, allSecured ? C.green : C.bone, 'right', F_U, 700);
 
   // Bottom Toast Notifications
   if(G.toast && G.toast.t > 0){
@@ -1921,55 +2176,53 @@ function updatePlay(dt){
   const wantThrust = held.up || held.thrust || pressed('thrust');
   const hasFuel = G.fuel > 0;
 
-  // 1. PHASE: ROCKET FLIGHT (Descent into landing beacon)
+    // 1. PHASE: ROCKET FLIGHT (Fully automated descent sequence on entering atmosphere)
   if(G.phase === 'flight'){
-    p.angle += steerDir * 3.8 * dt;
-    p.face = Math.cos(p.angle) >= 0 ? 1 : -1;
+    const pad = cfg.landingPad;
+    const targetX = pad.x + pad.w * 0.5;
+    const targetY = pad.y - 10;
+    const dx = targetX - p.x;
+    const dy = targetY - p.y;
 
-    p.thrusting = wantThrust;
-    setThrusterRumble(wantThrust && hasFuel);
+    // Automated descent guidance computer (Retrograde deceleration lock)
+    const targetVx = clamp(dx * 1.5, -200, 200);
+    const targetVy = clamp(dy * 0.8, 25, 120);
+    const targetAngle = clamp(p.vx * 0.002, -0.22, 0.22);
 
-    if(wantThrust){
-      const power = 740 * getThrustMult();
-      const cosA = Math.cos(p.angle), sinA = Math.sin(p.angle);
-      p.vx += cosA * power * dt;
-      p.vy += sinA * power * dt;
-      G.fuel = Math.max(0, G.fuel - 2.8 * getBurnMult() * dt);
-      for(let i=0; i<3; i++){
-        spawn(p.x - cosA * 20, p.y - sinA * 20, -cosA * 240 + (Math.random()-0.5)*50, -sinA * 240 + (Math.random()-0.5)*50, 0.28, 4.5, Math.random()<0.5?C.cyan:'#ff9a2e', 0, true);
-      }
-    }
+    p.vx = lerp(p.vx, targetVx, dt * 4.5);
+    p.vy = lerp(p.vy, targetVy, dt * 4.0);
+    p.angle = lerp(p.angle, targetAngle, dt * 6.0);
+    p.thrusting = true;
+    setThrusterRumble(true);
+    G.fuel = Math.max(0, G.fuel - 1.0 * dt);
 
-    if(held.down){ // Reverse brake
-      p.vx *= (1.0 - 2.8 * dt);
-      p.vy *= (1.0 - 2.8 * dt);
-    }
-
-    // Gentle planetary atmospheric gravity
-    p.vy += cfg.gravity * 0.45 * dt;
-    p.vx *= cfg.airDrag || 0.985;
-    p.vy *= cfg.airDrag || 0.985;
+    if(Math.random() < 0.4) spawn(p.x, p.y + 14, (Math.random()-0.5)*30, 80, 0.2, 3, C.green, 0, true);
 
     p.x += p.vx * dt;
     p.y += p.vy * dt;
 
-    // Check Landing Touchdown
-    const pad = cfg.landingPad;
-    const distPad = Math.hypot(p.x - pad.x, p.y - pad.y);
-    if(distPad < 85 && p.y <= pad.y + 15){
+    // Check Landing Touchdown strictly onto the elevated landing line (Never below screen!)
+    const distPad = Math.hypot(p.x - targetX, p.y - targetY);
+    if(distPad < 65 && Math.abs(p.y - targetY) < 18 && Math.abs(p.vy) < 130){
       G.phase = 'landing';
       G.phaseTimer = 0;
       p.vx = 0; p.vy = 0;
-      p.x = pad.x; p.y = pad.y - 10;
+      p.x = targetX; p.y = targetY;
       p.angle = 0;
       setThrusterRumble(false);
       SFX.land();
-      burst(pad.x, pad.y, 24, C.cyan, 220, 0.7, true);
+      burst(targetX, pad.y, 24, C.green, 220, 0.7, true);
       G.toast = {
-        a: 'TOUCHDOWN CONFIRMED',
+        a: 'TOUCHDOWN CONFIRMED ON LINE',
         b: 'Landing gear locked. Astronaut deploying onto ' + cfg.name,
         t: 3.5
       };
+    }
+
+    // Land on line, not below screen: Falling below screen triggers failure!
+    if(p.y > cfg.groundY + 10 || p.y > H + 400){
+      die('ALTITUDE CRITICAL — IMPACT BELOW FLIGHT CORRIDOR');
+      return;
     }
   }
 
@@ -2161,11 +2414,17 @@ function updatePlay(dt){
       spawn(p.x + p.face * 22, p.y - 4, p.face * 60, 0, 0.15, 6, C.cyan, 0, true);
     }
 
-    // Phase Shield (Q)
-    if(pressed('shield') && G.shieldCd <= 0){
-      G.shieldT = 1.8;
-      G.shieldCd = 5.0;
-      SFX.boost();
+    // Phase Shield (Q) - EXACTLY 1 SHIELD PER LEVEL
+    if(pressed('shield')){
+      if(G.shieldCharges > 0 && G.shieldT <= 0){
+        G.shieldCharges--;
+        G.shieldT = G.shieldMaxT || 3.5;
+        SFX.boost();
+        G.toast = { a: 'PHASE SHIELD ENGAGED', b: '100% damage immunity & projectile reflection active for 3.5s', t: 2.5 };
+      } else if(G.shieldCharges <= 0 && G.shieldT <= 0){
+        SFX.warn();
+        G.toast = { a: 'PHASE SHIELD DEPLETED', b: 'Only 1 shield permitted per level', t: 2.0 };
+      }
     }
 
     // Environmental Forces
@@ -2206,20 +2465,15 @@ function updatePlay(dt){
       }
     }
 
-    // Black Hole remnant pull (Fractured Moon only)
-    if(cfg.hasHole){
-      const hx = cfg.holePos.x, hy = cfg.holePos.y;
-      const distHole = Math.hypot(hx - p.x, hy - p.y);
-      if(distHole < cfg.holePullR && distHole > 0){
-        const pullFactor = Math.pow(Math.max(0, 1.0 - (distHole / cfg.holePullR)), 1.3);
-        const force = Math.min(cfg.holeForce * pullFactor, 360);
-        p.vx += ((hx - p.x) / distHole) * force * dt;
-        p.vy += ((hy - p.y) / distHole) * force * dt;
-      }
-      if(distHole <= cfg.holeKillR){
-        die('CONSUMED BY EVENT HORIZON SINGULARITY');
-        return;
-      }
+    // Relativistic Black Hole dynamic pursuit across the entire space behind player
+    G.bhX += (cfg.bhSpeed || 42) * dt;
+    const distToHole = Math.max(1, p.x - G.bhX);
+    G.bhPullN = (cfg.bhPullForce || 240) * Math.pow(Math.max(120, distToHole) / 400, -1.45);
+    p.vx -= G.bhPullN * dt; // Gravitational acceleration vector towards singularity
+
+    if(p.x <= G.bhX + (cfg.holeKillR || 110)){
+      die('CONSUMED BY EVENT HORIZON SINGULARITY');
+      return;
     }
 
     // Hazards update
@@ -2298,7 +2552,41 @@ function updatePlay(dt){
       if(d.y > cfg.groundY + 120) DEBRIS.splice(k, 1);
     }
 
-    // Enemies movement & collision
+    // Enemies movement, faction combat & collision
+    for(let i=0; i<ENEMIES.length; i++){
+      const e1 = ENEMIES[i];
+      e1.shootCd = (e1.shootCd || 1.5) - dt;
+      let nearestDist = Math.hypot(p.x - e1.x, p.y - e1.y);
+      let targetPos = { x: p.x, y: p.y };
+
+      // Inter-enemy faction infighting (Enemies attack rival faction enemies!)
+      for(let j=0; j<ENEMIES.length; j++){
+        if(i === j) continue;
+        const e2 = ENEMIES[j];
+        if(e1.faction && e2.faction && e1.faction !== e2.faction){
+          const dRival = Math.hypot(e2.x - e1.x, e2.y - e1.y);
+          if(dRival < nearestDist && dRival < 420){
+            nearestDist = dRival;
+            targetPos = { x: e2.x, y: e2.y };
+          }
+        }
+      }
+
+      if(nearestDist < 480 && e1.shootCd <= 0){
+        e1.shootCd = 1.8 + Math.random() * 1.2;
+        const ang = Math.atan2(targetPos.y - e1.y, targetPos.x - e1.x);
+        BULLETS.push({
+          x: e1.x + Math.cos(ang) * 22,
+          y: e1.y + Math.sin(ang) * 22,
+          vx: Math.cos(ang) * 440,
+          vy: Math.sin(ang) * 440,
+          faction: e1.faction,
+          life: 2.0
+        });
+      }
+    }
+
+    // Enemies movement & player collision
     for(let e=ENEMIES.length-1; e>=0; e--){
       const enemy = ENEMIES[e];
       enemy.x = enemy.baseX + Math.sin(G.t * 1.4 + enemy.phase) * 90;
@@ -2315,7 +2603,7 @@ function updatePlay(dt){
       }
     }
 
-    // Bullets update & enemy collision
+    // Bullets update, specular ricochet & enemy collision
     for(let b=BULLETS.length-1; b>=0; b--){
       const blt = BULLETS[b];
       blt.life -= dt;
@@ -2323,17 +2611,42 @@ function updatePlay(dt){
       blt.y += blt.vy * dt;
       if(blt.life <= 0){ BULLETS.splice(b, 1); continue; }
 
+      // Hostile bullet hitting player (or deflected by active Phase Shield / Sword)
+      if(blt.faction && blt.faction !== 'player' && Math.hypot(blt.x - p.x, blt.y - p.y) < p.radius + 8){
+        if(G.shieldT > 0 || p.atkT > 0){
+          blt.faction = 'player';
+          blt.vx = -blt.vx * 1.3;
+          blt.vy = -blt.vy * 1.3;
+          SFX.blaster();
+          burst(blt.x, blt.y, 10, C.cyan, 160, 0.35, true);
+        } else if(p.inv <= 0){
+          BULLETS.splice(b, 1);
+          hurt(1, 'HOSTILE PLASMA FIRE');
+          continue;
+        }
+      }
+
+      // Bullets hitting enemies
       for(let e=ENEMIES.length-1; e>=0; e--){
         const enemy = ENEMIES[e];
-        if(Math.hypot(blt.x - enemy.x, blt.y - enemy.y) < 32){
+        if(blt.faction !== enemy.faction && Math.hypot(blt.x - enemy.x, blt.y - enemy.y) < 32){
           enemy.hp -= 1;
           BULLETS.splice(b, 1);
           SFX.hit();
           burst(enemy.x, enemy.y, 12, C.cyan, 170, 0.35, true);
           if(enemy.hp <= 0){
+            // Unlock weapons only after winning fights against guardians!
+            if(enemy.isBoss && cfg.weaponReward){
+              if(cfg.weaponReward === 'sword') G.hasSword = true;
+              if(cfg.weaponReward === 'dual_blaster') G.hasDualBlaster = true;
+              if(cfg.weaponReward === 'lance') G.hasLance = true;
+              saveData();
+              SFX.orb();
+              G.toast = { a: 'WEAPON UNLOCKED!', b: (cfg.weaponName || 'NEW WEAPON') + ' achieved after winning fight!', t: 4.5 };
+            }
             ENEMIES.splice(e, 1);
-            G.score += 50;
-            G.credits += 25;
+            G.score += enemy.isBoss ? 200 : 50;
+            G.credits += enemy.isBoss ? 80 : 25;
             SFX.fuel();
             burst(enemy.x, enemy.y, 25, cfg.accent, 260, 0.6, true);
           }
@@ -2464,9 +2777,12 @@ function updatePlay(dt){
     G.shake = 8;
     const nextIdx = G.worldIdx + 1;
     if(G.phaseTimer >= 1.8){
-      if(nextIdx < PLANETS.length){
+      if(G.isEndless){
+        G.endlessSector++;
+        initPlanet(G.worldIdx + 1, true);
+      } else if(nextIdx < PLANETS.length){
         // Automatically progress to next planet
-        initPlanet(nextIdx);
+        initPlanet(nextIdx, false);
       } else {
         // Complete the Odyssey
         G.scene = 'victory';
@@ -2565,10 +2881,8 @@ function renderWorldPlay(){
 
   drawBackground(cfg, G.camX, G.camY, G.t);
 
-  // Black Hole (Fractured Moon)
-  if(cfg.hasHole){
-    drawBlackHole(cfg.holePos, cfg.holeKillR, G.camX, G.camY, G.t);
-  }
+  // Relativistic Black Hole dynamic pursuit across the entire space behind player
+  drawBlackHole({ x: G.bhX, y: G.phase === 'flight' ? PL.y : cfg.groundY - 300 }, cfg.holeKillR || 110, G.camX, G.camY, G.t);
 
   // Terrain & Platforms
   drawTerrain(cfg, G.camX, G.camY);
@@ -2606,6 +2920,9 @@ function renderWorldPlay(){
   } else if(G.phase === 'exit' || G.phase === 'explore'){
     drawAstronautCharacter(PL, G.camX, G.camY, G.t);
   }
+
+  // Core Mathematics Visualizations (Vectors, Angles, Ricochets, Parabola)
+  drawMathematicalGeometry(PL, G.camX, G.camY);
 
   ctx.restore();
 
@@ -2653,15 +2970,10 @@ function renderTitle(){
     initPlanet(0);
   }, {sel: true, sz: 14});
 
-  uiButton('SURFACE EVA FLIGHT (DIRECT TEST)', 68, 366, 340, 38, () => {
+  uiButton('ENDLESS FRONTIER (BLACK HOLE PURSUIT)', 68, 366, 340, 38, () => {
     SFX.click();
-    initPlanet(0);
-    G.phase = 'explore';
-    PL.x = LVL.landingPad.x + 60;
-    PL.y = LVL.landingPad.y - 35;
-    PL.vx = 0; PL.vy = -120;
-    G.toast = { a: 'SURFACE EVA DEPLOYED', b: 'W/Space = Thruster Fly · S = Down · A/D = Steer · Shift = Dash', t: 5.0 };
-  }, {sz: 13, col: C.green});
+    initPlanet(0, true);
+  }, {sz: 13, col: C.ember});
 
   uiButton('HANGAR & UPGRADES', 68, 412, 165, 36, () => {
     SFX.click();
@@ -2823,26 +3135,36 @@ function renderVictory(){
   txt('FLEET CREDITS SECURED: ' + G.credits, W/2, statY + 34, 15, C.green, 'center', F_U, 700);
   txt('HONORED PILOT: ' + (G.char==='arin'?'ARIN':'MIRA'), W/2, statY + 68, 13, C.bone, 'center', F_U, 600);
 
-  uiButton('BEGIN NEW ODYSSEY', W/2 - 150, statY + 115, 300, 48, () => {
+  uiButton('COMMENCE ENDLESS FRONTIER', W/2 - 150, statY + 115, 300, 44, () => {
     SFX.click();
-    initPlanet(0);
-  }, {sel: true, sz: 16});
+    initPlanet(0, true);
+  }, {sel: true, sz: 14, col: C.ember});
+
+  uiButton('BEGIN NEW ODYSSEY', W/2 - 150, statY + 168, 300, 38, () => {
+    SFX.click();
+    initPlanet(0, false);
+  }, {sz: 13});
 }
 
 function renderDead(){
-  ctx.fillStyle = 'rgba(15,3,8,0.84)';
+  ctx.fillStyle = 'rgba(18,2,8,0.92)';
   ctx.fillRect(0, 0, W, H);
 
-  txt('SYSTEMS COMPROMISED', W/2, H/2 - 80, 32, C.red, 'center', F_D, 900, 4);
-  txt(G.deadWhy || 'SUIT INTEGRITY COLLAPSE', W/2, H/2 - 40, 14, C.bone, 'center', F_U, 700);
-  txt('Current Planet: ' + LVL.name, W/2, H/2 - 15, 13, C.dim, 'center', F_U, 600);
+  ctx.save();
+  ctx.shadowColor = C.red;
+  ctx.shadowBlur = 20;
+  txt('LEVEL FAILED — TRY AGAIN', W/2, H/2 - 80, 34, C.red, 'center', F_D, 900, 4);
+  ctx.restore();
 
-  uiButton('RETRY PLANET [R]', W/2 - 130, H/2 + 20, 260, 44, () => {
+  txt(G.deadWhy || 'MISSION FAILURE', W/2, H/2 - 40, 14, C.bone, 'center', F_U, 700);
+  txt('Destination: ' + LVL.name + (G.isEndless ? ` (Sector ${G.endlessSector})` : ''), W/2, H/2 - 15, 13, C.dim, 'center', F_U, 600);
+
+  uiButton('RETRY MISSION FROM START [R]', W/2 - 150, H/2 + 20, 300, 46, () => {
     SFX.click();
-    initPlanet(G.worldIdx);
-  }, {sel: true});
+    initPlanet(G.worldIdx, G.isEndless);
+  }, {sel: true, sz: 14, col: C.green});
 
-  uiButton('ABORT TO MENU', W/2 - 130, H/2 + 76, 260, 38, () => {
+  uiButton('ABORT TO TITLE MENU', W/2 - 130, H/2 + 76, 260, 38, () => {
     SFX.click();
     G.scene = 'title';
   });
