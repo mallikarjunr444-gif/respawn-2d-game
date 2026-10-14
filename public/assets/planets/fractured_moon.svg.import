@@ -3,15 +3,15 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://cjfo31hw2hf4d"
-path="res://.godot/imported/fractured_moon.svg-f599eccab8aa65819ca6eef904ef97b6.ctex"
+path="res://.godot/imported/fractured_moon.svg-30071848f15f0d41290b2d217ae9d43c.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/planets/fractured_moon.svg"
-dest_files=["res://.godot/imported/fractured_moon.svg-f599eccab8aa65819ca6eef904ef97b6.ctex"]
+source_file="res://public/assets/planets/fractured_moon.svg"
+dest_files=["res://.godot/imported/fractured_moon.svg-30071848f15f0d41290b2d217ae9d43c.ctex"]
 
 [params]
 

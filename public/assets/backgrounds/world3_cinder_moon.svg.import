@@ -3,15 +3,15 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://bh3kbs0pmgrlk"
-path="res://.godot/imported/world3_cinder_moon.svg-b63bf15976be1f06d11f5e822f1cfe1b.ctex"
+path="res://.godot/imported/world3_cinder_moon.svg-86621a4751442ae68f5b638cd820e8fb.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/backgrounds/world3_cinder_moon.svg"
-dest_files=["res://.godot/imported/world3_cinder_moon.svg-b63bf15976be1f06d11f5e822f1cfe1b.ctex"]
+source_file="res://public/assets/backgrounds/world3_cinder_moon.svg"
+dest_files=["res://.godot/imported/world3_cinder_moon.svg-86621a4751442ae68f5b638cd820e8fb.ctex"]
 
 [params]
 

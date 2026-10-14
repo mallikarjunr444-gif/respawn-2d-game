@@ -3,15 +3,15 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://bjqcrbkkkfy7n"
-path="res://.godot/imported/asteroid.svg-695354c9e8e809890eb47c11dcdc50c7.ctex"
+path="res://.godot/imported/asteroid.svg-3b31286da8b27b2bea8f5ec349b9e289.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/objects/asteroid.svg"
-dest_files=["res://.godot/imported/asteroid.svg-695354c9e8e809890eb47c11dcdc50c7.ctex"]
+source_file="res://public/assets/objects/asteroid.svg"
+dest_files=["res://.godot/imported/asteroid.svg-3b31286da8b27b2bea8f5ec349b9e289.ctex"]
 
 [params]
 

@@ -3,15 +3,15 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://cy8pfxhokfdl1"
-path="res://.godot/imported/world4_cryos.svg-074883efaccd335855ba795fa71621b3.ctex"
+path="res://.godot/imported/world4_cryos.svg-9216e05b038c78a4ad58072c9c4c5a43.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/backgrounds/world4_cryos.svg"
-dest_files=["res://.godot/imported/world4_cryos.svg-074883efaccd335855ba795fa71621b3.ctex"]
+source_file="res://public/assets/backgrounds/world4_cryos.svg"
+dest_files=["res://.godot/imported/world4_cryos.svg-9216e05b038c78a4ad58072c9c4c5a43.ctex"]
 
 [params]
 

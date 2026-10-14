@@ -3,15 +3,15 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://jx4qnx01ajyw"
-path="res://.godot/imported/world5_vortex_prime.svg-ae23527a786104b3c48f9d14c6b1cc64.ctex"
+path="res://.godot/imported/world5_vortex_prime.svg-af888a049d61671969473c23b93043b4.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/backgrounds/world5_vortex_prime.svg"
-dest_files=["res://.godot/imported/world5_vortex_prime.svg-ae23527a786104b3c48f9d14c6b1cc64.ctex"]
+source_file="res://public/assets/backgrounds/world5_vortex_prime.svg"
+dest_files=["res://.godot/imported/world5_vortex_prime.svg-af888a049d61671969473c23b93043b4.ctex"]
 
 [params]
 

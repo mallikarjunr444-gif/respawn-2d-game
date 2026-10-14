@@ -3,15 +3,15 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://cn0mp7wjmiyim"
-path="res://.godot/imported/voidling.svg-f720f00ed2d45cb67146231046a90037.ctex"
+path="res://.godot/imported/voidling.svg-69dc55817866a88889764512a29213e7.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/enemies/voidling.svg"
-dest_files=["res://.godot/imported/voidling.svg-f720f00ed2d45cb67146231046a90037.ctex"]
+source_file="res://public/assets/enemies/voidling.svg"
+dest_files=["res://.godot/imported/voidling.svg-69dc55817866a88889764512a29213e7.ctex"]
 
 [params]
 

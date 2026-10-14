@@ -3,15 +3,15 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://ckgqugisp3lvw"
-path="res://.godot/imported/rocket_ship.svg-8beba2453bb1aef43a8c7d623e4d17a1.ctex"
+path="res://.godot/imported/rocket_ship.svg-d7b888dec7984ff4fcb1682d0a1e579c.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/objects/rocket_ship.svg"
-dest_files=["res://.godot/imported/rocket_ship.svg-8beba2453bb1aef43a8c7d623e4d17a1.ctex"]
+source_file="res://public/assets/objects/rocket_ship.svg"
+dest_files=["res://.godot/imported/rocket_ship.svg-d7b888dec7984ff4fcb1682d0a1e579c.ctex"]
 
 [params]
 

@@ -3,15 +3,15 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://cg4imcskw0r58"
-path="res://.godot/imported/crystal_barrier.svg-e46b3039f4817c56be9b78597f093b3a.ctex"
+path="res://.godot/imported/crystal_barrier.svg-861ca8ff859be690b83f11854595d4a5.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/objects/crystal_barrier.svg"
-dest_files=["res://.godot/imported/crystal_barrier.svg-e46b3039f4817c56be9b78597f093b3a.ctex"]
+source_file="res://public/assets/objects/crystal_barrier.svg"
+dest_files=["res://.godot/imported/crystal_barrier.svg-861ca8ff859be690b83f11854595d4a5.ctex"]
 
 [params]
 

@@ -3,15 +3,15 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://byu1wa236imaj"
-path="res://.godot/imported/aether_7.svg-4016fe7cc26e4777eb0788b08e3bf81e.ctex"
+path="res://.godot/imported/aether_7.svg-b7c16b07e3c34141b4c94a1a7a7bff4a.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/planets/aether_7.svg"
-dest_files=["res://.godot/imported/aether_7.svg-4016fe7cc26e4777eb0788b08e3bf81e.ctex"]
+source_file="res://public/assets/planets/aether_7.svg"
+dest_files=["res://.godot/imported/aether_7.svg-b7c16b07e3c34141b4c94a1a7a7bff4a.ctex"]
 
 [params]
 

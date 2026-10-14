@@ -3,15 +3,15 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://beniujrbiuk24"
-path="res://.godot/imported/satellite.svg-552a28dc3d9101718d65b811cee9eea3.ctex"
+path="res://.godot/imported/satellite.svg-57a72f57f57c5f43472b186e461f4014.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/objects/satellite.svg"
-dest_files=["res://.godot/imported/satellite.svg-552a28dc3d9101718d65b811cee9eea3.ctex"]
+source_file="res://public/assets/objects/satellite.svg"
+dest_files=["res://.godot/imported/satellite.svg-57a72f57f57c5f43472b186e461f4014.ctex"]
 
 [params]
 

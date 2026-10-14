@@ -3,15 +3,15 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://dosk2nihsvxj5"
-path="res://.godot/imported/comet.svg-5324971c437d814177a42f2bf9416499.ctex"
+path="res://.godot/imported/comet.svg-a842b23d724548fe0469cf6396782485.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/objects/comet.svg"
-dest_files=["res://.godot/imported/comet.svg-5324971c437d814177a42f2bf9416499.ctex"]
+source_file="res://public/assets/objects/comet.svg"
+dest_files=["res://.godot/imported/comet.svg-a842b23d724548fe0469cf6396782485.ctex"]
 
 [params]
 

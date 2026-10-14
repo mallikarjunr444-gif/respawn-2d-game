@@ -3,15 +3,15 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://c87gf5mgrvyb3"
-path="res://.godot/imported/forge_terminal.svg-484e017fc499cbc5a558474d1139b247.ctex"
+path="res://.godot/imported/forge_terminal.svg-f0a6279e5b59597ba5b7426de31523e8.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/objects/forge_terminal.svg"
-dest_files=["res://.godot/imported/forge_terminal.svg-484e017fc499cbc5a558474d1139b247.ctex"]
+source_file="res://public/assets/objects/forge_terminal.svg"
+dest_files=["res://.godot/imported/forge_terminal.svg-f0a6279e5b59597ba5b7426de31523e8.ctex"]
 
 [params]
 

@@ -3,15 +3,15 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://hobxcplcspyf"
-path="res://.godot/imported/gravity_lance.svg-a3c22cb641c3e1d2ca5c1cdfffbdab09.ctex"
+path="res://.godot/imported/gravity_lance.svg-8094201cda87d66c4a666ca9ca67b6dc.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/weapons/gravity_lance.svg"
-dest_files=["res://.godot/imported/gravity_lance.svg-a3c22cb641c3e1d2ca5c1cdfffbdab09.ctex"]
+source_file="res://public/assets/weapons/gravity_lance.svg"
+dest_files=["res://.godot/imported/gravity_lance.svg-8094201cda87d66c4a666ca9ca67b6dc.ctex"]
 
 [params]
 
