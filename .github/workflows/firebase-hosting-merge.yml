@@ -1,0 +1,42 @@
+name: Deploy to Firebase Hosting on merge
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  checks: write
+  contents: read
+  deployments: write
+
+jobs:
+  build_and_deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+
+      - name: Ensure public/index.html and root index.html are in sync
+        run: |
+          if [ -f "index.html" ] && [ -f "public/index.html" ]; then
+            if ! cmp -s index.html public/index.html; then
+              echo "Synchronizing index.html files..."
+              if git diff --name-only HEAD~1 HEAD 2>/dev/null | grep -q "^index.html$"; then
+                cp index.html public/index.html
+              else
+                cp public/index.html index.html
+              fi
+            fi
+          fi
+
+      - name: Deploy to Firebase Hosting
+        uses: FirebaseExtended/action-hosting-deploy@v0
+        with:
+          repoToken: '${{ secrets.GITHUB_TOKEN }}'
+          firebaseServiceAccount: '${{ secrets.FIREBASE_SERVICE_ACCOUNT_MALLIKARJUNR_ME }}'
+          channelId: live
+          projectId: mallikarjunr-me
+          target: orvexgames
