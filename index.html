@@ -2640,28 +2640,56 @@ function renderTitle(){
   ctx.shadowBlur = 0;
   ctx.restore();
 
-  txt('PLANET-TO-PLANET CONTINUOUS SURVIVAL ADVENTURE', 68, 260, 13, C.ember, 'left', F_U, 700, 3);
+  txt('PLANET-TO-PLANET CONTINUOUS SURVIVAL ADVENTURE', 68, 258, 13, C.ember, 'left', F_U, 700, 3);
 
-  txt('PILOT: ' + (G.char==='arin'?'ARIN (CYAN SUIT)':'MIRA (VIOLET SUIT)'), 68, 292, 13, G.char==='arin'?C.cyan:'#ff77cc', 'left', F_U, 700);
-  uiButton('SWITCH PILOT', 290, 276, 120, 26, () => {
+  txt('PILOT: ' + (G.char==='arin'?'ARIN (CYAN SUIT)':'MIRA (VIOLET SUIT)'), 68, 288, 13, G.char==='arin'?C.cyan:'#ff77cc', 'left', F_U, 700);
+  uiButton('SWITCH PILOT', 290, 272, 120, 26, () => {
     G.char = G.char === 'arin' ? 'mira' : 'arin';
     SFX.click();
   }, {sz: 11});
 
-  uiButton('LAUNCH EXPEDITION', 68, 324, 320, 46, () => {
+  uiButton('LAUNCH EXPEDITION (ROCKET DESCENT)', 68, 316, 340, 42, () => {
     SFX.click();
     initPlanet(0);
-  }, {sel: true, sz: 16});
+  }, {sel: true, sz: 14});
 
-  uiButton('ROCKET HANGAR & UPGRADES', 68, 380, 320, 40, () => {
+  uiButton('SURFACE EVA FLIGHT (DIRECT TEST)', 68, 366, 340, 38, () => {
+    SFX.click();
+    initPlanet(0);
+    G.phase = 'explore';
+    PL.x = LVL.landingPad.x + 60;
+    PL.y = LVL.landingPad.y - 35;
+    PL.vx = 0; PL.vy = -120;
+    G.toast = { a: 'SURFACE EVA DEPLOYED', b: 'W/Space = Thruster Fly · S = Down · A/D = Steer · Shift = Dash', t: 5.0 };
+  }, {sz: 13, col: C.green});
+
+  uiButton('HANGAR & UPGRADES', 68, 412, 165, 36, () => {
     SFX.click();
     G.scene = 'upgrades';
-  }, {sz: 14});
+  }, {sz: 12});
 
-  uiButton('EXPEDITION DIRECTIVES & MANUAL', 68, 430, 320, 40, () => {
+  uiButton('MANUAL & CONTROLS', 243, 412, 165, 36, () => {
     SFX.click();
     G.scene = 'manual';
-  }, {sz: 13});
+  }, {sz: 12});
+
+  // Live Animated Astronaut Showcase on Title Screen
+  const previewAstronaut = {
+    x: 740,
+    y: 310 + Math.sin(G.t * 2.5) * 10,
+    vx: Math.cos(G.t * 1.5) * 60,
+    vy: Math.sin(G.t * 2) * 30,
+    face: 1,
+    onGround: false,
+    thrustingUp: Math.sin(G.t * 3.5) > -0.1,
+    thrustingDown: false,
+    atkT: 0,
+    boostT: 0
+  };
+  drawAstronautCharacter(previewAstronaut, 0, 0, G.t);
+  txt(G.char === 'arin' ? 'PILOT: ARIN' : 'PILOT: MIRA', 740, 395, 14, G.char === 'arin' ? C.cyan : '#ff77cc', 'center', F_U, 700, 2);
+  txt('2D HIGH-TECH EVA SPACE SUIT', 740, 414, 11, C.bone, 'center', F_U, 600, 1);
+  txt('MICROGRAVITY THRUSTERS READY', 740, 432, 10, C.green, 'center', F_U, 700, 1);
 
   txt('SEAMLESS PLANETARY ADVENTURE · 6 DISCOVERED WORLDS · SOUND: [M]', W - 24, H - 18, 11, C.dim, 'right', F_U, 600);
 }
