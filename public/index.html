@@ -8,19 +8,19 @@
 <meta name="apple-mobile-web-app-title" content="Space Odyssey">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="format-detection" content="telephone=no">
-<meta name="description" content="Space Odyssey — Continuous planet-to-planet survival adventure across unique planetary environments.">
+<meta name="description" content="Space Odyssey — Geometric & Mathematical Planetary Survival Adventure across the cosmos.">
 <meta name="theme-color" content="#070a1a">
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
-<title>Space Odyssey — Planetary Survival Adventure | Orvex Games</title>
+<title>Space Odyssey — Mathematical & Geometric Planetary Survival | Orvex Games</title>
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ccircle cx='16' cy='16' r='14' fill='%23070a1a' stroke='%233df0ff' stroke-width='2'/%3E%3Ccircle cx='16' cy='16' r='6' fill='%23ff7a2e'/%3E%3Cpath d='M16 2v6M16 24v6M2 16h6M24 16h6' stroke='%233df0ff' stroke-width='2'/%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400;600;700&family=Syncopate:wght@700&family=Orbitron:wght@400;600;700;900&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400;600;700&family=Syncopate:wght@700&family=Orbitron:wght@400;600;700;900&family=JetBrains+Mono:wght@400;700&display=swap">
 <style>
-:root{--void:#050716;--navy:#0d1433;--violet:#3b2a7a;--cyan:#3df0ff;--ember:#ff7a2e;--gold:#ffd166;--green:#3dff88;--bone:#e9eefc;--dim:#8d97c4;
---display:'Syncopate','Arial Black',sans-serif;--ui:'Chakra Petch','Segoe UI',system-ui,sans-serif;--orbit:'Orbitron',sans-serif;color-scheme:dark}
+:root{--void:#050716;--navy:#0d1433;--violet:#3b2a7a;--cyan:#3df0ff;--ember:#ff7a2e;--gold:#ffd166;--green:#3dff88;--bone:#e9eefc;--dim:#8d97c4;--red:#ff3d5a;
+--display:'Syncopate','Arial Black',sans-serif;--ui:'Chakra Petch','Segoe UI',system-ui,sans-serif;--orbit:'Orbitron',sans-serif;--mono:'JetBrains Mono',monospace;color-scheme:dark}
 *{margin:0;padding:0;box-sizing:border-box}
 
 body{background:var(--void);color:var(--bone);font-family:var(--ui);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;padding:4px 10px;
@@ -29,7 +29,7 @@ radial-gradient(ellipse 60% 40% at 80% 20%, rgba(61,240,255,.08), transparent),
 radial-gradient(ellipse 50% 30% at 20% 30%, rgba(255,122,46,.06), transparent);
 height:100%;height:100dvh;min-height:-webkit-fill-available;overflow:hidden;overscroll-behavior:none;user-select:none;-webkit-user-select:none;touch-action:none}
 
-@keyframes borderPulse{0%,100%{box-shadow:0 0 24px rgba(61,240,255,.1),inset 0 0 20px rgba(0,0,0,.4)}50%{box-shadow:0 0 36px rgba(61,240,255,.22),inset 0 0 20px rgba(0,0,0,.4)}}
+@keyframes borderPulse{0%,100%{box-shadow:0 0 24px rgba(61,240,255,.12),inset 0 0 20px rgba(0,0,0,.4)}50%{box-shadow:0 0 36px rgba(61,240,255,.24),inset 0 0 20px rgba(0,0,0,.4)}}
 @keyframes loadGlow{0%,100%{text-shadow:0 0 20px rgba(61,240,255,.8),0 0 60px rgba(61,240,255,.4)}50%{text-shadow:0 0 30px rgba(61,240,255,1),0 0 80px rgba(61,240,255,.6)}}
 
 #stage{width:min(100%,calc((100vh - 120px) * 1.7778));width:min(100%,calc((100dvh - 120px) * 1.7778));aspect-ratio:16/9;max-width:100%;
@@ -42,11 +42,9 @@ canvas{width:100%;height:100%;display:block;touch-action:none;background:#000;ou
 .brand{display:flex;align-items:center;gap:8px;font:700 13px var(--display);letter-spacing:2px;color:var(--bone);text-decoration:none}
 .brand b{color:var(--cyan);font-weight:900}
 .brand-glyph{filter:drop-shadow(0 0 6px rgba(61,240,255,.5))}
-.title-pill{font:700 10px var(--ui);letter-spacing:3px;text-transform:uppercase;color:var(--cyan);background:rgba(59,42,122,.35);padding:3px 12px;border-radius:12px;border:1px solid rgba(61,240,255,.2)}
+.title-pill{font:700 10px var(--ui);letter-spacing:2px;text-transform:uppercase;color:var(--cyan);background:rgba(59,42,122,.35);padding:3px 12px;border-radius:12px;border:1px solid rgba(61,240,255,.2)}
 .actions{display:flex;align-items:center;gap:8px}
 
-.godot-btn{display:flex;align-items:center;gap:6px;padding:3px 10px;background:rgba(71,140,230,.18);border:1px solid rgba(71,140,230,.35);border-radius:6px;color:#8cc4ff;font:600 11px var(--ui);letter-spacing:.5px;text-decoration:none;transition:all .15s}
-.godot-btn:hover{background:rgba(71,140,230,.32);border-color:#478ce6;color:#fff}
 #fs-btn{width:28px;height:28px;background:rgba(61,240,255,.08);border:1px solid rgba(61,240,255,.25);border-radius:6px;color:var(--cyan);font-size:14px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .15s}
 #fs-btn:hover{background:rgba(61,240,255,.2);color:#fff}
 
@@ -56,6 +54,7 @@ canvas{width:100%;height:100%;display:block;touch-action:none;background:#000;ou
 .tb:active,.tb.on{background:#16306a;border-color:var(--cyan);color:var(--cyan)}
 .tb-dir{min-width:36px;font-size:13px}
 .tb-thrust{background:rgba(61,240,255,.18);border-color:var(--cyan);color:var(--cyan)}
+.tb-autoland{background:rgba(61,255,136,.18);border-color:var(--green);color:var(--green)}
 .tb-action{background:rgba(255,122,46,.18);border-color:var(--ember);color:var(--ember)}
 
 @media (pointer:coarse){#touch{display:flex}#keys{display:none}}
@@ -77,9 +76,9 @@ canvas{width:100%;height:100%;display:block;touch-action:none;background:#000;ou
 
 <div id="loader">
   <div class="l-title">SPACE <b>ODYSSEY</b></div>
-  <div class="l-sub">PLANETARY SURVIVAL SYSTEM</div>
+  <div class="l-sub">GEOMETRIC & MATHEMATICAL PLANETARY SURVIVAL</div>
   <div class="l-bar"><div class="l-bar-fill" id="lbar"></div></div>
-  <div class="l-text" id="ltext">Initializing propulsion & navigation...</div>
+  <div class="l-text" id="ltext">Initializing vectors, ricochets & trajectory physics...</div>
   <button id="lretry" onclick="location.reload()" style="display:none;margin-top:14px;padding:8px 20px;background:#3df0ff;color:#040614;font:700 12px 'Chakra Petch',sans-serif;border:none;border-radius:4px;cursor:pointer">RELOAD SYSTEM</button>
 </div>
 
@@ -88,7 +87,7 @@ canvas{width:100%;height:100%;display:block;touch-action:none;background:#000;ou
     <svg class="brand-glyph" viewBox="0 0 24 24" width="16" height="16" fill="none"><circle cx="12" cy="12" r="10" stroke="#3df0ff" stroke-width="2"/><circle cx="12" cy="12" r="4" fill="#ff7a2e"/></svg>
     <span>SPACE <b>ODYSSEY</b></span>
   </a>
-  <div class="title-pill" id="header-planet-title">INTERPLANETARY ODYSSEY</div>
+  <div class="title-pill" id="header-planet-title">INTERPLANETARY MATHEMATICAL ODYSSEY</div>
   <div class="actions">
     <button id="fs-btn" aria-label="Toggle Fullscreen" title="Toggle Fullscreen">⛶</button>
   </div>
@@ -105,6 +104,7 @@ canvas{width:100%;height:100%;display:block;touch-action:none;background:#000;ou
   </div>
   <div class="pad-center">
     <button class="tb tb-thrust" data-k="thrust">THRUST</button>
+    <button class="tb tb-autoland" data-k="autoland">AUTO-LAND</button>
     <button class="tb" data-k="boost">DASH</button>
     <button class="tb tb-action" data-k="use">BOARD</button>
   </div>
@@ -117,7 +117,7 @@ canvas{width:100%;height:100%;display:block;touch-action:none;background:#000;ou
 </div>
 
 <div id="keys">
-  <b>A / D / ARROWS</b> Move / Steer · <b>W / SPACE</b> Jump / Thruster · <b>SHIFT</b> Dash / Boost · <b>J</b> Sword · <b>K</b> Blaster · <b>Q</b> Phase Shield · <b>E</b> Board Rocket · <b>P</b> Pause · <b>R</b> Retry
+  <b>L</b> Auto-Land · <b>A / D / ARROWS</b> Move / Steer · <b>W / SPACE</b> Jump / Thruster · <b>SHIFT</b> Dash · <b>J</b> Sword (Parry) · <b>K</b> Blaster (Ricochet) · <b>Q</b> Phase Shield · <b>E</b> Board · <b>P</b> Pause · <b>R</b> Retry
 </div>
 
 <script>
@@ -130,7 +130,7 @@ const C = {
   gold: '#ffd166', green: '#3dff88', bone: '#eaf0fc', dim: '#8e98c7',
   red: '#ff3d5a', purple: '#ba68f8', teal: '#62ffd1', ice: '#6be7ff', toxic: '#b5ff40'
 };
-const F_D = "'Syncopate','Arial Black',sans-serif", F_U = "'Chakra Petch','Segoe UI',sans-serif", F_O = "'Orbitron',sans-serif";
+const F_D = "'Syncopate','Arial Black',sans-serif", F_U = "'Chakra Petch','Segoe UI',sans-serif", F_O = "'Orbitron',sans-serif", F_M = "'JetBrains Mono',monospace";
 
 const cv = document.getElementById('c'), ctx = cv.getContext('2d');
 function fit(){
@@ -183,6 +183,7 @@ const ASSET_IMAGES = {};
   'assets/planets/cryos.svg',
   'assets/planets/vortex_prime.svg',
   'assets/planets/earth.svg',
+  'assets/planets/black_hole_devourer.svg',
   'assets/backgrounds/world1_fractured_moon.svg',
   'assets/backgrounds/world2_aether7.svg',
   'assets/backgrounds/world3_cinder_moon.svg',
@@ -193,11 +194,10 @@ const ASSET_IMAGES = {};
   'assets/enemies/voidling.svg',
   'assets/enemies/guardian_aether_sentinel.svg',
   'assets/enemies/guardian_vortex.svg',
-  'assets/characters/arin_male.svg',
-  'assets/characters/mira_female.svg',
-  'assets/objects/crystal.svg',
-  'assets/objects/meteor.svg',
-  'assets/objects/satellite.svg'
+  'assets/weapons/energy_sword.svg',
+  'assets/weapons/plasma_blaster.svg',
+  'assets/weapons/phase_shield.svg',
+  'assets/weapons/gravity_lance.svg'
 ].forEach(src => {
   const img = new Image();
   img.src = src;
@@ -269,10 +269,14 @@ const SFX = {
   click(){ tone(540, 0.04, 'square', 0.06); },
   sword(){ noise(0.14, 0.22, 1600); tone(680, 0.12, 'sawtooth', 0.18, 0.35); },
   blaster(){ tone(920, 0.08, 'sawtooth', 0.15, 0.25); tone(460, 0.11, 'square', 0.09, 0.5); },
+  ricochet(){ tone(1200, 0.06, 'sine', 0.16, 1.8); tone(1800, 0.04, 'triangle', 0.12); },
+  shield(){ tone(320, 0.2, 'sine', 0.2, 1.8); tone(640, 0.3, 'triangle', 0.15); },
   land(){ tone(130, 0.3, 'sine', 0.25, 0.4); noise(0.35, 0.2, 450); },
+  autoland(){ tone(440, 0.08, 'sine', 0.12); setTimeout(()=>tone(880, 0.1, 'sine', 0.14), 60); },
   takeoff(){ noise(0.95, 0.38, 260); tone(75, 0.85, 'sawtooth', 0.28, 3.5); },
   door(){ tone(340, 0.14, 'sine', 0.12, 1.5); noise(0.18, 0.1, 950); },
   resource(){ tone(520, 0.12, 'sine', 0.16, 1.4); setTimeout(()=>tone(780, 0.16, 'sine', 0.16, 1.3), 80); setTimeout(()=>tone(1100, 0.22, 'triangle', 0.18), 160); },
+  fanfare(){ [523.25, 659.25, 783.99, 1046.5].forEach((f,idx)=>setTimeout(()=>tone(f, 0.35, 'triangle', 0.18), idx*110)); },
   rcs(){ noise(0.09, 0.08, 2200); tone(85, 0.08, 'sine', 0.06); }
 };
 
@@ -284,6 +288,7 @@ const MAP = {
   arrowdown: ['down'], s: ['down'],
   ' ': ['thrust'],
   shift: ['boost'],
+  l: ['autoland'],
   e: ['use'], enter: ['use', 'enter'],
   q: ['shield'],
   j: ['atk'], x: ['atk'],
@@ -385,124 +390,138 @@ function drawFx(camX, camY){
 }
 
 /* ═════════════════════════════════════════════════════════════════
-   SPACE ODYSSEY — REUSABLE PLANETARY CONFIGURATION SYSTEM
-   Preserves original 6 existing planets & assets in the repository.
-   Maps each to genuine gameplay, physics, hazards, and missions.
+   GEOMETRIC & MATHEMATICAL PLANETARY CONFIGURATIONS
    ═════════════════════════════════════════════════════════════════ */
 const PLANETS = [
   {
     id: 'fractured_moon',
     name: 'FRACTURED MOON',
     type: 'ALIEN GRAVITY PLANET',
-    sub: 'Gravitational anomaly fields. Collect Ancient Artifacts across lunar ruins.',
-    width: 5300, height: 1950, groundY: 1560,
+    sub: 'Quantum gravity inversion fields & crystal laser reflection prisms.',
+    width: 5400, height: 2000, groundY: 1580,
     sky: ['#07051a', '#24104d'], accent: '#ba68f8', starCol: '#d7c4ff',
     planetArt: 'assets/planets/fractured_moon.svg',
     bgArt: 'assets/backgrounds/world1_fractured_moon.svg',
     enemyType: 'voidling',
-    hasHole: true, holePos: {x: 180, y: 1240}, holePullR: 1250, holeForce: 190, holeKillR: 110,
-    gravity: 780, friction: 0.82, airDrag: 0.985, wind: {x: 0, y: 0},
+    bhSpeed: 42, bhBaseX: -700, bhPullForce: 240, bhKillR: 110,
+    gravity: 340, friction: 0.84, airDrag: 0.992, wind: {x: 0, y: 0},
     mandatoryName: 'Ancient Artifacts', mandatoryCount: 7,
     bonusName: 'Alien Energy Cores', bonusCount: 5,
-    gravityZones: 5, movingPlatforms: 5, enemies: 5,
-    landingPad: {x: 650, y: 1530, w: 220, h: 22},
-    rocketStart: {x: 200, y: 480, vx: 200, vy: 40, angle: 0.22},
-    departureRocket: {x: 4950, y: 1500, w: 90, h: 140}
+    landingLine: {x: 750, y: 1340, w: 260, h: 24},
+    departureRocket: {x: 5050, y: 1520, w: 90, h: 140},
+    mathFeature: 'QUANTUM GRAVITY & NORMAL-VECTOR SPECULAR LASERS',
+    weaponReward: 'energy_sword',
+    weaponName: 'VIBRO-ENERGY SWORD (PROJECTILE PARRY)'
   },
   {
     id: 'aether_7',
     name: 'AETHER-7',
     type: 'FLOATING SKY PLANET',
-    sub: 'Floating cloud plateaus and powerful updrafts. Collect Atmospheric Crystals.',
-    width: 5800, height: 2200, groundY: 1820,
+    sub: 'Atmospheric tensor winds & floating cloud archipelagos.',
+    width: 6000, height: 2200, groundY: 1820,
     sky: ['#041429', '#17606a'], accent: '#62ffd1', starCol: '#c4fff4',
     planetArt: 'assets/planets/aether_7.svg',
     bgArt: 'assets/backgrounds/world2_aether7.svg',
     enemyType: 'sentinel',
-    gravity: 700, friction: 0.86, airDrag: 0.99, wind: {x: 35, y: 0},
+    bhSpeed: 50, bhBaseX: -700, bhPullForce: 260, bhKillR: 115,
+    gravity: 680, friction: 0.86, airDrag: 0.988, wind: {x: 45, y: 0},
     mandatoryName: 'Atmospheric Crystals', mandatoryCount: 8,
     bonusName: 'Navigation Modules', bonusCount: 6,
-    updrafts: 6, downdrafts: 2, movingPlatforms: 8, enemies: 4,
-    landingPad: {x: 650, y: 1790, w: 220, h: 22},
-    rocketStart: {x: 220, y: 550, vx: 210, vy: 45, angle: 0.2},
-    departureRocket: {x: 5450, y: 1120, w: 90, h: 140}
+    landingLine: {x: 800, y: 1560, w: 260, h: 24},
+    departureRocket: {x: 5650, y: 1140, w: 90, h: 140},
+    mathFeature: 'AERODYNAMIC TENSOR FORCES: W(t) = <Ax sin ωt, Ay cos ωt>',
+    weaponReward: 'dual_blaster',
+    weaponName: 'DUAL PLASMA REPEATER (TWIN RICOCHET)'
   },
   {
     id: 'cinder_moon',
     name: 'CINDER MOON',
     type: 'VOLCANIC PLANET',
-    sub: 'Boiling lava trenches, fire jets, and falling hot rocks. Collect Thermal Cores.',
-    width: 5600, height: 2000, groundY: 1600,
+    sub: 'High geothermal gravity & parabolic magma arc ballistic geysers.',
+    width: 5800, height: 2100, groundY: 1640,
     sky: ['#1b0602', '#5c1707'], accent: '#ff7a2e', starCol: '#ffd1a4',
     planetArt: 'assets/planets/cinder_moon.svg',
     bgArt: 'assets/backgrounds/world3_cinder_moon.svg',
-    gravity: 920, friction: 0.83, airDrag: 0.982, wind: {x: 0, y: 0},
+    enemyType: 'magma',
+    bhSpeed: 58, bhBaseX: -700, bhPullForce: 280, bhKillR: 120,
+    gravity: 950, friction: 0.82, airDrag: 0.982, wind: {x: 0, y: 0},
     mandatoryName: 'Thermal Cores', mandatoryCount: 8,
-    bonusName: 'Rare Minerals', bonusCount: 5,
-    lavaPits: 7, fireJets: 8, heatZones: 6, fallingRocks: true, debris: 12,
-    landingPad: {x: 650, y: 1570, w: 220, h: 22},
-    rocketStart: {x: 200, y: 520, vx: 200, vy: 50, angle: 0.22},
-    departureRocket: {x: 5250, y: 1540, w: 90, h: 140}
+    bonusName: 'Rare Minerals', bonusCount: 6,
+    landingLine: {x: 720, y: 1400, w: 260, h: 24},
+    departureRocket: {x: 5450, y: 1580, w: 90, h: 140},
+    mathFeature: 'BALLISTIC PARABOLA KINEMATICS: r(t) = r0 + v0 t + 1/2 g t^2',
+    weaponReward: 'thermobaric',
+    weaponName: 'THERMOBARIC CANNON (EXPLOSIVE PARABOLIC LOB)'
   },
   {
     id: 'cryos',
     name: 'CRYOS',
     type: 'FROZEN PLANET',
-    sub: 'Low-friction ice caves, cracking platforms, and sub-zero gusts. Collect Frozen Samples.',
-    width: 5700, height: 2050, groundY: 1640,
+    sub: 'Low-friction ice momentum & specular blaster ricochet caves.',
+    width: 5900, height: 2150, groundY: 1680,
     sky: ['#03122c', '#0b4d75'], accent: '#6be7ff', starCol: '#d7fbff',
     planetArt: 'assets/planets/cryos.svg',
     bgArt: 'assets/backgrounds/world4_cryos.svg',
-    gravity: 750, friction: 0.24, airDrag: 0.994, wind: {x: -70, y: 0},
+    enemyType: 'cryo',
+    bhSpeed: 64, bhBaseX: -700, bhPullForce: 300, bhKillR: 120,
+    gravity: 740, friction: 0.04, airDrag: 0.996, wind: {x: -60, y: 0},
     mandatoryName: 'Frozen Samples', mandatoryCount: 9,
-    bonusName: 'Cryo Energy Cells', bonusCount: 5,
-    iceGusts: 6, crackingPlatforms: 9, enemies: 4,
-    landingPad: {x: 650, y: 1610, w: 220, h: 22},
-    rocketStart: {x: 200, y: 540, vx: 200, vy: 45, angle: 0.22},
-    departureRocket: {x: 5350, y: 1580, w: 90, h: 140}
+    bonusName: 'Cryo Energy Cells', bonusCount: 6,
+    landingLine: {x: 780, y: 1440, w: 260, h: 24},
+    departureRocket: {x: 5550, y: 1620, w: 90, h: 140},
+    mathFeature: 'CONSERVATION OF MOMENTUM (μ=0.04) & SPECULAR REFLECTION',
+    weaponReward: 'gravity_lance',
+    weaponName: 'SINGULARITY GRAVITY LANCE (VORTEX CRUSH)'
   },
   {
     id: 'vortex_prime',
     name: 'VORTEX PRIME',
-    type: 'TOXIC PLANET',
-    sub: 'Corrosive poison clouds and acid pools. Manage suit oxygen. Collect Scientific Samples.',
-    width: 5900, height: 2100, groundY: 1660,
+    type: 'RELATIVISTIC TOXIC PLANET',
+    sub: 'Multi-singularity spacetime warping & curved gravitational geodesics.',
+    width: 6100, height: 2200, groundY: 1720,
     sky: ['#07100e', '#224219'], accent: '#b5ff40', starCol: '#eaffc7',
     planetArt: 'assets/planets/vortex_prime.svg',
     bgArt: 'assets/backgrounds/world5_vortex_prime.svg',
     enemyType: 'vortex',
-    gravity: 830, friction: 0.78, airDrag: 0.978, wind: {x: -110, y: 0},
+    bhSpeed: 70, bhBaseX: -700, bhPullForce: 330, bhKillR: 125,
+    gravity: 840, friction: 0.78, airDrag: 0.978, wind: {x: -80, y: 0},
     mandatoryName: 'Scientific Samples', mandatoryCount: 9,
-    bonusName: 'Rare Toxic Minerals', bonusCount: 5,
-    oxygenDrain: 2.6, safeZones: 5, acidZones: 7, enemies: 5,
-    landingPad: {x: 650, y: 1630, w: 220, h: 22},
-    rocketStart: {x: 200, y: 550, vx: 200, vy: 45, angle: 0.22},
-    departureRocket: {x: 5550, y: 1600, w: 90, h: 140}
+    bonusName: 'Rare Toxic Minerals', bonusCount: 6,
+    landingLine: {x: 760, y: 1480, w: 260, h: 24},
+    departureRocket: {x: 5750, y: 1660, w: 90, h: 140},
+    mathFeature: 'MULTI-BODY N-GRAVITY SUMMATION: F = Σ (G Mi / ri^2) r^i',
+    weaponReward: 'singularity_master',
+    weaponName: 'GRAVITON VORTEX OVERCLOCK (INFINITE COMPRESSION)'
   },
   {
     id: 'earth',
     name: 'EARTH',
-    type: 'WIND PLANET & EXTRACTION BASE',
-    sub: 'Atmospheric re-entry gale winds and dust storm buffeting. Collect Energy Crystals.',
-    width: 5300, height: 1900, groundY: 1500,
+    type: 'EXTRACTION BASE & RE-ENTRY',
+    sub: 'Atmospheric re-entry shear winds & automated defense grid matrix.',
+    width: 5500, height: 2000, groundY: 1540,
     sky: ['#031633', '#0b4c94'], accent: '#4fd3ff', starCol: '#e8fbff',
     planetArt: 'assets/planets/earth.svg',
     bgArt: 'assets/backgrounds/world6_earth.svg',
-    gravity: 870, friction: 0.88, airDrag: 0.985, wind: {x: 165, y: 0},
-    mandatoryName: 'Energy Crystals', mandatoryCount: 6,
+    enemyType: 'sentinel',
+    bhSpeed: 78, bhBaseX: -700, bhPullForce: 360, bhKillR: 130,
+    gravity: 980, friction: 0.88, airDrag: 0.985, wind: {x: 180, y: 0},
+    mandatoryName: 'Energy Crystals', mandatoryCount: 7,
     bonusName: 'Fuel Reserves', bonusCount: 8,
-    dustStorms: true, windBuffet: true, satelliteFields: 5,
-    landingPad: {x: 650, y: 1470, w: 220, h: 22},
-    rocketStart: {x: 200, y: 500, vx: 200, vy: 40, angle: 0.22},
-    departureRocket: {x: 4950, y: 1440, w: 90, h: 140}
+    landingLine: {x: 750, y: 1300, w: 260, h: 24},
+    departureRocket: {x: 5150, y: 1480, w: 90, h: 140},
+    mathFeature: 'RE-ENTRY VECTOR NAVIGATION & GEODESIC COLLISION AVOIDANCE',
+    weaponReward: 'master_pilot',
+    weaponName: 'COSMIC ODYSSEY SUPREME ACCREDITATION'
   }
 ];
 
 /* ──────── Global Game State ──────── */
 const G = {
-  scene: 'title', // title, play, pause, victory, dead
+  scene: 'title', // title, play, pause, victory, dead, upgrades, manual
   phase: 'flight', // flight -> landing -> exit -> explore -> boarding -> takeoff -> warp
   worldIdx: 0,
+  isEndless: false,
+  endlessSector: 1,
   char: 'arin', // arin (cyan) or mira (violet)
   credits: 0,
   bestScores: {},
@@ -512,8 +531,9 @@ const G = {
   thrustLv: 0,
   effLv: 0,
 
-  // Runtime
+  // Runtime telemetry & resources
   fuel: 100,
+  oxygen: 100,
   hp: 3,
   score: 0,
   cellsGot: 0,
@@ -521,39 +541,53 @@ const G = {
   t: 0,
   shake: 0,
   toast: null,
+  welcomeBanner: null, // Welcome to planet modal
 
   // Camera
   camX: 0,
   camY: 0,
 
-  // Combat & abilities
-  hasSword: true,
-  hasBlaster: true,
-  hasShield: true,
+  // Mathematical telemetry
+  bhX: -700,
+  bhPullN: 0,
+  landingDist: 0,
+  autoLandActive: false,
+
+  // Weapons & Combat
+  weapons: {
+    blaster: true,
+    sword: false,
+    dual_blaster: false,
+    thermobaric: false,
+    gravity_lance: false
+  },
+  activeWeapon: 'blaster',
+  shieldCharges: 1, // EXACTLY 1 SHIELD PER LEVEL
   shieldT: 0,
-  shieldCd: 0,
+  shieldMaxT: 3.5,
 
   phaseTimer: 0,
   totalPlayTime: 0,
-
   mx: -1, my: -1
 };
 
-const saved = store('space_odyssey_save_v2');
+const saved = store('space_odyssey_save_v3');
 if(saved){
   if(saved.credits) G.credits = saved.credits;
   if(saved.bestScores) G.bestScores = saved.bestScores;
   if(saved.tankLv) G.tankLv = saved.tankLv;
   if(saved.thrustLv) G.thrustLv = saved.thrustLv;
   if(saved.effLv) G.effLv = saved.effLv;
+  if(saved.weapons) Object.assign(G.weapons, saved.weapons);
 }
 function saveData(){
-  store('space_odyssey_save_v2', {
+  store('space_odyssey_save_v3', {
     credits: G.credits,
     bestScores: G.bestScores,
     tankLv: G.tankLv,
     thrustLv: G.thrustLv,
-    effLv: G.effLv
+    effLv: G.effLv,
+    weapons: G.weapons
   });
 }
 
@@ -562,7 +596,7 @@ function getFuelPct(){ return (G.fuel / getMaxFuel()) * 100; }
 function getThrustMult(){ return 1 + G.thrustLv * 0.15; }
 function getBurnMult(){ return Math.max(0.4, 1 - G.effLv * 0.15); }
 
-/* ──────── Active World Entities ──────── */
+/* ──────── Active Entities ──────── */
 let PL = null;
 let LVL = null;
 let CELLS = [];
@@ -572,35 +606,68 @@ let PLATFORMS = [];
 let ENEMIES = [];
 let HAZARDS = [];
 let BULLETS = [];
+let MIRRORS = [];
+let LASER_BEAMS = [];
 let UI_BUTTONS = [];
+let RECENT_RICOCHETS = [];
 
-/* ──────── Planet Level Initializer ──────── */
-function initPlanet(worldIdx){
+/* ──────── Dynamic Procedural Level Generator ──────── */
+function initPlanet(worldIdx, isEndless = false){
   G.worldIdx = worldIdx;
-  const cfg = PLANETS[worldIdx];
+  G.isEndless = isEndless;
+  if(!isEndless) G.endlessSector = 1;
+
+  let cfg = Object.assign({}, PLANETS[worldIdx % PLANETS.length]);
+  if(isEndless){
+    cfg.name = `SECTOR ${G.endlessSector} · DEEP COSMOS`;
+    cfg.sub = 'Endless procedural void. Relentless Black Hole pursuit acceleration.';
+    cfg.bhSpeed = 50 + G.endlessSector * 12;
+    cfg.bhPullForce = 250 + G.endlessSector * 25;
+    cfg.mandatoryCount = 6 + (G.endlessSector % 5);
+  }
   LVL = cfg;
 
   document.getElementById('header-planet-title').textContent = cfg.name + ' · ' + cfg.type;
 
-  G.fuel = Math.max(G.fuel || 0, getMaxFuel() * 0.65);
+  G.fuel = Math.max(G.fuel || 0, getMaxFuel() * 0.85);
   G.oxygen = 100;
   G.hp = 3;
   G.cellsGot = 0;
   G.orbsGot = 0;
+  G.shieldCharges = 1; // Exactly 1 shield per level
   G.shieldT = 0;
-  G.shieldCd = 0;
   G.phase = 'flight';
   G.phaseTimer = 0;
+  G.autoLandActive = false;
+  G.bhX = cfg.bhBaseX || -700;
+  G.bhPullN = 0;
 
   P.length = 0;
   BULLETS = [];
+  RECENT_RICOCHETS = [];
+  LASER_BEAMS = [];
+
+  // Randomize initial insertion vector & landing pad placement for different gameplay positions
+  const seed = (worldIdx * 73 + (isEndless ? G.endlessSector * 137 : 19)) | 0;
+  const r = rng(seed);
+
+  const padX = 600 + r() * 300;
+  const padY = cfg.groundY - 200 - r() * 120; // High elevated line! Never below screen!
+  cfg.landingLine = { x: padX, y: padY, w: 260, h: 22 };
+
+  // Random start position & entry trajectory
+  const startX = 180 + r() * 150;
+  const startY = 220 + r() * 180;
+  const startVx = 160 + r() * 120;
+  const startVy = 20 + r() * 40;
+  const startAngle = 0.15 + (r() - 0.5) * 0.2;
 
   PL = {
-    x: cfg.rocketStart.x,
-    y: cfg.rocketStart.y,
-    vx: cfg.rocketStart.vx,
-    vy: cfg.rocketStart.vy,
-    angle: cfg.rocketStart.angle || 0,
+    x: startX,
+    y: startY,
+    vx: startVx,
+    vy: startVy,
+    angle: startAngle,
     face: 1,
     thrusting: false,
     thrustingUp: false,
@@ -610,13 +677,11 @@ function initPlanet(worldIdx){
     boostCd: 0,
     boostT: 0,
     inv: 1.0,
-    radius: 20,
+    radius: 18,
     onGround: false,
     coyote: 0,
     suit: 100,
-    oxygen: 100,
     walkCycle: 0,
-    bodyTilt: 0,
     atkT: 0,
     atkCd: 0,
     shootCd: 0
@@ -628,22 +693,21 @@ function initPlanet(worldIdx){
   ENEMIES = [];
   HAZARDS = [];
   DEBRIS = [];
+  MIRRORS = [];
 
-  const r = rng(310 + worldIdx * 43);
+  // Ground base
+  PLATFORMS.push({x: 0, y: cfg.groundY, w: cfg.width, h: cfg.height - cfg.groundY + 200, kind: 'ground'});
 
-  // Ground solid base
-  PLATFORMS.push({x: 0, y: cfg.groundY, w: cfg.width, h: cfg.height - cfg.groundY, kind: 'ground'});
-
-  // Landing pad platform at start
+  // ELEVATED HIGH LANDING LINE PLATFORM (Well above bottom of screen!)
   PLATFORMS.push({
-    x: cfg.landingPad.x - 40,
-    y: cfg.landingPad.y,
-    w: cfg.landingPad.w + 80,
-    h: 28,
-    kind: 'landing_pad'
+    x: cfg.landingLine.x - 30,
+    y: cfg.landingLine.y,
+    w: cfg.landingLine.w + 60,
+    h: 26,
+    kind: 'landing_line'
   });
 
-  // Departure rocket launch gantry platform at far right
+  // Extraction Gantry at far right
   PLATFORMS.push({
     x: cfg.departureRocket.x - 50,
     y: cfg.departureRocket.y + cfg.departureRocket.h - 10,
@@ -652,189 +716,200 @@ function initPlanet(worldIdx){
     kind: 'launch_pad'
   });
 
-  // Intermediate exploration platforms
-  const platformCount = cfg.movingPlatforms ? 22 : 18;
-  for(let q=0; q<platformCount; q++){
-    const t = (q + 1) / (platformCount + 1);
-    const startX = cfg.landingPad.x + 300;
-    const endX = cfg.departureRocket.x - 300;
-    const px = lerp(startX, endX, t) + (r() - 0.5) * 160;
-    const py = clamp(cfg.groundY - 140 - (r() * 480) - (cfg.updrafts ? r()*240 : 0), 420, cfg.groundY - 90);
-    const moving = cfg.movingPlatforms && q % 3 === 1;
-    const cracking = cfg.crackingPlatforms && q % 2 === 0;
-
+  // MULTI-ROUTE TOPOGRAPHY (Upper Sky Route, Mid Ruin Route, Deep Cavern Route)
+  // 1. Upper Sky Route (anti-gravity & aerial platforms)
+  const skyPlats = 8;
+  for(let i=0; i<skyPlats; i++){
+    const t = (i + 1) / (skyPlats + 1);
+    const px = lerp(cfg.landingLine.x + 350, cfg.departureRocket.x - 300, t) + (r() - 0.5) * 140;
+    const py = 340 + r() * 220;
     PLATFORMS.push({
-      x: px,
-      y: py,
-      w: 160 + r() * 110,
-      h: 22,
-      kind: cracking ? 'crack' : (moving ? 'move' : 'stone'),
-      ox: 0,
-      phase: r() * 6.28,
-      amp: moving ? 110 + r() * 90 : 0,
-      broke: false
+      x: px, y: py, w: 150 + r() * 90, h: 20,
+      kind: 'sky', route: 'sky', ox: 0, phase: r() * 6.28, amp: (i % 2 === 0) ? 90 : 0
     });
   }
 
-  // Mandatory Collectibles distribution (Reachable on platforms and exploration routes)
+  // 2. Mid Ruins Route (mirrors, laser puzzles, crumbling platforms)
+  const midPlats = 14;
+  for(let j=0; j<midPlats; j++){
+    const t = (j + 1) / (midPlats + 1);
+    const px = lerp(cfg.landingLine.x + 280, cfg.departureRocket.x - 200, t) + (r() - 0.5) * 120;
+    const py = cfg.groundY - 320 - (r() * 260);
+    const cracking = (j % 3 === 1);
+    PLATFORMS.push({
+      x: px, y: py, w: 160 + r() * 80, h: 22,
+      kind: cracking ? 'crack' : 'stone', route: 'mid', broke: false
+    });
+  }
+
+  // 3. Deep Cavern Trench Route (lower alcoves, guarded secrets)
+  const lowPlats = 8;
+  for(let k=0; k<lowPlats; k++){
+    const t = (k + 1) / (lowPlats + 1);
+    const px = lerp(cfg.landingLine.x + 400, cfg.departureRocket.x - 400, t);
+    const py = cfg.groundY - 80 - r() * 90;
+    PLATFORMS.push({
+      x: px, y: py, w: 180 + r() * 110, h: 24,
+      kind: 'cavern', route: 'cavern'
+    });
+  }
+
+  // Optical Geometric Mirrors for Blaster & Laser Ricochets
+  const mirrorCount = 4;
+  for(let m=0; m<mirrorCount; m++){
+    const mx = lerp(1200, cfg.width - 1200, (m + 0.5) / mirrorCount) + (r() - 0.5) * 180;
+    const my = cfg.groundY - 260 - r() * 350;
+    MIRRORS.push({
+      x: mx, y: my, w: 24, h: 90,
+      angle: (m % 2 === 0 ? 0.7854 : -0.7854), // 45 degrees
+      rotSpd: (m % 3 === 0 ? 0.4 : 0),
+      active: true
+    });
+  }
+
+  // Mandatory Collectibles distribution across hidden routes
   for(let i=0; i<cfg.mandatoryCount; i++){
     const t = (i + 1) / (cfg.mandatoryCount + 1);
-    const startX = cfg.landingPad.x + 320;
-    const endX = cfg.departureRocket.x - 280;
-    const px = lerp(startX, endX, t);
-    const plat = PLATFORMS[3 + (i % (PLATFORMS.length - 3))];
+    const targetPlat = PLATFORMS[3 + (i * 2) % (PLATFORMS.length - 3)];
     CELLS.push({
-      x: plat ? plat.x + plat.w * 0.5 : px,
-      y: plat ? plat.y - 42 : cfg.groundY - 70 - r() * 260,
+      x: targetPlat ? targetPlat.x + targetPlat.w * 0.5 : lerp(cfg.landingLine.x + 350, cfg.departureRocket.x - 300, t),
+      y: targetPlat ? targetPlat.y - 42 : cfg.groundY - 140,
       got: false,
       rot: r() * 6.28
     });
   }
 
-  // Bonus Energy Orbs / Modules
+  // Bonus Energy Orbs
   for(let j=0; j<cfg.bonusCount; j++){
-    const t = (j + 1) / (cfg.bonusCount + 1);
-    const startX = cfg.landingPad.x + 400;
-    const endX = cfg.departureRocket.x - 400;
-    const px = lerp(startX, endX, t) + (r() - 0.5) * 200;
-    const plat = PLATFORMS[4 + ((j * 3) % (PLATFORMS.length - 3))];
+    const targetPlat = PLATFORMS[4 + (j * 3) % (PLATFORMS.length - 4)];
     ORBS.push({
-      x: plat ? plat.x + plat.w * 0.5 : px,
-      y: plat ? plat.y - 80 : cfg.groundY - 180 - r() * 320,
+      x: targetPlat ? targetPlat.x + targetPlat.w * 0.5 : 1400 + j * 500,
+      y: targetPlat ? targetPlat.y - 75 : cfg.groundY - 240,
       got: false,
       rot: 0
     });
   }
 
-  // Hazards Configuration
-  if(cfg.updrafts){
-    for(let u=0; u<cfg.updrafts; u++){
+  // HAZARDS: Thermal updrafts, volcanic vents, cryogenic blizzards, gravity singularities
+  if(cfg.id === 'aether_7'){
+    for(let u=0; u<6; u++){
       HAZARDS.push({
         type: u % 3 === 2 ? 'downdraft' : 'updraft',
-        x: lerp(900, cfg.width - 900, u / cfg.updrafts),
-        y: cfg.groundY - 450,
-        w: 280, h: 900,
-        fy: u % 3 === 2 ? 480 : -660
+        x: lerp(1000, cfg.width - 1000, u / 6),
+        y: cfg.groundY - 500,
+        w: 260, h: 950,
+        fy: u % 3 === 2 ? 460 : -640
       });
     }
   }
-  if(cfg.gravityZones){
-    for(let g=0; g<cfg.gravityZones; g++){
-      HAZARDS.push({
-        type: g % 2 ? 'lowgrav' : 'heavygrav',
-        x: lerp(850, cfg.width - 850, g / cfg.gravityZones),
-        y: cfg.groundY - 320 - (r() * 320),
-        r: 220
-      });
-    }
-  }
-  if(cfg.heatZones || cfg.acidZones){
-    const count = cfg.heatZones || cfg.acidZones;
-    for(let h=0; h<count; h++){
-      HAZARDS.push({
-        type: cfg.acidZones ? 'acid' : 'heat',
-        x: lerp(1000, cfg.width - 900, h / count),
-        y: cfg.groundY - 260 - (r() * 360),
-        r: 230,
-        drain: 3.5
-      });
-    }
-  }
-  if(cfg.lavaPits){
-    for(let l=0; l<cfg.lavaPits; l++){
+  if(cfg.id === 'cinder_moon'){
+    for(let l=0; l<6; l++){
       HAZARDS.push({
         type: 'lava',
-        x: lerp(900, cfg.width - 900, l / cfg.lavaPits),
-        y: cfg.groundY + 16,
-        w: 260 + r() * 140,
-        h: 70
+        x: lerp(900, cfg.width - 900, l / 6),
+        y: cfg.groundY + 14,
+        w: 280, h: 70
       });
     }
-  }
-  if(cfg.fireJets){
-    for(let f=0; f<cfg.fireJets; f++){
+    for(let f=0; f<7; f++){
       HAZARDS.push({
         type: 'firejet',
-        x: lerp(1050, cfg.width - 950, f / cfg.fireJets),
+        x: lerp(1100, cfg.width - 1100, f / 7),
         y: cfg.groundY,
         phase: r() * 6.28
       });
     }
   }
-  if(cfg.iceGusts){
-    for(let i=0; i<cfg.iceGusts; i++){
+  if(cfg.id === 'vortex_prime'){
+    // Relativistic orbiting mini-singularities
+    for(let s=0; s<3; s++){
       HAZARDS.push({
-        type: 'icegust',
-        x: lerp(900, cfg.width - 900, i / cfg.iceGusts),
-        y: cfg.groundY - 320 - (r() * 400),
-        w: 440, h: 260,
-        fx: -240
-      });
-    }
-  }
-  if(cfg.safeZones){
-    for(let s=0; s<cfg.safeZones; s++){
-      HAZARDS.push({
-        type: 'safe',
-        x: lerp(850, cfg.width - 850, s / cfg.safeZones),
-        y: cfg.groundY - 20,
-        r: 150
-      });
-    }
-  }
-  if(cfg.dustStorms){
-    HAZARDS.push({
-      type: 'storm',
-      x: cfg.width * 0.5,
-      y: cfg.groundY - 400,
-      r: cfg.width * 0.45
-    });
-  }
-
-  // Debris & Hot Rocks
-  if(cfg.debris){
-    for(let k=0; k<cfg.debris; k++){
-      DEBRIS.push({
-        x: clamp(800 + r() * (cfg.width - 1600), 400, cfg.width - 400),
-        y: clamp(400 + r() * (cfg.groundY - 600), 200, cfg.groundY - 100),
-        vx: (r() - 0.5) * 50,
-        vy: (r() - 0.5) * 50,
-        radius: 20 + r() * 16,
-        rot: r() * 6.28,
-        rotSpd: (r() - 0.5) * 1.5,
-        hp: 2,
-        hot: !!cfg.fallingRocks && (k % 2 === 0)
+        type: 'singularity',
+        cx: lerp(1400, cfg.width - 1400, (s + 0.5) / 3),
+        cy: cfg.groundY - 450,
+        orbitR: 160 + s * 40,
+        orbitSpd: 0.8 + s * 0.3,
+        pullR: 380,
+        pullForce: 360,
+        killR: 35
       });
     }
   }
 
-  // Enemies Placement
-  for(let e=0; e<(cfg.enemies || 0); e++){
-    const plat = PLATFORMS[4 + ((e * 4) % Math.max(1, PLATFORMS.length - 4))];
+  // ENEMIES & INTER-FACTION COMBAT ARCHETYPES
+  // Factions: 'void' (Voidlings), 'drone' (Sentinels), 'beast' (Magma Walkers / Cryo Phantoms)
+  const enemyCount = 8;
+  for(let e=0; e<enemyCount; e++){
+    const plat = PLATFORMS[4 + (e * 3) % (PLATFORMS.length - 4)];
+    const ex = plat ? plat.x + plat.w * 0.5 : 1200 + e * 550;
+    const ey = plat ? plat.y - 32 : cfg.groundY - 44;
+
+    // Distribute factions to enable inter-enemy fighting!
+    let faction = 'void';
+    let type = 'voidling';
+    if(e % 3 === 1){
+      faction = 'drone';
+      type = 'sentinel';
+    } else if(e % 3 === 2){
+      faction = 'beast';
+      type = cfg.id === 'cinder_moon' ? 'magma' : (cfg.id === 'cryos' ? 'cryo' : 'stalker');
+    }
+
     ENEMIES.push({
-      type: cfg.enemyType || (cfg.id === 'aether_7' ? 'sentinel' : (cfg.id === 'vortex_prime' ? 'vortex' : 'voidling')),
-      x: plat ? plat.x + plat.w * 0.5 : 1200 + e * 700,
-      y: plat ? plat.y - 32 : cfg.groundY - 42,
-      baseX: plat ? plat.x + plat.w * 0.5 : 1200 + e * 700,
+      id: e,
+      faction: faction,
+      type: type,
+      x: ex,
+      y: ey,
+      baseX: ex,
+      vx: 0,
+      vy: 0,
       phase: r() * 6.28,
-      hp: 2,
+      hp: type === 'sentinel' ? 3 : 2,
+      maxHp: type === 'sentinel' ? 3 : 2,
+      shootCd: 1.0 + r() * 2.0,
+      targetEnemy: null,
       facing: 1
     });
   }
 
+  // Mini-Boss Guardian for Weapon Reward Unlocks!
+  ENEMIES.push({
+    id: 99,
+    isBoss: true,
+    faction: 'guardian',
+    type: cfg.id === 'aether_7' ? 'guardian_sentinel' : (cfg.id === 'vortex_prime' ? 'guardian_vortex' : 'void_alpha'),
+    x: cfg.departureRocket.x - 550,
+    y: cfg.groundY - 90,
+    baseX: cfg.departureRocket.x - 550,
+    vx: 0,
+    vy: 0,
+    phase: 0,
+    hp: 8,
+    maxHp: 8,
+    shootCd: 1.5,
+    facing: -1
+  });
+
   G.camX = PL.x - W/2;
   G.camY = PL.y - H/2;
   G.scene = 'play';
-  G.toast = {
-    a: cfg.name + ' · ' + cfg.type,
-    b: 'ROCKET FLIGHT: Steer & touch down onto the Landing Beacon.',
-    t: 4.5
+
+  // Dramatic cinematic arrival message!
+  G.welcomeBanner = {
+    title: `WELCOME TO ${cfg.name}`,
+    type: cfg.type,
+    sub: cfg.sub,
+    math: cfg.mathFeature,
+    reward: cfg.weaponName,
+    t: 5.0
   };
+  SFX.fanfare();
 }
 
 /* ──────── Draw Background & Sky Parallax ──────── */
-const BG_STARS = Array.from({length: 120}, () => ({
-  x: Math.random() * W, y: Math.random() * H, r: 0.8 + Math.random()*1.8, sp: 0.5 + Math.random()*2, ph: Math.random()*6.28
+const BG_STARS = Array.from({length: 130}, () => ({
+  x: Math.random() * W, y: Math.random() * H, r: 0.8 + Math.random()*2.0, sp: 0.5 + Math.random()*2, ph: Math.random()*6.28
 }));
 
 function drawBackground(cfg, camX, camY, t){
@@ -844,12 +919,12 @@ function drawBackground(cfg, camX, camY, t){
   ctx.fillStyle = g;
   ctx.fillRect(0, 0, W, H);
 
-  // Parallax starfield
+  // Parallax starfield with suction distortion when Black Hole is near
   for(let i=0; i<BG_STARS.length; i++){
     const s = BG_STARS[i];
     const sx = mod(s.x - camX * 0.05, W);
     const sy = mod(s.y - camY * 0.05, H);
-    const alpha = 0.4 + 0.6 * (0.5 + 0.5*Math.sin(t*s.sp + s.ph));
+    const alpha = 0.35 + 0.65 * (0.5 + 0.5*Math.sin(t*s.sp + s.ph));
     ctx.globalAlpha = alpha;
     ctx.fillStyle = cfg.starCol || '#fff';
     ctx.beginPath();
@@ -858,39 +933,90 @@ function drawBackground(cfg, camX, camY, t){
   }
   ctx.globalAlpha = 1;
 
-  // Distant planetary glow
-  const px = W * 0.7 - camX * 0.02, py = H * 0.3 - camY * 0.02;
-  ctx.save();
-  ctx.globalCompositeOperation = 'lighter';
-  const glow = ctx.createRadialGradient(px, py, 40, px, py, 260);
-  glow.addColorStop(0, cfg.accent + '22');
-  glow.addColorStop(1, 'rgba(0,0,0,0)');
-  ctx.fillStyle = glow;
-  ctx.beginPath();
-  ctx.arc(px, py, 260, 0, 6.283);
-  ctx.fill();
-  ctx.restore();
-
   // Background artwork
   const bg = ASSET_IMAGES[cfg.bgArt];
   if(bg && bg.complete && bg.naturalWidth){
     ctx.save();
-    ctx.globalAlpha = 0.36;
+    ctx.globalAlpha = 0.38;
     ctx.drawImage(bg, -camX * 0.08, -camY * 0.04, W * 1.25, H * 1.25);
     ctx.restore();
   }
 
-  // Planet artwork sphere in the sky
+  // Planet artwork sphere in sky
   const art = ASSET_IMAGES[cfg.planetArt];
   if(art && art.complete && art.naturalWidth){
     ctx.save();
-    ctx.globalAlpha = 0.85;
+    ctx.globalAlpha = 0.82;
     ctx.drawImage(art, W * 0.68 - camX * 0.025, H * 0.12 - camY * 0.02, 210, 210);
     ctx.restore();
   }
 }
 
-/* ──────── Draw Terrain & Platforms ──────── */
+/* ──────── Draw Relativistic Black Hole (Cosmic Devourer) ──────── */
+function drawDevourerBlackHole(bhX, killR, camX, camY, t){
+  const sx = bhX - camX;
+  const sy = H * 0.5; // Centers across the space
+
+  ctx.save();
+  ctx.translate(sx, sy);
+
+  // Relativistic gravitational accretion disk glow
+  ctx.globalCompositeOperation = 'lighter';
+  const gl = ctx.createRadialGradient(0, 0, killR * 0.7, 0, 0, 640);
+  gl.addColorStop(0, 'rgba(255,120,40,0.92)');
+  gl.addColorStop(0.2, 'rgba(255,50,140,0.55)');
+  gl.addColorStop(0.45, 'rgba(120,30,255,0.28)');
+  gl.addColorStop(0.7, 'rgba(61,240,255,0.12)');
+  gl.addColorStop(1, 'rgba(0,0,0,0)');
+  ctx.fillStyle = gl;
+  ctx.beginPath();
+  ctx.arc(0, 0, 640, 0, 6.283);
+  ctx.fill();
+
+  // Accretion disk Doppler-shifted warped rings
+  ctx.save();
+  ctx.rotate(-t * 0.75);
+  const ringColors = ['#ff7a2e','#ff3d5a','#ba68f8','#ffd166','#3df0ff','#ffffff'];
+  for(let i=0; i<6; i++){
+    ctx.strokeStyle = ringColors[i];
+    ctx.lineWidth = 15 - i * 2;
+    ctx.beginPath();
+    ctx.ellipse(0, 0, 160 + i*46, 50 + i*14, 0, 0, 6.283);
+    ctx.stroke();
+  }
+  ctx.restore();
+
+  // Accretion vortex suction stream vectors (visualizing mathematical gravitational pull)
+  ctx.strokeStyle = 'rgba(61,240,255,0.45)';
+  ctx.lineWidth = 1.5;
+  for(let k=0; k<16; k++){
+    const ang = k * (6.283 / 16) + t * 0.5;
+    const rStart = killR + 350;
+    const rEnd = killR + 25;
+    ctx.beginPath();
+    ctx.moveTo(Math.cos(ang) * rStart, Math.sin(ang) * rStart);
+    ctx.quadraticCurveTo(Math.cos(ang + 0.6) * (killR + 140), Math.sin(ang + 0.6) * (killR + 140), Math.cos(ang + 1.2) * rEnd, Math.sin(ang + 1.2) * rEnd);
+    ctx.stroke();
+  }
+
+  // Photon sphere ring (Einstein gravitational deflection boundary)
+  ctx.strokeStyle = 'rgba(255,245,210,0.85)';
+  ctx.lineWidth = 8;
+  ctx.beginPath();
+  ctx.arc(0, 0, killR + 14, 0, 6.283);
+  ctx.stroke();
+
+  // Central Event Horizon Void
+  ctx.globalCompositeOperation = 'source-over';
+  ctx.fillStyle = '#010106';
+  ctx.beginPath();
+  ctx.arc(0, 0, killR, 0, 6.283);
+  ctx.fill();
+
+  ctx.restore();
+}
+
+/* ──────── Draw Terrain, Platforms & Elevated Landing Line ──────── */
 function terrainColor(cfg){
   if(cfg.id === 'cinder_moon') return '#2b0c05';
   if(cfg.id === 'cryos') return '#113559';
@@ -900,11 +1026,11 @@ function terrainColor(cfg){
   return '#1b143a';
 }
 
-function drawTerrain(cfg, camX, camY){
+function drawTerrain(cfg, camX, camY, t){
   const groundY = cfg.groundY - camY;
   ctx.save();
 
-  // Surface bedrock gradient
+  // Surface bedrock
   const grad = ctx.createLinearGradient(0, groundY, 0, H);
   grad.addColorStop(0, terrainColor(cfg));
   grad.addColorStop(1, '#050713');
@@ -920,7 +1046,7 @@ function drawTerrain(cfg, camX, camY){
   ctx.closePath();
   ctx.fill();
 
-  // Top surface trim line in planet accent color
+  // Surface trim
   ctx.strokeStyle = cfg.accent;
   ctx.lineWidth = 3;
   ctx.beginPath();
@@ -939,14 +1065,43 @@ function drawTerrain(cfg, camX, camY){
     const py = p.y - camY;
     if(px < -p.w || px > W + p.w || py < -80 || py > H + 80) continue;
 
-    if(p.kind === 'landing_pad'){
-      ctx.fillStyle = '#18244c';
-      rr(px, py, p.w, p.h, 6);
+    // 1. ELEVATED LANDING LINE PLATFORM (Clear Holographic Landing Corridor)
+    if(p.kind === 'landing_line'){
+      // Elevated structural stanchions extending downward
+      ctx.strokeStyle = '#34476c';
+      ctx.lineWidth = 4;
+      ctx.beginPath();
+      ctx.moveTo(px + 20, py + p.h); ctx.lineTo(px + 20, py + p.h + 160);
+      ctx.moveTo(px + p.w - 20, py + p.h); ctx.lineTo(px + p.w - 20, py + p.h + 160);
+      ctx.stroke();
+
+      // Platform body
+      ctx.fillStyle = '#101c3e';
+      rr(px, py, p.w, p.h, 4);
       ctx.fill();
       ctx.strokeStyle = C.cyan;
-      ctx.lineWidth = 2.5;
+      ctx.lineWidth = 2;
       ctx.stroke();
-      txt('▲ LANDING ZONE ▲', px + p.w * 0.5, py + 18, 12, C.cyan, 'center', F_U, 700, 2);
+
+      // BRIGHT HOLOGRAPHIC LANDING LINE ON TOP (Land on line, not below of screen!)
+      ctx.save();
+      ctx.shadowColor = C.green;
+      ctx.shadowBlur = 12;
+      ctx.strokeStyle = C.green;
+      ctx.lineWidth = 4;
+      ctx.beginPath();
+      ctx.moveTo(px, py);
+      ctx.lineTo(px + p.w, py);
+      ctx.stroke();
+      ctx.restore();
+
+      // Left & Right Elevation Guide Beacons
+      const strobe = Math.sin(t * 8) > 0 ? C.green : C.cyan;
+      ctx.fillStyle = strobe;
+      ctx.beginPath(); ctx.arc(px, py - 8, 4, 0, 6.283); ctx.fill();
+      ctx.beginPath(); ctx.arc(px + p.w, py - 8, 4, 0, 6.283); ctx.fill();
+
+      txt('═══ AUTO-LAND LINE ═══', px + p.w * 0.5, py + 16, 11, C.green, 'center', F_O, 700, 1.5);
       continue;
     }
 
@@ -961,8 +1116,8 @@ function drawTerrain(cfg, camX, camY){
       continue;
     }
 
-    ctx.fillStyle = p.kind === 'crack' ? '#bdefff' : (p.kind === 'move' ? cfg.accent : terrainColor(cfg));
-    ctx.globalAlpha = p.kind === 'crack' ? 0.82 : 0.9;
+    ctx.fillStyle = p.kind === 'crack' ? '#bdefff' : (p.kind === 'sky' ? 'rgba(98,255,209,0.25)' : terrainColor(cfg));
+    ctx.globalAlpha = p.kind === 'crack' ? 0.82 : 0.92;
     rr(px, py, p.w, p.h, 6);
     ctx.fill();
     ctx.globalAlpha = 1;
@@ -971,7 +1126,7 @@ function drawTerrain(cfg, camX, camY){
     ctx.stroke();
 
     if(p.kind === 'crack'){
-      ctx.strokeStyle = 'rgba(4,6,20,0.5)';
+      ctx.strokeStyle = 'rgba(4,6,20,0.6)';
       ctx.beginPath();
       ctx.moveTo(px + p.w * 0.25, py + 3);
       ctx.lineTo(px + p.w * 0.42, py + p.h - 3);
@@ -979,10 +1134,47 @@ function drawTerrain(cfg, camX, camY){
       ctx.stroke();
     }
   }
+
+  // Draw Optical Geometric Mirrors
+  for(const m of MIRRORS){
+    const mx = m.x - camX, my = m.y - camY;
+    if(mx < -50 || mx > W+50 || my < -50 || my > H+50) continue;
+    ctx.save();
+    ctx.translate(mx, my);
+    ctx.rotate(m.angle);
+
+    // Mirror frame
+    ctx.fillStyle = '#1c2e54';
+    rr(-m.w*0.5, -m.h*0.5, m.w, m.h, 3);
+    ctx.fill();
+
+    // Specular silver reflective surface
+    const mGrad = ctx.createLinearGradient(0, -m.h*0.5, 0, m.h*0.5);
+    mGrad.addColorStop(0, '#ffffff');
+    mGrad.addColorStop(0.5, C.cyan);
+    mGrad.addColorStop(1, '#a0c4f8');
+    ctx.fillStyle = mGrad;
+    rr(-m.w*0.25, -m.h*0.45, m.w*0.5, m.h*0.9, 2);
+    ctx.fill();
+
+    // Normal Vector Arrow indicator
+    ctx.strokeStyle = C.gold;
+    ctx.lineWidth = 1.8;
+    ctx.beginPath();
+    ctx.moveTo(0, 0);
+    ctx.lineTo(26, 0);
+    ctx.stroke();
+    ctx.beginPath();
+    ctx.moveTo(26, 0); ctx.lineTo(21, -4); ctx.lineTo(21, 4); ctx.closePath();
+    ctx.fillStyle = C.gold; ctx.fill();
+
+    ctx.restore();
+  }
+
   ctx.restore();
 }
 
-/* ──────── Draw Landing Rocket & Departure Rocket ──────── */
+/* ──────── Draw Rocket Ship ──────── */
 function drawRocketShip(p, camX, camY, t, scale = 1, isLanded = false){
   const sx = p.x - camX, sy = p.y - camY;
   ctx.save();
@@ -1048,101 +1240,61 @@ function drawRocketShip(p, camX, camY, t, scale = 1, isLanded = false){
   ctx.ellipse(10, 0, 9, 4.5, 0, 0, 6.283);
   ctx.fill();
 
-  // Specular Glint
-  ctx.fillStyle = '#ffffff';
-  ctx.beginPath();
-  ctx.ellipse(13, -1.5, 3.5, 1.2, -0.2, 0, 6.283);
-  ctx.fill();
-
-  // Phase Shield Bubble
-  if(G.shieldT > 0){
-    ctx.save();
-    ctx.globalCompositeOperation = 'lighter';
-    ctx.strokeStyle = C.cyan;
-    ctx.lineWidth = 3;
-    ctx.fillStyle = 'rgba(61,240,255,0.18)';
-    ctx.beginPath();
-    ctx.arc(0, 0, 36, 0, 6.283);
-    ctx.fill();
-    ctx.stroke();
-    ctx.restore();
-  }
-
   ctx.restore();
 }
 
+/* ──────── Draw Departure Rocket ──────── */
 function drawDepartureRocket(cfg, camX, camY, t){
   const rk = cfg.departureRocket;
-  const rx = rk.x - camX, ry = rk.y - camY;
-  if(rx < -200 || rx > W+200) return;
+  const sx = rk.x + rk.w*0.5 - camX;
+  const sy = rk.y + rk.h*0.5 - camY;
 
   ctx.save();
-  ctx.translate(rx + rk.w * 0.5, ry + rk.h * 0.5);
+  ctx.translate(sx, sy);
 
-  // Launch pad support gantry tower
-  ctx.strokeStyle = '#445275';
+  // Tower gantry scaffold
+  ctx.strokeStyle = '#3e4a68';
   ctx.lineWidth = 3;
-  ctx.strokeRect(-55, -rk.h * 0.5, 110, rk.h);
-  for(let i=0; i<4; i++){
+  ctx.strokeRect(-rk.w*0.7, -rk.h*0.5, rk.w*1.4, rk.h);
+  for(let y=-rk.h*0.5; y<rk.h*0.5; y+=35){
     ctx.beginPath();
-    ctx.moveTo(-55, -rk.h * 0.5 + i*32);
-    ctx.lineTo(55, -rk.h * 0.5 + (i+1)*32);
+    ctx.moveTo(-rk.w*0.7, y); ctx.lineTo(rk.w*0.7, y + 35);
+    ctx.moveTo(rk.w*0.7, y); ctx.lineTo(-rk.w*0.7, y + 35);
     ctx.stroke();
   }
 
-  // Draw vertical rocket standing on pad
-  ctx.save();
-  ctx.rotate(-Math.PI / 2);
-  drawRocketShip({x: 0, y: 0, angle: 0, thrusting: G.phase === 'takeoff'}, 0, 0, t, 1.55, true);
-  ctx.restore();
+  // Heavy multi-stage rocket
+  const rg = ctx.createLinearGradient(-25, 0, 25, 0);
+  rg.addColorStop(0, '#65728e');
+  rg.addColorStop(0.4, '#ffffff');
+  rg.addColorStop(1, '#8fa0be');
+  ctx.fillStyle = rg;
+  rr(-24, -rk.h*0.48, 48, rk.h*0.88, 8);
+  ctx.fill();
 
-  // Halo pulse indicating extraction point
-  const allGot = G.cellsGot >= cfg.mandatoryCount;
-  ctx.globalCompositeOperation = 'lighter';
-  const halo = ctx.createRadialGradient(0, 0, 10, 0, 0, 100);
-  halo.addColorStop(0, allGot ? 'rgba(61,255,136,0.35)' : 'rgba(255,122,46,0.25)');
-  halo.addColorStop(1, 'rgba(0,0,0,0)');
-  ctx.fillStyle = halo;
+  // Rocket Nosecone
+  ctx.fillStyle = '#ff4757';
   ctx.beginPath();
-  ctx.arc(0, 0, 100, 0, 6.283);
+  ctx.moveTo(0, -rk.h*0.58);
+  ctx.lineTo(-24, -rk.h*0.48);
+  ctx.lineTo(24, -rk.h*0.48);
+  ctx.closePath();
+  ctx.fill();
+
+  // Status Beacon
+  const allGot = G.cellsGot >= cfg.mandatoryCount;
+  ctx.fillStyle = allGot ? C.green : C.ember;
+  ctx.beginPath();
+  ctx.arc(0, -rk.h*0.62, 5 + Math.sin(t*8)*2, 0, 6.283);
   ctx.fill();
 
   ctx.restore();
 }
 
-/* ──────── Draw Astronaut Hero (High-Tech 2D EVA Space Suit) ──────── */
+/* ──────── Draw Astronaut Character ──────── */
 function drawAstronautCharacter(p, camX, camY, t){
   const cfg = LVL;
   const sx = p.x - camX, sy = p.y - camY;
-
-  // 1. Umbilical Life-Support Docking Tether to Lander (within 480px)
-  if(cfg && cfg.landingPad){
-    const landerX = cfg.landingPad.x, landerY = cfg.landingPad.y - 18;
-    const distToPad = Math.hypot(p.x - landerX, p.y - landerY);
-    if(distToPad < 480){
-      const lx = landerX - camX, ly = landerY - camY;
-      ctx.save();
-      const tetherAlpha = clamp(1.0 - distToPad / 480, 0, 0.7);
-      ctx.strokeStyle = `rgba(61,240,255,${tetherAlpha * 0.75})`;
-      ctx.lineWidth = 1.6;
-      ctx.setLineDash([6, 4]);
-      ctx.lineDashOffset = -t * 18;
-      ctx.beginPath();
-      ctx.moveTo(lx, ly);
-      const midX = (lx + sx) * 0.5, midY = Math.max(ly, sy) + distToPad * 0.12;
-      ctx.quadraticCurveTo(midX, midY, sx - p.face * 14, sy - 8);
-      ctx.stroke();
-      ctx.setLineDash([]);
-      const prog = (t * 1.5) % 1.0;
-      const nodeX = (1 - prog) * (1 - prog) * lx + 2 * (1 - prog) * prog * midX + prog * prog * (sx - p.face * 14);
-      const nodeY = (1 - prog) * (1 - prog) * ly + 2 * (1 - prog) * prog * midY + prog * prog * (sy - 8);
-      ctx.fillStyle = C.cyan;
-      ctx.beginPath();
-      ctx.arc(nodeX, nodeY, 2.5, 0, 6.283);
-      ctx.fill();
-      ctx.restore();
-    }
-  }
 
   ctx.save();
   const floatBob = p.onGround ? 0 : Math.sin(t * 3.4) * 2.8;
@@ -1157,9 +1309,8 @@ function drawAstronautCharacter(p, camX, camY, t){
   const suitShade = fem ? '#b8a6d4' : '#9bb5db';
   const jointDark = fem ? '#24143a' : '#101d3b';
   const accColor  = fem ? '#ff5ec4' : C.cyan;
-  const accDark   = fem ? '#b82088' : '#0b7da8';
 
-  // 2. Volumetric Helmet Headlight Beam
+  // Headlight beam
   ctx.save();
   const beamGrad = ctx.createRadialGradient(16, -14, 4, 140, -10, 160);
   beamGrad.addColorStop(0, 'rgba(61,240,255,0.22)');
@@ -1167,50 +1318,17 @@ function drawAstronautCharacter(p, camX, camY, t){
   beamGrad.addColorStop(1, 'rgba(61,240,255,0)');
   ctx.fillStyle = beamGrad;
   ctx.beginPath();
-  ctx.moveTo(14, -14);
-  ctx.lineTo(190, -65);
-  ctx.lineTo(210, 35);
+  ctx.moveTo(14, -14); ctx.lineTo(190, -65); ctx.lineTo(210, 35);
   ctx.closePath();
   ctx.fill();
   ctx.restore();
 
-  // 3. MMU / SAFER Propulsion Backpack
+  // MMU Backpack
   ctx.fillStyle = jointDark;
   rr(-22, -18, 14, 32, 4);
   ctx.fill();
-  ctx.strokeStyle = '#34476c';
-  ctx.lineWidth = 1;
-  ctx.stroke();
 
-  // Twin Nitrogen / RCS Propellant Tanks
-  const tankGrad = ctx.createLinearGradient(-21, -16, -9, -16);
-  tankGrad.addColorStop(0, '#5a6e94');
-  tankGrad.addColorStop(0.5, '#b0c6ea');
-  tankGrad.addColorStop(1, '#334466');
-  ctx.fillStyle = tankGrad;
-  rr(-20, -16, 5, 26, 2.5); ctx.fill();
-  rr(-14, -16, 5, 26, 2.5); ctx.fill();
-
-  // Safety Yellow Ring bands
-  ctx.fillStyle = C.gold;
-  rr(-20, -10, 5, 2.5, 0.5); ctx.fill();
-  rr(-14, -10, 5, 2.5, 0.5); ctx.fill();
-  rr(-20, -1, 5, 2.5, 0.5); ctx.fill();
-  rr(-14, -1, 5, 2.5, 0.5); ctx.fill();
-
-  // Antenna on backpack
-  ctx.strokeStyle = '#8fa3c7';
-  ctx.lineWidth = 1.5;
-  ctx.beginPath();
-  ctx.moveTo(-16, -18); ctx.lineTo(-21, -30);
-  ctx.stroke();
-  ctx.fillStyle = Math.sin(t * 8) > 0 ? C.cyan : '#122544';
-  ctx.beginPath();
-  ctx.arc(-21, -30, 2.5, 0, 6.283);
-  ctx.fill();
-
-  // Dynamic RCS Thruster Plumes
-  // A. Bottom Main Thruster (fires downward when lifting/hovering)
+  // Dynamic Thruster Plumes
   const isUpThrust = (p.thrustingUp || held.up || held.thrust || (G.fuel > 0 && !p.onGround && p.vy < -40));
   if(isUpThrust && G.fuel > 0){
     const pLen = 22 + Math.random() * 14;
@@ -1224,209 +1342,37 @@ function drawAstronautCharacter(p, camX, camY, t){
     ctx.moveTo(-20, 14); ctx.lineTo(-9, 14); ctx.lineTo(-14.5, 14 + pLen);
     ctx.closePath();
     ctx.fill();
-    ctx.fillStyle = '#ffffff';
-    ctx.beginPath();
-    ctx.moveTo(-18, 14); ctx.lineTo(-11, 14); ctx.lineTo(-14.5, 14 + pLen * 0.45);
-    ctx.closePath();
-    ctx.fill();
   }
 
-  // B. Top Reverse RCS Nozzles (fires upward when descending/braking)
-  const isDownThrust = (held.down && !p.onGround);
-  if(isDownThrust && G.fuel > 0){
-    ctx.fillStyle = 'rgba(61,240,255,0.85)';
-    ctx.beginPath();
-    ctx.moveTo(-19, -18); ctx.lineTo(-11, -18); ctx.lineTo(-15, -30 - Math.random() * 8);
-    ctx.closePath();
-    ctx.fill();
-  }
-
-  // C. Lateral RCS Thruster Nozzles
-  if(Math.abs(p.vx) > 80 && !p.onGround && G.fuel > 0){
-    ctx.fillStyle = 'rgba(61,240,255,0.7)';
-    ctx.beginPath();
-    ctx.moveTo(-22, -4); ctx.lineTo(-22, 4); ctx.lineTo(-32 - Math.random() * 6, 0);
-    ctx.closePath();
-    ctx.fill();
-  }
-
-  // D. Tactical Boost Flare
-  if(p.boostT > 0){
-    ctx.save();
-    ctx.globalCompositeOperation = 'lighter';
-    const bGrad = ctx.createRadialGradient(-16, 0, 2, -16, 0, 48);
-    bGrad.addColorStop(0, '#ffffff');
-    bGrad.addColorStop(0.3, accColor);
-    bGrad.addColorStop(0.7, '#ff7a2e');
-    bGrad.addColorStop(1, 'rgba(0,0,0,0)');
-    ctx.fillStyle = bGrad;
-    ctx.beginPath();
-    ctx.arc(-16, 0, 48, 0, 6.283);
-    ctx.fill();
-    ctx.restore();
-  }
-
-  // 4. Back Leg & Boot
-  const walk = p.walkCycle || 0;
-  const legSwing = p.onGround ? Math.sin(walk) * 8 : (Math.sin(t * 2.5) * 3 + 4);
-  const backLegX = -4 - legSwing * 0.6;
-  const backLegY = 12 + Math.abs(legSwing) * 0.3;
-
-  ctx.fillStyle = suitShade;
-  rr(backLegX - 4, backLegY, 8, 14, 4); ctx.fill();
-  ctx.fillStyle = jointDark;
-  rr(backLegX - 3, backLegY + 8, 6, 3, 1); ctx.fill();
-  ctx.fillStyle = '#223254';
-  rr(backLegX - 5, backLegY + 12, 11, 7, 2.5); ctx.fill();
-  ctx.fillStyle = accDark;
-  rr(backLegX - 5, backLegY + 17, 11, 2, 0.5); ctx.fill();
-
-  // 5. Torso
-  const torsoGrad = ctx.createLinearGradient(-10, -14, 12, 14);
-  torsoGrad.addColorStop(0, suitWhite);
-  torsoGrad.addColorStop(0.65, suitWhite);
-  torsoGrad.addColorStop(1, suitShade);
-  ctx.fillStyle = torsoGrad;
+  // Torso
+  ctx.fillStyle = suitWhite;
   rr(-9, -15, 21, 27, 6);
   ctx.fill();
   ctx.strokeStyle = '#8fa3cc';
   ctx.lineWidth = 1;
   ctx.stroke();
 
-  // Mission Accent Stripes
-  ctx.fillStyle = accColor;
-  rr(-3, -15, 4, 27, 2); ctx.fill();
-  rr(4, -15, 2, 27, 1); ctx.fill();
-
-  // 6. Chest Display & Control Module (DCM)
-  ctx.fillStyle = jointDark;
-  rr(-2, -8, 14, 16, 3);
-  ctx.fill();
-  ctx.strokeStyle = '#3e527a';
-  ctx.lineWidth = 1;
-  ctx.stroke();
-
-  // ECG Heartbeat / Oxygen Monitor Screen
-  ctx.fillStyle = '#05111d';
-  rr(0, -6, 10, 7, 1.5);
-  ctx.fill();
-  ctx.strokeStyle = G.oxygen > 25 ? '#3dff88' : C.red;
-  ctx.lineWidth = 1.2;
-  ctx.beginPath();
-  ctx.moveTo(1, -2.5);
-  ctx.lineTo(3, -2.5);
-  ctx.lineTo(4.5, -5);
-  ctx.lineTo(6, -0.5);
-  ctx.lineTo(7.5, -2.5);
-  ctx.lineTo(9, -2.5);
-  ctx.stroke();
-
-  // DCM Status LEDs
-  ctx.fillStyle = C.green;
-  ctx.beginPath(); ctx.arc(1, 4, 1.2, 0, 6.283); ctx.fill();
-  ctx.fillStyle = accColor;
-  ctx.beginPath(); ctx.arc(5, 4, 1.2, 0, 6.283); ctx.fill();
-  ctx.fillStyle = C.gold;
-  ctx.beginPath(); ctx.arc(9, 4, 1.2, 0, 6.283); ctx.fill();
-
-  // Umbilical Hoses to Helmet
-  ctx.strokeStyle = '#62769c';
-  ctx.lineWidth = 2;
-  ctx.beginPath();
-  ctx.moveTo(8, -8); ctx.quadraticCurveTo(12, -12, 10, -16);
-  ctx.stroke();
-
-  // 7. Front Leg & Boot
-  const frontLegSwing = p.onGround ? -Math.sin(walk) * 8 : (-Math.sin(t * 2.5) * 3 - 3);
-  const frontLegX = 4 + frontLegSwing * 0.6;
-  const frontLegY = 12 + Math.abs(frontLegSwing) * 0.3;
-
+  // Helmet & Visor
   ctx.fillStyle = suitWhite;
-  rr(frontLegX - 4, frontLegY, 8, 14, 4); ctx.fill();
-  ctx.strokeStyle = '#8fa3cc'; ctx.lineWidth = 1; ctx.stroke();
-  ctx.fillStyle = jointDark;
-  rr(frontLegX - 3, frontLegY + 8, 6, 3, 1); ctx.fill();
-  ctx.fillStyle = '#1c2844';
-  rr(frontLegX - 5, frontLegY + 12, 12, 7, 2.5); ctx.fill();
-  ctx.fillStyle = accColor;
-  rr(frontLegX - 5, frontLegY + 17, 12, 2.5, 0.8); ctx.fill();
-  if(p.onGround){
-    ctx.fillStyle = 'rgba(61,240,255,0.4)';
-    rr(frontLegX - 7, frontLegY + 19, 16, 2, 1); ctx.fill();
-  }
-
-  // 8. Helmet & Gold Specular Visor
-  ctx.fillStyle = jointDark;
-  rr(2, -18, 15, 4, 1.5); ctx.fill();
-
-  const helmGrad = ctx.createRadialGradient(9, -24, 3, 10, -22, 13);
-  helmGrad.addColorStop(0, '#ffffff');
-  helmGrad.addColorStop(0.7, suitWhite);
-  helmGrad.addColorStop(1, suitShade);
-  ctx.fillStyle = helmGrad;
-  ctx.beginPath();
-  ctx.arc(10, -22, 11.5, 0, 6.283);
-  ctx.fill();
-  ctx.strokeStyle = '#8ea4cb';
-  ctx.lineWidth = 1.2;
-  ctx.stroke();
+  ctx.beginPath(); ctx.arc(10, -22, 11.5, 0, 6.283); ctx.fill();
+  ctx.strokeStyle = '#8ea4cb'; ctx.stroke();
 
   const visorGrad = ctx.createLinearGradient(7, -30, 19, -15);
   visorGrad.addColorStop(0, '#fff4a3');
-  visorGrad.addColorStop(0.25, '#ffc02e');
-  visorGrad.addColorStop(0.65, '#0a4275');
+  visorGrad.addColorStop(0.35, '#ffc02e');
   visorGrad.addColorStop(1, '#03142e');
   ctx.fillStyle = visorGrad;
   ctx.beginPath();
   ctx.ellipse(13.5, -22, 7.5, 8.5, 0.1, 0, 6.283);
   ctx.fill();
-  ctx.strokeStyle = '#ffe485';
-  ctx.lineWidth = 1;
-  ctx.stroke();
 
-  // Visor Specular Reflection Crescent
-  ctx.strokeStyle = 'rgba(255,255,255,0.85)';
-  ctx.lineWidth = 1.8;
-  ctx.beginPath();
-  ctx.arc(12.5, -23, 6, -1.8, -0.4);
-  ctx.stroke();
-
-  // Interior HUD Reticle Glow
-  ctx.fillStyle = 'rgba(61,240,255,0.6)';
-  ctx.beginPath();
-  ctx.arc(15, -22, 1.5, 0, 6.283);
-  ctx.fill();
-
-  // Headlight Bezel
-  ctx.fillStyle = '#ff7a2e';
-  rr(16, -16, 3, 3, 1); ctx.fill();
-
-  // 9. Arm & EVA Glove
-  const armAngle = p.atkT > 0 ? 0 : (p.onGround ? Math.sin(walk) * 0.4 : -0.2);
-  ctx.save();
-  ctx.translate(2, -8);
-  ctx.rotate(armAngle);
-  ctx.fillStyle = suitWhite;
-  ctx.beginPath(); ctx.arc(0, 0, 5, 0, 6.283); ctx.fill();
-  ctx.fillStyle = accColor;
-  ctx.beginPath(); ctx.arc(0, 0, 2, 0, 6.283); ctx.fill();
-  rr(-2, 0, 5, 12, 2.5); ctx.fill();
-  ctx.fillStyle = jointDark;
-  rr(-3, 9, 7, 6, 2); ctx.fill();
-  ctx.restore();
-
-  // 10. Energy Sword Attack
+  // 1. ENERGY SWORD ATTACK (Parry / Melee Slash)
   if(p.atkT > 0){
     const swingProg = 1 - p.atkT / 0.22;
     const a = lerp(-1.8, 1.4, swingProg);
     ctx.save();
     ctx.translate(6, -2);
     ctx.rotate(a);
-
-    ctx.fillStyle = jointDark;
-    rr(0, -3, 10, 6, 2); ctx.fill();
-    ctx.fillStyle = accColor;
-    rr(8, -5, 3, 10, 1.5); ctx.fill();
 
     ctx.strokeStyle = accColor;
     ctx.lineWidth = 6;
@@ -1440,8 +1386,9 @@ function drawAstronautCharacter(p, camX, camY, t){
     ctx.moveTo(10, 0); ctx.lineTo(42, 0);
     ctx.stroke();
 
+    // Geometric Parry Arc
     ctx.globalCompositeOperation = 'lighter';
-    ctx.strokeStyle = `rgba(${fem ? '255,94,196' : '61,240,255'},0.65)`;
+    ctx.strokeStyle = `rgba(61,240,255,0.7)`;
     ctx.lineWidth = 18;
     ctx.beginPath();
     ctx.arc(0, 0, 42, -0.7, 0.5);
@@ -1449,274 +1396,292 @@ function drawAstronautCharacter(p, camX, camY, t){
     ctx.restore();
   }
 
-  // 11. Phase Shield Hex Bubble
+  // 2. PHASE SHIELD HEXAGONAL FORCEFIELD (1 Shield in each level)
   if(G.shieldT > 0){
     ctx.save();
     ctx.globalCompositeOperation = 'lighter';
-    const sGrad = ctx.createRadialGradient(0, 0, 10, 0, 0, 36);
-    sGrad.addColorStop(0, 'rgba(61,240,255,0.08)');
-    sGrad.addColorStop(0.75, 'rgba(61,240,255,0.28)');
-    sGrad.addColorStop(1, 'rgba(180,104,248,0.7)');
+    const sGrad = ctx.createRadialGradient(0, 0, 10, 0, 0, 42);
+    sGrad.addColorStop(0, 'rgba(61,240,255,0.1)');
+    sGrad.addColorStop(0.7, 'rgba(61,240,255,0.35)');
+    sGrad.addColorStop(1, 'rgba(180,104,248,0.85)');
     ctx.fillStyle = sGrad;
     ctx.strokeStyle = C.cyan;
-    ctx.lineWidth = 2.5;
+    ctx.lineWidth = 3;
     ctx.beginPath();
     for(let a=0; a<6; a++){
       const ang = (a * 60 + t * 45) * Math.PI / 180;
-      const hx = Math.cos(ang) * 36, hy = Math.sin(ang) * 36;
+      const hx = Math.cos(ang) * 42, hy = Math.sin(ang) * 42;
       if(a === 0) ctx.moveTo(hx, hy);
       else ctx.lineTo(hx, hy);
     }
     ctx.closePath();
     ctx.fill();
     ctx.stroke();
+
+    // Hexagonal geometry grid lines
+    ctx.strokeStyle = 'rgba(255,255,255,0.5)';
+    ctx.lineWidth = 1;
+    for(let a=0; a<6; a++){
+      const ang = (a * 60 + t * 45) * Math.PI / 180;
+      ctx.beginPath();
+      ctx.moveTo(0, 0);
+      ctx.lineTo(Math.cos(ang)*42, Math.sin(ang)*42);
+      ctx.stroke();
+    }
     ctx.restore();
   }
 
   ctx.restore();
 }
 
-/* ──────── Draw Planet-Specific Collectibles ──────── */
-function drawMandatoryCollectible(c, cfg, camX, camY, t){
-  const cx = c.x - camX, cy = c.y - camY + Math.sin(t*3 + c.x)*5;
-  if(cx < -40 || cx > W+40 || cy < -40 || cy > H+40) return;
+/* ──────── Core Focus: Mathematical & Geometric Visualizations ──────── */
+function drawMathematicalGeometry(p, camX, camY){
+  const sx = p.x - camX, sy = p.y - camY;
 
-  ctx.save();
-  ctx.translate(cx, cy);
+  // 1. Dynamic Velocity Vector Arrow (v = <vx, vy>)
+  const speed = Math.hypot(p.vx, p.vy);
+  if(speed > 15){
+    const vLen = clamp(speed * 0.22, 25, 120);
+    const ang = Math.atan2(p.vy, p.vx);
+    const ex = sx + Math.cos(ang) * vLen;
+    const ey = sy + Math.sin(ang) * vLen;
 
-  ctx.globalCompositeOperation = 'lighter';
-  const gl = ctx.createRadialGradient(0, 0, 4, 0, 0, 26);
-  gl.addColorStop(0, cfg.accent);
-  gl.addColorStop(1, 'rgba(0,0,0,0)');
-  ctx.fillStyle = gl;
-  ctx.fillRect(-26, -26, 52, 52);
-
-  if(cfg.id === 'fractured_moon'){
-    ctx.rotate(t * 1.8);
-    ctx.fillStyle = C.purple;
+    ctx.save();
+    ctx.strokeStyle = C.cyan;
+    ctx.lineWidth = 2.5;
     ctx.beginPath();
-    ctx.moveTo(0, -14); ctx.lineTo(13, 0); ctx.lineTo(0, 14); ctx.lineTo(-13, 0); ctx.closePath();
-    ctx.fill();
-    ctx.strokeStyle = '#fff'; ctx.lineWidth = 2; ctx.stroke();
-    ctx.fillStyle = '#fff';
-    ctx.beginPath(); ctx.arc(0, 0, 4, 0, 6.283); ctx.fill();
-  } else if(cfg.id === 'aether_7'){
-    ctx.rotate(Math.sin(t*2)*0.2);
-    ctx.fillStyle = C.teal;
-    ctx.beginPath();
-    ctx.moveTo(0, -16); ctx.lineTo(10, -6); ctx.lineTo(6, 14); ctx.lineTo(-6, 14); ctx.lineTo(-10, -6); ctx.closePath();
-    ctx.fill();
-    ctx.strokeStyle = '#fff'; ctx.lineWidth = 1.5; ctx.stroke();
-  } else if(cfg.id === 'cinder_moon'){
-    ctx.rotate(t * 2.2);
-    const mg = ctx.createRadialGradient(0, 0, 2, 0, 0, 13);
-    mg.addColorStop(0, '#ffffff'); mg.addColorStop(0.4, '#ff9a2e'); mg.addColorStop(1, '#ff2200');
-    ctx.fillStyle = mg;
-    ctx.beginPath(); ctx.arc(0, 0, 13, 0, 6.283); ctx.fill();
-    ctx.strokeStyle = '#ffe08a'; ctx.lineWidth = 2; ctx.stroke();
-  } else if(cfg.id === 'cryos'){
-    ctx.fillStyle = C.ice;
-    rr(-6, -13, 12, 26, 3); ctx.fill();
-    ctx.strokeStyle = '#ffffff'; ctx.lineWidth = 2; ctx.stroke();
-    ctx.fillStyle = '#ffffff';
-    ctx.fillRect(-3, -7, 6, 14);
-  } else if(cfg.id === 'vortex_prime'){
-    ctx.fillStyle = C.toxic;
-    rr(-7, -12, 14, 24, 4); ctx.fill();
-    ctx.strokeStyle = '#eaffc7'; ctx.lineWidth = 2; ctx.stroke();
-    ctx.fillStyle = '#061608';
-    rr(-3, -8, 6, 16, 2); ctx.fill();
-  } else {
-    ctx.rotate(t * 1.5);
+    ctx.moveTo(sx, sy);
+    ctx.lineTo(ex, ey);
+    ctx.stroke();
+
+    // Vector Arrowhead
+    const arrSize = 8;
     ctx.fillStyle = C.cyan;
     ctx.beginPath();
-    ctx.moveTo(0, -15); ctx.lineTo(12, 0); ctx.lineTo(0, 15); ctx.lineTo(-12, 0); ctx.closePath();
+    ctx.moveTo(ex, ey);
+    ctx.lineTo(ex - Math.cos(ang - 0.45) * arrSize, ey - Math.sin(ang - 0.45) * arrSize);
+    ctx.lineTo(ex - Math.cos(ang + 0.45) * arrSize, ey - Math.sin(ang + 0.45) * arrSize);
+    ctx.closePath();
     ctx.fill();
-    ctx.strokeStyle = '#ffffff'; ctx.lineWidth = 2; ctx.stroke();
+
+    // Mathematical Angle Annotation
+    const deg = Math.round(ang * 180 / Math.PI);
+    txt(`v: ${Math.round(speed)}m/s ∠${deg}°`, ex + 8, ey + 4, 10, C.cyan, 'left', F_M, 700);
+    ctx.restore();
   }
 
+  // 2. Parabolic Ballistic Trajectory Predictor: r(t) = r0 + v0*t + 0.5*g*t^2
+  if(G.phase === 'flight' || (G.phase === 'explore' && !p.onGround)){
+    ctx.save();
+    ctx.strokeStyle = 'rgba(61,240,255,0.45)';
+    ctx.fillStyle = C.cyan;
+    const dtStep = 0.08;
+    let trajX = p.x, trajY = p.y;
+    let trajVx = p.vx, trajVy = p.vy;
+
+    for(let step=1; step<=12; step++){
+      trajVy += LVL.gravity * (G.phase === 'flight' ? 0.45 : 1.0) * dtStep;
+      if(LVL.wind) trajVx += LVL.wind.x * dtStep;
+      trajX += trajVx * dtStep;
+      trajY += trajVy * dtStep;
+
+      const px = trajX - camX, py = trajY - camY;
+      if(px < -20 || px > W+20 || py < -20 || py > H+20) break;
+
+      ctx.beginPath();
+      ctx.arc(px, py, 2.2, 0, 6.283);
+      ctx.fill();
+    }
+    ctx.restore();
+  }
+
+  // 3. Auto-Land Guidance Vector Target Line
+  if(G.phase === 'flight' && LVL.landingLine){
+    const pad = LVL.landingLine;
+    const padX = pad.x + pad.w*0.5 - camX;
+    const padY = pad.y - camY;
+
+    ctx.save();
+    ctx.strokeStyle = G.autoLandActive ? C.green : 'rgba(255,209,102,0.45)';
+    ctx.lineWidth = 1.5;
+    ctx.setLineDash([6, 6]);
+    ctx.beginPath();
+    ctx.moveTo(sx, sy);
+    ctx.lineTo(padX, padY);
+    ctx.stroke();
+    ctx.setLineDash([]);
+
+    // Crosshair target on landing line
+    ctx.strokeStyle = G.autoLandActive ? C.green : C.gold;
+    ctx.beginPath();
+    ctx.arc(padX, padY, 14 + Math.sin(G.t * 8)*3, 0, 6.283);
+    ctx.stroke();
+    ctx.restore();
+  }
+
+  // 4. Specular Ricochet Angle Rays & Degrees Annotations
+  ctx.save();
+  for(let i=RECENT_RICOCHETS.length-1; i>=0; i--){
+    const r = RECENT_RICOCHETS[i];
+    r.life -= 0.016;
+    if(r.life <= 0){ RECENT_RICOCHETS.splice(i, 1); continue; }
+
+    const rx = r.x - camX, ry = r.y - camY;
+    ctx.globalAlpha = clamp(r.life, 0, 1);
+
+    // Normal vector ray
+    ctx.strokeStyle = C.gold;
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.moveTo(rx, ry);
+    ctx.lineTo(rx + r.nx * 26, ry + r.ny * 26);
+    ctx.stroke();
+
+    // Incident ray
+    ctx.strokeStyle = C.red;
+    ctx.beginPath();
+    ctx.moveTo(rx - r.ix * 28, ry - r.iy * 28);
+    ctx.lineTo(rx, ry);
+    ctx.stroke();
+
+    // Reflected ray
+    ctx.strokeStyle = C.green;
+    ctx.beginPath();
+    ctx.moveTo(rx, ry);
+    ctx.lineTo(rx + r.rx * 28, ry + r.ry * 28);
+    ctx.stroke();
+
+    txt(`θr=${Math.round(r.deg)}°`, rx + 6, ry - 8, 10, C.green, 'left', F_M, 700);
+  }
+  ctx.globalAlpha = 1;
+  ctx.restore();
+}
+
+/* ──────── Draw Collectibles & Energy Orbs ──────── */
+function drawMandatoryCollectible(c, cfg, camX, camY, t){
+  const cx = c.x - camX, cy = c.y + Math.sin(t*2.8 + c.rot)*6 - camY;
+  if(cx < -40 || cx > W+40 || cy < -40 || cy > H+40) return;
+  ctx.save();
+  ctx.translate(cx, cy);
+  ctx.rotate(t * 1.5 + c.rot);
+
+  ctx.fillStyle = cfg.accent;
+  ctx.strokeStyle = '#ffffff';
+  ctx.lineWidth = 2;
+  ctx.beginPath();
+  for(let i=0; i<5; i++){
+    const ang = i * (6.283 / 5);
+    const r = (i % 2 === 0 ? 14 : 7);
+    if(i === 0) ctx.moveTo(Math.cos(ang)*r, Math.sin(ang)*r);
+    else ctx.lineTo(Math.cos(ang)*r, Math.sin(ang)*r);
+  }
+  ctx.closePath();
+  ctx.fill(); ctx.stroke();
   ctx.restore();
 }
 
 function drawEnergyOrb(o, camX, camY, t){
-  const ox = o.x - camX, oy = o.y - camY + Math.sin(t*2.5 + o.x)*6;
-  if(ox < -50 || ox > W+50 || oy < -50 || oy > H+50) return;
-
+  const ox = o.x - camX, oy = o.y + Math.sin(t*3.2 + o.rot)*7 - camY;
+  if(ox < -40 || ox > W+40 || oy < -40 || oy > H+40) return;
   ctx.save();
   ctx.translate(ox, oy);
+
   ctx.globalCompositeOperation = 'lighter';
-  const gl = ctx.createRadialGradient(0, 0, 6, 0, 0, 30);
-  gl.addColorStop(0, 'rgba(255,209,102,0.7)');
-  gl.addColorStop(1, 'rgba(0,0,0,0)');
-  ctx.fillStyle = gl;
-  ctx.fillRect(-30, -30, 60, 60);
+  const g = ctx.createRadialGradient(0, 0, 2, 0, 0, 16);
+  g.addColorStop(0, '#ffffff');
+  g.addColorStop(0.5, C.gold);
+  g.addColorStop(1, 'rgba(255,209,102,0)');
+  ctx.fillStyle = g;
+  ctx.beginPath(); ctx.arc(0, 0, 16, 0, 6.283); ctx.fill();
 
   ctx.fillStyle = C.gold;
-  ctx.beginPath(); ctx.arc(0, 0, 12, 0, 6.283); ctx.fill();
-
-  ctx.rotate(t * 2);
-  ctx.strokeStyle = '#fff'; ctx.lineWidth = 2;
-  ctx.beginPath(); ctx.ellipse(0, 0, 20, 7, 0, 0, 6.283); ctx.stroke();
+  ctx.beginPath(); ctx.arc(0, 0, 7, 0, 6.283); ctx.fill();
   ctx.restore();
 }
 
-/* ──────── Draw Hazards ──────── */
-function drawHazards(haz, cfg, camX, camY, t){
-  for(const h of haz){
-    const hx = h.x - camX, hy = h.y - camY;
-    if(h.type === 'updraft' || h.type === 'downdraft' || h.type === 'icegust'){
-      if(hx < -h.w || hx > W+h.w || hy < -h.h || hy > H+h.h) continue;
-      ctx.save();
-      ctx.globalCompositeOperation = 'lighter';
-      const col = h.type === 'downdraft' ? 'rgba(120,120,255,0.1)' : (h.type === 'icegust' ? 'rgba(120,230,255,0.12)' : 'rgba(120,255,210,0.14)');
-      ctx.fillStyle = col;
-      rr(hx - h.w/2, hy - h.h/2, h.w, h.h, 12);
-      ctx.fill();
-      for(let i=0; i<6; i++){
-        const yy = hy - h.h/2 + ((t*100 + i*110) % h.h);
-        ctx.strokeStyle = h.type === 'downdraft' ? '#8f8cff' : C.cyan;
-        ctx.lineWidth = 1.5;
-        ctx.beginPath();
-        ctx.moveTo(hx - h.w/2 + 30 + i*40, yy);
-        ctx.lineTo(hx - h.w/2 + 30 + i*40, yy + (h.type === 'downdraft' ? 55 : -55));
-        ctx.stroke();
-      }
-      ctx.restore();
-    } else if(h.type === 'lowgrav' || h.type === 'heavygrav'){
-      ctx.save();
-      ctx.globalCompositeOperation = 'lighter';
-      const col = h.type === 'lowgrav' ? 'rgba(186,104,248,0.25)' : 'rgba(255,122,46,0.22)';
-      const gl = ctx.createRadialGradient(hx, hy, 20, hx, hy, h.r);
-      gl.addColorStop(0, col);
-      gl.addColorStop(1, 'rgba(0,0,0,0)');
-      ctx.fillStyle = gl;
-      ctx.beginPath(); ctx.arc(hx, hy, h.r, 0, 6.283); ctx.fill();
-      txt(h.type === 'lowgrav' ? 'LOW-G FIELD' : 'HEAVY-G FIELD', hx, hy - h.r + 20, 11, cfg.accent, 'center', F_U, 700);
-      ctx.restore();
-    } else if(h.type === 'lava'){
-      ctx.save();
-      ctx.globalCompositeOperation = 'lighter';
-      ctx.fillStyle = 'rgba(255,70,15,0.85)';
-      rr(hx - h.w/2, hy - h.h/2, h.w, h.h, 10);
-      ctx.fill();
-      ctx.fillStyle = 'rgba(255,210,60,0.45)';
-      for(let i=0;i<7;i++){
-        ctx.beginPath();
-        ctx.arc(hx - h.w/2 + i*h.w/6, hy - 12 + Math.sin(t*5+i)*7, 8, 0, 6.283);
-        ctx.fill();
-      }
-      ctx.restore();
-    } else if(h.type === 'firejet'){
-      const active = Math.sin(t * 2.8 + h.phase) > -0.2;
-      if(!active) continue;
-      ctx.save();
-      ctx.globalCompositeOperation = 'lighter';
-      const height = 150 + Math.sin(t*12+h.phase)*24;
-      const fg = ctx.createLinearGradient(hx, hy, hx, hy - height);
-      fg.addColorStop(0, 'rgba(255,230,80,0.85)');
-      fg.addColorStop(0.45, 'rgba(255,90,20,0.7)');
-      fg.addColorStop(1, 'rgba(255,20,60,0)');
-      ctx.fillStyle = fg;
-      ctx.beginPath();
-      ctx.moveTo(hx - 22, hy); ctx.quadraticCurveTo(hx, hy - height - 20, hx + 22, hy); ctx.closePath();
-      ctx.fill();
-      ctx.restore();
-    } else if(h.type === 'safe'){
-      ctx.save();
-      ctx.globalCompositeOperation = 'lighter';
-      const gl = ctx.createRadialGradient(hx, hy, 10, hx, hy, h.r);
-      gl.addColorStop(0, 'rgba(61,255,136,0.24)');
-      gl.addColorStop(1, 'rgba(0,0,0,0)');
-      ctx.fillStyle = gl;
-      ctx.beginPath(); ctx.arc(hx, hy, h.r, 0, 6.283); ctx.fill();
-      txt('OXYGEN SAFE DOME', hx, hy - h.r + 20, 11, C.green, 'center', F_U, 700);
-      ctx.restore();
-    } else if(h.type === 'heat' || h.type === 'acid'){
-      ctx.save();
-      ctx.globalCompositeOperation = 'lighter';
-      const col = h.type === 'heat' ? 'rgba(255,100,30,' : 'rgba(180,240,40,';
-      const gl = ctx.createRadialGradient(hx, hy, 10, hx, hy, h.r);
-      gl.addColorStop(0, col + '0.4)');
-      gl.addColorStop(1, 'rgba(0,0,0,0)');
-      ctx.fillStyle = gl;
-      ctx.beginPath(); ctx.arc(hx, hy, h.r, 0, 6.283); ctx.fill();
-      txt(h.type === 'heat' ? '⚠️ THERMAL ZONE' : '⚠️ TOXIC CLOUD', hx, hy - h.r + 20, 11, col + '0.9)', 'center', F_U, 700);
-      ctx.restore();
-    } else if(h.type === 'storm'){
-      ctx.save();
-      ctx.globalAlpha = 0.12 + Math.sin(t * 1.5) * 0.05;
-      ctx.fillStyle = '#ffaa66';
-      ctx.fillRect(0, 0, W, H);
-      ctx.restore();
-    }
-  }
-}
-
-/* ──────── Draw Black Hole Singularity (Fractured Moon) ──────── */
-function drawBlackHole(pos, killR, camX, camY, t){
-  const hx = pos.x - camX, hy = pos.y - camY;
-  ctx.save();
-  ctx.translate(hx, hy);
-
-  ctx.globalCompositeOperation = 'lighter';
-  const gl = ctx.createRadialGradient(0, 0, killR * 0.8, 0, 0, 520);
-  gl.addColorStop(0, 'rgba(255,140,40,0.85)');
-  gl.addColorStop(0.2, 'rgba(255,70,160,0.5)');
-  gl.addColorStop(0.5, 'rgba(130,40,255,0.22)');
-  gl.addColorStop(1, 'rgba(0,0,0,0)');
-  ctx.fillStyle = gl;
-  ctx.beginPath(); ctx.arc(0, 0, 520, 0, 6.283); ctx.fill();
-
-  ctx.save();
-  ctx.rotate(-t * 0.65);
-  const ringColors = ['#ff8833','#ff3388','#b044ff','#ffd700','#3df0ff'];
-  for(let i=0; i<5; i++){
-    ctx.strokeStyle = ringColors[i];
-    ctx.lineWidth = 14 - i * 2;
-    ctx.beginPath(); ctx.ellipse(0, 0, 150 + i*40, 48 + i*13, 0, 0, 6.283); ctx.stroke();
-  }
-  ctx.restore();
-
-  ctx.strokeStyle = 'rgba(255,235,190,0.75)';
-  ctx.lineWidth = 8;
-  ctx.beginPath(); ctx.arc(0, 0, killR + 12, 0, 6.283); ctx.stroke();
-
-  ctx.globalCompositeOperation = 'source-over';
-  ctx.fillStyle = '#010105';
-  ctx.beginPath(); ctx.arc(0, 0, killR, 0, 6.283); ctx.fill();
-  ctx.restore();
-}
-
-/* ──────── Draw Enemies & Combat Bullets ──────── */
+/* ──────── Draw Enemies & Inter-Faction Fights ──────── */
 function drawEnemies(camX, camY, t){
   for(const e of ENEMIES){
     const ex = e.x - camX, ey = e.y - camY;
-    if(ex < -80 || ex > W+80 || ey < -80 || ey > H+80) continue;
-    const src = e.type === 'sentinel' ? 'assets/enemies/guardian_aether_sentinel.svg' : (e.type === 'vortex' ? 'assets/enemies/guardian_vortex.svg' : 'assets/enemies/voidling.svg');
-    const img = ASSET_IMAGES[src];
+    if(ex < -90 || ex > W+90 || ey < -90 || ey > H+90) continue;
+
     ctx.save();
-    ctx.translate(ex, ey + Math.sin(t*2.5 + e.phase) * 6);
-    if(img && img.complete && img.naturalWidth){
-      ctx.drawImage(img, -28, -28, 56, 56);
+    ctx.translate(ex, ey + Math.sin(t*2.5 + e.phase) * 5);
+
+    // Faction identifier aura
+    const fCol = e.faction === 'drone' ? C.teal : (e.faction === 'beast' ? C.ember : C.purple);
+    ctx.strokeStyle = fCol;
+    ctx.lineWidth = 1.5;
+
+    if(e.isBoss){
+      // Boss Guardian
+      ctx.fillStyle = '#2d1448';
+      rr(-36, -36, 72, 72, 8); ctx.fill(); ctx.stroke();
+      txt('BOSS GUARDIAN', 0, -44, 11, C.gold, 'center', F_O, 900);
+      // Health bar
+      rr(-32, -40, 64, 5, 2); ctx.fillStyle = 'rgba(255,255,255,0.2)'; ctx.fill();
+      rr(-32, -40, 64 * (e.hp / e.maxHp), 5, 2); ctx.fillStyle = C.red; ctx.fill();
     } else {
-      ctx.fillStyle = e.type === 'vortex' ? C.toxic : (e.type === 'sentinel' ? C.teal : C.purple);
-      ctx.beginPath(); ctx.arc(0, 0, 22, 0, 6.283); ctx.fill();
+      ctx.fillStyle = fCol;
+      ctx.beginPath();
+      ctx.arc(0, 0, 20, 0, 6.283);
+      ctx.fill(); ctx.stroke();
+
+      // Enemy eyes / scanner
+      ctx.fillStyle = '#ffffff';
+      ctx.beginPath(); ctx.arc(e.facing * 8, -4, 4, 0, 6.283); ctx.fill();
+      ctx.fillStyle = C.red;
+      ctx.beginPath(); ctx.arc(e.facing * 8, -4, 2, 0, 6.283); ctx.fill();
     }
+
     ctx.restore();
   }
 }
 
+/* ──────── Draw Bullets & Projectiles ──────── */
 function drawBullets(camX, camY){
   ctx.save();
   for(const b of BULLETS){
     const bx = b.x - camX, by = b.y - camY;
-    ctx.fillStyle = '#ffffff';
-    ctx.beginPath(); ctx.arc(bx, by, 3, 0, 6.283); ctx.fill();
-    ctx.strokeStyle = C.cyan;
+    ctx.fillStyle = b.faction === 'player' ? '#ffffff' : (b.faction === 'drone' ? C.teal : C.ember);
+    ctx.beginPath(); ctx.arc(bx, by, b.radius || 3.5, 0, 6.283); ctx.fill();
+
+    ctx.strokeStyle = b.faction === 'player' ? C.cyan : C.red;
     ctx.lineWidth = 3;
-    ctx.beginPath(); ctx.moveTo(bx - b.vx * 0.04, by - b.vy * 0.04); ctx.lineTo(bx, by); ctx.stroke();
+    ctx.beginPath();
+    ctx.moveTo(bx - b.vx * 0.035, by - b.vy * 0.035);
+    ctx.lineTo(bx, by);
+    ctx.stroke();
   }
   ctx.restore();
+}
+
+/* ──────── Draw Hazards & Debris ──────── */
+function drawHazards(hazards, cfg, camX, camY, t){
+  for(const h of hazards){
+    if(h.type === 'lava'){
+      const hx = h.x - camX, hy = h.y - camY;
+      if(hx < -h.w || hx > W+h.w) continue;
+      const lg = ctx.createLinearGradient(0, hy, 0, hy + h.h);
+      lg.addColorStop(0, '#ff3d00'); lg.addColorStop(0.5, '#ff8000'); lg.addColorStop(1, '#801000');
+      ctx.fillStyle = lg;
+      ctx.fillRect(hx, hy, h.w, h.h);
+    } else if(h.type === 'firejet'){
+      const hx = h.x - camX, hy = h.y - camY;
+      const active = Math.sin(t * 2.8 + h.phase) > -0.2;
+      if(active){
+        ctx.fillStyle = 'rgba(255,122,46,0.7)';
+        ctx.fillRect(hx - 14, hy - 180, 28, 180);
+      }
+    } else if(h.type === 'singularity'){
+      const hx = h.cx + Math.cos(t * h.orbitSpd) * h.orbitR - camX;
+      const hy = h.cy + Math.sin(t * h.orbitSpd) * h.orbitR - camY;
+      ctx.fillStyle = '#010106';
+      ctx.strokeStyle = C.toxic;
+      ctx.lineWidth = 3;
+      ctx.beginPath(); ctx.arc(hx, hy, h.killR, 0, 6.283); ctx.fill(); ctx.stroke();
+    }
+  }
 }
 
 function drawDebris(d, camX, camY){
@@ -1740,108 +1705,94 @@ function drawDebris(d, camX, camY){
   ctx.restore();
 }
 
-/* ──────── Planet-Specific HUD (Realistic Space Telemetry) ──────── */
+/* ──────── Planet-Specific HUD (Telemetry Matrix & Mathematical Systems) ──────── */
 function drawHUD(){
   const cfg = LVL;
   const pct = getFuelPct();
   const oxy = G.oxygen !== undefined ? G.oxygen : 100;
 
-  // Top Left: RCS Propellant & Oxygen Life Support
+  // Top Left: RCS Fuel & Oxygen
   const fx = 24, fy = 16, fw = 185, fh = 10;
-  ctx.fillStyle = 'rgba(7,10,26,0.88)';
-  rr(fx-6, fy-4, fw+12, fh*2+30, 6);
-  ctx.fill();
-  ctx.strokeStyle = 'rgba(61,240,255,0.25)';
-  ctx.lineWidth = 1;
-  ctx.stroke();
+  ctx.fillStyle = 'rgba(7,10,26,0.92)';
+  rr(fx-6, fy-4, fw+12, fh*2+30, 6); ctx.fill();
+  ctx.strokeStyle = 'rgba(61,240,255,0.25)'; ctx.lineWidth = 1; ctx.stroke();
 
-  // Fuel bar
-  rr(fx, fy+11, fw, fh, 2.5);
-  ctx.fillStyle = 'rgba(255,255,255,0.1)';
-  ctx.fill();
+  rr(fx, fy+11, fw, fh, 2.5); ctx.fillStyle = 'rgba(255,255,255,0.1)'; ctx.fill();
   const fuelColor = pct > 50 ? C.green : pct > 25 ? C.gold : C.red;
-  ctx.fillStyle = fuelColor;
-  rr(fx, fy+11, fw * clamp(pct/100, 0, 1), fh, 2.5);
-  ctx.fill();
+  ctx.fillStyle = fuelColor; rr(fx, fy+11, fw * clamp(pct/100, 0, 1), fh, 2.5); ctx.fill();
   txt('RCS PROPELLANT: ' + Math.floor(pct) + '%', fx, fy+8, 10, fuelColor, 'left', F_U, 700);
 
-  // Oxygen bar
   const oxyColor = oxy > 40 ? C.cyan : oxy > 20 ? C.gold : C.red;
-  rr(fx, fy+32, fw, fh, 2.5);
-  ctx.fillStyle = 'rgba(255,255,255,0.1)';
-  ctx.fill();
-  ctx.fillStyle = oxyColor;
-  rr(fx, fy+32, fw * clamp(oxy/100, 0, 1), fh, 2.5);
-  ctx.fill();
+  rr(fx, fy+32, fw, fh, 2.5); ctx.fillStyle = 'rgba(255,255,255,0.1)'; ctx.fill();
+  ctx.fillStyle = oxyColor; rr(fx, fy+32, fw * clamp(oxy/100, 0, 1), fh, 2.5); ctx.fill();
   txt('SUIT OXYGEN: ' + Math.floor(oxy) + '%', fx, fy+29, 10, oxyColor, 'left', F_U, 700);
 
-  // Hull / Shield Integrity Pips
+  // Hull / Shield Pips
   const px = 245, py = 24;
   for(let i=0; i<3; i++){
     ctx.fillStyle = i < G.hp ? C.cyan : 'rgba(255,255,255,0.15)';
-    rr(px + i*24, py, 18, 12, 3);
-    ctx.fill();
+    rr(px + i*24, py, 18, 12, 3); ctx.fill();
   }
   txt('HULL INTEGRITY', px, py - 6, 10, C.dim, 'left', F_U, 600);
 
-  // Center: Planet Name, Gravity & Dynamic Objective Tracker
+  // 1 Shield in each level indicator
+  const shCol = G.shieldCharges > 0 ? C.green : (G.shieldT > 0 ? C.cyan : C.dim);
+  const shTxt = G.shieldT > 0 ? `SHIELD ACTIVE (${G.shieldT.toFixed(1)}s)` : (G.shieldCharges > 0 ? 'PHASE SHIELD: 1/1 [Q]' : 'PHASE SHIELD: DEPLETED');
+  txt(shTxt, px + 95, py + 10, 11, shCol, 'left', F_U, 700);
+
+  // Center: Planet Name, Gravity & Dynamic Objective
   const gravG = (cfg.gravity / 980).toFixed(2);
-  txt(cfg.name + ' · ' + cfg.type + ' [' + gravG + 'G]', W/2, 22, 14, cfg.accent, 'center', F_O, 700, 2);
+  txt(cfg.name + ' · [' + gravG + 'G]', W/2, 22, 14, cfg.accent, 'center', F_O, 700, 2);
 
   const allSecured = G.cellsGot >= cfg.mandatoryCount;
   const objColor = allSecured ? C.green : C.gold;
-  const objText = (allSecured ? '✔ ALL OBJECTIVES SECURED' : cfg.mandatoryName.toUpperCase() + ': ' + G.cellsGot + ' / ' + cfg.mandatoryCount) + ' | FLEET CREDITS: ' + G.credits;
+  const objText = (allSecured ? '✔ ALL ARTIFACTS SECURED ➔ EXTRACTION GANTRY UNLOCKED' : `${cfg.mandatoryName.toUpperCase()}: ${G.cellsGot} / ${cfg.mandatoryCount}`) + ` | CREDITS: ${G.credits}`;
   txt(objText, W/2, 40, 12, objColor, 'center', F_U, 700, 1);
 
-  // Check Life Support Docking Tether
-  const distLander = Math.hypot(PL.x - cfg.landingPad.x, PL.y - cfg.landingPad.y);
-  if(distLander < 140 && G.phase === 'explore'){
-    txt('⚡ LIFE-SUPPORT TETHER DOCKED [RECHARGING]', W/2, 58, 11, C.green, 'center', F_U, 700);
-  } else {
-    // Environmental Hazard Indicator
-    let envText = '';
-    let envColor = C.cyan;
-    if(cfg.id === 'fractured_moon'){
-      envText = 'GRAVITY DISTORTION: ANOMALIES ACTIVE';
-      envColor = C.purple;
-    } else if(cfg.id === 'aether_7'){
-      envText = 'VERTICAL UPDRAFT CHANNELS DETECTED';
-      envColor = C.teal;
-    } else if(cfg.id === 'cinder_moon'){
-      envText = 'VOLCANIC HEAT & LAVA HAZARD ACTIVE';
-      envColor = C.ember;
-    } else if(cfg.id === 'cryos'){
-      envText = 'GLACIAL TRACTION: SUB-ZERO SLIPPERY ICE';
-      envColor = C.ice;
-    } else if(cfg.id === 'vortex_prime'){
-      const suitPct = Math.floor(PL.suit);
-      envText = 'SUIT PROTECTION: ' + suitPct + '% (SEEK SAFE DOMES)';
-      envColor = suitPct > 35 ? C.toxic : C.red;
-    } else if(cfg.id === 'earth'){
-      envText = 'ATMOSPHERIC WIND: ➔ 165 KM/H GUST FORCE';
-      envColor = C.cyan;
-    }
-    txt(envText, W/2, 58, 11, envColor, 'center', F_U, 700);
-  }
+  // Top Right: Mathematical Readout Matrix
+  const vSpeed = Math.round(Math.hypot(PL.vx, PL.vy));
+  const vAngle = Math.round(Math.atan2(PL.vy, PL.vx) * 180 / Math.PI);
+  const bhDist = Math.max(0, Math.round(PL.x - G.bhX));
+  const landDist = Math.round(Math.hypot(cfg.landingLine.x + cfg.landingLine.w*0.5 - PL.x, cfg.landingLine.y - PL.y));
 
-  // Top Right: Distance & Radar to Departure Rocket
-  const targetX = G.phase === 'flight' ? cfg.landingPad.x : cfg.departureRocket.x;
-  const targetY = G.phase === 'flight' ? cfg.landingPad.y : cfg.departureRocket.y;
-  const dx = targetX - PL.x, dy = targetY - PL.y;
-  const dist = Math.hypot(dx, dy);
-  const arrow = getArrow(Math.atan2(dy, dx));
+  ctx.fillStyle = 'rgba(7,10,26,0.92)';
+  rr(W - 275, 12, 260, 58, 6); ctx.fill();
+  ctx.strokeStyle = 'rgba(61,240,255,0.25)'; ctx.stroke();
 
-  let radarText = '';
+  txt(`VELOCITY: <${Math.round(PL.vx)}, ${Math.round(PL.vy)}> | ${vSpeed}m/s ∠${vAngle}°`, W - 265, 28, 10, C.cyan, 'left', F_M, 700);
+  txt(`DEVOURER BH PULL: -${Math.round(G.bhPullN)}N [DIST: ${bhDist}m]`, W - 265, 44, 10, bhDist < 600 ? C.red : C.ember, 'left', F_M, 700);
+  txt(G.phase === 'flight' ? `LANDING LINE: ${landDist}m ${G.autoLandActive ? '[AUTO-LAND ON]' : '[PRESS L]'}` : `DEPARTURE ROCKET: ${Math.round(Math.hypot(cfg.departureRocket.x - PL.x, cfg.departureRocket.y - PL.y))}m`, W - 265, 60, 10, G.autoLandActive ? C.green : C.bone, 'left', F_M, 700);
+
+  // Auto-Land Button in Flight Mode
   if(G.phase === 'flight'){
-    radarText = 'LANDING BEACON: ' + Math.floor(dist) + 'm ' + arrow;
-  } else if(!allSecured){
-    radarText = 'DEPARTURE ROCKET: ' + Math.floor(dist) + 'm ' + arrow + ' [LOCKED]';
-  } else {
-    radarText = 'DEPARTURE ROCKET: ' + Math.floor(dist) + 'm ' + arrow + ' [READY TO BOARD]';
+    uiButton(G.autoLandActive ? 'AUTO-LAND [ACTIVE]' : 'AUTO-LAND [OFF]', W/2 - 90, 56, 180, 24, () => {
+      G.autoLandActive = !G.autoLandActive;
+      SFX.autoland();
+    }, {sz: 10, col: G.autoLandActive ? C.green : C.gold, sel: G.autoLandActive});
   }
-  txt(radarText, W - 24, 26, 12, allSecured ? C.green : C.bone, 'right', F_U, 700);
 
-  // Bottom Toast Notifications
+  // Cinematic "WELCOME TO [PLANET NAME]" Modal Banner on Pass / Arrival
+  if(G.welcomeBanner && G.welcomeBanner.t > 0){
+    const wb = G.welcomeBanner;
+    wb.t -= 0.016;
+    const a = clamp(wb.t, 0, 1);
+    ctx.save();
+    ctx.globalAlpha = a;
+    ctx.fillStyle = 'rgba(7,12,32,0.92)';
+    rr(W/2 - 320, 95, 640, 110, 8);
+    ctx.fill();
+    ctx.strokeStyle = cfg.accent;
+    ctx.lineWidth = 2;
+    ctx.stroke();
+
+    txt(wb.title, W/2, 125, 20, cfg.accent, 'center', F_O, 900, 3);
+    txt(wb.type + ' · ' + wb.sub, W/2, 148, 12, C.bone, 'center', F_U, 600);
+    txt('CORE MATHEMATICS: ' + wb.math, W/2, 170, 11, C.cyan, 'center', F_M, 700);
+    txt('REWARD UNLOCKED: ' + wb.reward, W/2, 192, 11, C.gold, 'center', F_U, 700);
+    ctx.restore();
+  }
+
+  // Bottom Toast
   if(G.toast && G.toast.t > 0){
     const a = clamp(Math.min(G.toast.t, 1), 0, 1);
     ctx.save();
@@ -1856,19 +1807,6 @@ function drawHUD(){
     txt(G.toast.b, W/2, H - 36, 11, C.bone, 'center', F_U, 600, 1);
     ctx.restore();
   }
-}
-
-function getArrow(angle){
-  let deg = angle * 180 / Math.PI;
-  if(deg < 0) deg += 360;
-  if(deg >= 337.5 || deg < 22.5) return '➔';
-  if(deg >= 22.5 && deg < 67.5) return '➘';
-  if(deg >= 67.5 && deg < 112.5) return '⬇';
-  if(deg >= 112.5 && deg < 157.5) return '↙';
-  if(deg >= 157.5 && deg < 202.5) return '⬅';
-  if(deg >= 202.5 && deg < 247.5) return '↖';
-  if(deg >= 247.5 && deg < 292.5) return '⬆';
-  return '➚';
 }
 
 /* ──────── UI Button Helper ──────── */
@@ -1897,9 +1835,7 @@ function uiButton(label, x, y, w, h, fn, opts){
 }
 
 /* ═════════════════════════════════════════════════════════════════
-   CONTINUOUS GAMEPLAY LOOP SIMULATION STEP
-   ROCKET FLIGHT -> LANDING -> EXIT -> EXPLORATION -> BOARDING ->
-   TAKEOFF -> WARP TO NEXT PLANET
+   SIMULATION STEP: MATHEMATICS, VECTORS, GRAVITY & RICOCHET
    ═════════════════════════════════════════════════════════════════ */
 function updatePlay(dt){
   const p = PL, cfg = LVL;
@@ -1910,142 +1846,174 @@ function updatePlay(dt){
   p.atkT -= dt;
   p.atkCd -= dt;
   p.shootCd -= dt;
-  G.shieldCd -= dt;
   if(G.shieldT > 0) G.shieldT -= dt;
+
+  // 1. RELATIVISTIC BLACK HOLE DYNAMIC PURSUIT ACROSS SPACE
+  G.bhX += (cfg.bhSpeed || 45) * dt;
+  const distToHole = Math.max(1, p.x - G.bhX);
+  // Relativistic gravitational force: F = K / r^1.5
+  G.bhPullN = (cfg.bhPullForce || 260) * Math.pow(Math.max(120, distToHole) / 400, -1.5);
+  p.vx -= G.bhPullN * dt; // Gravitational pull vector towards singularity!
+
+  // Consumed by event horizon check
+  if(p.x <= G.bhX + (cfg.bhKillR || 110)){
+    die('CONSUMED BY EVENT HORIZON SINGULARITY');
+    return;
+  }
 
   // Steering & Input
   let steerDir = 0;
   if(held.left) steerDir -= 1;
   if(held.right) steerDir += 1;
 
+  if(pressed('autoland')){
+    G.autoLandActive = !G.autoLandActive;
+    SFX.autoland();
+  }
+
   const wantThrust = held.up || held.thrust || pressed('thrust');
   const hasFuel = G.fuel > 0;
 
-  // 1. PHASE: ROCKET FLIGHT (Descent into landing beacon)
+  // 2. PHASE: ROCKET FLIGHT (Descent & Auto-Land Mode)
   if(G.phase === 'flight'){
-    p.angle += steerDir * 3.8 * dt;
-    p.face = Math.cos(p.angle) >= 0 ? 1 : -1;
+    const pad = cfg.landingLine;
+    const targetX = pad.x + pad.w * 0.5;
+    const targetY = pad.y;
 
-    p.thrusting = wantThrust;
-    setThrusterRumble(wantThrust && hasFuel);
+    // AUTO-LAND VECTOR CALCULATION SYSTEM
+    if(G.autoLandActive){
+      const dx = targetX - p.x;
+      const dy = targetY - p.y;
+      const targetVx = clamp(dx * 1.4, -180, 180);
+      const targetVy = clamp(dy * 0.7, 20, 110);
+      const targetAngle = clamp(p.vx * 0.002, -0.22, 0.22);
 
-    if(wantThrust){
-      const power = 740 * getThrustMult();
-      const cosA = Math.cos(p.angle), sinA = Math.sin(p.angle);
-      p.vx += cosA * power * dt;
-      p.vy += sinA * power * dt;
-      G.fuel = Math.max(0, G.fuel - 2.8 * getBurnMult() * dt);
-      for(let i=0; i<3; i++){
-        spawn(p.x - cosA * 20, p.y - sinA * 20, -cosA * 240 + (Math.random()-0.5)*50, -sinA * 240 + (Math.random()-0.5)*50, 0.28, 4.5, Math.random()<0.5?C.cyan:'#ff9a2e', 0, true);
+      p.vx = lerp(p.vx, targetVx, dt * 4.5);
+      p.vy = lerp(p.vy, targetVy, dt * 4.0);
+      p.angle = lerp(p.angle, targetAngle, dt * 6.0);
+      p.thrusting = true;
+      setThrusterRumble(true);
+      G.fuel = Math.max(0, G.fuel - 1.2 * dt);
+
+      if(Math.random() < 0.4) spawn(p.x, p.y + 14, (Math.random()-0.5)*30, 80, 0.2, 3, C.green, 0, true);
+    } else {
+      // Manual control
+      p.angle += steerDir * 3.8 * dt;
+      p.face = Math.cos(p.angle) >= 0 ? 1 : -1;
+      p.thrusting = wantThrust;
+      setThrusterRumble(wantThrust && hasFuel);
+
+      if(wantThrust){
+        const power = 740 * getThrustMult();
+        const cosA = Math.cos(p.angle), sinA = Math.sin(p.angle);
+        p.vx += cosA * power * dt;
+        p.vy += sinA * power * dt;
+        G.fuel = Math.max(0, G.fuel - 2.8 * getBurnMult() * dt);
+        for(let i=0; i<3; i++){
+          spawn(p.x - cosA * 20, p.y - sinA * 20, -cosA * 240 + (Math.random()-0.5)*50, -sinA * 240 + (Math.random()-0.5)*50, 0.28, 4.5, Math.random()<0.5?C.cyan:'#ff9a2e', 0, true);
+        }
       }
-    }
 
-    if(held.down){ // Reverse brake
-      p.vx *= (1.0 - 2.8 * dt);
-      p.vy *= (1.0 - 2.8 * dt);
-    }
+      if(held.down){
+        p.vx *= (1.0 - 2.8 * dt);
+        p.vy *= (1.0 - 2.8 * dt);
+      }
 
-    // Gentle planetary atmospheric gravity
-    p.vy += cfg.gravity * 0.45 * dt;
-    p.vx *= cfg.airDrag || 0.985;
-    p.vy *= cfg.airDrag || 0.985;
+      p.vy += cfg.gravity * 0.45 * dt;
+      p.vx *= cfg.airDrag || 0.985;
+      p.vy *= cfg.airDrag || 0.985;
+    }
 
     p.x += p.vx * dt;
     p.y += p.vy * dt;
 
-    // Check Landing Touchdown
-    const pad = cfg.landingPad;
-    const distPad = Math.hypot(p.x - pad.x, p.y - pad.y);
-    if(distPad < 85 && p.y <= pad.y + 15){
+    // LAND ON LINE (Strictly above screen, on designated elevated landing line!)
+    const withinLineX = p.x >= pad.x - 20 && p.x <= pad.x + pad.w + 20;
+    const atLineY = p.y >= pad.y - 18 && p.y <= pad.y + 14;
+    const safeVelocity = Math.abs(p.vy) < 140 && Math.abs(p.vx) < 140;
+
+    if(withinLineX && atLineY && safeVelocity){
       G.phase = 'landing';
       G.phaseTimer = 0;
+      G.autoLandActive = false;
       p.vx = 0; p.vy = 0;
-      p.x = pad.x; p.y = pad.y - 10;
+      p.x = pad.x + pad.w * 0.5;
+      p.y = pad.y - 10;
       p.angle = 0;
       setThrusterRumble(false);
       SFX.land();
-      burst(pad.x, pad.y, 24, C.cyan, 220, 0.7, true);
+      burst(p.x, pad.y, 24, C.green, 220, 0.7, true);
       G.toast = {
-        a: 'TOUCHDOWN CONFIRMED',
-        b: 'Landing gear locked. Astronaut deploying onto ' + cfg.name,
+        a: 'TOUCHDOWN CONFIRMED ON LINE',
+        b: 'Landing struts locked. Astronaut deploying onto ' + cfg.name,
         t: 3.5
       };
     }
+
+    // CRASH DETECTION: Landing below screen or high-speed collision
+    if(p.y > cfg.groundY - 10 || p.y > H + 400){
+      die('ALTITUDE CRITICAL — IMPACT BELOW FLIGHT CORRIDOR');
+      return;
+    }
   }
 
-  // 2. PHASE: LANDING SEQUENCE
+  // 3. PHASE: LANDING SEQUENCE
   else if(G.phase === 'landing'){
     G.phaseTimer += dt;
-    p.x = lerp(p.x, cfg.landingPad.x, dt * 6);
-    p.y = lerp(p.y, cfg.landingPad.y - 12, dt * 6);
+    p.x = lerp(p.x, cfg.landingLine.x + cfg.landingLine.w * 0.5, dt * 6);
+    p.y = lerp(p.y, cfg.landingLine.y - 10, dt * 6);
     p.angle = lerp(p.angle, 0, dt * 10);
     if(G.phaseTimer >= 1.2){
       G.phase = 'exit';
       G.phaseTimer = 0;
       SFX.door();
-      p.x = cfg.landingPad.x + 35;
-      p.y = cfg.landingPad.y - 28;
+      p.x = cfg.landingLine.x + 35;
+      p.y = cfg.landingLine.y - 28;
       p.vx = 80; p.vy = -180;
       G.toast = {
         a: 'ASTRONAUT DEPLOYED',
-        b: 'Collect ' + cfg.mandatoryCount + ' ' + cfg.mandatoryName + ' across the terrain.',
+        b: 'Retrieve ' + cfg.mandatoryCount + ' ' + cfg.mandatoryName + ' across multi-path routes.',
         t: 4.0
       };
     }
   }
 
-  // 3. PHASE: EXIT HATCH
+  // 4. PHASE: EXIT HATCH
   else if(G.phase === 'exit'){
     G.phaseTimer += dt;
     p.vy += cfg.gravity * dt;
     p.x += p.vx * dt;
     p.y += p.vy * dt;
-    if(p.y >= cfg.landingPad.y - 18){
-      p.y = cfg.landingPad.y - 18;
+    if(p.y >= cfg.landingLine.y - 18){
+      p.y = cfg.landingLine.y - 18;
       p.vy = 0;
       G.phase = 'explore';
     }
   }
 
-  // 4. PHASE: PLANET EXPLORATION & OBJECTIVES (Realistic 2D Space Flight & Surface EVA)
+  // 5. PHASE: SURFACE EVA & OBJECTIVES
   else if(G.phase === 'explore'){
     p.coyote = p.onGround ? 0.12 : Math.max(0, p.coyote - dt);
     p.thrustingUp = false;
     p.thrustingDown = false;
     p.thrustingHoriz = 0;
 
-    // A. Life Support System (Oxygen & Tether Docking)
-    G.oxygen = G.oxygen !== undefined ? G.oxygen : 100;
-    const o2Drain = (cfg.oxygenDrain || 0.45) * dt;
-    G.oxygen = Math.max(0, G.oxygen - o2Drain);
-
-    // Tether Docking with Lander (automatic oxygen & propellant replenishment within 140px)
-    const distLander = Math.hypot(p.x - cfg.landingPad.x, p.y - (cfg.landingPad.y - 18));
-    if(distLander < 140){
+    // Life Support Drain & Tether Recharge
+    G.oxygen = Math.max(0, G.oxygen - 0.45 * dt);
+    const distLander = Math.hypot(p.x - (cfg.landingLine.x + cfg.landingLine.w*0.5), p.y - cfg.landingLine.y);
+    if(distLander < 180){
       G.oxygen = Math.min(100, G.oxygen + 35 * dt);
       G.fuel = Math.min(getMaxFuel(), G.fuel + 28 * dt);
-      if(Math.random() < 0.08) spawn(cfg.landingPad.x + (Math.random()-0.5)*30, cfg.landingPad.y - 20, 0, -30, 0.3, 2, C.cyan, 0, true);
+    }
+    if(G.oxygen <= 0 && p.inv <= 0 && G.shieldT <= 0){
+      hurt(1, 'SUIT OXYGEN DEPLETED');
     }
 
-    // Critical Oxygen Asphyxiation Warning
-    if(G.oxygen <= 0){
-      p.o2DmgT = (p.o2DmgT || 0) + dt;
-      if(p.o2DmgT > 2.0){
-        p.o2DmgT = 0;
-        G.hp -= 1;
-        SFX.hit();
-        G.shake = 8;
-        G.toast = { a: 'CRITICAL LIFE SUPPORT', b: 'SUIT OXYGEN DEPLETED IN VACUUM!', t: 2.2 };
-        if(G.hp <= 0) { die('SUIT OXYGEN DEPLETED IN THE VACUUM'); return; }
-      }
-    }
-
-    // B. Ground Walking vs Space Flight Kinematics
+    // Kinematics: Ground walking vs Microgravity Flight
     if(p.onGround){
-      // Surface locomotion
       p.walkCycle = (p.walkCycle || 0) + Math.abs(p.vx) * dt * 0.022;
       const friction = cfg.friction || 0.82;
-      const accel = cfg.id === 'cryos' ? 750 : 2100;
+      const accel = cfg.id === 'cryos' ? 650 : 2100;
 
       if(steerDir !== 0){
         p.vx += steerDir * accel * dt;
@@ -2055,62 +2023,37 @@ function updatePlay(dt){
       }
       p.vx = clamp(p.vx, -450, 450);
 
-      // Surface Jump / Liftoff into Space Flight
+      // Jump liftoff
       if((pressed('up') || pressed('thrust')) && (p.onGround || p.coyote > 0)){
         p.vy = -540;
         p.onGround = false;
         p.coyote = 0;
         SFX.boost();
-        burst(p.x, p.y + 16, 12, '#ffffff', 120, 0.35);
       }
     } else {
-      // Free Space Flight / Microgravity EVA with MMU Thruster Pack
-      p.walkCycle = (p.walkCycle || 0) + dt * 2.0;
-
-      // 1. Upward Thrusters (Counteract gravity / Fly upward)
+      // EVA Thrusters
       if(wantThrust && hasFuel){
         p.thrustingUp = true;
-        const upPower = 940 * getThrustMult();
-        p.vy -= upPower * dt;
+        p.vy -= 940 * getThrustMult() * dt;
         G.fuel = Math.max(0, G.fuel - 1.8 * getBurnMult() * dt);
-        if(Math.random() < 0.7){
-          SFX.rcs();
-          spawn(p.x - p.face*14, p.y + 14, -p.face*30 + (Math.random()-0.5)*40, 160 + Math.random()*70, 0.25, 4, C.cyan, 0, true);
-        }
+        if(Math.random() < 0.6) SFX.rcs();
       }
-
-      // 2. Downward Reverse RCS (Altitude descent control)
       if(held.down && hasFuel){
         p.thrustingDown = true;
         p.vy += 650 * getThrustMult() * dt;
         G.fuel = Math.max(0, G.fuel - 1.2 * getBurnMult() * dt);
-        if(Math.random() < 0.6){
-          SFX.rcs();
-          spawn(p.x - p.face*14, p.y - 18, -p.face*20 + (Math.random()-0.5)*30, -140 - Math.random()*60, 0.2, 3, C.cyan, 0, true);
-        }
       }
-
-      // 3. Lateral RCS Thrusters (Horizontal space maneuvering)
       if(steerDir !== 0 && hasFuel){
         p.thrustingHoriz = steerDir;
         p.vx += steerDir * 840 * dt;
         p.face = steerDir;
         G.fuel = Math.max(0, G.fuel - 0.7 * getBurnMult() * dt);
-      } else {
-        // Space Momentum Conservation (Newton's 1st Law)
-        if(held.down){ // Active Retrograde Braking / SAS
-          p.vx *= (1.0 - 4.2 * dt);
-        } else {
-          // Low drag vacuum drift
-          p.vx *= Math.pow(cfg.airDrag || 0.994, dt * 60);
-        }
       }
-
       p.vx = clamp(p.vx, -620, 620);
       p.vy = clamp(p.vy, -660, 660);
     }
 
-    // Tactical Dash / Emergency MMU Burn (Shift)
+    // Tactical Dash (Shift)
     if(pressed('boost') && p.boostCd <= 0 && G.fuel >= 6){
       p.boostCd = 1.2;
       p.boostT = 0.28;
@@ -2122,58 +2065,76 @@ function updatePlay(dt){
       burst(p.x, p.y, 18, C.cyan, 200, 0.5, true);
     }
 
-    // Energy Sword Melee Attack (J / X / Left Click)
+    // 1 SHIELD PER LEVEL ACTIVATION (Q)
+    if(pressed('shield')){
+      if(G.shieldCharges > 0 && G.shieldT <= 0){
+        G.shieldCharges--;
+        G.shieldT = G.shieldMaxT;
+        SFX.shield();
+        G.shake = 5;
+        burst(p.x, p.y, 25, C.cyan, 220, 0.7, true);
+        G.toast = { a: 'PHASE SHIELD DEPLOYED', b: 'Reflecting 100% incoming projectiles for 3.5s', t: 2.5 };
+      } else if(G.shieldCharges <= 0 && G.shieldT <= 0){
+        SFX.warn();
+        G.toast = { a: 'PHASE SHIELD DEPLETED', b: 'Only 1 shield allowed per level. Recharge on next planet.', t: 2.2 };
+      }
+    }
+
+    // ENERGY SWORD ATTACK (J / Left Click) - MELEE & PROJECTILE DEFLECTION
     if(pressed('atk') && p.atkCd <= 0){
       p.atkT = 0.22;
       p.atkCd = 0.35;
       SFX.sword();
-      // Hit detection on enemies within swing range
-      const slashX = p.x + p.face * 35;
+
+      // Projectile Parrying & Specular Deflection
+      const slashX = p.x + p.face * 32;
+      for(let b=BULLETS.length-1; b>=0; b--){
+        const blt = BULLETS[b];
+        if(blt.faction !== 'player' && Math.hypot(slashX - blt.x, p.y - blt.y) < 65){
+          // Parried! Reflect projectile back at enemies!
+          blt.faction = 'player';
+          blt.vx = -blt.vx * 1.3;
+          blt.vy = -blt.vy * 1.3;
+          SFX.ricochet();
+          burst(blt.x, blt.y, 14, C.cyan, 200, 0.4, true);
+        }
+      }
+
+      // Hit enemies
       for(let e=ENEMIES.length-1; e>=0; e--){
         const enemy = ENEMIES[e];
         if(Math.hypot(slashX - enemy.x, p.y - enemy.y) < 75){
-          enemy.hp -= 1;
+          enemy.hp -= 2;
           SFX.hit();
-          G.shake = 5;
-          burst(enemy.x, enemy.y, 14, cfg.accent, 190, 0.4, true);
+          G.shake = 6;
+          burst(enemy.x, enemy.y, 16, cfg.accent, 200, 0.4, true);
           if(enemy.hp <= 0){
-            ENEMIES.splice(e, 1);
-            G.score += 50;
-            G.credits += 25;
-            SFX.fuel();
-            burst(enemy.x, enemy.y, 25, cfg.accent, 260, 0.6, true);
+            killEnemy(e);
           }
         }
       }
     }
 
-    // Plasma Blaster Shoot (K / Z / Right Click)
+    // PLASMA BLASTER (K / Right Click) - MATHEMATICAL RICOCHET BULLETS
     if(pressed('shoot') && p.shootCd <= 0){
-      p.shootCd = 0.24;
+      p.shootCd = 0.22;
       SFX.blaster();
       BULLETS.push({
         x: p.x + p.face * 20,
         y: p.y - 4,
-        vx: p.face * 920,
-        vy: 0,
-        life: 1.1
+        vx: p.face * 940,
+        vy: (Math.random() - 0.5) * 40,
+        faction: 'player',
+        bounces: 0,
+        maxBounces: 3,
+        life: 1.4
       });
       spawn(p.x + p.face * 22, p.y - 4, p.face * 60, 0, 0.15, 6, C.cyan, 0, true);
     }
 
-    // Phase Shield (Q)
-    if(pressed('shield') && G.shieldCd <= 0){
-      G.shieldT = 1.8;
-      G.shieldCd = 5.0;
-      SFX.boost();
-    }
-
-    // Environmental Forces
+    // Gravity & wind
     p.vy += cfg.gravity * dt;
-    if(cfg.wind){
-      p.vx += cfg.wind.x * dt;
-      p.vy += cfg.wind.y * dt;
-    }
+    if(cfg.wind) p.vx += cfg.wind.x * dt;
     p.vx *= cfg.airDrag || 0.985;
     p.vy *= cfg.airDrag || 0.985;
 
@@ -2183,8 +2144,9 @@ function updatePlay(dt){
     p.y += p.vy * dt;
 
     for(const plat of PLATFORMS){
-      if(plat.kind === 'move') plat.ox = Math.sin(G.t * 1.4 + plat.phase) * plat.amp;
+      if(plat.kind === 'sky' && plat.amp) plat.ox = Math.sin(G.t * 1.4 + plat.phase) * plat.amp;
     }
+
     p.onGround = false;
     for(const plat of PLATFORMS){
       if(plat.broke) continue;
@@ -2195,127 +2157,53 @@ function updatePlay(dt){
         p.y = plat.y - p.radius;
         p.vy = 0;
         p.onGround = true;
-        if(plat.kind === 'move') p.x += Math.cos(G.t * 1.4 + plat.phase) * plat.amp * 1.4 * dt;
         if(plat.kind === 'crack'){
           plat.crackT = (plat.crackT || 0) + dt;
-          if(plat.crackT > 0.75){
-            plat.broke = true;
-            burst(p.x, p.y + 18, 18, '#bdefff', 180, 0.55, true);
+          if(plat.crackT > 0.75){ plat.broke = true; burst(p.x, p.y + 18, 18, '#bdefff', 180, 0.55, true); }
+        }
+      }
+    }
+
+    // 6. INTER-ENEMY FACTION WARFARE SIMULATION (Enemies attack other enemies!)
+    for(let i=0; i<ENEMIES.length; i++){
+      const e1 = ENEMIES[i];
+      e1.shootCd -= dt;
+
+      // Find nearest hostile target (either player or rival faction enemy)
+      let nearestDist = Math.hypot(p.x - e1.x, p.y - e1.y);
+      let targetPos = { x: p.x, y: p.y, isPlayer: true };
+
+      for(let j=0; j<ENEMIES.length; j++){
+        if(i === j) continue;
+        const e2 = ENEMIES[j];
+        if(e1.faction !== e2.faction){
+          const dRival = Math.hypot(e2.x - e1.x, e2.y - e1.y);
+          if(dRival < nearestDist && dRival < 450){
+            nearestDist = dRival;
+            targetPos = { x: e2.x, y: e2.y, enemyRef: e2, isPlayer: false };
           }
         }
       }
-    }
 
-    // Black Hole remnant pull (Fractured Moon only)
-    if(cfg.hasHole){
-      const hx = cfg.holePos.x, hy = cfg.holePos.y;
-      const distHole = Math.hypot(hx - p.x, hy - p.y);
-      if(distHole < cfg.holePullR && distHole > 0){
-        const pullFactor = Math.pow(Math.max(0, 1.0 - (distHole / cfg.holePullR)), 1.3);
-        const force = Math.min(cfg.holeForce * pullFactor, 360);
-        p.vx += ((hx - p.x) / distHole) * force * dt;
-        p.vy += ((hy - p.y) / distHole) * force * dt;
-      }
-      if(distHole <= cfg.holeKillR){
-        die('CONSUMED BY EVENT HORIZON SINGULARITY');
-        return;
-      }
-    }
-
-    // Hazards update
-    for(const h of HAZARDS){
-      if(h.type === 'updraft' || h.type === 'downdraft' || h.type === 'icegust'){
-        if(Math.abs(p.x - h.x) < h.w/2 && Math.abs(p.y - h.y) < h.h/2){
-          p.vy += (h.fy || 0) * dt;
-          p.vx += (h.fx || 0) * dt;
-        }
-      } else if(h.type === 'lowgrav' || h.type === 'heavygrav'){
-        const d = Math.hypot(p.x - h.x, p.y - h.y);
-        if(d < h.r){
-          p.vy += (h.type === 'lowgrav' ? -cfg.gravity * 0.72 : cfg.gravity * 0.95) * dt;
-        }
-      } else if(h.type === 'heat' || h.type === 'acid'){
-        const d = Math.hypot(p.x - h.x, p.y - h.y);
-        if(d < h.r){
-          G.fuel = Math.max(0, G.fuel - h.drain * dt);
-          if(h.type === 'acid') p.suit = Math.max(0, p.suit - (cfg.oxygenDrain || 1.5) * dt);
-          if(G.fuel <= 0 && p.inv <= 0 && G.shieldT <= 0){
-            hurt(1, 'ENVIRONMENTAL RADIATION BREACH');
-          }
-        }
-      } else if(h.type === 'lava'){
-        if(Math.abs(p.x - h.x) < h.w/2 && Math.abs(p.y - h.y) < h.h/2 && p.inv <= 0 && G.shieldT <= 0){
-          hurt(1, 'MOLTEN LAVA BREACH');
-        }
-      } else if(h.type === 'firejet'){
-        const active = Math.sin(G.t * 2.8 + h.phase) > -0.2;
-        if(active && Math.abs(p.x - h.x) < 32 && p.y > h.y - 180 && p.y < h.y + 20 && p.inv <= 0 && G.shieldT <= 0){
-          hurt(1, 'FIRE JET IMPACT');
-        }
-      } else if(h.type === 'safe'){
-        const d = Math.hypot(p.x - h.x, p.y - h.y);
-        if(d < h.r){
-          p.suit = Math.min(100, p.suit + 24 * dt);
-        }
+      // Attack targeted rival or player
+      e1.facing = targetPos.x >= e1.x ? 1 : -1;
+      if(nearestDist < 500 && e1.shootCd <= 0){
+        e1.shootCd = 1.6 + Math.random() * 1.2;
+        const ang = Math.atan2(targetPos.y - e1.y, targetPos.x - e1.x);
+        BULLETS.push({
+          x: e1.x + Math.cos(ang) * 25,
+          y: e1.y + Math.sin(ang) * 25,
+          vx: Math.cos(ang) * 480,
+          vy: Math.sin(ang) * 480,
+          faction: e1.faction,
+          bounces: 0,
+          maxBounces: 1,
+          life: 2.2
+        });
       }
     }
 
-    // Toxic Atmosphere Suit Oxygen Drain (Vortex Prime)
-    if(cfg.oxygenDrain && !HAZARDS.some(h => h.type === 'safe' && Math.hypot(p.x - h.x, p.y - h.y) < h.r)){
-      p.suit = Math.max(0, p.suit - cfg.oxygenDrain * dt);
-      if(p.suit <= 0 && p.inv <= 0 && G.shieldT <= 0){
-        hurt(1, 'SUIT OXYGEN DEPLETED');
-      }
-    }
-
-    // Falling Hot Rocks (Cinder Moon)
-    if(cfg.fallingRocks && Math.floor(G.t * 1.6) !== Math.floor((G.t - dt) * 1.6)){
-      DEBRIS.push({
-        x: clamp(p.x + (Math.random() - 0.5) * 800, 200, cfg.width - 200),
-        y: Math.max(80, p.y - 700),
-        vx: (Math.random() - 0.5) * 90,
-        vy: 190 + Math.random() * 140,
-        radius: 18 + Math.random() * 18,
-        rot: Math.random() * 6.28,
-        rotSpd: (Math.random() - 0.5) * 3,
-        hp: 1,
-        hot: true
-      });
-    }
-
-    // Debris physics & collision
-    for(let k=DEBRIS.length-1; k>=0; k--){
-      const d = DEBRIS[k];
-      d.x += d.vx * dt;
-      d.y += d.vy * dt;
-      d.rot += d.rotSpd * dt;
-      if(Math.hypot(p.x - d.x, p.y - d.y) < p.radius + d.radius){
-        if(p.inv <= 0 && G.shieldT <= 0){
-          hurt(1, d.hot ? 'FALLING HOT ROCK IMPACT' : 'DEBRIS IMPACT');
-          burst(d.x, d.y, 16, d.hot ? C.ember : '#9c9282', 180, 0.4);
-        }
-      }
-      if(d.y > cfg.groundY + 120) DEBRIS.splice(k, 1);
-    }
-
-    // Enemies movement & collision
-    for(let e=ENEMIES.length-1; e>=0; e--){
-      const enemy = ENEMIES[e];
-      enemy.x = enemy.baseX + Math.sin(G.t * 1.4 + enemy.phase) * 90;
-      enemy.y += Math.sin(G.t * 2.1 + enemy.phase) * 0.35;
-      const d = Math.hypot(p.x - enemy.x, p.y - enemy.y);
-      if(d < p.radius + 28){
-        if(p.boostT > 0 || G.shieldT > 0){
-          ENEMIES.splice(e, 1);
-          G.score += 60;
-          burst(enemy.x, enemy.y, 24, cfg.accent, 220, 0.55, true);
-        } else if(p.inv <= 0){
-          hurt(1, 'HOSTILE CONTACT: ' + enemy.type.toUpperCase());
-        }
-      }
-    }
-
-    // Bullets update & enemy collision
+    // 7. MATHEMATICAL RICOCHET BULLETS & SPECULAR REFLECTION
     for(let b=BULLETS.length-1; b>=0; b--){
       const blt = BULLETS[b];
       blt.life -= dt;
@@ -2323,21 +2211,52 @@ function updatePlay(dt){
       blt.y += blt.vy * dt;
       if(blt.life <= 0){ BULLETS.splice(b, 1); continue; }
 
+      // Mirror Specular Ricochet: v' = v - 2(v · n)n
+      for(const m of MIRRORS){
+        if(Math.hypot(blt.x - m.x, blt.y - m.y) < m.h * 0.5){
+          const nx = Math.cos(m.angle);
+          const ny = Math.sin(m.angle);
+          const dot = blt.vx * nx + blt.vy * ny;
+          blt.vx = blt.vx - 2 * dot * nx;
+          blt.vy = blt.vy - 2 * dot * ny;
+          blt.bounces++;
+          SFX.ricochet();
+          burst(blt.x, blt.y, 8, C.cyan, 140, 0.3, true);
+
+          const deg = Math.acos(clamp(-dot / Math.hypot(blt.vx, blt.vy), -1, 1)) * 180 / Math.PI;
+          RECENT_RICOCHETS.push({ x: blt.x, y: blt.y, nx, ny, ix: nx, iy: ny, rx: blt.vx, ry: blt.vy, deg, life: 1.2 });
+          break;
+        }
+      }
+
+      // Enemy hit checks
+      let hit = false;
       for(let e=ENEMIES.length-1; e>=0; e--){
         const enemy = ENEMIES[e];
-        if(Math.hypot(blt.x - enemy.x, blt.y - enemy.y) < 32){
+        if(blt.faction !== enemy.faction && Math.hypot(blt.x - enemy.x, blt.y - enemy.y) < 32){
           enemy.hp -= 1;
-          BULLETS.splice(b, 1);
+          hit = true;
           SFX.hit();
-          burst(enemy.x, enemy.y, 12, C.cyan, 170, 0.35, true);
+          burst(enemy.x, enemy.y, 14, C.cyan, 180, 0.4, true);
           if(enemy.hp <= 0){
-            ENEMIES.splice(e, 1);
-            G.score += 50;
-            G.credits += 25;
-            SFX.fuel();
-            burst(enemy.x, enemy.y, 25, cfg.accent, 260, 0.6, true);
+            killEnemy(e);
           }
           break;
+        }
+      }
+      if(hit){ BULLETS.splice(b, 1); continue; }
+
+      // Player hit by hostile bullets
+      if(blt.faction !== 'player' && Math.hypot(blt.x - p.x, blt.y - p.y) < p.radius + 6){
+        if(G.shieldT > 0){
+          // Deflect with shield!
+          blt.faction = 'player';
+          blt.vx = -blt.vx * 1.2;
+          blt.vy = -blt.vy * 1.2;
+          SFX.ricochet();
+        } else {
+          BULLETS.splice(b, 1);
+          hurt(1, 'HOSTILE BULLET IMPACT');
         }
       }
     }
@@ -2347,14 +2266,11 @@ function updatePlay(dt){
       const c = CELLS[i];
       if(!c.got){
         const d = Math.hypot(p.x - c.x, p.y - c.y);
-        if(d < 170 && d > 0){
-          c.x = lerp(c.x, p.x, dt * 5.5);
-          c.y = lerp(c.y, p.y, dt * 5.5);
-        }
+        if(d < 170) { c.x = lerp(c.x, p.x, dt * 5.5); c.y = lerp(c.y, p.y, dt * 5.5); }
         if(d < 42){
           c.got = true;
           G.cellsGot++;
-          G.oxygen = Math.min(100, (G.oxygen || 100) + 15);
+          G.oxygen = Math.min(100, G.oxygen + 15);
           G.score += 25;
           G.credits += 20;
           SFX.resource();
@@ -2362,8 +2278,8 @@ function updatePlay(dt){
           if(G.cellsGot >= cfg.mandatoryCount){
             SFX.orb();
             G.toast = {
-              a: 'ALL OBJECTIVES COMPLETE!',
-              b: 'All ' + cfg.mandatoryCount + ' ' + cfg.mandatoryName + ' secured. Return to the Departure Rocket to launch.',
+              a: 'ALL ARTIFACTS SECURED!',
+              b: 'Gantry unlocked. Head to the Departure Rocket to launch.',
               t: 4.5
             };
           }
@@ -2371,20 +2287,17 @@ function updatePlay(dt){
       }
     }
 
-    // Collect Bonus Energy Orbs
+    // Collect Energy Orbs
     for(let j=0; j<ORBS.length; j++){
       const o = ORBS[j];
       if(!o.got){
         const d = Math.hypot(p.x - o.x, p.y - o.y);
-        if(d < 160 && d > 0){
-          o.x = lerp(o.x, p.x, dt * 5.0);
-          o.y = lerp(o.y, p.y, dt * 5.0);
-        }
+        if(d < 160) { o.x = lerp(o.x, p.x, dt * 5); o.y = lerp(o.y, p.y, dt * 5); }
         if(d < 42){
           o.got = true;
           G.orbsGot++;
           G.fuel = Math.min(getMaxFuel(), G.fuel + 35);
-          G.oxygen = Math.min(100, (G.oxygen || 100) + 25);
+          G.oxygen = Math.min(100, G.oxygen + 25);
           G.score += 40;
           G.credits += 15;
           SFX.orb();
@@ -2393,7 +2306,7 @@ function updatePlay(dt){
       }
     }
 
-    // Check Boarding Departure Rocket at far end
+    // Departure Rocket Boarding
     const rk = cfg.departureRocket;
     const distRocket = Math.hypot(p.x - (rk.x + rk.w*0.5), p.y - (rk.y + rk.h*0.5));
     const allCollected = G.cellsGot >= cfg.mandatoryCount;
@@ -2403,26 +2316,20 @@ function updatePlay(dt){
         G.phase = 'boarding';
         G.phaseTimer = 0;
         SFX.door();
-        G.toast = {
-          a: 'BOARDING DEPARTURE ROCKET',
-          b: 'Systems pressurized. Engaging orbital ignition...',
-          t: 3.5
-        };
       } else if(!allCollected && (pressed('use') || distRocket < 65)){
         if(!G.toast || G.toast.t <= 0.5){
           SFX.warn();
-          const remaining = cfg.mandatoryCount - G.cellsGot;
           G.toast = {
             a: 'SYSTEMS LOCKED',
-            b: 'Retrieve ' + remaining + ' more ' + cfg.mandatoryName + ' before launch.',
-            t: 2.8
+            b: `Collect ${cfg.mandatoryCount - G.cellsGot} more ${cfg.mandatoryName} before launch.`,
+            t: 2.5
           };
         }
       }
     }
   }
 
-  // 5. PHASE: BOARDING DEPARTURE ROCKET
+  // 8. PHASE: BOARDING, TAKEOFF & WARP
   else if(G.phase === 'boarding'){
     G.phaseTimer += dt;
     const rk = cfg.departureRocket;
@@ -2435,57 +2342,72 @@ function updatePlay(dt){
       SFX.takeoff();
     }
   }
-
-  // 6. PHASE: TAKEOFF VERTICAL LAUNCH
   else if(G.phase === 'takeoff'){
     G.phaseTimer += dt;
     G.shake = 14;
     const rk = cfg.departureRocket;
-    // Launch rocket upwards
     rk.y -= 380 * dt * (1 + G.phaseTimer * 2.5);
     p.x = rk.x + rk.w * 0.5;
     p.y = rk.y + rk.h * 0.5;
-
-    // Heavy main engine exhaust plumes
-    for(let i=0; i<5; i++){
+    for(let i=0; i<4; i++){
       spawn(rk.x + rk.w*0.5 + (Math.random()-0.5)*20, rk.y + rk.h, (Math.random()-0.5)*80, 280 + Math.random()*120, 0.45, 6.5, Math.random()<0.5?'#ff9a2e':'#ffffff', 0, true);
     }
-
     if(G.phaseTimer >= 2.2){
       G.phase = 'warp';
       G.phaseTimer = 0;
       SFX.warp();
     }
   }
-
-  // 7. PHASE: COSMIC WARP TO NEXT PLANET
   else if(G.phase === 'warp'){
     G.phaseTimer += dt;
     G.shake = 8;
-    const nextIdx = G.worldIdx + 1;
     if(G.phaseTimer >= 1.8){
-      if(nextIdx < PLANETS.length){
-        // Automatically progress to next planet
-        initPlanet(nextIdx);
+      if(G.isEndless){
+        G.endlessSector++;
+        initPlanet(G.worldIdx + 1, true);
       } else {
-        // Complete the Odyssey
-        G.scene = 'victory';
-        SFX.orb();
+        const nextIdx = G.worldIdx + 1;
+        if(nextIdx < PLANETS.length){
+          initPlanet(nextIdx, false);
+        } else {
+          G.scene = 'victory';
+          SFX.orb();
+        }
       }
     }
   }
 
-  // Boundaries clamping
+  // Clamping & Smooth Camera
   p.x = clamp(p.x, 30, cfg.width - 30);
   p.y = clamp(p.y, 30, cfg.height - 30);
 
-  // Smooth camera tracking
   const targetCamX = clamp(p.x - W/2, 0, cfg.width - W);
   const targetCamY = clamp(p.y - H/2, 0, cfg.height - H);
   G.camX = lerp(G.camX, targetCamX, dt * 5.0);
   G.camY = lerp(G.camY, targetCamY, dt * 5.0);
 
   updFx(dt);
+}
+
+function killEnemy(idx){
+  const enemy = ENEMIES[idx];
+  ENEMIES.splice(idx, 1);
+  G.score += enemy.isBoss ? 250 : 60;
+  G.credits += enemy.isBoss ? 100 : 25;
+  SFX.boom();
+  burst(enemy.x, enemy.y, enemy.isBoss ? 45 : 25, LVL.accent, 280, 0.7, true);
+
+  // Weapon Unlock check
+  if(enemy.isBoss && LVL.weaponReward){
+    G.weapons[LVL.weaponReward] = true;
+    saveData();
+    SFX.fanfare();
+    G.toast = {
+      a: 'NEW WEAPON ACHIEVED!',
+      b: LVL.weaponName + ' unlocked into your arsenal!',
+      t: 4.5
+    };
+  }
 }
 
 function hurt(amount, reason){
@@ -2499,11 +2421,8 @@ function hurt(amount, reason){
     G.toast = { a: 'EMERGENCY SHIELD VENT', b: '-20% Fuel absorbed catastrophic breach', t: 2.2 };
   } else {
     G.hp -= amount;
-    if(G.hp <= 0){
-      die(reason || 'SUIT INTEGRITY COLLAPSE');
-    } else {
-      SFX.hit();
-    }
+    SFX.hit();
+    if(G.hp <= 0) die(reason || 'HULL INTEGRITY ZERO');
   }
 }
 
@@ -2511,7 +2430,7 @@ function die(why){
   setThrusterRumble(false);
   G.deadWhy = why;
   G.scene = 'dead';
-  G.shake = 18;
+  G.shake = 20;
   SFX.boom();
 }
 
@@ -2565,18 +2484,14 @@ function renderWorldPlay(){
 
   drawBackground(cfg, G.camX, G.camY, G.t);
 
-  // Black Hole (Fractured Moon)
-  if(cfg.hasHole){
-    drawBlackHole(cfg.holePos, cfg.holeKillR, G.camX, G.camY, G.t);
-  }
+  // Dynamic Black Hole running across whole space behind player
+  drawDevourerBlackHole(G.bhX, cfg.bhKillR || 110, G.camX, G.camY, G.t);
 
-  // Terrain & Platforms
-  drawTerrain(cfg, G.camX, G.camY);
+  // Terrain & Elevated Landing Line
+  drawTerrain(cfg, G.camX, G.camY, G.t);
 
-  // Hazards
+  // Hazards & Debris
   drawHazards(HAZARDS, cfg, G.camX, G.camY, G.t);
-
-  // Debris & Hot Rocks
   for(let i=0; i<DEBRIS.length; i++) drawDebris(DEBRIS[i], G.camX, G.camY);
 
   // Collectibles
@@ -2589,23 +2504,24 @@ function renderWorldPlay(){
   // Enemies
   drawEnemies(G.camX, G.camY, G.t);
 
-  // Bullets
+  // Bullets & Particles
   drawBullets(G.camX, G.camY);
-
-  // FX Particles
   drawFx(G.camX, G.camY);
 
-  // Landing Rocket (stationary on landing pad if astronaut has exited)
+  // Stationary Rocket on landing line if astronaut exited
   if(G.phase !== 'flight'){
-    drawRocketShip({x: cfg.landingPad.x, y: cfg.landingPad.y - 12, angle: 0, thrusting: false}, G.camX, G.camY, G.t, 1.25, true);
+    drawRocketShip({x: cfg.landingLine.x + cfg.landingLine.w*0.5, y: cfg.landingLine.y - 12, angle: 0, thrusting: false}, G.camX, G.camY, G.t, 1.25, true);
   }
 
-  // Player Character / Rocket
+  // Active Player Character / Rocket
   if(G.phase === 'flight' || G.phase === 'landing'){
     drawRocketShip(PL, G.camX, G.camY, G.t, 1.25, false);
   } else if(G.phase === 'exit' || G.phase === 'explore'){
     drawAstronautCharacter(PL, G.camX, G.camY, G.t);
   }
+
+  // Core Mathematics Visualizations (Vectors, Angles, Ricochets, Parabola)
+  drawMathematicalGeometry(PL, G.camX, G.camY);
 
   ctx.restore();
 
@@ -2621,8 +2537,9 @@ function renderWorldPlay(){
       ctx.beginPath();
       ctx.moveTo(x - 90, y); ctx.lineTo(x + 90, y); ctx.stroke();
     }
-    txt('HYPERDRIVE ENGAGED ➔ DESTINATION: ' + (PLANETS[G.worldIdx + 1]?.name || 'EARTH'), W/2, H/2 - 20, 20, C.cyan, 'center', F_O, 900, 3);
-    txt('APPROACHING PLANETARY ORBIT', W/2, H/2 + 15, 13, C.bone, 'center', F_U, 700, 2);
+    const destName = G.isEndless ? `SECTOR ${G.endlessSector + 1}` : (PLANETS[G.worldIdx + 1]?.name || 'EARTH EXTRACTION');
+    txt('HYPERDRIVE ENGAGED ➔ DESTINATION: ' + destName, W/2, H/2 - 20, 20, C.cyan, 'center', F_O, 900, 3);
+    txt('SYNCHRONIZING GRAVITATIONAL GEODESICS', W/2, H/2 + 15, 13, C.bone, 'center', F_U, 700, 2);
     ctx.restore();
   }
 }
@@ -2630,50 +2547,45 @@ function renderWorldPlay(){
 /* ──────── Screens: Title, Upgrades, Manual, Pause, Victory, Dead ──────── */
 function renderTitle(){
   drawBackground(PLANETS[0], G.t*30, 0, G.t);
-  drawBlackHole({x: 680, y: 260}, 110, 0, 0, G.t);
+  drawDevourerBlackHole(W * 0.72, 95, 0, 0, G.t);
 
   ctx.save();
   ctx.shadowColor = 'rgba(61,240,255,0.8)';
   ctx.shadowBlur = 24;
-  txt('SPACE', 64, 160, 58, C.bone, 'left', F_D, 700, 8);
-  txt('ODYSSEY', 64, 226, 58, C.cyan, 'left', F_D, 700, 8);
+  txt('SPACE', 64, 150, 56, C.bone, 'left', F_D, 700, 8);
+  txt('ODYSSEY', 64, 214, 56, C.cyan, 'left', F_D, 700, 8);
   ctx.shadowBlur = 0;
   ctx.restore();
 
-  txt('PLANET-TO-PLANET CONTINUOUS SURVIVAL ADVENTURE', 68, 258, 13, C.ember, 'left', F_U, 700, 3);
+  txt('GEOMETRIC & MATHEMATICAL PLANETARY SURVIVAL', 68, 246, 12.5, C.ember, 'left', F_U, 700, 3);
 
-  txt('PILOT: ' + (G.char==='arin'?'ARIN (CYAN SUIT)':'MIRA (VIOLET SUIT)'), 68, 288, 13, G.char==='arin'?C.cyan:'#ff77cc', 'left', F_U, 700);
-  uiButton('SWITCH PILOT', 290, 272, 120, 26, () => {
+  txt('PILOT: ' + (G.char==='arin'?'ARIN (CYAN SUIT)':'MIRA (VIOLET SUIT)'), 68, 276, 13, G.char==='arin'?C.cyan:'#ff77cc', 'left', F_U, 700);
+  uiButton('SWITCH PILOT', 290, 260, 120, 26, () => {
     G.char = G.char === 'arin' ? 'mira' : 'arin';
     SFX.click();
   }, {sz: 11});
 
-  uiButton('LAUNCH EXPEDITION (ROCKET DESCENT)', 68, 316, 340, 42, () => {
+  uiButton('LAUNCH EXPEDITION (CAMPAIGN)', 68, 302, 340, 42, () => {
     SFX.click();
-    initPlanet(0);
+    initPlanet(0, false);
   }, {sel: true, sz: 14});
 
-  uiButton('SURFACE EVA FLIGHT (DIRECT TEST)', 68, 366, 340, 38, () => {
+  uiButton('ENDLESS FRONTIER (BLACK HOLE PURSUIT)', 68, 350, 340, 38, () => {
     SFX.click();
-    initPlanet(0);
-    G.phase = 'explore';
-    PL.x = LVL.landingPad.x + 60;
-    PL.y = LVL.landingPad.y - 35;
-    PL.vx = 0; PL.vy = -120;
-    G.toast = { a: 'SURFACE EVA DEPLOYED', b: 'W/Space = Thruster Fly · S = Down · A/D = Steer · Shift = Dash', t: 5.0 };
-  }, {sz: 13, col: C.green});
+    initPlanet(0, true);
+  }, {sz: 12.5, col: C.ember});
 
-  uiButton('HANGAR & UPGRADES', 68, 412, 165, 36, () => {
+  uiButton('HANGAR & UPGRADES', 68, 396, 165, 36, () => {
     SFX.click();
     G.scene = 'upgrades';
   }, {sz: 12});
 
-  uiButton('MANUAL & CONTROLS', 243, 412, 165, 36, () => {
+  uiButton('MATHEMATICS & CONTROLS', 243, 396, 165, 36, () => {
     SFX.click();
     G.scene = 'manual';
   }, {sz: 12});
 
-  // Live Animated Astronaut Showcase on Title Screen
+  // Title Astronaut Preview
   const previewAstronaut = {
     x: 740,
     y: 310 + Math.sin(G.t * 2.5) * 10,
@@ -2687,11 +2599,10 @@ function renderTitle(){
     boostT: 0
   };
   drawAstronautCharacter(previewAstronaut, 0, 0, G.t);
-  txt(G.char === 'arin' ? 'PILOT: ARIN' : 'PILOT: MIRA', 740, 395, 14, G.char === 'arin' ? C.cyan : '#ff77cc', 'center', F_U, 700, 2);
-  txt('2D HIGH-TECH EVA SPACE SUIT', 740, 414, 11, C.bone, 'center', F_U, 600, 1);
-  txt('MICROGRAVITY THRUSTERS READY', 740, 432, 10, C.green, 'center', F_U, 700, 1);
+  txt('MATHEMATICS CORE: VECTORS · RICOCHETS · GRAVITY', 740, 395, 12, C.cyan, 'center', F_O, 700, 1);
+  txt('1 SHIELD PER LEVEL · AUTO-LAND GUIDANCE [L]', 740, 415, 11, C.green, 'center', F_U, 700, 1);
 
-  txt('SEAMLESS PLANETARY ADVENTURE · 6 DISCOVERED WORLDS · SOUND: [M]', W - 24, H - 18, 11, C.dim, 'right', F_U, 600);
+  txt('ORVEX GAMES · HTTPS://ORVEXGAMES.ME/ · SOUND: [M]', W - 24, H - 18, 11, C.dim, 'right', F_U, 600);
 }
 
 function renderUpgradesMenu(){
@@ -2699,14 +2610,14 @@ function renderUpgradesMenu(){
   ctx.fillStyle = 'rgba(5,7,26,0.85)';
   ctx.fillRect(0, 0, W, H);
 
-  txt('ROCKET HANGAR & SUIT UPGRADES', W/2, 56, 24, C.gold, 'center', F_D, 700, 4);
-  txt('Available Fleet Credits: ' + G.credits, W/2, 86, 15, C.green, 'center', F_U, 700);
+  txt('HANGAR & WEAPONS TELEMETRY', W/2, 56, 24, C.gold, 'center', F_D, 700, 4);
+  txt('Fleet Credits: ' + G.credits, W/2, 86, 15, C.green, 'center', F_U, 700);
 
   const costs = [100, 250, 500];
   const items = [
-    { name: 'EXTENDED FUEL RESERVES', key: 'tankLv', desc: '+25% Max Thruster & Jetpack Fuel' },
-    { name: 'ION THRUSTER OVERCLOCK', key: 'thrustLv', desc: '+15% Main Thruster & Sprint Power' },
-    { name: 'THERMAL SHIELD RE-GEN', key: 'effLv', desc: '15% Reduced Burn & Hazard Resistance' }
+    { name: 'EXTENDED PROPELLANT RESERVES', key: 'tankLv', desc: '+25% Fuel tank capacity' },
+    { name: 'ION THRUSTER OVERCLOCK', key: 'thrustLv', desc: '+15% Thruster propulsion vector' },
+    { name: 'THERMAL SHIELD RE-GEN', key: 'effLv', desc: '15% Reduced burn & hazard resistance' }
   ];
 
   for(let i=0; i<3; i++){
@@ -2719,7 +2630,6 @@ function renderUpgradesMenu(){
     rr(W/2 - 280, y, 560, 85, 8);
     ctx.fill();
     ctx.strokeStyle = 'rgba(61,240,255,0.2)';
-    ctx.lineWidth = 1;
     ctx.stroke();
 
     txt(it.name, W/2 - 260, y + 28, 15, C.cyan, 'left', F_U, 700);
@@ -2735,11 +2645,7 @@ function renderUpgradesMenu(){
         saveData();
         SFX.boost();
       }
-    }, {
-      disabled: !canBuy,
-      col: canBuy ? C.green : C.dim,
-      sz: 12
-    });
+    }, {disabled: !canBuy, col: canBuy ? C.green : C.dim, sz: 12});
   }
 
   uiButton('RETURN TO MENU', W/2 - 120, H - 42, 240, 34, () => {
@@ -2750,24 +2656,24 @@ function renderUpgradesMenu(){
 
 function renderManual(){
   drawBackground(PLANETS[0], 0, 0, G.t);
-  ctx.fillStyle = 'rgba(5,7,26,0.88)';
+  ctx.fillStyle = 'rgba(5,7,26,0.92)';
   ctx.fillRect(0, 0, W, H);
 
-  txt('EXPEDITION FLIGHT & SURVIVAL MANUAL', W/2, 50, 22, C.cyan, 'center', F_D, 700, 3);
+  txt('MATHEMATICAL & GEOMETRIC SURVIVAL MANUAL', W/2, 50, 22, C.cyan, 'center', F_D, 700, 3);
 
   const lines = [
-    '• CONTINUOUS GAME LOOP: Rocket Flight ➔ Landing Pad ➔ Astronaut Exits ➔ Explore & Collect ➔ Return to Departure Rocket ➔ Take-Off ➔ Next Planet.',
-    '• FRACTURED MOON: Alien gravity anomaly fields. High floaty jumps in low-G zones. Collect Ancient Artifacts before void collapses.',
-    '• AETHER-7: High-altitude sky islands and vertical updrafts. Collect Atmospheric Crystals.',
-    '• CINDER MOON: Boiling lava trenches, erupting fire vents, and falling hot rocks. Collect Thermal Cores.',
-    '• CRYOS: Sub-zero low-friction ice surfaces and cracking ledges. Counter-steer on slippery ice. Collect Frozen Samples.',
-    '• VORTEX PRIME: Toxic atmosphere drains suit oxygen. Recover inside pressurized Safe Domes. Collect Scientific Samples.',
-    '• EARTH: High atmospheric gale winds pushing astronaut. Salvage Energy Crystals and reach Extraction Command.',
-    '• COMBAT: [J] Energy Sword slash · [K] Plasma Blaster · [Q] Phase Shield · [Shift] Invulnerable Dash.'
+    '• AUTO-LAND SYSTEM: Press [L] or tap AUTO-LAND. Guidance computer computes descent vectors and retrograde thruster burns to land on the line.',
+    '• LAND ON LINE: Touchdown must occur on the elevated Holographic Landing Line. Descending below safe elevation triggers altitude failure.',
+    '• BLACK HOLE DEVOURER: Sweeps relentlessly across space behind the player. Exerts gravitational pull: F = K / r^1.5. Outrun the event horizon!',
+    '• MATHEMATICAL RICOCHET: Blaster bolts and sword parries reflect specularly off surfaces: v\' = v - 2(v · n)n (Angle of incidence = reflection).',
+    '• MULTI-ROUTE CHALLENGE: 3 topological routes (Upper Sky, Mid Ruins, Cavern Trench). Artifacts and weapon caches are hidden in fortified alcoves.',
+    '• INTER-ENEMY FACTIONS: Voidlings, Drone Sentinels, and Biome Beasts are hostile to each other! Lure rival factions into crossfire skirmishes.',
+    '• 1 SHIELD PER LEVEL: Press [Q] for Phase Shield. Exactly 1 charge per level grants 3.5s 100% damage immunity and projectile deflection.',
+    '• WEAPONS ARSENAL: Achieve advanced weapons (Vibro Sword, Twin Blaster, Thermobaric Cannon, Gravity Lance) ONLY after defeating planetary guardians!'
   ];
 
   for(let i=0; i<lines.length; i++){
-    txt(lines[i], 60, 95 + i * 44, 11.5, C.bone, 'left', F_U, 600);
+    txt(lines[i], 60, 95 + i * 44, 11, C.bone, 'left', F_U, 600);
   }
 
   uiButton('RETURN TO EXPEDITION', W/2 - 130, H - 42, 260, 34, () => {
@@ -2777,7 +2683,7 @@ function renderManual(){
 }
 
 function renderPause(){
-  ctx.fillStyle = 'rgba(5,7,26,0.78)';
+  ctx.fillStyle = 'rgba(5,7,26,0.85)';
   ctx.fillRect(0, 0, W, H);
 
   txt('EXPEDITION PAUSED', W/2, H/2 - 90, 28, C.cyan, 'center', F_D, 700, 4);
@@ -2790,10 +2696,10 @@ function renderPause(){
 
   uiButton('RETRY PLANET [R]', W/2 - 130, H/2 + 20, 260, 38, () => {
     SFX.click();
-    initPlanet(G.worldIdx);
+    initPlanet(G.worldIdx, G.isEndless);
   });
 
-  uiButton('EXPEDITION DIRECTIVES', W/2 - 130, H/2 + 68, 260, 36, () => {
+  uiButton('MATHEMATICS DIRECTIVES', W/2 - 130, H/2 + 68, 260, 36, () => {
     SFX.click();
     G.scene = 'manual';
   });
@@ -2806,43 +2712,53 @@ function renderPause(){
 
 function renderVictory(){
   drawBackground(PLANETS[5], 0, 0, G.t);
-  ctx.fillStyle = 'rgba(5,7,26,0.85)';
+  ctx.fillStyle = 'rgba(5,7,26,0.88)';
   ctx.fillRect(0, 0, W, H);
 
   ctx.save();
   ctx.shadowColor = 'rgba(61,255,136,0.8)';
   ctx.shadowBlur = 24;
-  txt('SPACE ODYSSEY COMPLETE', W/2, 120, 32, C.green, 'center', F_D, 900, 6);
+  txt('COSMIC ODYSSEY CONQUERED', W/2, 120, 32, C.green, 'center', F_D, 900, 6);
   ctx.restore();
 
-  txt('EXPEDITION SUCCESSFUL — EXTRACTION COMMAND REACHED', W/2, 160, 15, C.cyan, 'center', F_U, 700, 2);
-  txt('You conquered all 6 planetary worlds across the cosmos.', W/2, 190, 13, C.bone, 'center', F_U, 600);
+  txt('ALL 6 WORLDS SURVIVED · BLACK HOLE OUTRUN · EXTRACTION REACHED', W/2, 160, 14, C.cyan, 'center', F_U, 700, 2);
 
-  const statY = 240;
+  const statY = 220;
   txt('FINAL EXPEDITION SCORE: ' + G.score, W/2, statY, 18, C.gold, 'center', F_O, 700);
   txt('FLEET CREDITS SECURED: ' + G.credits, W/2, statY + 34, 15, C.green, 'center', F_U, 700);
   txt('HONORED PILOT: ' + (G.char==='arin'?'ARIN':'MIRA'), W/2, statY + 68, 13, C.bone, 'center', F_U, 600);
 
-  uiButton('BEGIN NEW ODYSSEY', W/2 - 150, statY + 115, 300, 48, () => {
+  uiButton('COMMENCE ENDLESS FRONTIER', W/2 - 160, statY + 110, 320, 46, () => {
     SFX.click();
-    initPlanet(0);
-  }, {sel: true, sz: 16});
+    initPlanet(0, true);
+  }, {sel: true, sz: 14});
+
+  uiButton('RETURN TO TITLE', W/2 - 130, statY + 166, 260, 38, () => {
+    SFX.click();
+    G.scene = 'title';
+  });
 }
 
+// "LEVEL FAILED - TRY AGAIN" SCREEN
 function renderDead(){
-  ctx.fillStyle = 'rgba(15,3,8,0.84)';
+  ctx.fillStyle = 'rgba(18,2,8,0.92)';
   ctx.fillRect(0, 0, W, H);
 
-  txt('SYSTEMS COMPROMISED', W/2, H/2 - 80, 32, C.red, 'center', F_D, 900, 4);
-  txt(G.deadWhy || 'SUIT INTEGRITY COLLAPSE', W/2, H/2 - 40, 14, C.bone, 'center', F_U, 700);
-  txt('Current Planet: ' + LVL.name, W/2, H/2 - 15, 13, C.dim, 'center', F_U, 600);
+  ctx.save();
+  ctx.shadowColor = C.red;
+  ctx.shadowBlur = 20;
+  txt('LEVEL FAILED — TRY AGAIN', W/2, H/2 - 85, 34, C.red, 'center', F_D, 900, 4);
+  ctx.restore();
 
-  uiButton('RETRY PLANET [R]', W/2 - 130, H/2 + 20, 260, 44, () => {
+  txt(G.deadWhy || 'SYSTEM TELEMETRY COLLAPSE', W/2, H/2 - 45, 14.5, C.bone, 'center', F_U, 700);
+  txt('Destination: ' + LVL.name + (G.isEndless ? ` (Sector ${G.endlessSector})` : ''), W/2, H/2 - 18, 13, C.dim, 'center', F_U, 600);
+
+  uiButton('RETRY MISSION FROM START [R]', W/2 - 150, H/2 + 20, 300, 46, () => {
     SFX.click();
-    initPlanet(G.worldIdx);
-  }, {sel: true});
+    initPlanet(G.worldIdx, G.isEndless);
+  }, {sel: true, sz: 14, col: C.green});
 
-  uiButton('ABORT TO MENU', W/2 - 130, H/2 + 76, 260, 38, () => {
+  uiButton('ABORT TO TITLE MENU', W/2 - 130, H/2 + 78, 260, 38, () => {
     SFX.click();
     G.scene = 'title';
   });
@@ -2866,7 +2782,7 @@ function frame(ts){
     SFX.click();
   }
   if(pressed('retry') && (G.scene === 'dead' || G.scene === 'play')){
-    initPlanet(G.worldIdx);
+    initPlanet(G.worldIdx, G.isEndless);
     SFX.click();
   }
 
@@ -2918,9 +2834,9 @@ function tickLoad(){
   const lb = document.getElementById('lbar');
   const lt = document.getElementById('ltext');
   if(lb) lb.style.width = loadProg + '%';
-  if(lt && loadProg < 100) lt.textContent = 'Calibrating thrusters & planetary telemetry... ' + loadProg + '%';
+  if(lt && loadProg < 100) lt.textContent = 'Calibrating vectors, ricochets & trajectory physics... ' + loadProg + '%';
   if(loadProg >= 100){
-    if(lt) lt.textContent = 'PROPULSION & NAVIGATION ONLINE';
+    if(lt) lt.textContent = 'MATHEMATICS & GEOMETRY NAVIGATION ONLINE';
     setTimeout(() => {
       const ld = document.getElementById('loader');
       if(ld) ld.classList.add('done');
