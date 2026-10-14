@@ -93,11 +93,6 @@ custom_minimum_size = Vector2(0, 46)
 layout_mode = 2
 text = "LAUNCH CAMPAIGN"
 
-[node name="EndlessBtn" type="Button" parent="CenterContainer/VBox/MenuButtons"]
-custom_minimum_size = Vector2(0, 44)
-layout_mode = 2
-text = "COMMENCE ENDLESS FRONTIER"
-
 [node name="PlanetsBtn" type="Button" parent="CenterContainer/VBox/MenuButtons"]
 custom_minimum_size = Vector2(0, 42)
 layout_mode = 2
@@ -225,7 +220,6 @@ text = "CLOSE HANGAR"
 
 [connection signal="pressed" from="CenterContainer/VBox/CharSelector/CharBtn" to="." method="_on_char_btn_pressed"]
 [connection signal="pressed" from="CenterContainer/VBox/MenuButtons/LaunchBtn" to="." method="_on_launch_btn_pressed"]
-[connection signal="pressed" from="CenterContainer/VBox/MenuButtons/EndlessBtn" to="." method="_on_endless_btn_pressed"]
 [connection signal="pressed" from="CenterContainer/VBox/MenuButtons/PlanetsBtn" to="." method="_on_planets_btn_pressed"]
 [connection signal="pressed" from="CenterContainer/VBox/MenuButtons/UpgradesBtn" to="." method="_on_upgrades_btn_pressed"]
 [connection signal="pressed" from="CenterContainer/VBox/MenuButtons/ControlsBtn" to="." method="_on_controls_btn_pressed"]

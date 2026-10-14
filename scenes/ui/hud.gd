@@ -127,7 +127,7 @@ func _on_score_changed(s: int) -> void:
 func _update_weapons() -> void:
 	sword_icon.modulate = Color(0.3, 0.9, 1.0, 1.0) if GameState.has_sword else Color(0.3, 0.3, 0.3, 0.3)
 	blaster_icon.modulate = Color(0.3, 0.9, 1.0, 1.0) if GameState.has_blaster else Color(0.3, 0.3, 0.3, 0.3)
-	shield_icon.modulate = Color(0.3, 0.9, 1.0, 1.0) if (GameState.has_shield and GameState.shield_charges > 0) else Color(0.4, 0.4, 0.4, 0.35)
+	shield_icon.modulate = Color(0.3, 0.9, 1.0, 1.0) if GameState.has_shield else Color(0.3, 0.3, 0.3, 0.3)
 	lance_icon.modulate = Color(0.8, 0.4, 1.0, 1.0) if GameState.has_lance else Color(0.3, 0.3, 0.3, 0.3)
 
 func _on_toast_requested(title: String, subtitle: String, duration: float) -> void:
@@ -137,24 +137,13 @@ func _on_toast_requested(title: String, subtitle: String, duration: float) -> vo
 	toast_timer = duration
 
 func _on_player_died(reason: String) -> void:
-	var title_lbl = $GameOverPanel/VBox/Title
-	if title_lbl:
-		title_lbl.text = "LEVEL FAILED — TRY AGAIN"
-	var restart_lbl = $GameOverPanel/VBox/RestartBtn
-	if restart_lbl:
-		restart_lbl.text = "TRY AGAIN FROM START OF GAME [R]"
 	game_over_reason.text = reason
 	game_over_panel.visible = true
 
 func _on_restart_pressed() -> void:
 	GameState.force_unpause()
-	# If failed, restart from the start of the game (World 0)
-	GameState.start_level(0)
+	GameState.restart_level()
 
 func _on_menu_pressed() -> void:
 	GameState.force_unpause()
 	GameState.go_to_menu()
-
-func _unhandled_input(event: InputEvent) -> void:
-	if game_over_panel.visible and event.is_action_pressed("restart"):
-		_on_restart_pressed()

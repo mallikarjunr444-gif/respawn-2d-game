@@ -37,11 +37,8 @@ func _on_char_btn_pressed() -> void:
 
 func _on_launch_btn_pressed() -> void:
 	SoundManager.play("click", 0.05)
+	# Start at level 0 (Black Space tutorial) or first available
 	GameState.start_level(0)
-
-func _on_endless_btn_pressed() -> void:
-	SoundManager.play("click", 0.05)
-	GameState.start_endless()
 
 func _on_planets_btn_pressed() -> void:
 	SoundManager.play("click", 0.05)

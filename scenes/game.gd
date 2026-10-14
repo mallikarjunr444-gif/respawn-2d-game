@@ -46,12 +46,8 @@ func _ready() -> void:
 	_setup_visuals()
 	_generate_level()
 
-	var p_name = world_info.get("name", "SPACE ODYSSEY").to_upper()
-	if GameState.game_mode == "endless":
-		p_name = "SECTOR " + str(GameState.endless_sector) + " · " + p_name
-	hud.set_sector_title(p_name)
-	# Cinematic "WELCOME TO [PLANET NAME]" Banner upon entry/arrival
-	GameState.show_toast("WELCOME TO " + p_name, world_info.get("subtitle", "Survive and reach the gate"), 5.0)
+	hud.set_sector_title(world_info.get("name", "SPACE ODYSSEY"))
+	GameState.show_toast(world_info.get("name", ""), world_info.get("subtitle", "Survive and reach the gate"), 4.0)
 
 func _setup_visuals() -> void:
 	sky_rect.color = world_info.get("sky_color", Color(0.02, 0.03, 0.06, 1.0))
@@ -91,74 +87,14 @@ func _create_starfield() -> void:
 	particles.color = col
 	add_child(particles)
 
-func _create_elevated_landing_line(pad_pos: Vector2, pad_width: float = 340.0) -> Node2D:
-	var pad_node = Node2D.new()
-	pad_node.name = "ElevatedLandingLine"
-	pad_node.position = pad_pos
-
-	# Stanchions / Support Pillars holding the elevated line
-	var left_stanchion = Line2D.new()
-	left_stanchion.points = PackedVector2Array([Vector2(0, 0), Vector2(0, 900)])
-	left_stanchion.default_color = Color(0.2, 0.35, 0.55, 0.8)
-	left_stanchion.width = 6.0
-	pad_node.add_child(left_stanchion)
-
-	var right_stanchion = Line2D.new()
-	right_stanchion.points = PackedVector2Array([Vector2(pad_width, 0), Vector2(pad_width, 900)])
-	right_stanchion.default_color = Color(0.2, 0.35, 0.55, 0.8)
-	right_stanchion.width = 6.0
-	pad_node.add_child(right_stanchion)
-
-	# Holographic green landing line (Never below screen!)
-	var holo_line = Line2D.new()
-	holo_line.points = PackedVector2Array([Vector2(-20, 0), Vector2(pad_width + 20, 0)])
-	holo_line.default_color = Color(0.1, 1.0, 0.65, 0.95)
-	holo_line.width = 9.0
-	pad_node.add_child(holo_line)
-
-	# Beacon Lights
-	var light_l = PointLight2D.new()
-	light_l.color = Color(0.1, 1.0, 0.65)
-	light_l.energy = 1.5
-	light_l.position = Vector2(0, -12)
-	pad_node.add_child(light_l)
-
-	var light_r = PointLight2D.new()
-	light_r.color = Color(0.1, 1.0, 0.65)
-	light_r.energy = 1.5
-	light_r.position = Vector2(pad_width, -12)
-	pad_node.add_child(light_r)
-
-	# Collision Line (elevated platform)
-	var body = StaticBody2D.new()
-	var col = CollisionShape2D.new()
-	var seg = SegmentShape2D.new()
-	seg.a = Vector2(-25, 0)
-	seg.b = Vector2(pad_width + 25, 0)
-	col.shape = seg
-	body.add_child(col)
-	pad_node.add_child(body)
-
-	add_child(pad_node)
-	return pad_node
-
 func _generate_level() -> void:
-	# 1. Dynamic Randomized Insertion Coordinates & Elevated Landing Line (Different positions each run!)
-	var base_start = world_info.get("player_start", Vector2(1200.0, 2000.0))
-	var start_pos = base_start + Vector2(randf_range(-140.0, 160.0), randf_range(-100.0, 120.0))
-
-	# Elevated landing line elevated strictly above ground (Never below screen!)
-	var landing_y = clampf(start_pos.y + 320.0, 1200.0, level_bounds.size.y - 750.0)
-	var pad_pos = Vector2(start_pos.x + 60.0, landing_y)
-	_create_elevated_landing_line(pad_pos, 340.0)
-
+	# 1. Spawn Player (Facing right, escaping away from black hole)
 	player = player_scene.instantiate()
+	var start_pos = world_info.get("player_start", Vector2(1200.0, 2000.0))
 	player.position = start_pos
 	player.facing_angle = 0.0
-	player.velocity = Vector2(80.0, 35.0)
+	player.velocity = Vector2(80.0, 0.0)
 	player.level_bounds = level_bounds
-	player.landing_target = Vector2(pad_pos.x + 170.0, pad_pos.y - 18.0)
-	player.is_auto_landing = true # Fully automated descent sequence on entering atmosphere!
 
 	# Space mode: ONLY rocket in space; on planet: character
 	var is_in_space = world_info.get("is_space", false) or world_info.get("id") == "black_space"
@@ -166,36 +102,30 @@ func _generate_level() -> void:
 
 	# Configure planetary environmental forces
 	var grav_val = world_info.get("gravity_strength", 200.0)
-	player.level_gravity = Vector2(0.0, grav_val * 0.15)
+	player.level_gravity = Vector2(0.0, grav_val * 0.15) # Smooth flight gravity
 	var wind_dir = world_info.get("wind_direction", Vector2.ZERO)
 	var wind_str = world_info.get("wind_strength", 0.0)
 	player.level_wind = wind_dir * wind_str
 	player.level_drag = world_info.get("drag_coefficient", 0.015)
 	add_child(player)
 
-	# 2. Spawn Launch Gate at dynamically varied position
+	# 2. Spawn Launch Gate
 	launch_gate = launch_gate_scene.instantiate()
-	var base_gate = world_info.get("launch_gate_position", Vector2(level_bounds.size.x - 500.0, 2000.0))
-	var gate_pos = base_gate + Vector2(randf_range(-120.0, 80.0), randf_range(-120.0, 120.0))
+	var gate_pos = world_info.get("launch_gate_position", Vector2(level_bounds.size.x - 500.0, 2000.0))
 	launch_gate.position = gate_pos
 	launch_gate.set_min_fuel(world_info.get("min_fuel_to_launch", 15.0))
 	launch_gate.set_required_cells(world_info.get("fuel_cell_count", 0))
 	add_child(launch_gate)
 
-	# 3. Dynamic Black Hole pursuit running behind the player across the whole space
-	devourer = devourer_scene.instantiate()
-	var bh_x = start_pos.x - 800.0
-	var bh_y = start_pos.y
-	devourer.position = Vector2(bh_x, bh_y)
-	devourer.pull_radius = 2400.0 + (GameState.current_world_idx * 120.0)
-	devourer.pull_strength = 450.0 + (GameState.current_world_idx * 25.0)
-	devourer.kill_radius = 180.0
-	devourer.pursuit_speed = 52.0 + (GameState.current_world_idx * 7.0)
-	if GameState.game_mode == "endless":
-		devourer.pursuit_speed += GameState.endless_sector * 12.0
-		devourer.pull_strength += GameState.endless_sector * 20.0
-	devourer.target_player = player
-	add_child(devourer)
+	# 3. Spawn Black Hole (opening space only — positioned behind the player on the left)
+	if world_info.get("has_black_hole", false):
+		devourer = devourer_scene.instantiate()
+		devourer.position = world_info.get("black_hole_position", Vector2(500.0, 2000.0))
+		devourer.pull_radius = world_info.get("black_hole_pull_radius", 2200.0)
+		devourer.pull_strength = world_info.get("black_hole_pull_strength", 420.0)
+		devourer.kill_radius = world_info.get("black_hole_kill_radius", 180.0)
+		devourer.target_player = player
+		add_child(devourer)
 
 	# 4. Spawn Fuel Cells along the route
 	_spawn_collectibles(start_pos, gate_pos)

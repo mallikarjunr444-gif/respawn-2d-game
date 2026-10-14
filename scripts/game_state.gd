@@ -45,13 +45,11 @@ var bonus_routes_found: int = 0
 var player_hp: int = 3
 const MAX_HP: int = 3
 
-# ── Weapons & Defense ──
+# ── Weapons (preserved from original) ──
 var has_sword: bool = false
 var has_blaster: bool = false
-var has_shield: bool = true  # Exactly 1 Shield in each level
+var has_shield: bool = false
 var has_lance: bool = false
-var shield_charges: int = 1  # 1 Shield charge per level
-var endless_sector: int = 1  # Endless Frontier sector count
 
 # ── Upgrades ──
 var upgrade_tank_level: int = 0       # 0-3, each adds 25% capacity
@@ -277,8 +275,7 @@ func force_unpause() -> void:
 # ═══════════════════════════════════════════════════════════════
 
 func start_level(world_index: int) -> void:
-	if game_mode != "endless":
-		game_mode = "story"
+	game_mode = "story"
 	current_world_idx = world_index
 	# Preserve collected fuel progression, ensuring player starts with at least 55% tank
 	fuel = maxf(fuel, get_effective_max_fuel() * 0.55)
@@ -289,13 +286,12 @@ func start_level(world_index: int) -> void:
 	orbs_collected = 0
 	bonus_routes_found = 0
 	score = 0
-	shield_charges = 1 # EXACTLY 1 SHIELD IN EACH LEVEL
 
 	# Unlock weapons based on progression
-	has_shield = true # Shield is available with 1 charge per level
-	has_sword = world_index >= 2 or game_mode == "endless"
-	has_blaster = world_index >= 4 or game_mode == "endless"
-	has_lance = world_index >= 8 or game_mode == "endless"
+	has_sword = world_index >= 2
+	has_blaster = world_index >= 4
+	has_shield = world_index >= 6
+	has_lance = world_index >= 8
 
 	weapons_changed.emit()
 	force_unpause()
@@ -317,23 +313,14 @@ func complete_level() -> void:
 	if next_idx < LevelData.get_planet_count() and not unlocked_levels.has(next_idx):
 		unlocked_levels.append(next_idx)
 
-	if game_mode == "endless":
-		endless_sector += 1
-
 	save_data()
 	level_completed.emit()
 
 func restart_level() -> void:
 	force_unpause()
-	# If failed, restart from the start of the game (World 0)
-	start_level(0)
+	start_level(current_world_idx)
 
 func go_to_next_level() -> void:
-	if game_mode == "endless":
-		var next_idx = (current_world_idx + 1) % LevelData.get_planet_count()
-		start_level(next_idx)
-		return
-
 	var next_idx = current_world_idx + 1
 	if next_idx < LevelData.get_planet_count():
 		start_level(next_idx)

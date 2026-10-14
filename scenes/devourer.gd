@@ -11,7 +11,6 @@ extends Node2D
 @export var max_pull_force: float = 440.0
 @export var kill_radius: float = 140.0
 @export var rotation_speed: float = 1.0
-@export var pursuit_speed: float = 55.0
 
 var target_player: CharacterBody2D = null
 var alert_cooldown: float = 0.0
@@ -27,17 +26,13 @@ func _ready() -> void:
 func _process(delta: float) -> void:
 	disk_poly.rotation += rotation_speed * delta
 
-	# 1. Pull Player toward singularity center & pursue player across space
+	# 1. Pull Player toward singularity center
 	if not target_player or not is_instance_valid(target_player):
 		var players = get_tree().get_nodes_in_group("player")
 		if players.size() > 0:
 			target_player = players[0]
 
 	if target_player and is_instance_valid(target_player):
-		# Dynamic Black Hole pursuit running behind the whole space
-		global_position.x += pursuit_speed * delta
-		global_position.y = lerpf(global_position.y, target_player.global_position.y, 1.2 * delta)
-
 		var offset_to_player = target_player.global_position - global_position
 		var dist = offset_to_player.length()
 
