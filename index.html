@@ -3159,9 +3159,9 @@ function renderDead(){
   txt(G.deadWhy || 'MISSION FAILURE', W/2, H/2 - 40, 14, C.bone, 'center', F_U, 700);
   txt('Destination: ' + LVL.name + (G.isEndless ? ` (Sector ${G.endlessSector})` : ''), W/2, H/2 - 15, 13, C.dim, 'center', F_U, 600);
 
-  uiButton('RETRY MISSION FROM START [R]', W/2 - 150, H/2 + 20, 300, 46, () => {
+  uiButton('TRY AGAIN FROM START OF GAME [R]', W/2 - 165, H/2 + 20, 330, 46, () => {
     SFX.click();
-    initPlanet(G.worldIdx, G.isEndless);
+    initPlanet(0, G.isEndless);
   }, {sel: true, sz: 14, col: C.green});
 
   uiButton('ABORT TO TITLE MENU', W/2 - 130, H/2 + 76, 260, 38, () => {
@@ -3188,7 +3188,7 @@ function frame(ts){
     SFX.click();
   }
   if(pressed('retry') && (G.scene === 'dead' || G.scene === 'play')){
-    initPlanet(G.worldIdx);
+    initPlanet(0, G.isEndless);
     SFX.click();
   }
 
