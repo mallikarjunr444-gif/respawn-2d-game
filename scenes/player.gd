@@ -26,6 +26,9 @@ const BOOST_MAX_DURATION: float = 0.4
 const BOOST_COOLDOWN_TIME: float = 1.5
 const BOOST_FUEL_COST: float = 8.0
 
+var is_auto_landing: bool = false
+var landing_target: Vector2 = Vector2.ZERO
+
 # ── Damage ──
 var invulnerable_timer: float = 0.0
 var attack_cooldown: float = 0.0
@@ -99,6 +102,26 @@ func _physics_process(delta: float) -> void:
 		if shield_active_timer <= 0.0:
 			shield_bubble.visible = false
 			shield_bubble.monitoring = false
+
+	# ── Automated Descent Guidance Sequence (Auto landing on planet line) ──
+	if is_auto_landing:
+		var diff = landing_target - global_position
+		var target_vx = clampf(diff.x * 2.5, -220.0, 220.0)
+		var target_vy = clampf(diff.y * 1.6, 30.0, 130.0)
+		velocity.x = lerpf(velocity.x, target_vx, 5.0 * delta)
+		velocity.y = lerpf(velocity.y, target_vy, 4.5 * delta)
+		facing_angle = lerp_angle(facing_angle, 0.0, 6.0 * delta)
+		rotation = lerp_angle(rotation, PI * 0.5, 8.0 * delta)
+		is_thrusting = true
+		exhaust_particles.emitting = true
+		move_and_slide()
+		if diff.length() < 42.0 and absf(velocity.y) < 130.0:
+			is_auto_landing = false
+			velocity = Vector2.ZERO
+			exhaust_particles.emitting = false
+			SoundManager.play("land", 0.1)
+			GameState.show_toast("TOUCHDOWN CONFIRMED ON LINE", "Automated descent sequence complete. Elevated landing line locked.", 4.0)
+		return
 
 	# ── Directional Steering & Rotation (Left/Right or A/D) ──
 	var steer_input = 0.0
@@ -217,11 +240,13 @@ func _physics_process(delta: float) -> void:
 				_fire_plasma_blaster()
 			lance_charge_time = 0.0
 
-	# Phase Shield
-	if Input.is_action_just_pressed("shield") and GameState.has_shield and shield_cooldown <= 0.0:
-		shield_active_timer = 1.8
-		shield_cooldown = 5.5
+	# Phase Shield (Exactly 1 Shield charge per level)
+	if Input.is_action_just_pressed("shield") and GameState.has_shield and GameState.shield_charges > 0 and shield_cooldown <= 0.0:
+		GameState.shield_charges -= 1
+		shield_active_timer = 3.5
+		shield_cooldown = 4.0
 		SoundManager.play("shield", 0.05)
+		GameState.weapons_changed.emit()
 
 	# ── Move ──
 	move_and_slide()
@@ -242,9 +267,9 @@ func _physics_process(delta: float) -> void:
 	if position.y < min_y:
 		position.y = min_y
 		if velocity.y < 0.0: velocity.y = 0.0
-	elif position.y > max_y:
-		position.y = max_y
-		if velocity.y > 0.0: velocity.y = -30.0
+	elif position.y >= max_y - 30.0:
+		# Land on line, not below screen: Falling below screen triggers failure!
+		take_damage(99, "ALTITUDE CRITICAL — IMPACT BELOW FLIGHT CORRIDOR")
 
 
 # ═══════════════════════════════════════════════════════════════
