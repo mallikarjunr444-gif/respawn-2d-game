@@ -1,0 +1,37 @@
+[gd_scene format=3 uid="uid://fuel_cell_001"]
+
+[ext_resource type="Script" path="res://scenes/objects/fuel_cell.gd" id="1_script"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_fuel"]
+radius = 32.0
+
+[sub_resource type="Gradient" id="Gradient_sparkle"]
+colors = PackedColorArray(0.3, 1.0, 0.5, 1, 0.1, 0.8, 0.3, 0)
+
+[node name="FuelCell" type="Area2D"]
+collision_layer = 4
+collision_mask = 1
+script = ExtResource("1_script")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("CircleShape2D_fuel")
+
+[node name="GlowLight" type="PointLight2D" parent="."]
+color = Color(0.2, 1.0, 0.4, 1)
+energy = 1.0
+texture_scale = 0.6
+
+[node name="SparkleParticles" type="CPUParticles2D" parent="."]
+emitting = false
+amount = 12
+lifetime = 0.4
+one_shot = true
+explosiveness = 0.9
+direction = Vector2(0, 0)
+spread = 180.0
+gravity = Vector2(0, 0)
+initial_velocity_min = 40.0
+initial_velocity_max = 100.0
+scale_amount_min = 1.0
+scale_amount_max = 3.0
+color_ramp = SubResource("Gradient_sparkle")

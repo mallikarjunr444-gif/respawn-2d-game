@@ -1,0 +1,47 @@
+[gd_scene format=3 uid="uid://surface_astronaut_001"]
+
+[ext_resource type="Script" path="res://scenes/surface_astronaut.gd" id="1_script"]
+[ext_resource type="Texture2D" path="res://assets/characters/arin_male.svg" id="2_arin"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_astro"]
+size = Vector2(24, 48)
+
+[sub_resource type="Gradient" id="Gradient_dust"]
+colors = PackedColorArray(0.7, 0.55, 0.3, 0.8, 0.5, 0.4, 0.2, 0)
+
+[node name="SurfaceAstronaut" type="CharacterBody2D"]
+z_index = 5
+collision_layer = 1
+collision_mask = 6
+script = ExtResource("1_script")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(0, -24)
+shape = SubResource("RectangleShape2D_astro")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+position = Vector2(0, -28)
+scale = Vector2(0.42, 0.42)
+texture = ExtResource("2_arin")
+
+[node name="VisorLight" type="PointLight2D" parent="."]
+position = Vector2(4, -40)
+color = Color(0.24, 0.94, 1, 1)
+energy = 1.4
+texture_scale = 1.0
+
+[node name="DustParticles" type="CPUParticles2D" parent="."]
+position = Vector2(0, 0)
+emitting = false
+amount = 8
+lifetime = 0.3
+one_shot = false
+explosiveness = 0.3
+direction = Vector2(0, -1)
+spread = 60.0
+gravity = Vector2(0, 200)
+initial_velocity_min = 30.0
+initial_velocity_max = 60.0
+scale_amount_min = 1.0
+scale_amount_max = 2.5
+color_ramp = SubResource("Gradient_dust")

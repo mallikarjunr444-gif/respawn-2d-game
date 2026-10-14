@@ -1,0 +1,18 @@
+[gd_scene format=3 uid="uid://ring_debris_001"]
+
+[ext_resource type="Script" path="res://scenes/objects/ring_debris.gd" id="1_script"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_debris"]
+radius = 30.0
+
+[node name="RingDebris" type="Area2D"]
+collision_layer = 4
+collision_mask = 1
+script = ExtResource("1_script")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("CircleShape2D_debris")
+
+[node name="Polygon2D" type="Polygon2D" parent="."]
+color = Color(0.85, 0.75, 0.5, 0.85)
+polygon = PackedVector2Array(0, -28, 22, -18, 28, 10, 8, 26, -18, 22, -26, -5, -12, -24)

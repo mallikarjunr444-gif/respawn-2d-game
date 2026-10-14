@@ -3,8 +3,9 @@
 [ext_resource type="Script" path="res://scenes/game.gd" id="1_script"]
 [ext_resource type="Environment" uid="uid://cx4x27891evr2" path="res://default_env.tres" id="2_env"]
 [ext_resource type="PackedScene" uid="uid://cx4x27891evr5" path="res://scenes/ui/hud.tscn" id="3_hud"]
-[ext_resource type="PackedScene" uid="uid://cx4x27891evr6" path="res://scenes/ui/puzzle_modal.tscn" id="4_pz"]
-[ext_resource type="Texture2D" path="res://assets/planets/fractured_moon.svg" id="5_planet"]
+[ext_resource type="PackedScene" uid="uid://pause_menu_001" path="res://scenes/ui/pause_menu.tscn" id="4_pause"]
+[ext_resource type="PackedScene" uid="uid://level_complete_001" path="res://scenes/ui/level_complete.tscn" id="5_complete"]
+[ext_resource type="Texture2D" path="res://assets/planets/fractured_moon.svg" id="6_planet"]
 
 [node name="Game" type="Node2D"]
 script = ExtResource("1_script")
@@ -13,29 +14,31 @@ script = ExtResource("1_script")
 environment = ExtResource("2_env")
 
 [node name="Camera2D" type="Camera2D" parent="."]
-position = Vector2(180, 480)
-zoom = Vector2(1.1, 1.1)
+position = Vector2(400, 2000)
+zoom = Vector2(0.85, 0.85)
 
 [node name="ParallaxBackground" type="ParallaxBackground" parent="."]
 
 [node name="ParallaxLayerSky" type="ParallaxLayer" parent="ParallaxBackground"]
-motion_mirroring = Vector2(1280, 0)
+motion_mirroring = Vector2(2560, 2560)
 
 [node name="SkyRect" type="ColorRect" parent="ParallaxBackground/ParallaxLayerSky"]
-offset_left = -600.0
-offset_top = -600.0
-offset_right = 2400.0
-offset_bottom = 1200.0
-color = Color(0.04, 0.05, 0.12, 1)
+offset_left = -1000.0
+offset_top = -1000.0
+offset_right = 7000.0
+offset_bottom = 5000.0
+color = Color(0.02, 0.03, 0.06, 1)
 
 [node name="ParallaxLayerPlanet" type="ParallaxLayer" parent="ParallaxBackground"]
-motion_scale = Vector2(0.06, 0.06)
+motion_scale = Vector2(0.04, 0.04)
 
 [node name="PlanetSprite" type="Sprite2D" parent="ParallaxBackground/ParallaxLayerPlanet"]
-position = Vector2(800, 180)
-scale = Vector2(0.85, 0.85)
-texture = ExtResource("5_planet")
+position = Vector2(1200, 800)
+scale = Vector2(1.2, 1.2)
+texture = ExtResource("6_planet")
 
 [node name="HUD" parent="." instance=ExtResource("3_hud")]
 
-[node name="PuzzleModal" parent="." instance=ExtResource("4_pz")]
+[node name="PauseMenu" parent="." instance=ExtResource("4_pause")]
+
+[node name="LevelComplete" parent="." instance=ExtResource("5_complete")]

@@ -2,6 +2,7 @@
 
 [ext_resource type="Script" path="res://scenes/player.gd" id="1_script"]
 [ext_resource type="Texture2D" path="res://assets/characters/arin_male.svg" id="2_arin"]
+[ext_resource type="Texture2D" path="res://assets/objects/rocket_ship.svg" id="3_ship"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_player"]
 size = Vector2(28, 54)
@@ -12,10 +13,14 @@ size = Vector2(56, 64)
 [sub_resource type="CircleShape2D" id="CircleShape2D_shield"]
 radius = 42.0
 
-[sub_resource type="Gradient" id="Gradient_thruster"]
-colors = PackedColorArray(0.24, 0.94, 1, 1, 0.1, 0.2, 0.6, 0)
+[sub_resource type="Gradient" id="Gradient_exhaust"]
+colors = PackedColorArray(1.0, 0.7, 0.2, 1, 1.0, 0.3, 0.05, 0.8, 0.2, 0.05, 0.8, 0)
+
+[sub_resource type="Gradient" id="Gradient_boost"]
+colors = PackedColorArray(0.4, 0.8, 1.0, 1, 0.1, 0.3, 1.0, 0.6, 0.05, 0.1, 0.5, 0)
 
 [node name="Player" type="CharacterBody2D"]
+z_index = 5
 collision_layer = 1
 collision_mask = 6
 script = ExtResource("1_script")
@@ -29,21 +34,48 @@ position = Vector2(0, -28)
 scale = Vector2(0.45, 0.45)
 texture = ExtResource("2_arin")
 
-[node name="ThrusterParticles" type="CPUParticles2D" parent="."]
-position = Vector2(0, -4)
+[node name="RocketSprite" type="Sprite2D" parent="."]
+position = Vector2(0, 8)
+scale = Vector2(0.3, 0.3)
+modulate = Color(0.8, 0.8, 0.9, 1.0)
+
+[node name="ShipSprite" type="Sprite2D" parent="."]
+visible = false
+position = Vector2(0, -18)
+scale = Vector2(0.48, 0.48)
+texture = ExtResource("3_ship")
+
+[node name="ExhaustParticles" type="CPUParticles2D" parent="."]
+position = Vector2(0, 12)
 emitting = false
-amount = 16
-lifetime = 0.2
-one_shot = true
-explosiveness = 0.8
+amount = 24
+lifetime = 0.35
+one_shot = false
+explosiveness = 0.3
 direction = Vector2(0, 1)
-spread = 35.0
+spread = 25.0
 gravity = Vector2(0, 0)
-initial_velocity_min = 90.0
-initial_velocity_max = 140.0
+initial_velocity_min = 120.0
+initial_velocity_max = 200.0
 scale_amount_min = 2.0
 scale_amount_max = 5.0
-color_ramp = SubResource("Gradient_thruster")
+color_ramp = SubResource("Gradient_exhaust")
+
+[node name="BoostParticles" type="CPUParticles2D" parent="."]
+position = Vector2(0, 12)
+emitting = false
+amount = 32
+lifetime = 0.25
+one_shot = false
+explosiveness = 0.6
+direction = Vector2(0, 1)
+spread = 40.0
+gravity = Vector2(0, 0)
+initial_velocity_min = 200.0
+initial_velocity_max = 350.0
+scale_amount_min = 3.0
+scale_amount_max = 8.0
+color_ramp = SubResource("Gradient_boost")
 
 [node name="SwordArea" type="Area2D" parent="."]
 position = Vector2(24, -28)

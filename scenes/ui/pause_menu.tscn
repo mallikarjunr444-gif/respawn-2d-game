@@ -1,0 +1,122 @@
+[gd_scene format=3 uid="uid://pause_menu_001"]
+
+[ext_resource type="Script" path="res://scenes/ui/pause_menu.gd" id="1_script"]
+
+[node name="PauseMenu" type="CanvasLayer"]
+process_mode = 3
+layer = 10
+script = ExtResource("1_script")
+
+[node name="DimOverlay" type="ColorRect" parent="."]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.02, 0.03, 0.06, 0.75)
+
+[node name="Panel" type="PanelContainer" parent="."]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -220.0
+offset_top = -240.0
+offset_right = 220.0
+offset_bottom = 240.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VBox" type="VBoxContainer" parent="Panel"]
+layout_mode = 2
+theme_override_constants/separation = 14
+alignment = 1
+
+[node name="Title" type="Label" parent="Panel/VBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.3, 0.9, 1, 1)
+theme_override_font_sizes/font_size = 28
+text = "SYSTEM PAUSED"
+horizontal_alignment = 1
+
+[node name="Subtitle" type="Label" parent="Panel/VBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.6, 0.7, 0.8, 1)
+theme_override_font_sizes/font_size = 13
+text = "MISSION ON HOLD"
+horizontal_alignment = 1
+
+[node name="ResumeBtn" type="Button" parent="Panel/VBox"]
+custom_minimum_size = Vector2(0, 42)
+layout_mode = 2
+text = "RESUME FLIGHT"
+
+[node name="RestartBtn" type="Button" parent="Panel/VBox"]
+custom_minimum_size = Vector2(0, 38)
+layout_mode = 2
+text = "RESTART PLANET"
+
+[node name="LevelSelectBtn" type="Button" parent="Panel/VBox"]
+custom_minimum_size = Vector2(0, 38)
+layout_mode = 2
+text = "PLANET NAVIGATION"
+
+[node name="AudioBox" type="VBoxContainer" parent="Panel/VBox"]
+layout_mode = 2
+theme_override_constants/separation = 6
+
+[node name="AudioLabel" type="Label" parent="Panel/VBox/AudioBox"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 14
+text = "AUDIO SETTINGS"
+horizontal_alignment = 1
+
+[node name="MusicBox" type="HBoxContainer" parent="Panel/VBox/AudioBox"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="Panel/VBox/AudioBox/MusicBox"]
+custom_minimum_size = Vector2(60, 0)
+layout_mode = 2
+theme_override_font_sizes/font_size = 12
+text = "Music"
+
+[node name="MusicSlider" type="HSlider" parent="Panel/VBox/AudioBox/MusicBox"]
+layout_mode = 2
+size_flags_horizontal = 3
+max_value = 1.0
+step = 0.05
+value = 0.7
+
+[node name="MusicCheck" type="CheckBox" parent="Panel/VBox/AudioBox"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 12
+button_pressed = true
+text = "Music Enabled"
+
+[node name="SfxBox" type="HBoxContainer" parent="Panel/VBox/AudioBox"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="Panel/VBox/AudioBox/SfxBox"]
+custom_minimum_size = Vector2(60, 0)
+layout_mode = 2
+theme_override_font_sizes/font_size = 12
+text = "SFX"
+
+[node name="SfxSlider" type="HSlider" parent="Panel/VBox/AudioBox/SfxBox"]
+layout_mode = 2
+size_flags_horizontal = 3
+max_value = 1.0
+step = 0.05
+value = 0.85
+
+[node name="SfxCheck" type="CheckBox" parent="Panel/VBox/AudioBox"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 12
+button_pressed = true
+text = "SFX Enabled"
+
+[node name="MenuBtn" type="Button" parent="Panel/VBox"]
+custom_minimum_size = Vector2(0, 38)
+layout_mode = 2
+text = "RETURN TO ORBIT (MENU)"
