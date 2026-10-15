@@ -1,95 +1,168 @@
 diff --git a/public/index.html b/public/index.html
-index 643a352..69df9fd 100644
+index 69df9fd..6b49c26 100644
 --- a/public/index.html
 +++ b/public/index.html
-@@ -34,9 +34,12 @@ height:100%;height:100dvh;min-height:-webkit-fill-available;overflow:hidden;over
- 
- #stage{width:min(100%,calc((100vh - 54px) * 1.7778));width:min(100%,calc((100dvh - 54px) * 1.7778));aspect-ratio:16/9;max-width:100%;
- border:1px solid rgba(61,240,255,.28);border-radius:6px;position:relative;
--animation:borderPulse 4s ease-in-out infinite;background:#000;overflow:hidden}
-+animation:borderPulse 4s ease-in-out infinite;background:#000;overflow:hidden;
-+touch-action:none;-webkit-touch-callout:none;-webkit-user-select:none;user-select:none}
- 
--canvas{width:100%;height:100%;display:block;touch-action:none;background:#000;outline:none;border-radius:5px}
-+#stage, #stage *{-webkit-touch-callout:none;-webkit-user-select:none;user-select:none}
-+
-+canvas{width:100%;height:100%;display:block;touch-action:none;-webkit-touch-callout:none;-webkit-user-select:none;user-select:none;background:#000;outline:none;border-radius:5px}
- 
- #orvex-header{width:min(100%,calc((100vh - 54px) * 1.7778));width:min(100%,calc((100dvh - 54px) * 1.7778));display:flex;align-items:center;justify-content:space-between;padding:4px 12px;background:rgba(13,20,51,.75);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border:1px solid rgba(61,240,255,.18);border-radius:8px;box-shadow:0 4px 16px rgba(0,0,0,.4);z-index:10}
- .brand{display:flex;align-items:center;gap:8px;font:700 13px var(--display);letter-spacing:2px;color:var(--bone);text-decoration:none}
-@@ -50,15 +53,15 @@ canvas{width:100%;height:100%;display:block;touch-action:none;background:#000;ou
+@@ -53,19 +53,23 @@ canvas{width:100%;height:100%;display:block;touch-action:none;-webkit-touch-call
  #fs-btn{width:28px;height:28px;background:rgba(61,240,255,.08);border:1px solid rgba(61,240,255,.25);border-radius:6px;color:var(--cyan);font-size:14px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .15s}
  #fs-btn:hover{background:rgba(61,240,255,.2);color:#fff}
  
--#touch{display:none;position:absolute;inset:0;width:auto;justify-content:space-between;align-items:flex-end;gap:10px;padding:max(10px,env(safe-area-inset-top)) max(14px,env(safe-area-inset-right)) max(14px,env(safe-area-inset-bottom)) max(14px,env(safe-area-inset-left));pointer-events:none;z-index:20}
--.pad-left,.pad-center,.pad-right{display:flex;gap:8px;align-items:flex-end;pointer-events:none}
-+#touch{display:none;position:absolute;inset:0;width:auto;justify-content:space-between;align-items:flex-end;gap:10px;padding:max(10px,env(safe-area-inset-top)) max(14px,env(safe-area-inset-right)) max(14px,env(safe-area-inset-bottom)) max(14px,env(safe-area-inset-left));pointer-events:none;z-index:20;touch-action:none;-webkit-touch-callout:none;-webkit-user-select:none;user-select:none}
-+.pad-left,.pad-center,.pad-right,.dpad{display:flex;gap:8px;align-items:flex-end;pointer-events:none;touch-action:none;-webkit-touch-callout:none;-webkit-user-select:none;user-select:none}
- .pad-right{flex-wrap:wrap;max-width:230px;justify-content:flex-end}
--.dpad{display:grid;grid-template-columns:52px 52px 52px;grid-template-rows:52px 52px 52px;gap:6px;pointer-events:none}
-+.dpad{display:grid;grid-template-columns:52px 52px 52px;grid-template-rows:52px 52px 52px;gap:6px;pointer-events:none;touch-action:none;-webkit-touch-callout:none;-webkit-user-select:none;user-select:none}
- .dpad .tb[data-k="up"]{grid-column:2;grid-row:1}
- .dpad .tb[data-k="left"]{grid-column:1;grid-row:2}
- .dpad .tb[data-k="right"]{grid-column:3;grid-row:2}
- .dpad .tb[data-k="down"]{grid-column:2;grid-row:3}
--.tb{min-width:52px;height:52px;padding:0 8px;border-radius:12px;border:1px solid rgba(61,240,255,.28);background:rgba(13,20,51,.82);color:var(--bone);font:700 12px var(--ui);letter-spacing:.05em;touch-action:none;user-select:none;-webkit-user-select:none;cursor:pointer;pointer-events:auto;box-shadow:0 8px 18px rgba(0,0,0,.4)}
-+.tb{min-width:52px;height:52px;padding:0 8px;border-radius:12px;border:1px solid rgba(61,240,255,.28);background:rgba(13,20,51,.82);color:var(--bone);font:700 12px var(--ui);letter-spacing:.05em;touch-action:none;-webkit-touch-callout:none;-webkit-user-select:none;user-select:none;-webkit-user-drag:none;-webkit-tap-highlight-color:transparent;cursor:pointer;pointer-events:auto;box-shadow:0 8px 18px rgba(0,0,0,.4)}
- .tb:active,.tb.on{background:#16306a;border-color:var(--cyan);color:var(--cyan)}
- .tb-dir{min-width:52px;font-size:16px}
- .tb-thrust{min-width:88px;height:58px;background:rgba(61,240,255,.2);border-color:var(--cyan);color:var(--cyan)}
-@@ -390,10 +393,29 @@ addEventListener('keyup', e => {
-   const k = MAP[e.key.toLowerCase()];
-   if(k) k.forEach(release);
- });
--addEventListener('blur', () => { held={}; });
-+addEventListener('blur', () => {
-+  held = {};
-+  document.querySelectorAll('.tb').forEach(btn => btn.classList.remove('on'));
-+});
-+
-+// Scoped contextmenu, text-selection, and drag prevention for the game area
-+const stageEl = document.getElementById('stage');
-+if(stageEl){
-+  stageEl.addEventListener('contextmenu', e => e.preventDefault(), { capture: true });
-+  stageEl.addEventListener('selectstart', e => e.preventDefault(), { capture: true });
-+  stageEl.addEventListener('dragstart', e => e.preventDefault(), { capture: true });
-+}
-+
-+const touchControls = document.getElementById('touch');
-+if(touchControls){
-+  touchControls.addEventListener('contextmenu', e => e.preventDefault(), { capture: true });
-+  touchControls.addEventListener('selectstart', e => e.preventDefault(), { capture: true });
-+  touchControls.addEventListener('dragstart', e => e.preventDefault(), { capture: true });
+-#touch{display:none;position:absolute;inset:0;width:auto;justify-content:space-between;align-items:flex-end;gap:10px;padding:max(10px,env(safe-area-inset-top)) max(14px,env(safe-area-inset-right)) max(14px,env(safe-area-inset-bottom)) max(14px,env(safe-area-inset-left));pointer-events:none;z-index:20;touch-action:none;-webkit-touch-callout:none;-webkit-user-select:none;user-select:none}
+-.pad-left,.pad-center,.pad-right,.dpad{display:flex;gap:8px;align-items:flex-end;pointer-events:none;touch-action:none;-webkit-touch-callout:none;-webkit-user-select:none;user-select:none}
+-.pad-right{flex-wrap:wrap;max-width:230px;justify-content:flex-end}
+-.dpad{display:grid;grid-template-columns:52px 52px 52px;grid-template-rows:52px 52px 52px;gap:6px;pointer-events:none;touch-action:none;-webkit-touch-callout:none;-webkit-user-select:none;user-select:none}
+-.dpad .tb[data-k="up"]{grid-column:2;grid-row:1}
+-.dpad .tb[data-k="left"]{grid-column:1;grid-row:2}
+-.dpad .tb[data-k="right"]{grid-column:3;grid-row:2}
+-.dpad .tb[data-k="down"]{grid-column:2;grid-row:3}
+-.tb{min-width:52px;height:52px;padding:0 8px;border-radius:12px;border:1px solid rgba(61,240,255,.28);background:rgba(13,20,51,.82);color:var(--bone);font:700 12px var(--ui);letter-spacing:.05em;touch-action:none;-webkit-touch-callout:none;-webkit-user-select:none;user-select:none;-webkit-user-drag:none;-webkit-tap-highlight-color:transparent;cursor:pointer;pointer-events:auto;box-shadow:0 8px 18px rgba(0,0,0,.4)}
+-.tb:active,.tb.on{background:#16306a;border-color:var(--cyan);color:var(--cyan)}
+-.tb-dir{min-width:52px;font-size:16px}
+-.tb-thrust{min-width:88px;height:58px;background:rgba(61,240,255,.2);border-color:var(--cyan);color:var(--cyan)}
++#touch{display:none;position:absolute;inset:0;width:auto;justify-content:space-between;align-items:flex-end;gap:12px;padding:max(10px,env(safe-area-inset-top)) max(14px,env(safe-area-inset-right)) max(12px,env(safe-area-inset-bottom)) max(14px,env(safe-area-inset-left));pointer-events:none;z-index:20;touch-action:none;-webkit-touch-callout:none;-webkit-user-select:none;user-select:none}
++.pad-left{display:flex;align-items:flex-end;pointer-events:none;touch-action:none;-webkit-touch-callout:none;-webkit-user-select:none;user-select:none}
++.joy-container{display:flex;align-items:center;gap:6px;padding:4px;background:rgba(13,20,51,.76);border:1px solid rgba(61,240,255,.26);border-radius:16px;pointer-events:auto;touch-action:none;-webkit-touch-callout:none;-webkit-user-select:none;user-select:none;box-shadow:0 6px 18px rgba(0,0,0,.45)}
++.joy-divider{width:2px;height:34px;background:linear-gradient(180deg,transparent,rgba(61,240,255,.4),transparent);border-radius:1px}
++.pad-right{display:grid;grid-template-columns:repeat(4,52px);grid-template-rows:48px 48px;gap:6px;align-items:flex-end;pointer-events:none;touch-action:none;-webkit-touch-callout:none;-webkit-user-select:none;user-select:none}
++.tb{width:52px;height:48px;padding:0;border-radius:10px;border:1px solid rgba(61,240,255,.28);background:rgba(13,20,51,.84);color:var(--bone);font:700 11px var(--ui);letter-spacing:.03em;display:flex;align-items:center;justify-content:center;touch-action:none;-webkit-touch-callout:none;-webkit-user-select:none;user-select:none;-webkit-user-drag:none;-webkit-tap-highlight-color:transparent;cursor:pointer;pointer-events:auto;box-shadow:0 6px 14px rgba(0,0,0,.4);transition:background .1s,border-color .1s,box-shadow .1s}
++.tb:active,.tb.on{background:#16306a;border-color:var(--cyan);color:var(--cyan);box-shadow:0 0 12px rgba(61,240,255,.45)}
++.tb-side{width:58px;height:50px;font-size:20px;border-radius:12px}
++.tb-v-dir{font-size:18px}
++.tb-thrust{background:rgba(61,240,255,.18);border-color:var(--cyan);color:var(--cyan)}
+ .tb-action{background:rgba(255,122,46,.2);border-color:var(--ember);color:var(--ember)}
++@media (max-width: 760px){
++  .pad-right{grid-template-columns:repeat(4,46px);grid-template-rows:44px 44px;gap:5px}
++  .tb{width:46px;height:44px;font-size:10px}
++  .tb-side{width:52px;height:46px;font-size:18px}
++  .joy-container{gap:4px;padding:3px}
 +}
  
- document.querySelectorAll('.tb').forEach(b => {
+ #shortcuts-bar{position:absolute;bottom:8px;left:50%;transform:translateX(-50%);display:flex;align-items:center;justify-content:center;gap:5px 8px;padding:3px 12px;background:rgba(7,10,26,.88);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);border:1px solid rgba(61,240,255,.28);border-radius:18px;font:600 10.5px var(--ui);color:var(--bone);letter-spacing:.02em;white-space:nowrap;box-shadow:0 4px 14px rgba(0,0,0,.6);pointer-events:none;z-index:15;max-width:96%;overflow-x:auto}
+ .sc-item{display:inline-flex;align-items:center;gap:3px;flex-shrink:0}
+@@ -139,23 +143,21 @@ html:fullscreen canvas{border-radius:0}
+   <canvas id="c" width="960" height="540" tabindex="0" aria-label="Space Odyssey"></canvas>
+   <div id="touch">
+     <div class="pad-left">
+-      <div class="dpad">
+-        <button class="tb tb-dir" data-k="up" aria-label="Up">▲</button>
+-        <button class="tb tb-dir" data-k="left" aria-label="Left">◀</button>
+-        <button class="tb tb-dir" data-k="right" aria-label="Right">▶</button>
+-        <button class="tb tb-dir" data-k="down" aria-label="Down">▼</button>
++      <div class="joy-container" id="joy-left" aria-label="Steering Joystick">
++        <button class="tb tb-side" data-k="left" aria-label="Move Left">◀</button>
++        <div class="joy-divider"></div>
++        <button class="tb tb-side" data-k="right" aria-label="Move Right">▶</button>
+       </div>
+     </div>
+-    <div class="pad-center">
+-      <button class="tb tb-thrust" data-k="thrust">THRUST</button>
+-    </div>
+     <div class="pad-right">
+-      <button class="tb" data-k="boost">DASH</button>
+-      <button class="tb tb-action" data-k="use">BOARD</button>
+-      <button class="tb" data-k="atk">SWORD</button>
+-      <button class="tb" data-k="shoot">BLAST</button>
+-      <button class="tb" data-k="shield">SHIELD</button>
+-      <button class="tb" data-k="pause">PAUSE</button>
++      <button class="tb tb-v-dir tb-thrust" data-k="up" aria-label="Up and Thrust">▲</button>
++      <button class="tb" data-k="atk" aria-label="Sword Attack">SWORD</button>
++      <button class="tb" data-k="boost" aria-label="Dash">DASH</button>
++      <button class="tb tb-action" data-k="use" aria-label="Board Rocket">BOARD</button>
++      <button class="tb tb-v-dir" data-k="down" aria-label="Down and Brake">▼</button>
++      <button class="tb" data-k="shoot" aria-label="Blaster Shot">BLAST</button>
++      <button class="tb" data-k="shield" aria-label="Shield">SHIELD</button>
++      <button class="tb" data-k="pause" aria-label="Pause Game">PAUSE</button>
+     </div>
+   </div>
+   <div id="shortcuts-bar" aria-label="Keyboard Shortcuts">
+@@ -413,19 +415,88 @@ if(touchControls){
+   touchControls.addEventListener('dragstart', e => e.preventDefault(), { capture: true });
+ }
+ 
+-document.querySelectorAll('.tb').forEach(b => {
++// ── Left Hand: Directional Joystick / Side-Buttons Controller ──
++const joyLeft = document.getElementById('joy-left');
++if(joyLeft){
++  let joyPointerId = null;
++
++  const updateJoy = (clientX) => {
++    const rect = joyLeft.getBoundingClientRect();
++    const midX = rect.left + rect.width / 2;
++    const btnL = joyLeft.querySelector('.tb[data-k="left"]');
++    const btnR = joyLeft.querySelector('.tb[data-k="right"]');
++
++    if(clientX < midX){
++      press('left');
++      release('right');
++      if(btnL) btnL.classList.add('on');
++      if(btnR) btnR.classList.remove('on');
++    } else {
++      press('right');
++      release('left');
++      if(btnR) btnR.classList.add('on');
++      if(btnL) btnL.classList.remove('on');
++    }
++  };
++
++  const endJoy = (e) => {
++    if(joyPointerId !== null && (e.pointerId === joyPointerId || e.type === 'touchcancel')){
++      try{ joyLeft.releasePointerCapture(joyPointerId); }catch(err){}
++      joyPointerId = null;
++      release('left');
++      release('right');
++      const btnL = joyLeft.querySelector('.tb[data-k="left"]');
++      const btnR = joyLeft.querySelector('.tb[data-k="right"]');
++      if(btnL) btnL.classList.remove('on');
++      if(btnR) btnR.classList.remove('on');
++    }
++  };
++
++  joyLeft.addEventListener('pointerdown', e => {
++    e.preventDefault();
++    joyPointerId = e.pointerId;
++    try{ joyLeft.setPointerCapture(e.pointerId); }catch(err){}
++    audioInit();
++    updateJoy(e.clientX);
++  });
++
++  joyLeft.addEventListener('pointermove', e => {
++    if(joyPointerId !== null && e.pointerId === joyPointerId){
++      e.preventDefault();
++      updateJoy(e.clientX);
++    }
++  });
++
++  joyLeft.addEventListener('pointerup', endJoy);
++  joyLeft.addEventListener('pointercancel', endJoy);
++  joyLeft.addEventListener('lostpointercapture', endJoy);
++  joyLeft.addEventListener('contextmenu', e => e.preventDefault(), { capture: true });
++}
++
++// ── Right Hand: Vertical (Up / Thrust & Down / Brake) + Combat & Action Grid ──
++document.querySelectorAll('.pad-right .tb').forEach(b => {
    const a = b.dataset.k;
-+  b.setAttribute('type', 'button');
+   b.setAttribute('type', 'button');
    b.addEventListener('pointerdown', e => {
      e.preventDefault();
      try{ b.setPointerCapture(e.pointerId); }catch(err){}
-@@ -408,6 +430,15 @@ document.querySelectorAll('.tb').forEach(b => {
+     audioInit();
+-    press(a);
++    if(a === 'up'){
++      press('up');
++      press('thrust');
++    } else {
++      press(a);
++    }
+     b.classList.add('on');
+   });
+   const onUp = (e) => {
+     try{ b.releasePointerCapture(e.pointerId); }catch(err){}
+-    release(a);
++    if(a === 'up'){
++      release('up');
++      release('thrust');
++    } else {
++      release(a);
++    }
+     b.classList.remove('on');
    };
    b.addEventListener('pointerup', onUp);
-   b.addEventListener('pointercancel', onUp);
-+  b.addEventListener('lostpointercapture', onUp);
-+  b.addEventListener('contextmenu', e => e.preventDefault());
-+  b.addEventListener('selectstart', e => e.preventDefault());
-+  b.addEventListener('dragstart', e => e.preventDefault());
-+});
-+
-+window.addEventListener('touchcancel', () => {
-+  held = {};
-+  document.querySelectorAll('.tb').forEach(btn => btn.classList.remove('on'));
- });
- 
- cv.addEventListener('mousedown', e => {
-@@ -420,6 +451,8 @@ cv.addEventListener('mouseup', e => {
-   else if(e.button === 2) release('shoot');
- });
- cv.addEventListener('contextmenu', e => e.preventDefault());
-+cv.addEventListener('selectstart', e => e.preventDefault());
-+cv.addEventListener('dragstart', e => e.preventDefault());
- 
- ['touchstart','touchend','pointerdown'].forEach(ev => {
-   window.addEventListener(ev, () => {
