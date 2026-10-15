@@ -400,12 +400,12 @@ const PLANETS = [
     planetArt: 'assets/planets/fractured_moon.svg',
     bgArt: 'assets/backgrounds/world1_fractured_moon.svg',
     enemyType: 'voidling',
-    hasHole: true, holePos: {x: 180, y: 1240}, holePullR: 1250, holeForce: 190, holeKillR: 110,
+    hasHole: true, holePos: {x: -300, y: 1240}, holePullR: 1250, holeForce: 190, holeKillR: 110,
     gravity: 780, friction: 0.82, airDrag: 0.985, wind: {x: 0, y: 0},
     mandatoryName: 'Ancient Artifacts', mandatoryCount: 7,
     bonusName: 'Alien Energy Cores', bonusCount: 5,
     gravityZones: 5, movingPlatforms: 5, enemies: 5,
-    landingPad: {x: 650, y: 1530, w: 220, h: 22},
+    landingPad: {x: 620, y: 1530, w: 220, h: 22},
     rocketStart: {x: 200, y: 480, vx: 200, vy: 40, angle: 0.22},
     departureRocket: {x: 4950, y: 1500, w: 90, h: 140}
   },
@@ -423,7 +423,7 @@ const PLANETS = [
     mandatoryName: 'Atmospheric Crystals', mandatoryCount: 8,
     bonusName: 'Navigation Modules', bonusCount: 6,
     updrafts: 6, downdrafts: 2, movingPlatforms: 8, enemies: 4,
-    landingPad: {x: 650, y: 1790, w: 220, h: 22},
+    landingPad: {x: 820, y: 1790, w: 220, h: 22},
     rocketStart: {x: 220, y: 550, vx: 210, vy: 45, angle: 0.2},
     departureRocket: {x: 5450, y: 1120, w: 90, h: 140}
   },
@@ -437,10 +437,11 @@ const PLANETS = [
     planetArt: 'assets/planets/cinder_moon.svg',
     bgArt: 'assets/backgrounds/world3_cinder_moon.svg',
     gravity: 920, friction: 0.83, airDrag: 0.982, wind: {x: 0, y: 0},
+    enemyType: 'voidling', enemies: 4,
     mandatoryName: 'Thermal Cores', mandatoryCount: 8,
     bonusName: 'Rare Minerals', bonusCount: 5,
     lavaPits: 7, fireJets: 8, heatZones: 6, fallingRocks: true, debris: 12,
-    landingPad: {x: 650, y: 1570, w: 220, h: 22},
+    landingPad: {x: 940, y: 1570, w: 220, h: 22},
     rocketStart: {x: 200, y: 520, vx: 200, vy: 50, angle: 0.22},
     departureRocket: {x: 5250, y: 1540, w: 90, h: 140}
   },
@@ -454,10 +455,11 @@ const PLANETS = [
     planetArt: 'assets/planets/cryos.svg',
     bgArt: 'assets/backgrounds/world4_cryos.svg',
     gravity: 750, friction: 0.24, airDrag: 0.994, wind: {x: -70, y: 0},
+    enemyType: 'sentinel',
     mandatoryName: 'Frozen Samples', mandatoryCount: 9,
     bonusName: 'Cryo Energy Cells', bonusCount: 5,
     iceGusts: 6, crackingPlatforms: 9, enemies: 4,
-    landingPad: {x: 650, y: 1610, w: 220, h: 22},
+    landingPad: {x: 740, y: 1610, w: 220, h: 22},
     rocketStart: {x: 200, y: 540, vx: 200, vy: 45, angle: 0.22},
     departureRocket: {x: 5350, y: 1580, w: 90, h: 140}
   },
@@ -475,7 +477,7 @@ const PLANETS = [
     mandatoryName: 'Scientific Samples', mandatoryCount: 9,
     bonusName: 'Rare Toxic Minerals', bonusCount: 5,
     oxygenDrain: 2.6, safeZones: 5, acidZones: 7, enemies: 5,
-    landingPad: {x: 650, y: 1630, w: 220, h: 22},
+    landingPad: {x: 1020, y: 1630, w: 220, h: 22},
     rocketStart: {x: 200, y: 550, vx: 200, vy: 45, angle: 0.22},
     departureRocket: {x: 5550, y: 1600, w: 90, h: 140}
   },
@@ -489,10 +491,11 @@ const PLANETS = [
     planetArt: 'assets/planets/earth.svg',
     bgArt: 'assets/backgrounds/world6_earth.svg',
     gravity: 870, friction: 0.88, airDrag: 0.985, wind: {x: 165, y: 0},
+    enemyType: 'sentinel', enemies: 3,
     mandatoryName: 'Energy Crystals', mandatoryCount: 6,
     bonusName: 'Fuel Reserves', bonusCount: 8,
     dustStorms: true, windBuffet: true, satelliteFields: 5,
-    landingPad: {x: 650, y: 1470, w: 220, h: 22},
+    landingPad: {x: 560, y: 1470, w: 220, h: 22},
     rocketStart: {x: 200, y: 500, vx: 200, vy: 40, angle: 0.22},
     departureRocket: {x: 4950, y: 1440, w: 90, h: 140}
   }
@@ -527,11 +530,21 @@ const G = {
   camY: 0,
 
   // Combat & abilities
-  hasSword: true,
-  hasBlaster: true,
+  unlockedSword: false,
+  unlockedBlaster: false,
+  hasSword: false,
+  hasBlaster: false,
   hasShield: true,
   shieldT: 0,
   shieldCd: 0,
+  shieldCharges: 1,
+  fightKills: 0,
+  lastPlanetClear: null,
+
+  // Endless expedition state
+  endless: false,
+  runCycle: 0,
+  holePos: null,
 
   phaseTimer: 0,
   totalPlayTime: 0,
@@ -546,6 +559,10 @@ if(saved){
   if(saved.tankLv) G.tankLv = saved.tankLv;
   if(saved.thrustLv) G.thrustLv = saved.thrustLv;
   if(saved.effLv) G.effLv = saved.effLv;
+  G.unlockedSword = saved.unlockedSword === true;
+  G.unlockedBlaster = saved.unlockedBlaster === true;
+  G.hasSword = G.unlockedSword;
+  G.hasBlaster = G.unlockedBlaster;
 }
 function saveData(){
   store('space_odyssey_save_v2', {
@@ -553,7 +570,9 @@ function saveData(){
     bestScores: G.bestScores,
     tankLv: G.tankLv,
     thrustLv: G.thrustLv,
-    effLv: G.effLv
+    effLv: G.effLv,
+    unlockedSword: G.unlockedSword,
+    unlockedBlaster: G.unlockedBlaster
   });
 }
 
@@ -589,8 +608,13 @@ function initPlanet(worldIdx){
   G.orbsGot = 0;
   G.shieldT = 0;
   G.shieldCd = 0;
+  G.shieldCharges = 1;
+  G.fightKills = 0;
+  G.hasSword = G.unlockedSword;
+  G.hasBlaster = G.unlockedBlaster || G.worldIdx >= 1;
   G.phase = 'flight';
   G.phaseTimer = 0;
+  G.holePos = cfg.hasHole ? {x: cfg.holePos.x, y: cfg.holePos.y} : null;
 
   P.length = 0;
   BULLETS = [];
@@ -629,7 +653,8 @@ function initPlanet(worldIdx){
   HAZARDS = [];
   DEBRIS = [];
 
-  const r = rng(310 + worldIdx * 43);
+  const layoutSeed = (Date.now() ^ ((worldIdx + G.runCycle * PLANETS.length) * 2654435761)) >>> 0;
+  const r = rng(layoutSeed);
 
   // Ground solid base
   PLATFORMS.push({x: 0, y: cfg.groundY, w: cfg.width, h: cfg.height - cfg.groundY, kind: 'ground'});
@@ -809,7 +834,8 @@ function initPlanet(worldIdx){
   }
 
   // Enemies Placement
-  for(let e=0; e<(cfg.enemies || 0); e++){
+  const enemyCount = Math.min((cfg.enemies || 0) + G.runCycle, 14);
+  for(let e=0; e<enemyCount; e++){
     const plat = PLATFORMS[4 + ((e * 4) % Math.max(1, PLATFORMS.length - 4))];
     ENEMIES.push({
       type: cfg.enemyType || (cfg.id === 'aether_7' ? 'sentinel' : (cfg.id === 'vortex_prime' ? 'vortex' : 'voidling')),
@@ -817,18 +843,18 @@ function initPlanet(worldIdx){
       y: plat ? plat.y - 32 : cfg.groundY - 42,
       baseX: plat ? plat.x + plat.w * 0.5 : 1200 + e * 700,
       phase: r() * 6.28,
-      hp: 2,
+      hp: 2 + Math.min(G.runCycle, 4),
       facing: 1
     });
   }
 
   G.camX = PL.x - W/2;
-  G.camY = PL.y - H/2;
+  G.camY = clamp(PL.y - H/2, 0, cfg.height - H);
   G.scene = 'play';
   G.toast = {
-    a: cfg.name + ' · ' + cfg.type,
-    b: 'ROCKET FLIGHT: Steer & touch down onto the Landing Beacon.',
-    t: 4.5
+    a: 'WELCOME TO ' + cfg.name,
+    b: cfg.sub + ' Land on the glowing runway and fight through the route to secure the extraction path.',
+    t: 4.8
   };
 }
 
@@ -2124,24 +2150,36 @@ function updatePlay(dt){
 
     // Energy Sword Melee Attack (J / X / Left Click)
     if(pressed('atk') && p.atkCd <= 0){
-      p.atkT = 0.22;
-      p.atkCd = 0.35;
-      SFX.sword();
-      // Hit detection on enemies within swing range
-      const slashX = p.x + p.face * 35;
-      for(let e=ENEMIES.length-1; e>=0; e--){
-        const enemy = ENEMIES[e];
-        if(Math.hypot(slashX - enemy.x, p.y - enemy.y) < 75){
-          enemy.hp -= 1;
-          SFX.hit();
-          G.shake = 5;
-          burst(enemy.x, enemy.y, 14, cfg.accent, 190, 0.4, true);
-          if(enemy.hp <= 0){
-            ENEMIES.splice(e, 1);
-            G.score += 50;
-            G.credits += 25;
-            SFX.fuel();
-            burst(enemy.x, enemy.y, 25, cfg.accent, 260, 0.6, true);
+      if(!G.hasSword){
+        G.toast = { a: 'WEAPON LOCKED', b: 'Energy sword unlocked after surviving the first hostile encounter.', t: 2.2 };
+      } else {
+        p.atkT = 0.22;
+        p.atkCd = 0.35;
+        SFX.sword();
+        // Hit detection on enemies within swing range
+        const slashX = p.x + p.face * 35;
+        for(let e=ENEMIES.length-1; e>=0; e--){
+          const enemy = ENEMIES[e];
+          if(Math.hypot(slashX - enemy.x, p.y - enemy.y) < 75){
+            enemy.hp -= 1;
+            SFX.hit();
+            G.shake = 5;
+            burst(enemy.x, enemy.y, 14, cfg.accent, 190, 0.4, true);
+            if(enemy.hp <= 0){
+              ENEMIES.splice(e, 1);
+              G.score += 50;
+              G.credits += 25;
+              G.fightKills += 1;
+              if(G.fightKills >= 1 && !G.unlockedSword){
+                G.unlockedSword = true;
+                G.hasSword = true;
+                G.hasBlaster = G.unlockedBlaster;
+                saveData();
+                G.toast = { a: 'ENERGY SWORD UNLOCKED', b: 'Blade systems restored. Melee combat is now live.', t: 3.3 };
+              }
+              SFX.fuel();
+              burst(enemy.x, enemy.y, 25, cfg.accent, 260, 0.6, true);
+            }
           }
         }
       }
@@ -2149,16 +2187,20 @@ function updatePlay(dt){
 
     // Plasma Blaster Shoot (K / Z / Right Click)
     if(pressed('shoot') && p.shootCd <= 0){
-      p.shootCd = 0.24;
-      SFX.blaster();
-      BULLETS.push({
-        x: p.x + p.face * 20,
-        y: p.y - 4,
-        vx: p.face * 920,
-        vy: 0,
-        life: 1.1
-      });
-      spawn(p.x + p.face * 22, p.y - 4, p.face * 60, 0, 0.15, 6, C.cyan, 0, true);
+      if(!G.hasBlaster){
+        G.toast = { a: 'BLASTER LOCKED', b: 'Plasma blaster available after the first planet victory and weapon trials.', t: 2.4 };
+      } else {
+        p.shootCd = 0.24;
+        SFX.blaster();
+        BULLETS.push({
+          x: p.x + p.face * 20,
+          y: p.y - 4,
+          vx: p.face * 920,
+          vy: 0,
+          life: 1.1
+        });
+        spawn(p.x + p.face * 22, p.y - 4, p.face * 60, 0, 0.15, 6, C.cyan, 0, true);
+      }
     }
 
     // Phase Shield (Q)
@@ -2465,10 +2507,21 @@ function updatePlay(dt){
     const nextIdx = G.worldIdx + 1;
     if(G.phaseTimer >= 1.8){
       if(nextIdx < PLANETS.length){
-        // Automatically progress to next planet
+        G.lastPlanetClear = G.worldIdx;
+        G.unlockedBlaster = true;
+        G.hasBlaster = true;
+        saveData();
+        G.toast = {
+          a: 'WELCOME TO ' + PLANETS[nextIdx].name,
+          b: 'Sector shift complete. New route, new enemy patterns, new survival challenge.',
+          t: 4.5
+        };
         initPlanet(nextIdx);
       } else {
-        // Complete the Odyssey
+        G.lastPlanetClear = G.worldIdx;
+        G.unlockedBlaster = true;
+        G.hasBlaster = true;
+        saveData();
         G.scene = 'victory';
         SFX.orb();
       }
@@ -2512,6 +2565,12 @@ function die(why){
   G.deadWhy = why;
   G.scene = 'dead';
   G.shake = 18;
+  G.lastPlanetClear = G.worldIdx;
+  G.toast = {
+    a: 'PLANET FAILED',
+    b: 'Mission reset. Try again from the start of ' + LVL.name + '.',
+    t: 3.2
+  };
   SFX.boom();
 }
 
@@ -2833,16 +2892,17 @@ function renderDead(){
   ctx.fillStyle = 'rgba(15,3,8,0.84)';
   ctx.fillRect(0, 0, W, H);
 
-  txt('SYSTEMS COMPROMISED', W/2, H/2 - 80, 32, C.red, 'center', F_D, 900, 4);
-  txt(G.deadWhy || 'SUIT INTEGRITY COLLAPSE', W/2, H/2 - 40, 14, C.bone, 'center', F_U, 700);
-  txt('Current Planet: ' + LVL.name, W/2, H/2 - 15, 13, C.dim, 'center', F_U, 600);
+  txt('MISSION FAILED', W/2, H/2 - 90, 32, C.red, 'center', F_D, 900, 4);
+  txt('LEVEL FAILED — TRY AGAIN', W/2, H/2 - 52, 18, C.gold, 'center', F_U, 700);
+  txt(G.deadWhy || 'SUIT INTEGRITY COLLAPSE', W/2, H/2 - 24, 14, C.bone, 'center', F_U, 700);
+  txt('Current Planet: ' + LVL.name + ' · Resetting to mission start.', W/2, H/2 + 2, 13, C.dim, 'center', F_U, 600);
 
-  uiButton('RETRY PLANET [R]', W/2 - 130, H/2 + 20, 260, 44, () => {
+  uiButton('RETRY PLANET [R]', W/2 - 130, H/2 + 40, 260, 44, () => {
     SFX.click();
     initPlanet(G.worldIdx);
   }, {sel: true});
 
-  uiButton('ABORT TO MENU', W/2 - 130, H/2 + 76, 260, 38, () => {
+  uiButton('ABORT TO MENU', W/2 - 130, H/2 + 96, 260, 38, () => {
     SFX.click();
     G.scene = 'title';
   });
