@@ -1102,7 +1102,7 @@ function initPlanet(worldIdx){
         y: 70 + r() * 260,
         vx: (r() - 0.5) * 90,
         vy: 220 + r() * 180,
-        radius: 9 + r() * 5,
+        radius: 14 + r() * 5,
         rot: r() * 6.28,
         rotSpd: (r() - 0.5) * 1.5,
         hp: 2,
@@ -2281,7 +2281,7 @@ function drawDebris(d, camX, camY){
     ctx.globalAlpha = 0.95;
     ctx.shadowColor = d.hot ? C.ember : 'rgba(180,210,255,0.35)';
     ctx.shadowBlur = d.hot ? 10 : 4;
-    const size = d.radius * 1.35;
+    const size = d.radius * 1.55;
     ctx.drawImage(img, -size, -size, size * 2, size * 2);
     if(d.hot){
       ctx.globalCompositeOperation = 'lighter';
@@ -3090,7 +3090,7 @@ function updatePlay(dt){
         y: Math.max(80, p.y - 700),
         vx: (Math.random() - 0.5) * 90,
         vy: 190 + Math.random() * 140,
-        radius: 9 + Math.random() * 5,
+        radius: 14 + Math.random() * 5,
         rot: Math.random() * 6.28,
         rotSpd: (Math.random() - 0.5) * 3,
         hp: 1,
@@ -3107,7 +3107,7 @@ function updatePlay(dt){
         y: Math.max(50, p.y - 700 - Math.random() * 180),
         vx: (Math.random() - 0.5) * 80,
         vy: 260 + Math.random() * 180,
-        radius: 9 + Math.random() * 5,
+        radius: 14 + Math.random() * 5,
         rot: Math.random() * 6.28,
         rotSpd: (Math.random() - 0.5) * 3,
         hp: 1,
