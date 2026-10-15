@@ -1,78 +1,242 @@
 diff --git a/public/index.html b/public/index.html
-index e06cb40..6fd2754 100644
+index 6fd2754..3d87d07 100644
 --- a/public/index.html
 +++ b/public/index.html
-@@ -1387,6 +1387,7 @@ function drawRocketShip(p, camX, camY, t, scale = 1, isLanded = false){
-     ctx.restore();
+@@ -872,9 +872,9 @@ function initPlanet(worldIdx){
+   G.phaseTimer = 0;
+   G.personalRocket = {
+     x: cfg.landingPad.x,
+-    y: cfg.landingPad.y - 12,
++    y: cfg.landingPad.y - 38,
+     travel: 0,
+-    angle: 0,
++    angle: -Math.PI / 2,
+     scale: 1.25,
+     thrusting: false
+   };
+@@ -1309,14 +1309,47 @@ function drawRocketShip(p, camX, camY, t, scale = 1, isLanded = false){
+   ctx.scale(scale, scale);
+   ctx.rotate(p.angle);
+ 
+-  // Landing Struts if landed
++  // Deployable Heavy-Duty Planetary Landing Legs (extend symmetrically from base when landing or landed)
+   if(isLanded){
+-    ctx.strokeStyle = '#687898';
+-    ctx.lineWidth = 3.5;
++    ctx.strokeStyle = '#8fa3cc';
++    ctx.lineWidth = 3;
++    ctx.lineCap = 'round';
++
++    // Left Tripod Leg
++    ctx.beginPath();
++    ctx.moveTo(-12, -8);
++    ctx.lineTo(-28, -20);
++    ctx.lineTo(-30, -22);
++    ctx.stroke();
++    // Left Shock Absorber Piston
++    ctx.strokeStyle = '#4e628a';
++    ctx.lineWidth = 2;
++    ctx.beginPath();
++    ctx.moveTo(-6, -5); ctx.lineTo(-22, -15);
++    ctx.stroke();
++    // Left Foot Pad (titanium ground deck pad)
++    ctx.fillStyle = '#c5d7ed';
++    rr(-32, -26, 4, 8, 1.5);
++    ctx.fill();
++
++    // Right Tripod Leg
++    ctx.strokeStyle = '#8fa3cc';
++    ctx.lineWidth = 3;
+     ctx.beginPath();
+-    ctx.moveTo(-16, 12); ctx.lineTo(-28, 28); ctx.lineTo(-34, 28);
+-    ctx.moveTo(16, 12); ctx.lineTo(28, 28); ctx.lineTo(34, 28);
++    ctx.moveTo(-12, 8);
++    ctx.lineTo(-28, 20);
++    ctx.lineTo(-30, 22);
+     ctx.stroke();
++    // Right Shock Absorber Piston
++    ctx.strokeStyle = '#4e628a';
++    ctx.lineWidth = 2;
++    ctx.beginPath();
++    ctx.moveTo(-6, 5); ctx.lineTo(-22, 15);
++    ctx.stroke();
++    // Right Foot Pad
++    ctx.fillStyle = '#c5d7ed';
++    rr(-32, 18, 4, 8, 1.5);
++    ctx.fill();
    }
  
-+  ctx.restore();
- }
+   // Delta Wings
+@@ -1336,6 +1369,31 @@ function drawRocketShip(p, camX, camY, t, scale = 1, isLanded = false){
+   rr(-27, -5, 4, 10, 1);
+   ctx.fill();
  
++  // Dynamic Main Engine Exhaust Plume (blasts straight downward when upright)
++  if(p.thrusting){
++    const plumeLen = 28 + Math.random() * 16;
++    const flg = ctx.createLinearGradient(-27, 0, -27 - plumeLen, 0);
++    flg.addColorStop(0, '#ffffff');
++    flg.addColorStop(0.2, C.cyan);
++    flg.addColorStop(0.6, '#ff6622');
++    flg.addColorStop(1, 'rgba(255,50,0,0)');
++    ctx.fillStyle = flg;
++    ctx.beginPath();
++    ctx.moveTo(-27, -5);
++    ctx.lineTo(-27 - plumeLen, 0);
++    ctx.lineTo(-27, 5);
++    ctx.closePath();
++    ctx.fill();
++
++    ctx.fillStyle = '#ffffff';
++    ctx.beginPath();
++    ctx.moveTo(-27, -2.5);
++    ctx.lineTo(-27 - plumeLen * 0.45, 0);
++    ctx.lineTo(-27, 2.5);
++    ctx.closePath();
++    ctx.fill();
++  }
++
+   // Aerodynamic Fuselage
+   const hg = ctx.createLinearGradient(-20, -12, -20, 12);
+   hg.addColorStop(0, '#8a99b8');
+@@ -2333,7 +2391,7 @@ function drawHUD(){
  
-@@ -2562,16 +2563,18 @@ function updatePlay(dt){
-     p.x = lerp(p.x, pad.x, dt * 2.5);
-     if(p.onGround) p.y = lerp(p.y, targetY, dt * 5);
-     p.angle = lerp(p.angle, 0, dt * 10);
--    if(p.onGround && G.phaseTimer >= 1.2){
-+    if(p.onGround && G.phaseTimer >= 1.0){
+   // Top Right: Distance & Radar to Your Rocket at Landing Pad
+   const rocketX = cfg.landingPad.x;
+-  const rocketY = cfg.landingPad.y - 12;
++  const rocketY = cfg.landingPad.y - 38;
+   const dx = rocketX - PL.x, dy = rocketY - PL.y;
+   const dist = Math.hypot(dx, dy);
+   const arrow = getArrow(Math.atan2(dy, dx));
+@@ -2537,44 +2595,76 @@ function updatePlay(dt){
+     }
+   }
+ 
+-  // 2. PHASE: LANDING SEQUENCE
++  // 2. PHASE: LANDING SEQUENCE (Authentic vertical rocket landing with retro-burn)
+   else if(G.phase === 'landing'){
+     G.phaseTimer += dt;
+     const pad = cfg.landingPad;
+-    const targetY = pad.y - p.radius;
+-    const previousBottom = p.y + p.radius;
++    const targetY = pad.y - 38;
++    const previousBottom = p.y + 38;
+     const horizontalStep = clamp((pad.x - p.x) * 4.5 * dt, -260 * dt, 260 * dt);
+     p.x += horizontalStep;
+     p.vx = horizontalStep / Math.max(dt, 0.001);
+-    p.vy = Math.min(360, p.vy + cfg.gravity * 0.35 * dt);
++
++    // Smoothly orient nose straight UP into the sky (-Math.PI/2) and engines DOWN towards pad
++    p.angle = lerp(p.angle, -Math.PI / 2, dt * 5.0);
++
++    // Controlled deceleration descent
++    p.vy = Math.min(220, p.vy + cfg.gravity * 0.25 * dt);
++    if(p.y > pad.y - 200){
++      p.vy = lerp(p.vy, 45, dt * 4.0);
++    }
+     p.y += p.vy * dt;
+ 
+-    // The landing pad is the authoritative collision surface. The rocket
+-    // only settles after crossing its top edge while descending.
+-    const crossedPadTop = previousBottom <= pad.y && p.y + p.radius >= pad.y;
+-    const alignedWithPad = Math.abs(p.x - pad.x) <= pad.w * 0.5 + p.radius;
++    // Retro-rocket landing burn (cushions vertical touchdown with flame & smoke onto the pad)
++    if(!p.onGround){
++      p.thrusting = true;
++      if(Math.random() < 0.85){
++        SFX.rcs();
++        const nozzleX = p.x;
++        const nozzleY = p.y + 30;
++        spawn(
++          nozzleX + (Math.random()-0.5)*14,
++          nozzleY,
++          (Math.random()-0.5)*35,
++          150 + Math.random()*120,
++          0.22, 5.0,
++          Math.random() < 0.6 ? C.cyan : '#ff9a2e',
++          0, true
++        );
++      }
++    }
++
++    // Touchdown on landing pad surface
++    const crossedPadTop = previousBottom <= pad.y && p.y + 38 >= pad.y;
++    const alignedWithPad = Math.abs(p.x - pad.x) <= pad.w * 0.5 + 30;
+     if(crossedPadTop && alignedWithPad){
+       p.y = targetY;
+       p.vx = 0;
+       p.vy = 0;
++      p.angle = -Math.PI / 2;
+       p.onGround = true;
++      p.thrusting = false;
++      burst(pad.x, pad.y, 22, '#d9e8ff', 160, 0.45, true);
++      SFX.land();
++    }
++
++    p.x = lerp(p.x, pad.x, dt * 3.0);
++    if(p.onGround){
++      p.y = lerp(p.y, targetY, dt * 6.0);
++      p.angle = -Math.PI / 2;
+     }
+ 
+-    p.x = lerp(p.x, pad.x, dt * 2.5);
+-    if(p.onGround) p.y = lerp(p.y, targetY, dt * 5);
+-    p.angle = lerp(p.angle, 0, dt * 10);
+     if(p.onGround && G.phaseTimer >= 1.0){
        G.phase = 'exit';
        G.phaseTimer = 0;
        SFX.door();
--      p.x = pad.x + 35;
-+      p.x = pad.x + 45;
+-      p.x = pad.x + 45;
++      p.x = pad.x + 48;
        p.y = pad.y - 26;
--      p.vx = 80;
--      p.vy = -160;
-+      p.vx = 0;
-+      p.vy = 0;
-+      p.onGround = true;
-+      p.face = 1;
-       SFX.land();
--      burst(pad.x + 35, pad.y - 26, 24, C.cyan, 220, 0.7, true);
-+      burst(pad.x + 45, pad.y - 12, 18, C.cyan, 160, 0.5, true);
+       p.vx = 0;
+       p.vy = 0;
+       p.onGround = true;
+       p.face = 1;
+-      SFX.land();
+-      burst(pad.x + 45, pad.y - 12, 18, C.cyan, 160, 0.5, true);
++      burst(pad.x + 48, pad.y - 12, 18, C.cyan, 160, 0.5, true);
        G.toast = {
          a: 'ASTRONAUT DEPLOYED',
          b: 'Explore the planet and collect ' + cfg.mandatoryName + '. Return to your rocket when complete.',
-@@ -2580,20 +2583,15 @@ function updatePlay(dt){
+@@ -2601,8 +2691,8 @@ function updatePlay(dt){
+     const ship = G.personalRocket;
+     if(ship && G.phase === 'explore'){
+       ship.x = cfg.landingPad.x;
+-      ship.y = cfg.landingPad.y - 12;
+-      ship.angle = 0;
++      ship.y = cfg.landingPad.y - 38;
++      ship.angle = -Math.PI / 2;
+       ship.scale = 1.25;
+       ship.thrusting = false;
      }
-   }
+@@ -3128,7 +3218,7 @@ function updatePlay(dt){
  
--  // 3. PHASE: EXIT HATCH (Smooth astronaut deployment onto planetary bedrock)
-+  // 3. PHASE: EXIT HATCH (Smooth astronaut deployment onto landing pad deck)
-   else if(G.phase === 'exit'){
+     // Board the same rocket stationed at the landing pad
+     const rocketX = cfg.landingPad.x;
+-    const rocketY = cfg.landingPad.y - 12;
++    const rocketY = cfg.landingPad.y - 38;
+     const distRocket = Math.hypot(p.x - rocketX, p.y - rocketY);
+     const allCollected = G.cellsGot >= cfg.mandatoryCount;
+ 
+@@ -3161,7 +3251,7 @@ function updatePlay(dt){
      G.phaseTimer += dt;
--    p.vy += cfg.gravity * dt;
--    p.x += p.vx * dt;
--    p.y += p.vy * dt;
-     const pad = cfg.landingPad;
--    const surfaceFloor = getSurfaceY(p.x, cfg) - 26;
--    const padFloor = (p.x >= pad.x - 40 && p.x <= pad.x + pad.w + 40) ? (pad.y - 26) : surfaceFloor;
--    const targetFloor = Math.min(padFloor, surfaceFloor);
--    if(p.y >= targetFloor && p.vy >= 0){
--      p.y = targetFloor;
--      p.vy = 0;
--      p.onGround = true;
-+    const padFloor = (pad && p.x >= pad.x - 40 && p.x <= pad.x + pad.w + 40) ? (pad.y - 26) : (getSurfaceY(p.x, cfg) - 26);
-+    p.y = padFloor;
-+    p.vy = 0;
-+    p.onGround = true;
-+    if(G.phaseTimer >= 0.35){
-       G.phase = 'explore';
-     }
-   }
-@@ -3218,9 +3216,12 @@ function updatePlay(dt){
-     }
-   }
+     p.vx *= 0.8; p.vy *= 0.8;
+     p.x = lerp(p.x, cfg.landingPad.x, dt * 6);
+-    p.y = lerp(p.y, cfg.landingPad.y - 12, dt * 6);
++    p.y = lerp(p.y, cfg.landingPad.y - 38, dt * 6);
+     if(G.phaseTimer >= 1.0){
+       G.phase = 'takeoff';
+       G.phaseTimer = 0;
+@@ -3355,8 +3445,10 @@ function renderWorldPlay(){
+   drawFx(G.camX, G.camY);
  
--  // Boundaries clamping (strictly kept above planetary ground line)
-+  // Boundaries clamping (strictly kept on/above landing pad and planetary ground line)
-   p.x = clamp(p.x, 30, cfg.width - 30);
--  p.y = clamp(p.y, 30, (G.phase === 'explore' || G.phase === 'exit') ? (getSurfaceY(p.x, cfg) - 26) : (cfg.height - 30));
-+  const pad = cfg.landingPad;
-+  const onPadX = (pad && p.x >= pad.x - 40 && p.x <= pad.x + pad.w + 40);
-+  const maxFloorY = (onPadX && pad.y < getSurfaceY(p.x, cfg)) ? (pad.y - 26) : (getSurfaceY(p.x, cfg) - 26);
-+  p.y = clamp(p.y, 30, (G.phase === 'explore' || G.phase === 'exit') ? maxFloorY : (cfg.height - 30));
- 
-   // Smooth camera tracking
-   const targetCamX = clamp(p.x - W/2, 0, cfg.width - W);
+   // The single personal rocket follows the astronaut from touchdown through takeoff (strictly 1 rocket)
+-  if(G.phase === 'flight' || G.phase === 'landing'){
++  if(G.phase === 'flight'){
+     drawRocketShip(PL, G.camX, G.camY, G.t, 1.25, false);
++  } else if(G.phase === 'landing'){
++    drawRocketShip(PL, G.camX, G.camY, G.t, 1.25, true);
+   } else if(G.phase !== 'warp' && G.personalRocket){
+     drawRocketShip(
+       G.personalRocket,
