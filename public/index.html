@@ -50,8 +50,8 @@ canvas{width:100%;height:100%;display:block;touch-action:none;-webkit-touch-call
 
 .godot-btn{display:flex;align-items:center;gap:6px;padding:3px 10px;background:rgba(71,140,230,.18);border:1px solid rgba(71,140,230,.35);border-radius:6px;color:#8cc4ff;font:600 11px var(--ui);letter-spacing:.5px;text-decoration:none;transition:all .15s}
 .godot-btn:hover{background:rgba(71,140,230,.32);border-color:#478ce6;color:#fff}
-#fs-btn{width:28px;height:28px;background:rgba(61,240,255,.08);border:1px solid rgba(61,240,255,.25);border-radius:6px;color:var(--cyan);font-size:14px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .15s}
-#fs-btn:hover{background:rgba(61,240,255,.2);color:#fff}
+#settings-btn,#fs-btn{width:28px;height:28px;background:rgba(61,240,255,.08);border:1px solid rgba(61,240,255,.25);border-radius:6px;color:var(--cyan);font-size:14px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .15s}
+#settings-btn:hover,#fs-btn:hover{background:rgba(61,240,255,.2);color:#fff}
 
 #touch{display:none;position:absolute;inset:0;width:auto;justify-content:space-between;align-items:flex-end;gap:12px;padding:max(10px,env(safe-area-inset-top)) max(14px,env(safe-area-inset-right)) max(12px,env(safe-area-inset-bottom)) max(14px,env(safe-area-inset-left));pointer-events:none;z-index:20;touch-action:none;-webkit-touch-callout:none;-webkit-user-select:none;user-select:none}
 .pad-left{display:flex;align-items:flex-end;pointer-events:none;touch-action:none;-webkit-touch-callout:none;-webkit-user-select:none;user-select:none}
@@ -135,6 +135,7 @@ html:fullscreen canvas{border-radius:0}
   </a>
   <div class="title-pill" id="header-planet-title">INTERPLANETARY ODYSSEY</div>
   <div class="actions">
+    <button id="settings-btn" aria-label="Game Settings" title="Game Settings">⚙</button>
     <button id="fs-btn" aria-label="Toggle Fullscreen" title="Toggle Fullscreen">⛶</button>
   </div>
 </header>
@@ -248,6 +249,42 @@ function store(k,v){
   }catch(e){ return null; }
 }
 
+/* ──────── System Settings & Preferences ──────── */
+const DEFAULT_SETTINGS = {
+  volume: 100,         // 100, 75, 50, 25, 0 (%)
+  muted: false,        // boolean
+  thrusterSound: true, // boolean (thruster rumble)
+  scanlines: true,     // boolean (retro CRT scanline overlay)
+  screenShake: 'full', // 'full' (1.0), 'reduced' (0.35), 'off' (0.0)
+  particles: 'high',   // 'high' (1.0), 'low' (0.4)
+  touchOpacity: 100,   // 100, 80, 60, 40 (%)
+  pilot: 'arin',       // 'arin' or 'mira'
+  autoBoard: true      // boolean (auto board on rocket proximity)
+};
+
+const savedSettings = store('space_odyssey_settings_v1') || {};
+const SETTINGS = Object.assign({}, DEFAULT_SETTINGS, savedSettings);
+let settingsFeedback = '';
+let settingsFeedbackT = 0;
+
+function saveSettings(){
+  store('space_odyssey_settings_v1', SETTINGS);
+  applySettings();
+}
+
+function applySettings(){
+  if(master){
+    master.gain.value = (muted || SETTINGS.muted) ? 0 : 0.6 * (SETTINGS.volume / 100);
+  }
+  const touchEl = document.getElementById('touch');
+  if(touchEl){
+    touchEl.style.opacity = (SETTINGS.touchOpacity / 100);
+  }
+  if(typeof G !== 'undefined' && G){
+    G.char = SETTINGS.pilot || G.char || 'arin';
+  }
+}
+
 /* ──────── Full Asset Image Loader ──────── */
 const ASSET_IMAGES = {};
 [
@@ -290,7 +327,7 @@ function audioInit(){
   try{
     AC = new (window.AudioContext || window.webkitAudioContext)();
     master = AC.createGain();
-    master.gain.value = muted ? 0 : 0.6;
+    master.gain.value = (muted || SETTINGS.muted) ? 0 : 0.6 * (SETTINGS.volume / 100);
     master.connect(AC.destination);
 
     thrusterOsc = AC.createOscillator();
@@ -309,30 +346,30 @@ function audioInit(){
 }
 function setThrusterRumble(active){
   if(!AC || !thrusterGain) return;
-  const target = active ? 0.09 : 0.0001;
+  const target = (active && SETTINGS.thrusterSound && !muted && !SETTINGS.muted && SETTINGS.volume > 0) ? 0.09 : 0.0001;
   thrusterGain.gain.setTargetAtTime(target, AC.currentTime, 0.05);
 }
 function tone(f,d,type,v,slide){
-  if(!AC || muted) return;
+  if(!AC || muted || SETTINGS.muted || SETTINGS.volume <= 0) return;
   try{
     const t = AC.currentTime, o = AC.createOscillator(), g = AC.createGain();
     o.type = type || 'sine';
     o.frequency.setValueAtTime(f, t);
     if(slide) o.frequency.exponentialRampToValueAtTime(Math.max(20, f * slide), t + d);
-    g.gain.setValueAtTime(v || 0.15, t);
+    g.gain.setValueAtTime((v || 0.15) * (SETTINGS.volume / 100), t);
     g.gain.exponentialRampToValueAtTime(0.0001, t + d);
     o.connect(g); g.connect(master);
     o.start(t); o.stop(t + d + 0.02);
   }catch(e){}
 }
 function noise(d,v,fc){
-  if(!AC || muted) return;
+  if(!AC || muted || SETTINGS.muted || SETTINGS.volume <= 0) return;
   try{
     const n = Math.floor(AC.sampleRate * d), b = AC.createBuffer(1, n, AC.sampleRate), a = b.getChannelData(0);
     for(let i=0; i<n; i++) a[i] = (Math.random()*2 - 1) * (1 - i/n);
     const s = AC.createBufferSource(); s.buffer = b;
     const f = AC.createBiquadFilter(); f.type = 'bandpass'; f.frequency.value = fc || 800;
-    const g = AC.createGain(); g.gain.value = v || 0.16;
+    const g = AC.createGain(); g.gain.value = (v || 0.16) * (SETTINGS.volume / 100);
     s.connect(f); f.connect(g); g.connect(master);
     s.start();
   }catch(e){}
@@ -540,6 +577,7 @@ function spawn(x,y,vx,vy,life,size,col,grav,add){
   P.push({x,y,vx,vy,life,max:life,size,col,grav:grav||0,add:!!add,ox:x,oy:y});
 }
 function burst(x,y,n,col,spd,life,add){
+  if(typeof SETTINGS !== 'undefined' && SETTINGS.particles === 'low') n = Math.max(1, Math.round(n * 0.4));
   for(let i=0;i<n;i++){
     const a = Math.random()*6.283, s = spd * (0.3 + Math.random()*0.7);
     spawn(x,y,Math.cos(a)*s, Math.sin(a)*s, life*(0.5+Math.random()*0.5), 2+Math.random()*3, col, 0, add);
@@ -800,10 +838,11 @@ function isRocketSafeZone(x, y, cfg){
 
 /* ──────── Global Game State ──────── */
 const G = {
-  scene: 'title', // title, play, pause, victory, dead
+  scene: 'title', // title, play, pause, victory, dead, settings
+  lastScene: 'title',
   phase: 'flight', // flight -> landing -> exit -> explore -> boarding -> takeoff -> warp
   worldIdx: 0,
-  char: 'arin', // arin (cyan) or mira (violet)
+  char: (typeof SETTINGS !== 'undefined' && SETTINGS.pilot) ? SETTINGS.pilot : 'arin', // arin (cyan) or mira (violet)
   credits: 0,
   bestScores: {},
 
@@ -3454,7 +3493,8 @@ function updatePlay(dt){
     const allCollected = G.cellsGot >= cfg.mandatoryCount;
 
     if(distRocket < 95){
-      if(allCollected && (pressed('use') || pressed('thrust') || distRocket < 55)){
+      const shouldAuto = (typeof SETTINGS === 'undefined' || SETTINGS.autoBoard) ? (pressed('thrust') || distRocket < 55) : false;
+      if(allCollected && (pressed('use') || shouldAuto)){
         G.phase = 'boarding';
         G.phaseTimer = 0;
         SFX.door();
@@ -3463,7 +3503,7 @@ function updatePlay(dt){
           b: 'Systems pressurized. Engaging orbital ignition...',
           t: 3.5
         };
-      } else if(!allCollected && (pressed('use') || distRocket < 65)){
+      } else if(!allCollected && (pressed('use') || ((typeof SETTINGS === 'undefined' || SETTINGS.autoBoard) && distRocket < 65))){
         if(!G.toast || G.toast.t <= 0.5){
           SFX.warn();
           const remaining = cfg.mandatoryCount - G.cellsGot;
@@ -3602,6 +3642,9 @@ function render(){
     case 'title':
       renderTitle();
       break;
+    case 'settings':
+      renderSettingsMenu();
+      break;
     case 'upgrades':
       renderUpgradesMenu();
       break;
@@ -3628,17 +3671,20 @@ function render(){
   }
 
   // Scanline overlay
-  ctx.save();
-  ctx.globalAlpha = 0.025;
-  ctx.fillStyle = '#000';
-  for(let y=0; y<H; y+=3) ctx.fillRect(0, y, W, 1);
-  ctx.restore();
+  if(typeof SETTINGS === 'undefined' || SETTINGS.scanlines){
+    ctx.save();
+    ctx.globalAlpha = 0.025;
+    ctx.fillStyle = '#000';
+    for(let y=0; y<H; y+=3) ctx.fillRect(0, y, W, 1);
+    ctx.restore();
+  }
 }
 
 function renderWorldPlay(){
   const cfg = LVL;
-  const shakeX = (Math.random() - 0.5) * G.shake;
-  const shakeY = (Math.random() - 0.5) * G.shake;
+  const shakeMult = (typeof SETTINGS !== 'undefined' && SETTINGS.screenShake === 'off') ? 0 : ((typeof SETTINGS !== 'undefined' && SETTINGS.screenShake === 'reduced') ? 0.35 : 1.0);
+  const shakeX = (Math.random() - 0.5) * G.shake * shakeMult;
+  const shakeY = (Math.random() - 0.5) * G.shake * shakeMult;
 
   ctx.save();
   ctx.translate(shakeX, shakeY);
@@ -3739,6 +3785,8 @@ function renderTitle(){
   txt('PILOT: ' + (G.char==='arin'?'ARIN (CYAN SUIT)':'MIRA (VIOLET SUIT)'), 68, 288, 13, G.char==='arin'?C.cyan:'#ff77cc', 'left', F_U, 700);
   uiButton('SWITCH PILOT', 290, 272, 120, 26, () => {
     G.char = G.char === 'arin' ? 'mira' : 'arin';
+    SETTINGS.pilot = G.char;
+    saveSettings();
     SFX.click();
   }, {sz: 11});
 
@@ -3766,15 +3814,21 @@ function renderTitle(){
     initPlanet(PLANETS.length);
   }, {sz: 12, col: C.gold});
 
-  uiButton('HANGAR & UPGRADES', 68, 454, 165, 36, () => {
+  uiButton('HANGAR', 68, 454, 108, 36, () => {
     SFX.click();
     G.scene = 'upgrades';
-  }, {sz: 12});
+  }, {sz: 11});
 
-  uiButton('MISSIONS', 243, 454, 165, 36, () => {
+  uiButton('MISSIONS', 184, 454, 108, 36, () => {
     SFX.click();
     G.scene = 'missions';
-  }, {sz: 12, col: C.gold});
+  }, {sz: 11, col: C.gold});
+
+  uiButton('⚙ SETTINGS', 300, 454, 108, 36, () => {
+    SFX.click();
+    G.lastScene = 'title';
+    G.scene = 'settings';
+  }, {sz: 11, col: C.cyan});
 
   txt('RCS PROPULSION ONLINE', 466, 306, 10, C.green, 'left', F_U, 700, 1);
   txt('6 DISCOVERED WORLDS · ENDLESS FRONTIER', 466, 324, 10, C.dim, 'left', F_U, 600, 1);
@@ -3955,32 +4009,326 @@ function renderManual(){
   });
 }
 
+/* ──────── Settings Actions & Controller ──────── */
+function cycleVolume(){
+  const vols = [100, 75, 50, 25, 0];
+  let idx = vols.indexOf(SETTINGS.volume);
+  if(idx === -1) idx = 0;
+  SETTINGS.volume = vols[(idx + 1) % vols.length];
+  if(SETTINGS.volume > 0 && SETTINGS.muted) SETTINGS.muted = false;
+  saveSettings();
+  SFX.click();
+  settingsFeedback = 'SFX Volume set to ' + SETTINGS.volume + '%';
+  settingsFeedbackT = 3.5;
+}
+
+function toggleMute(){
+  SETTINGS.muted = !SETTINGS.muted;
+  saveSettings();
+  SFX.click();
+  settingsFeedback = SETTINGS.muted ? 'Master audio muted 🔇' : 'Master audio unmuted 🔊';
+  settingsFeedbackT = 3.5;
+}
+
+function toggleThrusterSound(){
+  SETTINGS.thrusterSound = !SETTINGS.thrusterSound;
+  saveSettings();
+  setThrusterRumble(false);
+  SFX.click();
+  settingsFeedback = SETTINGS.thrusterSound ? 'Thruster sound enabled' : 'Thruster sound muted';
+  settingsFeedbackT = 3.5;
+}
+
+function toggleScanlines(){
+  SETTINGS.scanlines = !SETTINGS.scanlines;
+  saveSettings();
+  SFX.click();
+  settingsFeedback = SETTINGS.scanlines ? 'CRT retro scanlines enabled' : 'CRT scanlines disabled';
+  settingsFeedbackT = 3.5;
+}
+
+function cycleScreenShake(){
+  const shakes = ['full', 'reduced', 'off'];
+  let idx = shakes.indexOf(SETTINGS.screenShake);
+  if(idx === -1) idx = 0;
+  SETTINGS.screenShake = shakes[(idx + 1) % shakes.length];
+  saveSettings();
+  SFX.click();
+  settingsFeedback = 'Screen shake impact set to ' + SETTINGS.screenShake.toUpperCase();
+  settingsFeedbackT = 3.5;
+}
+
+function toggleParticles(){
+  SETTINGS.particles = SETTINGS.particles === 'high' ? 'low' : 'high';
+  saveSettings();
+  SFX.click();
+  settingsFeedback = 'Particle density set to ' + (SETTINGS.particles === 'high' ? 'HIGH QUALITY' : 'LOW (PERF)');
+  settingsFeedbackT = 3.5;
+}
+
+function cycleTouchOpacity(){
+  const opacs = [100, 80, 60, 40];
+  let idx = opacs.indexOf(SETTINGS.touchOpacity);
+  if(idx === -1) idx = 0;
+  SETTINGS.touchOpacity = opacs[(idx + 1) % opacs.length];
+  saveSettings();
+  SFX.click();
+  settingsFeedback = 'Touch controls opacity set to ' + SETTINGS.touchOpacity + '%';
+  settingsFeedbackT = 3.5;
+}
+
+function togglePilot(){
+  SETTINGS.pilot = (SETTINGS.pilot === 'arin' ? 'mira' : 'arin');
+  G.char = SETTINGS.pilot;
+  saveSettings();
+  SFX.click();
+  settingsFeedback = 'Pilot switched to ' + (G.char === 'arin' ? 'ARIN (CYAN)' : 'MIRA (VIOLET)');
+  settingsFeedbackT = 3.5;
+}
+
+function toggleAutoBoard(){
+  SETTINGS.autoBoard = !SETTINGS.autoBoard;
+  saveSettings();
+  SFX.click();
+  settingsFeedback = SETTINGS.autoBoard ? 'Auto-board on proximity: ACTIVE' : 'Manual rocket board [E]: REQUIRED';
+  settingsFeedbackT = 3.5;
+}
+
+function resetDefaults(){
+  Object.assign(SETTINGS, DEFAULT_SETTINGS);
+  saveSettings();
+  SFX.click();
+  settingsFeedback = 'Settings restored to defaults';
+  settingsFeedbackT = 3.5;
+}
+
+function resetExpedition(){
+  clearSavedRun();
+  G.score = 0;
+  saveData();
+  SFX.boom();
+  settingsFeedback = 'Expedition save data reset';
+  settingsFeedbackT = 3.5;
+}
+
+function returnFromSettings(){
+  SFX.click();
+  G.scene = G.lastScene || 'title';
+}
+
+function renderSettingsMenu(){
+  drawBackground(PLANETS[G.worldIdx !== undefined && PLANETS[G.worldIdx] ? G.worldIdx : 0], 0, 0, G.t);
+  ctx.fillStyle = 'rgba(5,7,26,0.92)';
+  ctx.fillRect(0, 0, W, H);
+
+  // Subtitle and Title
+  txt('EXPEDITION HARDWARE & TELEMETRY CONFIGURATION', W/2, 36, 10.5, C.dim, 'center', F_U, 700, 3);
+
+  ctx.save();
+  ctx.shadowColor = 'rgba(61,240,255,0.7)';
+  ctx.shadowBlur = 18;
+  txt('SYSTEM SETTINGS', W/2, 62, 23, C.cyan, 'center', F_D, 700, 4);
+  ctx.restore();
+
+  const colW = 276;
+  const colH = 345;
+  const y = 80;
+
+  // ──── Column 1: Audio & Acoustics ────
+  const x1 = 50;
+  ctx.save();
+  ctx.fillStyle = 'rgba(11,20,51,0.78)';
+  rr(x1, y, colW, colH, 10);
+  ctx.fill();
+  ctx.strokeStyle = 'rgba(61,240,255,0.28)';
+  ctx.lineWidth = 1;
+  ctx.stroke();
+
+  // Header Badge
+  ctx.fillStyle = 'rgba(61,240,255,0.12)';
+  rr(x1 + 14, y + 12, colW - 28, 28, 6);
+  ctx.fill();
+  txt('🔊 AUDIO & ACOUSTICS', x1 + colW/2, y + 30, 12, C.cyan, 'center', F_U, 700, 1.5);
+
+  // Row 1: Volume
+  txt('SFX VOLUME LEVEL', x1 + 18, y + 64, 11, C.bone, 'left', F_U, 700);
+  txt('Synthesizer, lasers, alerts & telemetry', x1 + 18, y + 78, 9.5, C.dim, 'left', F_U, 500);
+  ctx.fillStyle = 'rgba(255,255,255,0.08)';
+  rr(x1 + 18, y + 84, colW - 36, 5, 2);
+  ctx.fill();
+  if(SETTINGS.volume > 0){
+    ctx.fillStyle = C.cyan;
+    rr(x1 + 18, y + 84, (colW - 36) * (SETTINGS.volume / 100), 5, 2);
+    ctx.fill();
+  }
+  uiButton('VOLUME: ' + SETTINGS.volume + '%', x1 + 18, y + 95, colW - 36, 32, cycleVolume, {
+    col: SETTINGS.volume > 0 ? C.cyan : C.dim,
+    sz: 12
+  });
+
+  // Row 2: Master Mute
+  txt('MASTER AUDIO STATE', x1 + 18, y + 150, 11, C.bone, 'left', F_U, 700);
+  txt('Instant mute all synthesized sound output', x1 + 18, y + 164, 9.5, C.dim, 'left', F_U, 500);
+  uiButton(SETTINGS.muted ? 'AUDIO: MUTED 🔇' : 'AUDIO: ACTIVE 🔊', x1 + 18, y + 175, colW - 36, 32, toggleMute, {
+    col: SETTINGS.muted ? C.ember : C.green,
+    sz: 12
+  });
+
+  // Row 3: Thruster Rumble
+  txt('THRUSTER ENGINE AUDIO', x1 + 18, y + 230, 11, C.bone, 'left', F_U, 700);
+  txt('Low-pass atmospheric & RCS engine rumble', x1 + 18, y + 244, 9.5, C.dim, 'left', F_U, 500);
+  uiButton(SETTINGS.thrusterSound ? 'ENGINE SOUND: ON' : 'ENGINE SOUND: MUTED', x1 + 18, y + 255, colW - 36, 32, toggleThrusterSound, {
+    col: SETTINGS.thrusterSound ? C.cyan : C.dim,
+    sz: 12
+  });
+  ctx.restore();
+
+  // ──── Column 2: Visuals & Display ────
+  const x2 = 342;
+  ctx.save();
+  ctx.fillStyle = 'rgba(11,20,51,0.78)';
+  rr(x2, y, colW, colH, 10);
+  ctx.fill();
+  ctx.strokeStyle = 'rgba(255,209,102,0.28)';
+  ctx.lineWidth = 1;
+  ctx.stroke();
+
+  // Header Badge
+  ctx.fillStyle = 'rgba(255,209,102,0.12)';
+  rr(x2 + 14, y + 12, colW - 28, 28, 6);
+  ctx.fill();
+  txt('🖥️ VISUALS & DISPLAY', x2 + colW/2, y + 30, 12, C.gold, 'center', F_U, 700, 1.5);
+
+  // Row 1: Scanlines
+  txt('CRT SCANLINE FILTER', x2 + 18, y + 64, 11, C.bone, 'left', F_U, 700);
+  txt('Retro arcade CRT monitor scanline overlay', x2 + 18, y + 78, 9.5, C.dim, 'left', F_U, 500);
+  uiButton(SETTINGS.scanlines ? 'SCANLINES: ENABLED' : 'SCANLINES: OFF', x2 + 18, y + 95, colW - 36, 32, toggleScanlines, {
+    col: SETTINGS.scanlines ? C.gold : C.dim,
+    sz: 12
+  });
+
+  // Row 2: Screen Shake
+  txt('IMPACT SCREEN SHAKE', x2 + 18, y + 150, 11, C.bone, 'left', F_U, 700);
+  txt('Camera vibration during collisions & blasts', x2 + 18, y + 164, 9.5, C.dim, 'left', F_U, 500);
+  const shakeLabels = { full: 'SHAKE: FULL (100%)', reduced: 'SHAKE: REDUCED (35%)', off: 'SHAKE: DISABLED' };
+  uiButton(shakeLabels[SETTINGS.screenShake] || 'SHAKE: FULL', x2 + 18, y + 175, colW - 36, 32, cycleScreenShake, {
+    col: SETTINGS.screenShake === 'off' ? C.dim : C.gold,
+    sz: 12
+  });
+
+  // Row 3: Particles
+  txt('PARTICLE FX DENSITY', x2 + 18, y + 230, 11, C.bone, 'left', F_U, 700);
+  txt('Sparks, smoke, and thruster exhaust density', x2 + 18, y + 244, 9.5, C.dim, 'left', F_U, 500);
+  uiButton(SETTINGS.particles === 'high' ? 'PARTICLES: HIGH QUALITY' : 'PARTICLES: LOW (PERF)', x2 + 18, y + 255, colW - 36, 32, toggleParticles, {
+    col: SETTINGS.particles === 'high' ? C.gold : C.dim,
+    sz: 12
+  });
+  ctx.restore();
+
+  // ──── Column 3: Controls & Suit ────
+  const x3 = 634;
+  ctx.save();
+  ctx.fillStyle = 'rgba(11,20,51,0.78)';
+  rr(x3, y, colW, colH, 10);
+  ctx.fill();
+  ctx.strokeStyle = 'rgba(61,255,136,0.28)';
+  ctx.lineWidth = 1;
+  ctx.stroke();
+
+  // Header Badge
+  ctx.fillStyle = 'rgba(61,255,136,0.12)';
+  rr(x3 + 14, y + 12, colW - 28, 28, 6);
+  ctx.fill();
+  txt('🎮 CONTROLS & SUIT', x3 + colW/2, y + 30, 12, C.green, 'center', F_U, 700, 1.5);
+
+  // Row 1: Mobile Pad Opacity
+  txt('MOBILE BUTTON OPACITY', x3 + 18, y + 64, 11, C.bone, 'left', F_U, 700);
+  txt('Transparency of on-screen touch controls', x3 + 18, y + 78, 9.5, C.dim, 'left', F_U, 500);
+  uiButton('PAD OPACITY: ' + SETTINGS.touchOpacity + '%', x3 + 18, y + 95, colW - 36, 32, cycleTouchOpacity, {
+    col: C.green,
+    sz: 12
+  });
+
+  // Row 2: Pilot Suit
+  txt('DEFAULT ASTRONAUT SUIT', x3 + 18, y + 150, 11, C.bone, 'left', F_U, 700);
+  txt('EVA space suit model & HUD telemetry color', x3 + 18, y + 164, 9.5, C.dim, 'left', F_U, 500);
+  uiButton(G.char === 'arin' ? 'PILOT: ARIN (CYAN)' : 'PILOT: MIRA (VIOLET)', x3 + 18, y + 175, colW - 36, 32, togglePilot, {
+    col: G.char === 'arin' ? C.cyan : '#ff77cc',
+    sz: 12
+  });
+
+  // Row 3: Auto-Board Rocket
+  txt('ROCKET BOARDING PROTOCOL', x3 + 18, y + 230, 11, C.bone, 'left', F_U, 700);
+  txt('Automatic boarding when samples are collected', x3 + 18, y + 244, 9.5, C.dim, 'left', F_U, 500);
+  uiButton(SETTINGS.autoBoard ? 'BOARDING: AUTO PROXIMITY' : 'BOARDING: MANUAL KEY [E]', x3 + 18, y + 255, colW - 36, 32, toggleAutoBoard, {
+    col: SETTINGS.autoBoard ? C.green : C.dim,
+    sz: 12
+  });
+  ctx.restore();
+
+  // Feedback Notification Banner
+  const hasRecentFeedback = settingsFeedback && settingsFeedbackT > 0;
+  const statusMsg = hasRecentFeedback ? ('✔ ' + settingsFeedback) : 'Click any setting to customize · Preferences saved automatically';
+  ctx.save();
+  ctx.fillStyle = 'rgba(7,10,26,0.92)';
+  rr(W/2 - 240, 434, 480, 24, 6);
+  ctx.fill();
+  ctx.strokeStyle = hasRecentFeedback ? 'rgba(61,240,255,0.45)' : 'rgba(141,151,196,0.22)';
+  ctx.lineWidth = 1;
+  ctx.stroke();
+  txt(statusMsg, W/2, 450, 10.5, hasRecentFeedback ? C.cyan : C.dim, 'center', F_U, 600, 1);
+  ctx.restore();
+
+  // ──── Bottom Action Bar ────
+  uiButton('RESTORE DEFAULTS', 50, 470, 180, 36, resetDefaults, {
+    col: C.dim,
+    sz: 11
+  });
+
+  uiButton('RESET EXPEDITION DATA', 246, 470, 210, 36, resetExpedition, {
+    col: C.ember,
+    sz: 11
+  });
+
+  uiButton('RETURN / SAVE [ESC]', 634, 470, 276, 36, returnFromSettings, {
+    sel: true,
+    col: C.cyan,
+    sz: 13
+  });
+}
+
 function renderPause(){
   ctx.fillStyle = 'rgba(5,7,26,0.78)';
   ctx.fillRect(0, 0, W, H);
 
-  txt('EXPEDITION PAUSED', W/2, H/2 - 90, 28, C.cyan, 'center', F_D, 700, 4);
-  txt('CURRENT DESTINATION: ' + LVL.name, W/2, H/2 - 55, 14, C.gold, 'center', F_U, 700);
+  txt('EXPEDITION PAUSED', W/2, H/2 - 110, 28, C.cyan, 'center', F_D, 700, 4);
+  txt('CURRENT DESTINATION: ' + LVL.name, W/2, H/2 - 75, 14, C.gold, 'center', F_U, 700);
 
-  uiButton('PLAY / RESUME', W/2 - 130, H/2 - 30, 260, 40, () => {
+  uiButton('PLAY / RESUME', W/2 - 130, H/2 - 50, 260, 38, () => {
     resumeGame();
   }, {sel: true});
 
-  uiButton('RETRY PLANET [R]', W/2 - 130, H/2 + 20, 260, 38, () => {
+  uiButton('⚙ SETTINGS', W/2 - 130, H/2 - 6, 260, 36, () => {
+    SFX.click();
+    G.lastScene = 'pause';
+    G.scene = 'settings';
+  }, {col: C.cyan});
+
+  uiButton('RETRY PLANET [R]', W/2 - 130, H/2 + 36, 260, 36, () => {
     SFX.click();
     initPlanet(G.worldIdx);
   });
 
-  uiButton('EXPEDITION DIRECTIVES', W/2 - 130, H/2 + 68, 260, 36, () => {
+  uiButton('EXPEDITION DIRECTIVES', W/2 - 130, H/2 + 78, 260, 36, () => {
     SFX.click();
     G.scene = 'manual';
   });
 
-  uiButton('ABORT TO MAIN MENU', W/2 - 130, H/2 + 114, 260, 36, () => {
+  uiButton('ABORT TO MAIN MENU', W/2 - 130, H/2 + 120, 260, 36, () => {
     exitToMenu();
   });
 
-  uiButton('EXIT EXPEDITION', W/2 - 130, H/2 + 158, 260, 34, () => {
+  uiButton('EXIT EXPEDITION', W/2 - 130, H/2 + 162, 260, 32, () => {
     exitToMenu();
   }, {col: C.ember, sz: 12});
 }
@@ -4038,11 +4386,18 @@ function frame(ts){
   lastT = ts;
   G.t += dt;
 
-  if(pressed('mute')){
-    muted = !muted;
-    if(master) master.gain.value = muted ? 0 : 0.6;
+  if(settingsFeedbackT > 0){
+    settingsFeedbackT -= dt;
+    if(settingsFeedbackT <= 0) settingsFeedback = '';
   }
-  if(pressed('pause') && G.scene === 'play'){
+
+  if(pressed('mute')){
+    SETTINGS.muted = !SETTINGS.muted;
+    saveSettings();
+  }
+  if((pressed('pause') || pressed('esc')) && G.scene === 'settings'){
+    returnFromSettings();
+  } else if(pressed('pause') && G.scene === 'play'){
     G.scene = 'pause';
     setThrusterRumble(false);
     SFX.click();
@@ -4092,6 +4447,22 @@ document.getElementById('fs-btn').addEventListener('click', () => {
     document.exitFullscreen().catch(()=>{});
   }
 });
+
+// Settings Toggle via Header
+const setBtn = document.getElementById('settings-btn');
+if(setBtn){
+  setBtn.addEventListener('click', () => {
+    SFX.click();
+    if(G.scene === 'settings'){
+      returnFromSettings();
+    } else {
+      G.lastScene = G.scene;
+      G.scene = 'settings';
+      setThrusterRumble(false);
+    }
+  });
+}
+applySettings();
 
 // Loading screen
 let loadProg = 0;
