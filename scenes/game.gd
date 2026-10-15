@@ -387,7 +387,7 @@ func _build_surface_level() -> void:
 	surface_origin_y = landing_surface_y
 	player.remove_from_group("player")
 	player.set_physics_process(false)
-	player.visible = true
+	player.visible = false
 	player.position = Vector2(player.position.x, landing_surface_y)
 
 	surface_root = Node2D.new()
