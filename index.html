@@ -697,8 +697,8 @@ const PLANETS = [
     id: 'fractured_moon',
     name: 'FRACTURED MOON',
     type: 'ALIEN GRAVITY PLANET',
-    sub: 'Gravitational anomaly fields. Collect Ancient Artifacts across lunar ruins.',
-    width: 5300, height: 1950, groundY: 1560,
+    sub: 'Gravitational anomaly fields. Collect 12 Void Anomaly Spheres & 6 Ancient Lunar Tablets.',
+    width: 5400, height: 1950, groundY: 1560,
     sky: ['#07051a', '#24104d'], accent: '#ba68f8', starCol: '#d7c4ff',
     planetArt: 'assets/planets/fractured_moon.svg',
     bgArt: 'assets/backgrounds/world1_fractured_moon.svg',
@@ -706,9 +706,9 @@ const PLANETS = [
     attackStyle: 'gravity_rock',
     hasHole: true, holePos: {x: 180, y: 1240}, holePullR: 1250, holeForce: 190, holeKillR: 110,
     gravity: 780, friction: 0.82, airDrag: 0.985, wind: {x: 0, y: 0},
-    mandatoryName: 'Ancient Artifacts', mandatoryCount: 7,
-    bonusName: 'Alien Energy Cores', bonusCount: 5,
-    gravityZones: 5, movingPlatforms: 5, enemies: 5,
+    mandatoryName: 'Void Anomaly Spheres', mandatoryCount: 12,
+    bonusName: 'Ancient Lunar Tablets', bonusCount: 6,
+    gravityZones: 5, movingPlatforms: 6, enemies: 12,
     landingPad: {x: 650, y: 1530, w: 220, h: 22},
     rocketStart: {x: 200, y: 480, vx: 200, vy: 40, angle: 0.22},
     departureRocket: {x: 4950, y: 1500, w: 90, h: 140}
@@ -717,17 +717,17 @@ const PLANETS = [
     id: 'aether_7',
     name: 'AETHER-7',
     type: 'FLOATING SKY PLANET',
-    sub: 'Floating cloud plateaus and powerful updrafts. Collect Atmospheric Crystals.',
-    width: 5800, height: 2200, groundY: 1820,
+    sub: 'Floating cloud plateaus and powerful updrafts. Collect 14 Aero-Crystals & 7 Flight Recorders.',
+    width: 5900, height: 2200, groundY: 1820,
     sky: ['#041429', '#17606a'], accent: '#62ffd1', starCol: '#c4fff4',
     planetArt: 'assets/planets/aether_7.svg',
     bgArt: 'assets/backgrounds/world2_aether7.svg',
     enemyType: 'sentinel',
     attackStyle: 'sky_shard',
     gravity: 700, friction: 0.86, airDrag: 0.99, wind: {x: 35, y: 0},
-    mandatoryName: 'Atmospheric Crystals', mandatoryCount: 8,
-    bonusName: 'Navigation Modules', bonusCount: 6,
-    updrafts: 6, downdrafts: 2, movingPlatforms: 8, enemies: 4,
+    mandatoryName: 'Atmospheric Aero-Crystals', mandatoryCount: 14,
+    bonusName: 'Stratosphere Flight Recorders', bonusCount: 7,
+    updrafts: 6, downdrafts: 2, movingPlatforms: 9, enemies: 14,
     landingPad: {x: 650, y: 1790, w: 220, h: 22},
     rocketStart: {x: 220, y: 550, vx: 210, vy: 45, angle: 0.2},
     departureRocket: {x: 5450, y: 1120, w: 90, h: 140}
@@ -736,16 +736,17 @@ const PLANETS = [
     id: 'cinder_moon',
     name: 'CINDER MOON',
     type: 'VOLCANIC PLANET',
-    sub: 'Boiling lava trenches, fire jets, and falling hot rocks. Collect Thermal Cores.',
-    width: 5600, height: 2000, groundY: 1600,
+    sub: 'Boiling lava trenches, fire jets, and hostile swarms. Collect 14 Magma Cores & 7 Volcanic Geodes.',
+    width: 5700, height: 2000, groundY: 1600,
     sky: ['#1b0602', '#5c1707'], accent: '#ff7a2e', starCol: '#ffd1a4',
     planetArt: 'assets/planets/cinder_moon.svg',
     bgArt: 'assets/backgrounds/world3_cinder_moon.svg',
+    enemyType: 'burrower',
     gravity: 920, friction: 0.83, airDrag: 0.982, wind: {x: 0, y: 0},
-    mandatoryName: 'Thermal Cores', mandatoryCount: 8,
+    mandatoryName: 'Igneous Magma Cores', mandatoryCount: 14,
     attackStyle: 'gravity_rock',
-    bonusName: 'Rare Minerals', bonusCount: 5,
-    lavaPits: 7, fireJets: 8, heatZones: 6, fallingRocks: true, debris: 12,
+    bonusName: 'Pyrite Volcanic Geodes', bonusCount: 7,
+    lavaPits: 7, fireJets: 8, heatZones: 6, fallingRocks: true, debris: 12, enemies: 14,
     landingPad: {x: 650, y: 1570, w: 220, h: 22},
     rocketStart: {x: 200, y: 520, vx: 200, vy: 50, angle: 0.22},
     departureRocket: {x: 5250, y: 1540, w: 90, h: 140}
@@ -754,16 +755,17 @@ const PLANETS = [
     id: 'cryos',
     name: 'CRYOS',
     type: 'FROZEN PLANET',
-    sub: 'Low-friction ice caves, cracking platforms, and sub-zero gusts. Collect Frozen Samples.',
-    width: 5700, height: 2050, groundY: 1640,
+    sub: 'Low-friction ice caves, cracking platforms, and ice sentinels. Collect 15 Permafrost Specimens & 8 Cryo Capsules.',
+    width: 5800, height: 2050, groundY: 1640,
     sky: ['#03122c', '#0b4d75'], accent: '#6be7ff', starCol: '#d7fbff',
     planetArt: 'assets/planets/cryos.svg',
     bgArt: 'assets/backgrounds/world4_cryos.svg',
+    enemyType: 'sentinel',
     gravity: 750, friction: 0.24, airDrag: 0.994, wind: {x: -70, y: 0},
-    mandatoryName: 'Frozen Samples', mandatoryCount: 9,
+    mandatoryName: 'Glacial Permafrost Specimens', mandatoryCount: 15,
     attackStyle: 'ice_shard',
-    bonusName: 'Cryo Energy Cells', bonusCount: 5,
-    iceGusts: 6, crackingPlatforms: 9, enemies: 4,
+    bonusName: 'Cryo-Stasis Capsules', bonusCount: 8,
+    iceGusts: 6, crackingPlatforms: 10, enemies: 15,
     landingPad: {x: 650, y: 1610, w: 220, h: 22},
     rocketStart: {x: 200, y: 540, vx: 200, vy: 45, angle: 0.22},
     departureRocket: {x: 5350, y: 1580, w: 90, h: 140}
@@ -772,17 +774,17 @@ const PLANETS = [
     id: 'vortex_prime',
     name: 'VORTEX PRIME',
     type: 'TOXIC PLANET',
-    sub: 'Corrosive poison clouds and acid pools. Manage suit oxygen. Collect Scientific Samples.',
-    width: 5900, height: 2100, groundY: 1660,
+    sub: 'Corrosive poison clouds and acid pools. Collect 15 Xenocyte Canisters & 8 Bio Relics.',
+    width: 6000, height: 2100, groundY: 1660,
     sky: ['#07100e', '#224219'], accent: '#b5ff40', starCol: '#eaffc7',
     planetArt: 'assets/planets/vortex_prime.svg',
     bgArt: 'assets/backgrounds/world5_vortex_prime.svg',
     enemyType: 'vortex',
     attackStyle: 'toxic_glob',
     gravity: 830, friction: 0.78, airDrag: 0.978, wind: {x: -110, y: 0},
-    mandatoryName: 'Scientific Samples', mandatoryCount: 9,
-    bonusName: 'Rare Toxic Minerals', bonusCount: 5,
-    oxygenDrain: 2.6, safeZones: 5, acidZones: 7, enemies: 5,
+    mandatoryName: 'Corrosive Xenocyte Canisters', mandatoryCount: 15,
+    bonusName: 'Bio-Hazard Research Relics', bonusCount: 8,
+    oxygenDrain: 2.6, safeZones: 5, acidZones: 7, enemies: 16,
     landingPad: {x: 650, y: 1630, w: 220, h: 22},
     rocketStart: {x: 200, y: 550, vx: 200, vy: 45, angle: 0.22},
     departureRocket: {x: 5550, y: 1600, w: 90, h: 140}
@@ -791,16 +793,17 @@ const PLANETS = [
     id: 'earth',
     name: 'EARTH',
     type: 'WIND PLANET & EXTRACTION BASE',
-    sub: 'Atmospheric re-entry gale winds and dust storm buffeting. Collect Energy Crystals.',
-    width: 5300, height: 1900, groundY: 1500,
+    sub: 'Atmospheric re-entry gale winds and defense drone patrols. Collect 16 Power Matrices & 8 Blackboxes.',
+    width: 5500, height: 1900, groundY: 1500,
     sky: ['#031633', '#0b4c94'], accent: '#4fd3ff', starCol: '#e8fbff',
     planetArt: 'assets/planets/earth.svg',
     bgArt: 'assets/backgrounds/world6_earth.svg',
+    enemyType: 'sentinel',
     gravity: 870, friction: 0.88, airDrag: 0.985, wind: {x: 165, y: 0},
-    mandatoryName: 'Energy Crystals', mandatoryCount: 6,
-    bonusName: 'Fuel Reserves', bonusCount: 8,
-      dustStorms: true, windBuffet: true,
-    attackStyle: 'storm_bolt',
+    mandatoryName: 'Terra-Beacon Power Matrices', mandatoryCount: 16,
+    bonusName: 'Orbital Defense Blackboxes', bonusCount: 8,
+    dustStorms: true, windBuffet: true,
+    attackStyle: 'storm_bolt', enemies: 15,
     landingPad: {x: 650, y: 1470, w: 220, h: 22},
     rocketStart: {x: 200, y: 500, vx: 200, vy: 40, angle: 0.22},
     departureRocket: {x: 4950, y: 1440, w: 90, h: 140}
@@ -829,19 +832,28 @@ const ENDLESS_PALETTES = [
   ['#061b1b', '#12625c', '#7dffd8'], ['#08102a', '#1c2b69', '#8fb7ff']
 ];
 
+const ENDLESS_MANDATORY_NAMES = [
+  'Signal Quantum Cores', 'Lumen Biomass Seeds', 'Solar Fusion Relays', 'Storm Key Nodes',
+  'Refraction Shards', 'Ashen Core Ingots', 'Graviton Anchors', 'Void Cryo Spindles'
+];
+const ENDLESS_BONUS_NAMES = [
+  'Frontier Data Slates', 'Bio-Synth Crystals', 'Hyper-Capacitors', 'Ion Flight Beacons',
+  'Prism Memory Cells', 'Magma Geodes', 'Tidal Resonators', 'Sub-Zero Artifacts'
+];
+
 function createEndlessPlanet(index){
   const depth = Math.max(1, index - PLANETS.length + 1);
   const slot = (depth - 1) % ENDLESS_PLANET_NAMES.length;
   const cycle = Math.floor((depth - 1) / ENDLESS_PLANET_NAMES.length);
   const palette = ENDLESS_PALETTES[slot];
-  const width = 5600 + Math.min(2200, cycle * 260) + (slot % 3) * 180;
+  const width = 5600 + Math.min(2400, cycle * 280) + (slot % 3) * 180;
   const groundY = 1450 + (slot % 4) * 90;
   const enemyType = ENDLESS_ENEMIES[slot];
   return {
     id: 'endless_' + depth,
     name: ENDLESS_PLANET_NAMES[slot] + ' ' + (cycle + 1),
     type: ENDLESS_PLANET_TYPES[slot],
-    sub: 'Procedural frontier sector ' + depth + '. Recover the signal core and reach extraction.',
+    sub: 'Procedural frontier sector ' + depth + '. Recover ' + (12 + Math.min(10, cycle * 2 + slot % 5)) + ' ' + ENDLESS_MANDATORY_NAMES[slot % ENDLESS_MANDATORY_NAMES.length] + '.',
     width, height: groundY + 430, groundY,
     sky: [palette[0], palette[1]], accent: palette[2], starCol: '#e8fbff',
     planetArt: 'assets/planets/fractured_moon.svg',
@@ -852,9 +864,10 @@ function createEndlessPlanet(index){
     friction: Math.max(0.3, 0.9 - (slot % 4) * 0.12),
     airDrag: 0.982 + (slot % 3) * 0.004,
     wind: {x: (slot % 2 ? -1 : 1) * (35 + (slot % 4) * 28), y: slot === 3 ? -35 : 0},
-    mandatoryName: ['Signal Cores', 'Lumen Seeds', 'Solar Relays', 'Storm Keys'][slot % 4],
-    mandatoryCount: 7 + Math.min(6, cycle + slot % 4),
-    bonusName: 'Frontier Relics', bonusCount: 5 + (slot % 4),
+    mandatoryName: ENDLESS_MANDATORY_NAMES[slot % ENDLESS_MANDATORY_NAMES.length],
+    mandatoryCount: 12 + Math.min(10, cycle * 2 + slot % 5),
+    bonusName: ENDLESS_BONUS_NAMES[slot % ENDLESS_BONUS_NAMES.length],
+    bonusCount: 7 + (slot % 4),
     gravityZones: slot % 3 === 0 ? 4 + cycle : 0,
     updrafts: slot % 3 === 1 ? 4 + (cycle % 3) : 0,
     heatZones: slot === 2 ? 5 + cycle : 0,
@@ -862,7 +875,7 @@ function createEndlessPlanet(index){
     dustStorms: slot === 4,
     lavaPits: slot === 5 ? 5 + cycle : 0,
     iceGusts: slot === 7 ? 5 + cycle : 0,
-    enemies: 5 + Math.min(7, cycle + slot % 3),
+    enemies: 14 + Math.min(12, cycle * 3 + (slot % 4) * 2),
     debris: 8 + cycle * 2,
     landingPad: {x: 620 + (slot % 4) * 35, y: groundY - 30, w: 220, h: 22},
     rocketStart: {x: 170 + (slot % 3) * 30, y: 420 + (slot % 4) * 38, vx: 190 + (slot % 3) * 12, vy: 35, angle: 0.2},
@@ -1150,15 +1163,15 @@ function initPlanet(worldIdx){
 
 
   // Intermediate exploration platforms
-  const platformCount = cfg.movingPlatforms ? 22 : 18;
+  const platformCount = cfg.movingPlatforms ? 34 : 28;
   for(let q=0; q<platformCount; q++){
     const t = (q + 1) / (platformCount + 1);
-    const startX = cfg.landingPad.x + 300;
-    const endX = cfg.width - 320;
+    const startX = cfg.landingPad.x + 280;
+    const endX = cfg.width - 280;
     const px = lerp(startX, endX, t) + (r() - 0.5) * 160;
     const route = q % 3;
     const routeHeight = route === 0 ? 150 + r() * 170 : route === 1 ? 300 + r() * 220 : 520 + r() * 260;
-    const py = clamp(cfg.groundY - routeHeight - (cfg.updrafts ? r()*180 : 0), 360, cfg.groundY - 90);
+    const py = clamp(cfg.groundY - routeHeight - (cfg.updrafts ? r()*180 : 0), 340, cfg.groundY - 90);
     const moving = cfg.movingPlatforms && q % 3 === 1;
     const cracking = cfg.crackingPlatforms && (q % 2 === 0 || route === 2);
 
@@ -1179,13 +1192,17 @@ function initPlanet(worldIdx){
   // Mandatory Collectibles distribution (Reachable on platforms and exploration routes)
   for(let i=0; i<cfg.mandatoryCount; i++){
     const t = (i + 1) / (cfg.mandatoryCount + 1);
-    const startX = cfg.landingPad.x + 320;
-    const endX = cfg.width - 320;
-    const px = lerp(startX, endX, t);
-    const plat = PLATFORMS[3 + (i % (PLATFORMS.length - 3))];
+    const startX = cfg.landingPad.x + 280;
+    const endX = cfg.width - 280;
+    const px = lerp(startX, endX, t) + (r() - 0.5) * 120;
+    const platIdx = 2 + (i * 2 + (i >= PLATFORMS.length - 2 ? 1 : 0)) % Math.max(1, PLATFORMS.length - 2);
+    const plat = PLATFORMS[platIdx];
+    const platOffset = ((i % 3) - 1) * 35;
+    const posX = plat ? clamp(plat.x + plat.w * 0.5 + platOffset, plat.x + 22, plat.x + plat.w - 22) : px;
+    const posY = plat ? plat.y - 42 : cfg.groundY - 60 - (i % 3) * 85;
     CELLS.push({
-      x: plat ? plat.x + plat.w * 0.5 : px,
-      y: plat ? plat.y - 42 : cfg.groundY - 70 - r() * 260,
+      x: posX,
+      y: posY,
       got: false,
       rot: r() * 6.28
     });
@@ -1194,27 +1211,31 @@ function initPlanet(worldIdx){
 
   // Emergency Nano-Repair Health Packs (distributed on exploration platforms)
   HEALTH_PACKS = [];
-  for(let h=0; h<3; h++){
+  for(let h=0; h<4; h++){
     const platIdx = 2 + ((h * 5 + 2) % (PLATFORMS.length - 2));
     const plat = PLATFORMS[platIdx];
     HEALTH_PACKS.push({
-      x: plat ? plat.x + plat.w * 0.5 : cfg.landingPad.x + 600 + h * 900,
+      x: plat ? plat.x + plat.w * 0.5 : cfg.landingPad.x + 550 + h * 800,
       y: plat ? plat.y - 32 : cfg.groundY - 60,
       got: false,
       pulse: Math.random() * 6.28
     });
   }
 
-  // Bonus Energy Orbs / Modules
+  // Bonus Planetary Relics / Cores (Distinct secondary objective)
   for(let j=0; j<cfg.bonusCount; j++){
     const t = (j + 1) / (cfg.bonusCount + 1);
-    const startX = cfg.landingPad.x + 400;
-    const endX = cfg.width - 400;
-    const px = lerp(startX, endX, t) + (r() - 0.5) * 200;
-    const plat = PLATFORMS[4 + ((j * 3) % (PLATFORMS.length - 3))];
+    const startX = cfg.landingPad.x + 350;
+    const endX = cfg.width - 350;
+    const px = lerp(startX, endX, t) + (r() - 0.5) * 160;
+    const platIdx = 2 + (j * 3 + 1) % Math.max(1, PLATFORMS.length - 2);
+    const plat = PLATFORMS[platIdx];
+    const platOffset = ((j % 2) === 0 ? 35 : -35);
+    const posX = plat ? clamp(plat.x + plat.w * 0.5 + platOffset, plat.x + 20, plat.x + plat.w - 20) : px;
+    const posY = plat ? plat.y - 70 : cfg.groundY - 140 - (j % 3) * 90;
     ORBS.push({
-      x: plat ? plat.x + plat.w * 0.5 : px,
-      y: plat ? plat.y - 80 : cfg.groundY - 180 - r() * 320,
+      x: posX,
+      y: posY,
       got: false,
       rot: 0
     });
@@ -1340,24 +1361,45 @@ function initPlanet(worldIdx){
     pulse: r() * 6.28
   });
 
-  // Enemies Placement
+  // Enemies Placement (Dense hostile encounters across the planet)
   const enemyRoster = getEnemyRoster(cfg);
-  for(let e=0; e<(cfg.enemies || 0); e++){
-    const plat = PLATFORMS[4 + ((e * 4) % Math.max(1, PLATFORMS.length - 4))];
-    const enemyX = plat ? plat.x + plat.w * 0.5 : 1200 + e * 700;
-    const safeEnemyX = Math.abs(enemyX - cfg.landingPad.x) < 420 ? cfg.landingPad.x + 520 + e * 120 : enemyX;
+  const totalEnemies = cfg.enemies || 14;
+  for(let e=0; e<totalEnemies; e++){
+    const t = (e + 1) / (totalEnemies + 1);
+    const startX = cfg.landingPad.x + 460;
+    const endX = cfg.width - 280;
+    const spreadX = lerp(startX, endX, t) + (r() - 0.5) * 140;
+
+    const usePlat = (e % 3 !== 0);
+    const platIdx = 2 + (e * 2) % Math.max(1, PLATFORMS.length - 2);
+    const plat = usePlat ? PLATFORMS[platIdx] : null;
+
+    let posX = plat ? plat.x + plat.w * 0.5 + ((e % 2 === 0) ? 20 : -20) : spreadX;
+    if(Math.abs(posX - cfg.landingPad.x) < 420){
+      posX = cfg.landingPad.x + 480 + e * 70;
+    }
+    posX = clamp(posX, 280, cfg.width - 220);
+
+    let posY = plat ? plat.y - 32 : cfg.groundY - 42;
+    const enemyType = enemyRoster[e % enemyRoster.length];
+    if(enemyType === 'sentinel' || enemyType === 'swarm' || enemyType === 'stormcaller' || enemyType === 'prism'){
+      posY -= (25 + (e % 3) * 30);
+    }
+
+    const enemyHp = (enemyType === 'sentinel' || enemyType === 'vortex') ? 3 : 2;
     ENEMIES.push({
-      type: enemyRoster[e % enemyRoster.length],
-      x: safeEnemyX,
-      y: plat ? plat.y - 32 : cfg.groundY - 42,
-      baseX: safeEnemyX,
-      baseY: plat ? plat.y - 32 : cfg.groundY - 42,
+      type: enemyType,
+      x: posX,
+      y: posY,
+      baseX: posX,
+      baseY: posY,
       phase: r() * 6.28,
-      hp: 2,
-      facing: 1,
-      shotT: 1.5 + r() * 2.5,
-      orbitR: 70 + r() * 90,
-      speed: 0.6 + r() * 0.8
+      hp: enemyHp,
+      maxHp: enemyHp,
+      facing: (e % 2 === 0 ? 1 : -1),
+      shotT: 1.2 + r() * 2.2,
+      orbitR: 65 + r() * 85,
+      speed: 0.65 + r() * 0.75
     });
   }
 
@@ -2059,69 +2101,119 @@ function drawMandatoryCollectible(c, cfg, camX, camY, t){
   ctx.save();
   ctx.translate(cx, cy);
 
-  // Holographic [ ◆ COLLECT ◆ ] Badge above the mandatory collectible
-  rr(-38, -36, 76, 16, 4);
+  // Holographic badge customized per planet
+  const badgeLabel = cfg.id === 'fractured_moon' ? '◆ VOID SPHERE ◆' :
+    (cfg.id === 'aether_7' ? '◆ AERO-CRYSTAL ◆' :
+    (cfg.id === 'cinder_moon' ? '◆ MAGMA CORE ◆' :
+    (cfg.id === 'cryos' ? '◆ FROST SPECIMEN ◆' :
+    (cfg.id === 'vortex_prime' ? '◆ XENOCYTE VIAL ◆' :
+    (cfg.id === 'earth' ? '◆ POWER MATRIX ◆' : '◆ ' + (cfg.mandatoryName || 'SAMPLE').toUpperCase() + ' ◆')))));
+
+  const badgeWidth = Math.max(76, badgeLabel.length * 6.5 + 16);
+  rr(-badgeWidth/2, -36, badgeWidth, 16, 4);
   ctx.fillStyle = 'rgba(6, 12, 30, 0.9)';
   ctx.fill();
-  ctx.strokeStyle = '#3df0ff';
+  ctx.strokeStyle = cfg.accent || '#3df0ff';
   ctx.lineWidth = 1.3;
   ctx.stroke();
-  txt('◆ COLLECT ◆', 0, -24, 9, '#3df0ff', 'center', F_U, 700, 1);
+  txt(badgeLabel, 0, -24, 8.5, cfg.accent || '#3df0ff', 'center', F_U, 700, 1);
 
   // Concentric pulsing aura
-  ctx.strokeStyle = 'rgba(61, 240, 255, 0.45)';
+  ctx.strokeStyle = (cfg.accent || '#3df0ff') + '77';
   ctx.lineWidth = 1.5;
   ctx.beginPath();
-  ctx.arc(0, 0, 18 + Math.sin(t * 4.5) * 3, 0, 6.283);
+  ctx.arc(0, 0, 19 + Math.sin(t * 4.5) * 3, 0, 6.283);
   ctx.stroke();
 
   ctx.globalCompositeOperation = 'lighter';
-  const gl = ctx.createRadialGradient(0, 0, 4, 0, 0, 26);
+  const gl = ctx.createRadialGradient(0, 0, 4, 0, 0, 28);
   gl.addColorStop(0, cfg.accent);
   gl.addColorStop(1, 'rgba(0,0,0,0)');
   ctx.fillStyle = gl;
-  ctx.fillRect(-26, -26, 52, 52);
+  ctx.fillRect(-28, -28, 56, 56);
 
   if(cfg.id === 'fractured_moon'){
+    // Void Anomaly Sphere: Pulsing cosmic sphere with singularity event horizon
     ctx.rotate(t * 1.8);
     ctx.fillStyle = C.purple;
     ctx.beginPath();
-    ctx.moveTo(0, -14); ctx.lineTo(13, 0); ctx.lineTo(0, 14); ctx.lineTo(-13, 0); ctx.closePath();
-    ctx.fill();
-    ctx.strokeStyle = '#fff'; ctx.lineWidth = 2; ctx.stroke();
-    ctx.fillStyle = '#fff';
+    ctx.arc(0, 0, 13, 0, 6.283); ctx.fill();
+    ctx.strokeStyle = '#f0abfc'; ctx.lineWidth = 2; ctx.stroke();
+    // Inner singularity core
+    ctx.fillStyle = '#ffffff';
     ctx.beginPath(); ctx.arc(0, 0, 4, 0, 6.283); ctx.fill();
+    // Orbiting mini-ring
+    ctx.strokeStyle = '#c084fc'; ctx.lineWidth = 1.5;
+    ctx.beginPath(); ctx.ellipse(0, 0, 20, 6, 0, 0, 6.283); ctx.stroke();
   } else if(cfg.id === 'aether_7'){
-    ctx.rotate(Math.sin(t*2)*0.2);
+    // Atmospheric Aero-Crystal: Faceted sky shard levitating with cyan prisms
+    ctx.rotate(Math.sin(t*2)*0.25);
     ctx.fillStyle = C.teal;
     ctx.beginPath();
-    ctx.moveTo(0, -16); ctx.lineTo(10, -6); ctx.lineTo(6, 14); ctx.lineTo(-6, 14); ctx.lineTo(-10, -6); ctx.closePath();
+    ctx.moveTo(0, -18); ctx.lineTo(11, -6); ctx.lineTo(7, 16); ctx.lineTo(-7, 16); ctx.lineTo(-11, -6); ctx.closePath();
     ctx.fill();
-    ctx.strokeStyle = '#fff'; ctx.lineWidth = 1.5; ctx.stroke();
-  } else if(cfg.id === 'cinder_moon'){
-    ctx.rotate(t * 2.2);
-    const mg = ctx.createRadialGradient(0, 0, 2, 0, 0, 13);
-    mg.addColorStop(0, '#ffffff'); mg.addColorStop(0.4, '#ff9a2e'); mg.addColorStop(1, '#ff2200');
-    ctx.fillStyle = mg;
-    ctx.beginPath(); ctx.arc(0, 0, 13, 0, 6.283); ctx.fill();
-    ctx.strokeStyle = '#ffe08a'; ctx.lineWidth = 2; ctx.stroke();
-  } else if(cfg.id === 'cryos'){
-    ctx.fillStyle = C.ice;
-    rr(-6, -13, 12, 26, 3); ctx.fill();
     ctx.strokeStyle = '#ffffff'; ctx.lineWidth = 2; ctx.stroke();
-    ctx.fillStyle = '#ffffff';
-    ctx.fillRect(-3, -7, 6, 14);
+    // Facet glint
+    ctx.strokeStyle = 'rgba(255,255,255,0.7)'; ctx.lineWidth = 1.2;
+    ctx.beginPath(); ctx.moveTo(0, -16); ctx.lineTo(0, 14); ctx.stroke();
+  } else if(cfg.id === 'cinder_moon'){
+    // Igneous Magma Core: Molten volcanic fireball with glowing cracks
+    ctx.rotate(t * 2.2);
+    const mg = ctx.createRadialGradient(0, 0, 2, 0, 0, 14);
+    mg.addColorStop(0, '#ffffff'); mg.addColorStop(0.35, '#ffdd44'); mg.addColorStop(0.7, '#ff7a2e'); mg.addColorStop(1, '#ff1a00');
+    ctx.fillStyle = mg;
+    ctx.beginPath(); ctx.arc(0, 0, 14, 0, 6.283); ctx.fill();
+    ctx.strokeStyle = '#ffe08a'; ctx.lineWidth = 2; ctx.stroke();
+    // Ember sparks
+    for(let s=0; s<4; s++){
+      const sa = s * Math.PI * 0.5 + t * 3;
+      ctx.fillStyle = '#ffaa33';
+      ctx.beginPath(); ctx.arc(Math.cos(sa)*18, Math.sin(sa)*18, 2, 0, 6.283); ctx.fill();
+    }
+  } else if(cfg.id === 'cryos'){
+    // Glacial Permafrost Specimen: Crystalline ice star with sub-zero facet spikes
+    ctx.rotate(t * 0.8);
+    ctx.fillStyle = C.ice;
+    for(let k=0; k<6; k++){
+      const ang = k * Math.PI / 3;
+      ctx.save(); ctx.rotate(ang);
+      ctx.beginPath(); ctx.moveTo(0, -17); ctx.lineTo(4, 0); ctx.lineTo(0, 4); ctx.lineTo(-4, 0); ctx.closePath();
+      ctx.fill(); ctx.restore();
+    }
+    ctx.strokeStyle = '#ffffff'; ctx.lineWidth = 1.8; ctx.stroke();
+    ctx.fillStyle = '#ffffff'; ctx.beginPath(); ctx.arc(0, 0, 4, 0, 6.283); ctx.fill();
   } else if(cfg.id === 'vortex_prime'){
-    ctx.fillStyle = C.toxic;
-    rr(-7, -12, 14, 24, 4); ctx.fill();
-    ctx.strokeStyle = '#eaffc7'; ctx.lineWidth = 2; ctx.stroke();
-    ctx.fillStyle = '#061608';
-    rr(-3, -8, 6, 16, 2); ctx.fill();
-  } else {
+    // Corrosive Xenocyte Canister: Biohazard vial with glowing green mutagen
+    rr(-8, -14, 16, 28, 4);
+    ctx.fillStyle = 'rgba(10, 40, 20, 0.9)'; ctx.fill();
+    ctx.strokeStyle = '#b5ff40'; ctx.lineWidth = 2; ctx.stroke();
+    // Swirling mutagen liquid
+    const liquidY = Math.sin(t * 4) * 2;
+    ctx.fillStyle = '#b5ff40';
+    rr(-5, -6 + liquidY, 10, 16, 2); ctx.fill();
+    // Top & bottom caps
+    ctx.fillStyle = '#333';
+    rr(-7, -15, 14, 3, 1); ctx.fill();
+    rr(-7, 12, 14, 3, 1); ctx.fill();
+  } else if(cfg.id === 'earth'){
+    // Terra-Beacon Power Matrix: Hexagonal fusion battery with bright cyan plasma core
     ctx.rotate(t * 1.5);
-    ctx.fillStyle = C.cyan;
+    ctx.fillStyle = '#061a33';
     ctx.beginPath();
-    ctx.moveTo(0, -15); ctx.lineTo(12, 0); ctx.lineTo(0, 15); ctx.lineTo(-12, 0); ctx.closePath();
+    for(let a=0; a<6; a++){
+      const rad = a * Math.PI / 3;
+      const hx = Math.cos(rad) * 15, hy = Math.sin(rad) * 15;
+      if(a===0) ctx.moveTo(hx, hy); else ctx.lineTo(hx, hy);
+    }
+    ctx.closePath(); ctx.fill();
+    ctx.strokeStyle = '#4fd3ff'; ctx.lineWidth = 2.2; ctx.stroke();
+    ctx.fillStyle = '#4fd3ff'; ctx.beginPath(); ctx.arc(0, 0, 5, 0, 6.283); ctx.fill();
+  } else {
+    // Endless procedural artifact
+    ctx.rotate(t * 1.5);
+    ctx.fillStyle = cfg.accent || C.cyan;
+    ctx.beginPath();
+    ctx.moveTo(0, -16); ctx.lineTo(13, 0); ctx.lineTo(0, 16); ctx.lineTo(-13, 0); ctx.closePath();
     ctx.fill();
     ctx.strokeStyle = '#ffffff'; ctx.lineWidth = 2; ctx.stroke();
   }
@@ -2136,27 +2228,101 @@ function drawEnergyOrb(o, camX, camY, t){
   ctx.save();
   ctx.translate(ox, oy);
 
-  // Floating Bonus Badge
-  rr(-28, -30, 56, 13, 3);
-  ctx.fillStyle = 'rgba(15, 10, 4, 0.88)';
+  const cfg = LVL;
+  // Floating Planet Relic Badge
+  const relicTag = cfg.id === 'fractured_moon' ? '★ LUNAR TABLET' :
+    (cfg.id === 'aether_7' ? '★ FLIGHT RECORDER' :
+    (cfg.id === 'cinder_moon' ? '★ VOLCANIC GEODE' :
+    (cfg.id === 'cryos' ? '★ CRYO-STASIS' :
+    (cfg.id === 'vortex_prime' ? '★ BIO-RELIC' :
+    (cfg.id === 'earth' ? '★ ORBITAL BLACKBOX' : '★ PLANET RELIC')))));
+
+  const badgeW = Math.max(68, relicTag.length * 6.2 + 14);
+  rr(-badgeW/2, -32, badgeW, 14, 3);
+  ctx.fillStyle = 'rgba(20, 12, 4, 0.92)';
   ctx.fill();
   ctx.strokeStyle = C.gold;
   ctx.lineWidth = 1;
   ctx.stroke();
-  txt('+CREDITS', 0, -20, 8, C.gold, 'center', F_U, 700, 1);
+  txt(relicTag, 0, -22, 7.8, C.gold, 'center', F_U, 700, 1);
+
   ctx.globalCompositeOperation = 'lighter';
-  const gl = ctx.createRadialGradient(0, 0, 6, 0, 0, 30);
+  const gl = ctx.createRadialGradient(0, 0, 6, 0, 0, 32);
   gl.addColorStop(0, 'rgba(255,209,102,0.7)');
   gl.addColorStop(1, 'rgba(0,0,0,0)');
   ctx.fillStyle = gl;
-  ctx.fillRect(-30, -30, 60, 60);
+  ctx.fillRect(-32, -32, 64, 64);
 
-  ctx.fillStyle = C.gold;
-  ctx.beginPath(); ctx.arc(0, 0, 12, 0, 6.283); ctx.fill();
+  if(cfg.id === 'fractured_moon'){
+    // Ancient Lunar Tablet: Carved stone slab with glowing purple runes
+    ctx.fillStyle = '#1e1430';
+    rr(-9, -14, 18, 28, 3); ctx.fill();
+    ctx.strokeStyle = '#c084fc'; ctx.lineWidth = 1.5; ctx.stroke();
+    ctx.fillStyle = '#f0abfc';
+    ctx.fillRect(-5, -8, 10, 2);
+    ctx.fillRect(-2, -4, 4, 9);
+    ctx.fillRect(-5, 7, 10, 2);
+  } else if(cfg.id === 'aether_7'){
+    // Stratosphere Flight Recorder: Hexagonal golden data module
+    ctx.rotate(t * 1.5);
+    ctx.fillStyle = '#ffd166';
+    ctx.beginPath();
+    for(let i=0; i<6; i++){
+      const a = i * Math.PI / 3;
+      const px = Math.cos(a) * 12, py = Math.sin(a) * 12;
+      if(i===0) ctx.moveTo(px, py); else ctx.lineTo(px, py);
+    }
+    ctx.closePath(); ctx.fill();
+    ctx.strokeStyle = '#62ffd1'; ctx.lineWidth = 2; ctx.stroke();
+    ctx.fillStyle = '#061622'; ctx.beginPath(); ctx.arc(0, 0, 4, 0, 6.283); ctx.fill();
+  } else if(cfg.id === 'cinder_moon'){
+    // Pyrite Volcanic Geode: Dark jagged rock with molten gold interior
+    ctx.fillStyle = '#2b110a';
+    ctx.beginPath();
+    ctx.moveTo(0, -14); ctx.lineTo(12, -5); ctx.lineTo(10, 11); ctx.lineTo(-10, 11); ctx.lineTo(-12, -5);
+    ctx.closePath(); ctx.fill();
+    ctx.strokeStyle = '#ff7a2e'; ctx.lineWidth = 2; ctx.stroke();
+    const gg = ctx.createRadialGradient(0, 0, 1, 0, 0, 7);
+    gg.addColorStop(0, '#ffffff'); gg.addColorStop(0.5, '#ffd166'); gg.addColorStop(1, '#ff3b00');
+    ctx.fillStyle = gg; ctx.beginPath(); ctx.arc(0, 1, 6, 0, 6.283); ctx.fill();
+  } else if(cfg.id === 'cryos'){
+    // Cryo-Stasis Capsule: Sleek silver/glass cryogenic pod
+    ctx.fillStyle = 'rgba(107, 231, 255, 0.4)';
+    rr(-7, -14, 14, 28, 4); ctx.fill();
+    ctx.strokeStyle = '#ffffff'; ctx.lineWidth = 1.5; ctx.stroke();
+    ctx.fillStyle = '#a5c4d4';
+    rr(-8, -15, 16, 4, 2); ctx.fill();
+    rr(-8, 11, 16, 4, 2); ctx.fill();
+    ctx.fillStyle = '#6be7ff'; ctx.beginPath(); ctx.arc(0, 0, 4, 0, 6.283); ctx.fill();
+  } else if(cfg.id === 'vortex_prime'){
+    // Bio-Hazard Research Relic: Double-helix bio-matrix capsule
+    ctx.fillStyle = '#0d2818';
+    rr(-8, -13, 16, 26, 4); ctx.fill();
+    ctx.strokeStyle = '#b5ff40'; ctx.lineWidth = 2; ctx.stroke();
+    ctx.fillStyle = '#b5ff40';
+    for(let i=0; i<3; i++){
+      const y = -6 + i * 6;
+      const x = Math.sin(t * 3 + i * 1.5) * 3.5;
+      ctx.beginPath(); ctx.arc(x, y, 2.5, 0, 6.283); ctx.fill();
+    }
+  } else if(cfg.id === 'earth'){
+    // Orbital Defense Blackbox: High-contrast telemetry recorder
+    ctx.fillStyle = '#ff6b35';
+    rr(-11, -9, 22, 18, 3); ctx.fill();
+    ctx.strokeStyle = '#ffffff'; ctx.lineWidth = 1.5; ctx.stroke();
+    ctx.fillStyle = '#111'; ctx.fillRect(-7, -5, 14, 4);
+    const blink = Math.sin(t * 8) > 0;
+    ctx.fillStyle = blink ? '#4dff88' : '#114422';
+    ctx.beginPath(); ctx.arc(5, 3, 2.5, 0, 6.283); ctx.fill();
+  } else {
+    // Endless planet star relic
+    ctx.fillStyle = C.gold;
+    ctx.beginPath(); ctx.arc(0, 0, 12, 0, 6.283); ctx.fill();
+    ctx.rotate(t * 2);
+    ctx.strokeStyle = '#fff'; ctx.lineWidth = 2;
+    ctx.beginPath(); ctx.ellipse(0, 0, 20, 7, 0, 0, 6.283); ctx.stroke();
+  }
 
-  ctx.rotate(t * 2);
-  ctx.strokeStyle = '#fff'; ctx.lineWidth = 2;
-  ctx.beginPath(); ctx.ellipse(0, 0, 20, 7, 0, 0, 6.283); ctx.stroke();
   ctx.restore();
 }
 
@@ -2665,11 +2831,14 @@ function drawHUD(){
   // Line 1: Planet Name & Gravity Telemetry (Clean, Bold Orbitron)
   txt(cfg.name.toUpperCase() + ' · ' + gravG + 'G', W/2, 22, 13, cfg.accent, 'center', F_O, 700, 2);
 
-  // Line 2: Dynamic Primary Mission Objective & Credits Tracker
+  // Line 2: Dynamic Primary & Secondary Objectives + Threat Telemetry
   const allSecured = G.cellsGot >= cfg.mandatoryCount;
   const objColor = allSecured ? C.green : C.gold;
-  const objText = (allSecured ? '✔ ALL SAMPLES SECURED · RETURN TO ROCKET' : '◆ OBJECTIVE: COLLECT ' + cfg.mandatoryCount + ' ' + cfg.mandatoryName.toUpperCase() + ' [' + G.cellsGot + ' / ' + cfg.mandatoryCount + ']') + '   |   CREDITS: ' + G.credits;
-  txt(objText, W/2, 40, 11, objColor, 'center', F_U, 700, 1);
+  const objText = (allSecured ? '✔ SAMPLES SECURED [' + G.cellsGot + '/' + cfg.mandatoryCount + ']' : '◆ MISSION: ' + cfg.mandatoryName.toUpperCase() + ' [' + G.cellsGot + ' / ' + cfg.mandatoryCount + ']');
+  const relicText = '★ RELICS: [' + G.orbsGot + '/' + cfg.bonusCount + ']';
+  const threatText = '☠ HOSTILES: ' + ENEMIES.length;
+  const fullStatus = objText + '   ·   ' + relicText + '   ·   ' + threatText + '   ·   ⬡ ' + G.credits + ' CR';
+  txt(fullStatus, W/2, 40, 10.5, objColor, 'center', F_U, 700, 1);
 
   // Line 3: Environmental Hazard or Life-Support Tether (Only when active)
   const distLander = Math.hypot(PL.x - cfg.landingPad.x, PL.y - cfg.landingPad.y);
@@ -2715,9 +2884,9 @@ function drawHUD(){
     radarText = 'LANDING ZONE: ' + Math.floor(dist) + 'm ' + arrow;
   } else if(!allSecured){
     const remaining = cfg.mandatoryCount - G.cellsGot;
-    radarText = 'ROCKET: ' + Math.floor(dist) + 'm ' + arrow + ' [' + remaining + ' MORE]';
+    radarText = 'ROCKET: ' + Math.floor(dist) + 'm ' + arrow + ' [' + remaining + ' SAMPLES NEEDED]';
   } else {
-    radarText = 'ROCKET: ' + Math.floor(dist) + 'm ' + arrow + ' [READY TO BOARD]';
+    radarText = 'ROCKET: ' + Math.floor(dist) + 'm ' + arrow + ' [EXTRACTION READY · BOARD]';
   }
   txt(radarText, W - 20, 22, 11, allSecured ? C.green : C.bone, 'right', F_U, 700);
 
@@ -3012,8 +3181,8 @@ function updatePlay(dt){
       burst(pad.x + 48, pad.y - 12, 18, C.cyan, 160, 0.5, true);
       G.toast = {
         a: 'ASTRONAUT DEPLOYED',
-        b: 'Explore the planet and collect ' + cfg.mandatoryName + '. Return to your rocket when complete.',
-        t: 4.0
+        b: 'Recover ' + cfg.mandatoryCount + ' ' + cfg.mandatoryName + ' & ' + cfg.bonusCount + ' ' + cfg.bonusName + '. Neutralize hostile threats!',
+        t: 4.5
       };
     }
   }
@@ -3438,6 +3607,31 @@ function updatePlay(dt){
       }
     }
 
+    // Dynamic Reinforcements: Keep hostiles actively patrolling across the planet
+    if(G.phase === 'explore' && ENEMIES.length < Math.floor((cfg.enemies || 14) * 0.7)){
+      G.reinforceTimer = (G.reinforceTimer || 0) + dt;
+      if(G.reinforceTimer >= 11.0){
+        G.reinforceTimer = 0;
+        const enemyRoster = getEnemyRoster(cfg);
+        const newType = enemyRoster[Math.floor(Math.random() * enemyRoster.length)];
+        const candidates = PLATFORMS.filter(pl => pl.kind !== 'ground' && pl.kind !== 'landing_pad' && Math.abs(pl.x - p.x) > 420);
+        const spawnPlat = candidates.length ? candidates[Math.floor(Math.random() * candidates.length)] : null;
+        if(spawnPlat){
+          const sx = spawnPlat.x + spawnPlat.w * 0.5;
+          const sy = spawnPlat.y - 32;
+          const newHp = (newType === 'sentinel' || newType === 'vortex') ? 3 : 2;
+          ENEMIES.push({
+            type: newType,
+            x: sx, y: sy, baseX: sx, baseY: sy,
+            phase: Math.random() * 6.28,
+            hp: newHp, maxHp: newHp,
+            facing: 1, shotT: 1.6, orbitR: 70, speed: 0.7
+          });
+          burst(sx, sy, 22, '#ff3b5c', 200, 0.5, true);
+        }
+      }
+    }
+
     // Bullets update & enemy collision
     for(let b=BULLETS.length-1; b>=0; b--){
       const blt = BULLETS[b];
@@ -3513,8 +3707,8 @@ function updatePlay(dt){
           if(G.cellsGot >= cfg.mandatoryCount){
             SFX.orb();
             G.toast = {
-              a: 'ALL OBJECTIVES COMPLETE!',
-              b: 'All ' + cfg.mandatoryCount + ' ' + cfg.mandatoryName + ' secured. Return to your personal rocket to launch.',
+              a: 'PRIMARY OBJECTIVE SECURED!',
+              b: 'All ' + cfg.mandatoryCount + ' ' + cfg.mandatoryName + ' secured! Extraction rocket cleared for takeoff.',
               t: 4.5
             };
           }
@@ -3522,7 +3716,7 @@ function updatePlay(dt){
       }
     }
 
-    // Collect Bonus Energy Orbs
+    // Collect Bonus Planetary Relics / Modules
     for(let j=0; j<ORBS.length; j++){
       const o = ORBS[j];
       if(!o.got){
@@ -3537,10 +3731,20 @@ function updatePlay(dt){
           recordMissionStat('orbs');
           G.fuel = Math.min(getMaxFuel(), G.fuel + 35);
           G.oxygen = Math.min(100, (G.oxygen || 100) + 25);
-          G.score += 40;
-          G.credits += 15;
+          G.score += 50;
+          G.credits += 25;
           SFX.orb();
-          burst(o.x, o.y, 20, C.gold, 220, 0.7, true);
+          burst(o.x, o.y, 22, C.gold, 220, 0.7, true);
+          if(G.orbsGot >= cfg.bonusCount){
+            SFX.orb();
+            G.toast = {
+              a: 'SECONDARY OBJECTIVE COMPLETED!',
+              b: 'All ' + cfg.bonusCount + ' ' + cfg.bonusName + ' collected! +50 Credits Bonus.',
+              t: 4.0
+            };
+            G.credits += 50;
+            G.score += 200;
+          }
         }
       }
     }

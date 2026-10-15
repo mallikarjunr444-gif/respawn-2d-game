@@ -399,11 +399,12 @@ func _build_surface_level() -> void:
 	_spawn_surface_astronaut(config)
 	_spawn_surface_objectives(config)
 	_spawn_surface_hazards(config)
+	_spawn_surface_enemies(config)
 
 	launch_gate = exit_rocket_scene.instantiate()
 	launch_gate.name = "SurfaceExitRocket"
 	launch_gate.position = Vector2(player.position.x, landing_surface_y - 30.0)
-	launch_gate.set_resources_needed(config.get("mandatory_count", 5))
+	launch_gate.set_resources_needed(config.get("mandatory_count", 12))
 	launch_gate.boarding_started.connect(_on_surface_boarding_started)
 	launch_gate.takeoff_complete.connect(_on_surface_takeoff_complete)
 	surface_root.add_child(launch_gate)
@@ -488,17 +489,42 @@ func _spawn_surface_astronaut(config: Dictionary) -> void:
 
 func _spawn_surface_objectives(config: Dictionary) -> void:
 	var profile = _surface_profile(world_info.get("id", "earth"))
-	var count = config.get("mandatory_count", 5)
+	var count = config.get("mandatory_count", 12)
 	var route_start = player.position.x + profile.get("start", 200.0)
 	var route_end = profile.get("gate", 4000.0) - 180.0
 	for index in range(count):
 		var resource = surface_resource_scene.instantiate()
 		var progress = float(index + 1) / float(count + 1)
 		var x = lerpf(route_start, route_end, progress)
-		var y = surface_origin_y - 70.0 - float((index % 3) * 85)
+		var y = surface_origin_y - 70.0 - float((index % 4) * 80)
 		resource.position = Vector2(x, y)
 		resource.set_resource_info(config.get("resource_name", "Surface Resource"), config.get("resource_icon", "*"), world_info.get("accent_color", Color(0.3, 1.0, 0.6)))
 		surface_root.add_child(resource)
+
+	# Bonus exploration energy orbs
+	var bonus_count = config.get("bonus_count", 6)
+	for b in range(bonus_count):
+		var orb = energy_orb_scene.instantiate()
+		var b_prog = float(b + 1) / float(bonus_count + 1)
+		var bx = lerpf(route_start + 120.0, route_end - 120.0, b_prog)
+		var by = surface_origin_y - 130.0 - float((b % 3) * 90)
+		orb.position = Vector2(bx, by)
+		surface_root.add_child(orb)
+
+func _spawn_surface_enemies(config: Dictionary) -> void:
+	var profile = _surface_profile(world_info.get("id", "earth"))
+	var enemy_count = config.get("enemy_count", 12)
+	var route_start = player.position.x + profile.get("start", 200.0) + 380.0
+	var route_end = profile.get("gate", 4000.0) - 220.0
+	for i in range(enemy_count):
+		var voidling = voidling_scene.instantiate()
+		var progress = float(i + 1) / float(enemy_count + 1)
+		var ex = lerpf(route_start, route_end, progress)
+		var ey = surface_origin_y - 48.0 - float((i % 3) * 80)
+		voidling.position = Vector2(ex, ey)
+		voidling.patrol_range = randf_range(70.0, 160.0)
+		voidling.patrol_speed = randf_range(1.2, 2.2)
+		surface_root.add_child(voidling)
 
 func _spawn_surface_hazards(config: Dictionary) -> void:
 	var effects = config.get("env_effects", [])
