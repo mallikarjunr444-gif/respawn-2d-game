@@ -401,7 +401,7 @@ func _build_surface_level() -> void:
 
 	launch_gate = exit_rocket_scene.instantiate()
 	launch_gate.name = "SurfaceExitRocket"
-	launch_gate.position = _surface_gate_position(config)
+	launch_gate.position = Vector2(player.position.x, landing_surface_y - 30.0)
 	launch_gate.set_resources_needed(config.get("mandatory_count", 5))
 	launch_gate.boarding_started.connect(_on_surface_boarding_started)
 	launch_gate.takeoff_complete.connect(_on_surface_takeoff_complete)
