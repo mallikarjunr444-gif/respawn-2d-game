@@ -34,9 +34,12 @@ height:100%;height:100dvh;min-height:-webkit-fill-available;overflow:hidden;over
 
 #stage{width:min(100%,calc((100vh - 54px) * 1.7778));width:min(100%,calc((100dvh - 54px) * 1.7778));aspect-ratio:16/9;max-width:100%;
 border:1px solid rgba(61,240,255,.28);border-radius:6px;position:relative;
-animation:borderPulse 4s ease-in-out infinite;background:#000;overflow:hidden}
+animation:borderPulse 4s ease-in-out infinite;background:#000;overflow:hidden;
+touch-action:none;-webkit-touch-callout:none;-webkit-user-select:none;user-select:none}
 
-canvas{width:100%;height:100%;display:block;touch-action:none;background:#000;outline:none;border-radius:5px}
+#stage, #stage *{-webkit-touch-callout:none;-webkit-user-select:none;user-select:none}
+
+canvas{width:100%;height:100%;display:block;touch-action:none;-webkit-touch-callout:none;-webkit-user-select:none;user-select:none;background:#000;outline:none;border-radius:5px}
 
 #orvex-header{width:min(100%,calc((100vh - 54px) * 1.7778));width:min(100%,calc((100dvh - 54px) * 1.7778));display:flex;align-items:center;justify-content:space-between;padding:4px 12px;background:rgba(13,20,51,.75);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border:1px solid rgba(61,240,255,.18);border-radius:8px;box-shadow:0 4px 16px rgba(0,0,0,.4);z-index:10}
 .brand{display:flex;align-items:center;gap:8px;font:700 13px var(--display);letter-spacing:2px;color:var(--bone);text-decoration:none}
@@ -50,15 +53,15 @@ canvas{width:100%;height:100%;display:block;touch-action:none;background:#000;ou
 #fs-btn{width:28px;height:28px;background:rgba(61,240,255,.08);border:1px solid rgba(61,240,255,.25);border-radius:6px;color:var(--cyan);font-size:14px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .15s}
 #fs-btn:hover{background:rgba(61,240,255,.2);color:#fff}
 
-#touch{display:none;position:absolute;inset:0;width:auto;justify-content:space-between;align-items:flex-end;gap:10px;padding:max(10px,env(safe-area-inset-top)) max(14px,env(safe-area-inset-right)) max(14px,env(safe-area-inset-bottom)) max(14px,env(safe-area-inset-left));pointer-events:none;z-index:20}
-.pad-left,.pad-center,.pad-right{display:flex;gap:8px;align-items:flex-end;pointer-events:none}
+#touch{display:none;position:absolute;inset:0;width:auto;justify-content:space-between;align-items:flex-end;gap:10px;padding:max(10px,env(safe-area-inset-top)) max(14px,env(safe-area-inset-right)) max(14px,env(safe-area-inset-bottom)) max(14px,env(safe-area-inset-left));pointer-events:none;z-index:20;touch-action:none;-webkit-touch-callout:none;-webkit-user-select:none;user-select:none}
+.pad-left,.pad-center,.pad-right,.dpad{display:flex;gap:8px;align-items:flex-end;pointer-events:none;touch-action:none;-webkit-touch-callout:none;-webkit-user-select:none;user-select:none}
 .pad-right{flex-wrap:wrap;max-width:230px;justify-content:flex-end}
-.dpad{display:grid;grid-template-columns:52px 52px 52px;grid-template-rows:52px 52px 52px;gap:6px;pointer-events:none}
+.dpad{display:grid;grid-template-columns:52px 52px 52px;grid-template-rows:52px 52px 52px;gap:6px;pointer-events:none;touch-action:none;-webkit-touch-callout:none;-webkit-user-select:none;user-select:none}
 .dpad .tb[data-k="up"]{grid-column:2;grid-row:1}
 .dpad .tb[data-k="left"]{grid-column:1;grid-row:2}
 .dpad .tb[data-k="right"]{grid-column:3;grid-row:2}
 .dpad .tb[data-k="down"]{grid-column:2;grid-row:3}
-.tb{min-width:52px;height:52px;padding:0 8px;border-radius:12px;border:1px solid rgba(61,240,255,.28);background:rgba(13,20,51,.82);color:var(--bone);font:700 12px var(--ui);letter-spacing:.05em;touch-action:none;user-select:none;-webkit-user-select:none;cursor:pointer;pointer-events:auto;box-shadow:0 8px 18px rgba(0,0,0,.4)}
+.tb{min-width:52px;height:52px;padding:0 8px;border-radius:12px;border:1px solid rgba(61,240,255,.28);background:rgba(13,20,51,.82);color:var(--bone);font:700 12px var(--ui);letter-spacing:.05em;touch-action:none;-webkit-touch-callout:none;-webkit-user-select:none;user-select:none;-webkit-user-drag:none;-webkit-tap-highlight-color:transparent;cursor:pointer;pointer-events:auto;box-shadow:0 8px 18px rgba(0,0,0,.4)}
 .tb:active,.tb.on{background:#16306a;border-color:var(--cyan);color:var(--cyan)}
 .tb-dir{min-width:52px;font-size:16px}
 .tb-thrust{min-width:88px;height:58px;background:rgba(61,240,255,.2);border-color:var(--cyan);color:var(--cyan)}
@@ -390,10 +393,29 @@ addEventListener('keyup', e => {
   const k = MAP[e.key.toLowerCase()];
   if(k) k.forEach(release);
 });
-addEventListener('blur', () => { held={}; });
+addEventListener('blur', () => {
+  held = {};
+  document.querySelectorAll('.tb').forEach(btn => btn.classList.remove('on'));
+});
+
+// Scoped contextmenu, text-selection, and drag prevention for the game area
+const stageEl = document.getElementById('stage');
+if(stageEl){
+  stageEl.addEventListener('contextmenu', e => e.preventDefault(), { capture: true });
+  stageEl.addEventListener('selectstart', e => e.preventDefault(), { capture: true });
+  stageEl.addEventListener('dragstart', e => e.preventDefault(), { capture: true });
+}
+
+const touchControls = document.getElementById('touch');
+if(touchControls){
+  touchControls.addEventListener('contextmenu', e => e.preventDefault(), { capture: true });
+  touchControls.addEventListener('selectstart', e => e.preventDefault(), { capture: true });
+  touchControls.addEventListener('dragstart', e => e.preventDefault(), { capture: true });
+}
 
 document.querySelectorAll('.tb').forEach(b => {
   const a = b.dataset.k;
+  b.setAttribute('type', 'button');
   b.addEventListener('pointerdown', e => {
     e.preventDefault();
     try{ b.setPointerCapture(e.pointerId); }catch(err){}
@@ -408,6 +430,15 @@ document.querySelectorAll('.tb').forEach(b => {
   };
   b.addEventListener('pointerup', onUp);
   b.addEventListener('pointercancel', onUp);
+  b.addEventListener('lostpointercapture', onUp);
+  b.addEventListener('contextmenu', e => e.preventDefault());
+  b.addEventListener('selectstart', e => e.preventDefault());
+  b.addEventListener('dragstart', e => e.preventDefault());
+});
+
+window.addEventListener('touchcancel', () => {
+  held = {};
+  document.querySelectorAll('.tb').forEach(btn => btn.classList.remove('on'));
 });
 
 cv.addEventListener('mousedown', e => {
@@ -420,6 +451,8 @@ cv.addEventListener('mouseup', e => {
   else if(e.button === 2) release('shoot');
 });
 cv.addEventListener('contextmenu', e => e.preventDefault());
+cv.addEventListener('selectstart', e => e.preventDefault());
+cv.addEventListener('dragstart', e => e.preventDefault());
 
 ['touchstart','touchend','pointerdown'].forEach(ev => {
   window.addEventListener(ev, () => {
