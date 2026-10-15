@@ -1,4 +1,5 @@
 extends Area2D
+class_name SurfaceHazard
 
 # ═══════════════════════════════════════════════════════════════
 # Surface Hazard Zone — Environmental danger on planet surfaces.

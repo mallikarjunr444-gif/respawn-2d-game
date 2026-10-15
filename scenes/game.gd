@@ -25,6 +25,7 @@ var meteor_scene = preload("res://scenes/objects/meteor.tscn")
 var surface_astronaut_scene = preload("res://scenes/surface_astronaut.tscn")
 var surface_resource_scene = preload("res://scenes/objects/surface_resource.tscn")
 var surface_hazard_scene = preload("res://scenes/objects/surface_hazard.tscn")
+var surface_hazard_script = preload("res://scenes/objects/surface_hazard.gd")
 var exit_rocket_scene = preload("res://scenes/objects/exit_rocket.tscn")
 
 # Hazard Scenes
@@ -326,7 +327,9 @@ func _begin_planet_landing() -> void:
 	landing_started = true
 	player.set_physics_process(false)
 	player.velocity = Vector2.ZERO
-	player.exhaust_particles.emitting = true
+	var exhaust = player.get_node_or_null("ExhaustParticles")
+	if exhaust:
+		exhaust.emitting = true
 	landing_speed = 0.0
 	landing_surface_y = player.position.y + 520.0
 	_create_landing_pad(player.position.x, landing_surface_y)
@@ -360,7 +363,9 @@ func _update_landing(delta: float) -> void:
 	var collision = player.move_and_collide(Vector2(0.0, landing_speed * delta))
 	if collision:
 		player.velocity = Vector2.ZERO
-		player.exhaust_particles.emitting = false
+		var exhaust = player.get_node_or_null("ExhaustParticles")
+		if exhaust:
+			exhaust.emitting = false
 		landing_complete = true
 		SoundManager.play("portal", 0.08)
 		GameState.show_toast("TOUCHDOWN", "Surface landing confirmed", 2.0)
@@ -471,11 +476,12 @@ func _spawn_surface_astronaut(config: Dictionary) -> void:
 func _spawn_surface_objectives(config: Dictionary) -> void:
 	var profile = _surface_profile(world_info.get("id", "earth"))
 	var count = config.get("mandatory_count", 5)
-	var route_width = profile.get("gate", 4000.0) - profile.get("start", 200.0)
+	var route_start = player.position.x + profile.get("start", 200.0)
+	var route_end = profile.get("gate", 4000.0) - 180.0
 	for index in range(count):
 		var resource = surface_resource_scene.instantiate()
 		var progress = float(index + 1) / float(count + 1)
-		var x = player.position.x + profile.get("start", 200.0) + route_width * progress
+		var x = lerpf(route_start, route_end, progress)
 		var y = surface_origin_y - 70.0 - float((index % 3) * 85)
 		resource.position = Vector2(x, y)
 		resource.set_resource_info(config.get("resource_name", "Surface Resource"), config.get("resource_icon", "*"), world_info.get("accent_color", Color(0.3, 1.0, 0.6)))
@@ -483,15 +489,15 @@ func _spawn_surface_objectives(config: Dictionary) -> void:
 
 func _spawn_surface_hazards(config: Dictionary) -> void:
 	var effects = config.get("env_effects", [])
-	var hazard_kind = surface_hazard_scene.instantiate().HazardKind.FIRE
+	var hazard_kind = SurfaceHazard.HazardKind.FIRE
 	if effects.has(PlanetConfig.EnvEffect.ICE):
-		hazard_kind = surface_hazard_scene.instantiate().HazardKind.ICE_PATCH
+		hazard_kind = SurfaceHazard.HazardKind.ICE_PATCH
 	elif effects.has(PlanetConfig.EnvEffect.TOXIC):
-		hazard_kind = surface_hazard_scene.instantiate().HazardKind.TOXIC
+		hazard_kind = SurfaceHazard.HazardKind.TOXIC
 	elif effects.has(PlanetConfig.EnvEffect.ACID_RAIN):
-		hazard_kind = surface_hazard_scene.instantiate().HazardKind.ACID
+		hazard_kind = SurfaceHazard.HazardKind.ACID
 	elif effects.has(PlanetConfig.EnvEffect.WIND):
-		hazard_kind = surface_hazard_scene.instantiate().HazardKind.WIND_GUST
+		hazard_kind = SurfaceHazard.HazardKind.WIND_GUST
 	for index in range(4):
 		var hazard = surface_hazard_scene.instantiate()
 		hazard.hazard_kind = hazard_kind
