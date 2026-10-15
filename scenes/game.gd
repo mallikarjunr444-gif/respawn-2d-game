@@ -22,6 +22,10 @@ var fuel_cell_scene = preload("res://scenes/objects/fuel_cell.tscn")
 var energy_orb_scene = preload("res://scenes/objects/energy_orb.tscn")
 var launch_gate_scene = preload("res://scenes/objects/launch_gate.tscn")
 var meteor_scene = preload("res://scenes/objects/meteor.tscn")
+var surface_astronaut_scene = preload("res://scenes/surface_astronaut.tscn")
+var surface_resource_scene = preload("res://scenes/objects/surface_resource.tscn")
+var surface_hazard_scene = preload("res://scenes/objects/surface_hazard.tscn")
+var exit_rocket_scene = preload("res://scenes/objects/exit_rocket.tscn")
 
 # Hazard Scenes
 var wind_zone_scene = preload("res://scenes/objects/wind_zone.tscn")
@@ -37,6 +41,15 @@ var world_info: Dictionary = {}
 var meteor_timer: float = 0.0
 var meteor_interval: float = 4.0
 var level_bounds: Rect2 = Rect2(0, 0, 6000, 4000)
+var surface_mode: bool = false
+var landing_started: bool = false
+var landing_complete: bool = false
+var landing_pad: StaticBody2D = null
+var surface_root: Node2D = null
+var surface_astronaut: CharacterBody2D = null
+var landing_speed: float = 0.0
+var landing_surface_y: float = 0.0
+var surface_origin_y: float = 0.0
 
 func _ready() -> void:
 	world_info = LevelData.get_world_info(GameState.current_world_idx)
@@ -275,6 +288,21 @@ func _process(delta: float) -> void:
 	if not player or not is_instance_valid(player):
 		return
 
+	if landing_started and not landing_complete:
+		_update_landing(delta)
+		return
+
+	if not surface_mode and not world_info.get("is_space", false):
+		var approach_x = world_info.get("player_start", Vector2.ZERO).x + level_bounds.size.x * 0.22
+		if player.position.x >= approach_x and player.velocity.x >= 0.0:
+			_begin_planet_landing()
+			return
+
+	if surface_mode:
+		_update_surface_camera(delta)
+		_update_surface_hud()
+		return
+
 	# Smooth camera follow with velocity lookahead
 	var target_cam = player.position + player.velocity * 0.35
 	target_cam.x = clampf(target_cam.x, 640.0, level_bounds.size.x - 640.0)
@@ -290,6 +318,204 @@ func _process(delta: float) -> void:
 
 	# Update radar and HUD navigation
 	_update_hud_radar()
+
+func _begin_planet_landing() -> void:
+	if landing_started or surface_mode:
+		return
+
+	landing_started = true
+	player.set_physics_process(false)
+	player.velocity = Vector2.ZERO
+	player.exhaust_particles.emitting = true
+	landing_speed = 0.0
+	landing_surface_y = player.position.y + 520.0
+	_create_landing_pad(player.position.x, landing_surface_y)
+	SoundManager.play("boost", 0.08)
+	GameState.show_toast("PLANET APPROACH", "Automatic landing burn engaged", 2.5)
+
+func _create_landing_pad(pad_x: float, pad_y: float) -> void:
+	landing_pad = StaticBody2D.new()
+	landing_pad.name = "LandingPad"
+	landing_pad.collision_layer = 2
+	landing_pad.collision_mask = 1
+	var shape = CollisionShape2D.new()
+	var rectangle = RectangleShape2D.new()
+	rectangle.size = Vector2(520.0, 44.0)
+	shape.shape = rectangle
+	shape.position = Vector2(0.0, 22.0)
+	landing_pad.add_child(shape)
+	var pad_visual = Polygon2D.new()
+	pad_visual.color = world_info.get("accent_color", Color(0.3, 0.9, 1.0, 1.0))
+	pad_visual.polygon = PackedVector2Array([
+		Vector2(-260.0, 0.0), Vector2(260.0, 0.0), Vector2(220.0, 44.0), Vector2(-220.0, 44.0)
+	])
+	landing_pad.add_child(pad_visual)
+	landing_pad.position = Vector2(pad_x, pad_y)
+	add_child(landing_pad)
+
+func _update_landing(delta: float) -> void:
+	if not player or not is_instance_valid(player):
+		return
+	landing_speed = minf(landing_speed + 900.0 * delta, 360.0)
+	var collision = player.move_and_collide(Vector2(0.0, landing_speed * delta))
+	if collision:
+		player.velocity = Vector2.ZERO
+		player.exhaust_particles.emitting = false
+		landing_complete = true
+		SoundManager.play("portal", 0.08)
+		GameState.show_toast("TOUCHDOWN", "Surface landing confirmed", 2.0)
+		_build_surface_level()
+
+func _build_surface_level() -> void:
+	surface_mode = true
+	var planet_id = world_info.get("id", "earth")
+	var config = PlanetConfig.get_surface_config(planet_id)
+	surface_origin_y = landing_surface_y
+	player.remove_from_group("player")
+	player.set_physics_process(false)
+	player.visible = true
+	player.position = Vector2(player.position.x, landing_surface_y)
+
+	surface_root = Node2D.new()
+	surface_root.name = "PlanetSurface"
+	add_child(surface_root)
+	_create_surface_backdrop(config)
+	_create_surface_terrain(config)
+	_spawn_surface_astronaut(config)
+	_spawn_surface_objectives(config)
+	_spawn_surface_hazards(config)
+
+	launch_gate = exit_rocket_scene.instantiate()
+	launch_gate.name = "SurfaceExitRocket"
+	launch_gate.position = _surface_gate_position(config)
+	launch_gate.set_resources_needed(config.get("mandatory_count", 5))
+	launch_gate.takeoff_complete.connect(_on_surface_takeoff_complete)
+	surface_root.add_child(launch_gate)
+	camera.position = surface_astronaut.position
+	GameState.show_toast(config.get("surface_name", "PLANET SURFACE"), "Exit the rocket and recover the required samples", 4.0)
+
+func _surface_profile(planet_id: String) -> Dictionary:
+	var profiles = {
+		"neptune": {"start": 180.0, "gate": 4200.0, "steps": [Vector2(700, -130), Vector2(1240, -260), Vector2(1880, -90), Vector2(2550, -310), Vector2(3260, -150)]},
+		"mars": {"start": 240.0, "gate": 4700.0, "steps": [Vector2(860, -280), Vector2(1420, 40), Vector2(2050, -360), Vector2(2940, -80), Vector2(3780, -300)]},
+		"saturn": {"start": 160.0, "gate": 5000.0, "steps": [Vector2(720, -220), Vector2(1320, -430), Vector2(2100, -180), Vector2(2920, -420), Vector2(3860, -240)]},
+		"jupiter": {"start": 260.0, "gate": 4450.0, "steps": [Vector2(780, -90), Vector2(1360, -210), Vector2(1940, -70), Vector2(2620, -230), Vector2(3480, -100)]},
+		"earth": {"start": 220.0, "gate": 3600.0, "steps": [Vector2(720, -160), Vector2(1260, -40), Vector2(1840, -220), Vector2(2450, -80), Vector2(3020, -180)]},
+		"uranus": {"start": 200.0, "gate": 4600.0, "steps": [Vector2(660, -260), Vector2(1180, -90), Vector2(1810, -340), Vector2(2520, -170), Vector2(3400, -380)]},
+		"mercury": {"start": 280.0, "gate": 4300.0, "steps": [Vector2(760, -70), Vector2(1440, -300), Vector2(2180, -110), Vector2(2860, -340), Vector2(3600, -120)]},
+		"venus": {"start": 190.0, "gate": 4800.0, "steps": [Vector2(720, -190), Vector2(1280, -360), Vector2(1940, -120), Vector2(2740, -290), Vector2(3620, -160)]},
+		"pluto": {"start": 150.0, "gate": 5200.0, "steps": [Vector2(720, -340), Vector2(1400, -120), Vector2(2180, -430), Vector2(3120, -200), Vector2(4100, -380)]},
+	}
+	return profiles.get(planet_id, {"start": 200.0, "gate": 3800.0, "steps": [Vector2(760, -150), Vector2(1400, -260), Vector2(2100, -90), Vector2(2860, -220)]})
+
+func _surface_gate_position(config: Dictionary) -> Vector2:
+	var profile = _surface_profile(world_info.get("id", "earth"))
+	return Vector2(profile.get("gate", config.get("surface_width", 4000.0) - 300.0), surface_origin_y - 30.0)
+
+func _create_surface_backdrop(config: Dictionary) -> void:
+	var backdrop = Polygon2D.new()
+	backdrop.color = config.get("sky_gradient_bottom", Color(0.06, 0.08, 0.18, 1.0))
+	backdrop.polygon = PackedVector2Array([
+		Vector2(-500.0, surface_origin_y - 900.0), Vector2(6200.0, surface_origin_y - 900.0),
+		Vector2(6200.0, surface_origin_y + 80.0), Vector2(-500.0, surface_origin_y + 80.0)
+	])
+	backdrop.z_index = -10
+	surface_root.add_child(backdrop)
+	var particles = CPUParticles2D.new()
+	particles.amount = 90
+	particles.lifetime = 5.0
+	particles.emission_shape = CPUParticles2D.EMISSION_SHAPE_RECTANGLE
+	particles.emission_rect_extents = Vector2(3000.0, 420.0)
+	particles.position = Vector2(2500.0, surface_origin_y - 420.0)
+	particles.gravity = Vector2(0.0, 18.0)
+	particles.initial_velocity_min = 8.0
+	particles.initial_velocity_max = 24.0
+	particles.color = config.get("particle_color", Color(0.5, 0.7, 1.0, 0.2))
+	surface_root.add_child(particles)
+
+func _create_surface_terrain(config: Dictionary) -> void:
+	var profile = _surface_profile(world_info.get("id", "earth"))
+	_create_surface_platform(Vector2(2500.0, surface_origin_y + 22.0), Vector2(5600.0, 44.0), config.get("ground_color", Color(0.2, 0.25, 0.3)))
+	for step in profile.get("steps", []):
+		_create_surface_platform(Vector2(step.x, surface_origin_y + step.y), Vector2(360.0, 28.0), config.get("platform_color", Color(0.3, 0.6, 0.8)))
+
+func _create_surface_platform(platform_position: Vector2, platform_size: Vector2, color: Color) -> void:
+	var platform = StaticBody2D.new()
+	platform.collision_layer = 2
+	platform.collision_mask = 1
+	platform.position = platform_position
+	var shape_node = CollisionShape2D.new()
+	var rectangle = RectangleShape2D.new()
+	rectangle.size = platform_size
+	shape_node.shape = rectangle
+	platform.add_child(shape_node)
+	var visual = Polygon2D.new()
+	visual.color = color
+	visual.polygon = PackedVector2Array([
+		Vector2(-platform_size.x * 0.5, -platform_size.y * 0.5),
+		Vector2(platform_size.x * 0.5, -platform_size.y * 0.5),
+		Vector2(platform_size.x * 0.5, platform_size.y * 0.5),
+		Vector2(-platform_size.x * 0.5, platform_size.y * 0.5)
+	])
+	platform.add_child(visual)
+	surface_root.add_child(platform)
+
+func _spawn_surface_astronaut(config: Dictionary) -> void:
+	surface_astronaut = surface_astronaut_scene.instantiate()
+	surface_astronaut.configure(config)
+	var profile = _surface_profile(world_info.get("id", "earth"))
+	surface_astronaut.position = Vector2(player.position.x + profile.get("start", 200.0), surface_origin_y - 48.0)
+	surface_astronaut.astronaut_died.connect(_on_surface_astronaut_died)
+	surface_root.add_child(surface_astronaut)
+
+func _spawn_surface_objectives(config: Dictionary) -> void:
+	var profile = _surface_profile(world_info.get("id", "earth"))
+	var count = config.get("mandatory_count", 5)
+	var route_width = profile.get("gate", 4000.0) - profile.get("start", 200.0)
+	for index in range(count):
+		var resource = surface_resource_scene.instantiate()
+		var progress = float(index + 1) / float(count + 1)
+		var x = player.position.x + profile.get("start", 200.0) + route_width * progress
+		var y = surface_origin_y - 70.0 - float((index % 3) * 85)
+		resource.position = Vector2(x, y)
+		resource.set_resource_info(config.get("resource_name", "Surface Resource"), config.get("resource_icon", "*"), world_info.get("accent_color", Color(0.3, 1.0, 0.6)))
+		surface_root.add_child(resource)
+
+func _spawn_surface_hazards(config: Dictionary) -> void:
+	var effects = config.get("env_effects", [])
+	var hazard_kind = surface_hazard_scene.instantiate().HazardKind.FIRE
+	if effects.has(PlanetConfig.EnvEffect.ICE):
+		hazard_kind = surface_hazard_scene.instantiate().HazardKind.ICE_PATCH
+	elif effects.has(PlanetConfig.EnvEffect.TOXIC):
+		hazard_kind = surface_hazard_scene.instantiate().HazardKind.TOXIC
+	elif effects.has(PlanetConfig.EnvEffect.ACID_RAIN):
+		hazard_kind = surface_hazard_scene.instantiate().HazardKind.ACID
+	elif effects.has(PlanetConfig.EnvEffect.WIND):
+		hazard_kind = surface_hazard_scene.instantiate().HazardKind.WIND_GUST
+	for index in range(4):
+		var hazard = surface_hazard_scene.instantiate()
+		hazard.hazard_kind = hazard_kind
+		hazard.damage_per_tick = maxf(config.get("hazard_damage", 1.0), 1.0)
+		hazard.zone_width = 180.0
+		hazard.position = Vector2(player.position.x + 900.0 + index * 720.0, surface_origin_y - 22.0)
+		surface_root.add_child(hazard)
+
+func _update_surface_camera(delta: float) -> void:
+	if surface_astronaut and is_instance_valid(surface_astronaut):
+		camera.position = camera.position.lerp(surface_astronaut.position + Vector2(0.0, -120.0), 5.0 * delta)
+
+func _update_surface_hud() -> void:
+	if not surface_astronaut or not is_instance_valid(surface_astronaut) or not launch_gate:
+		return
+	var offset_to_gate = launch_gate.position - surface_astronaut.position
+	hud.update_radar(offset_to_gate.length(), offset_to_gate.angle(), surface_astronaut.has_all_resources, -1.0, surface_astronaut.resources_collected, surface_astronaut.resources_required)
+
+func _on_surface_astronaut_died(reason: String) -> void:
+	GameState.show_toast("SUIT FAILURE", reason + " - retrying planet", 2.5)
+	GameState.restart_level()
+
+func _on_surface_takeoff_complete() -> void:
+	GameState.complete_level()
 
 func _spawn_meteor() -> void:
 	if not player or not is_instance_valid(player):

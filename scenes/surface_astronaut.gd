@@ -192,6 +192,7 @@ func collect_resource() -> void:
 	resources_collected += 1
 	has_all_resources = resources_collected >= resources_required
 	resource_collected.emit(resources_collected, resources_required)
+	GameState.add_fuel_cell_score()
 	GameState.add_score(15)
 	SoundManager.play("gem", 0.1)
 

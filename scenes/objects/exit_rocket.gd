@@ -131,7 +131,10 @@ func _process(delta: float) -> void:
 			var collected = 0
 			if target_astronaut and is_instance_valid(target_astronaut):
 				collected = target_astronaut.resources_collected
-			prompt_label.text = "COLLECT ALL RESOURCES FIRST\n" + str(collected) + " / " + str(resources_required)
+			var required = resources_required
+			if target_astronaut and is_instance_valid(target_astronaut):
+				required = target_astronaut.resources_required
+			prompt_label.text = "COLLECT ALL RESOURCES FIRST\n" + str(collected) + " / " + str(required)
 			prompt_label.modulate = Color(1.0, 0.5, 0.3)
 
 		# Board on interaction (only if all resources collected)
