@@ -22,12 +22,15 @@ A 2D astronaut flight-survival game built with Godot 4. Pilot through open-space
 | Interact | `E` / `Enter` | Use a launch gate when its requirements are met |
 | Energy sword | `J` / Left mouse button | Melee attack |
 | Blaster | `K` / Right mouse button | Fire a projectile |
-| Phase shield | `Q` | Activate the shield |
+| Phase shield | `Q` | Activate the one shield charge available per level |
 | Pause | `P` / `Esc` | Pause or resume |
+| Retry | `R` | Retry the current level after failure |
 
 ## Campaign
 
 The campaign contains ten planetary environments, each with its own flight conditions, hazards, fuel requirements, and route to the next world. Collect fuel cells and energy orbs, avoid collisions, and reach the launch gate with the required supplies. Completing levels earns credits that can be spent on fuel tank, thrust, and engine-efficiency upgrades.
+
+Each level grants one Phase Shield activation. Failed levels can be retried with `R`; earlier completed levels and permanent upgrades remain saved.
 
 The opening Black Space mission introduces flight and the singularity hazard. Use the planet navigation screen to replay unlocked missions and review your progress.
 

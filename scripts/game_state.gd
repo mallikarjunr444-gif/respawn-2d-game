@@ -22,10 +22,14 @@ var selected_character: String = "arin"  # "arin" or "mira"
 var game_mode: String = "story"  # "story" or "endless"
 var current_world_idx: int = 0
 var is_paused: bool = false
+var level_failed: bool = false
+var level_completed_this_run: bool = false
+var shield_charge_available: bool = true
 
 # ── Fuel System ──
 var fuel: float = 100.0
 var max_fuel: float = 100.0
+var level_start_fuel: float = 100.0
 const FUEL_CONSUMPTION_RATE: float = 3.2    # Per second while thrusting (allows 30+ seconds continuous flight)
 const FUEL_IDLE_DRAIN: float = 0.0          # No idle drain
 const FUEL_CELL_VALUE: float = 16.0         # Each fuel cell gives generous fuel
@@ -112,6 +116,10 @@ func _register_action(action_name: String, keys: Array[Key], joy_buttons: Array[
 		InputMap.action_add_event(action_name, ev)
 
 func _input(event: InputEvent) -> void:
+	if level_failed and event.is_action_pressed("restart"):
+		restart_level()
+		get_viewport().set_input_as_handled()
+		return
 	if event.is_action_pressed("pause"):
 		toggle_pause()
 
@@ -196,6 +204,8 @@ func add_bonus_route_score() -> void:
 # ═══════════════════════════════════════════════════════════════
 
 func damage_player(amount: int, reason: String = "COLLISION") -> bool:
+	if level_failed:
+		return false
 	player_hp = clampi(player_hp - amount, 0, MAX_HP)
 	health_changed.emit(player_hp, MAX_HP)
 	if player_hp <= 0:
@@ -210,7 +220,7 @@ func damage_player(amount: int, reason: String = "COLLISION") -> bool:
 			return false
 		else:
 			SoundManager.play("boom", 0.1)
-			player_died.emit(reason)
+			fail_level(reason)
 			return true
 	else:
 		SoundManager.play("hit", 0.1)
@@ -262,6 +272,8 @@ func _get_upgrade_level(upgrade_type: String) -> int:
 # ═══════════════════════════════════════════════════════════════
 
 func toggle_pause() -> void:
+	if level_failed:
+		return
 	is_paused = not is_paused
 	get_tree().paused = is_paused
 	pause_toggled.emit(is_paused)
@@ -275,10 +287,17 @@ func force_unpause() -> void:
 # ═══════════════════════════════════════════════════════════════
 
 func start_level(world_index: int) -> void:
-	game_mode = "story"
+	if game_mode != "endless":
+		game_mode = "story"
 	current_world_idx = world_index
+	level_failed = false
+	level_completed_this_run = false
+	shield_charge_available = true
+	get_tree().paused = false
+	is_paused = false
 	# Preserve collected fuel progression, ensuring player starts with at least 55% tank
 	fuel = maxf(fuel, get_effective_max_fuel() * 0.55)
+	level_start_fuel = fuel
 	fuel_warning_active = false
 	player_hp = MAX_HP
 	level_score = 0
@@ -290,7 +309,7 @@ func start_level(world_index: int) -> void:
 	# Unlock weapons based on progression
 	has_sword = world_index >= 2
 	has_blaster = world_index >= 4
-	has_shield = world_index >= 6
+	has_shield = true
 	has_lance = world_index >= 8
 
 	weapons_changed.emit()
@@ -298,6 +317,10 @@ func start_level(world_index: int) -> void:
 	get_tree().change_scene_to_file("res://scenes/game.tscn")
 
 func complete_level() -> void:
+	if level_failed or level_completed_this_run:
+		return
+	level_completed_this_run = true
+
 	# Record score
 	var best = level_best_scores.get(current_world_idx, 0)
 	if level_score > best:
@@ -314,10 +337,30 @@ func complete_level() -> void:
 		unlocked_levels.append(next_idx)
 
 	save_data()
+	is_paused = true
+	get_tree().paused = true
 	level_completed.emit()
+
+func consume_shield_charge() -> bool:
+	if not has_shield or not shield_charge_available or level_failed:
+		return false
+	shield_charge_available = false
+	weapons_changed.emit()
+	return true
+
+func fail_level(reason: String) -> void:
+	if level_failed or level_completed_this_run:
+		return
+	level_failed = true
+	is_paused = true
+	get_tree().paused = true
+	player_died.emit(reason)
 
 func restart_level() -> void:
 	force_unpause()
+	fuel = level_start_fuel
+	fuel_warning_active = false
+	fuel_changed.emit(fuel, get_effective_max_fuel())
 	start_level(current_world_idx)
 
 func go_to_next_level() -> void:
@@ -341,6 +384,7 @@ func is_level_completed_flag(idx: int) -> bool:
 
 # Legacy compatibility
 func start_story(world_index: int = 0, _selected_from_route: bool = false) -> void:
+	game_mode = "story"
 	start_level(world_index)
 
 func start_endless() -> void:

@@ -11,9 +11,12 @@ extends Node2D
 @export var max_pull_force: float = 440.0
 @export var kill_radius: float = 140.0
 @export var rotation_speed: float = 1.0
+@export var pursuit_speed: float = 70.0
 
 var target_player: CharacterBody2D = null
 var alert_cooldown: float = 0.0
+var is_active: bool = true
+var consumed_player: bool = false
 
 @onready var sprite: Sprite2D = $Sprite2D
 @onready var particles: CPUParticles2D = $CPUParticles2D
@@ -25,6 +28,8 @@ func _ready() -> void:
 
 func _process(delta: float) -> void:
 	disk_poly.rotation += rotation_speed * delta
+	if not is_active:
+		return
 
 	# 1. Pull Player toward singularity center
 	if not target_player or not is_instance_valid(target_player):
@@ -33,6 +38,13 @@ func _process(delta: float) -> void:
 			target_player = players[0]
 
 	if target_player and is_instance_valid(target_player):
+		var travel_direction = target_player.velocity.normalized()
+		if travel_direction.length_squared() < 0.01:
+			travel_direction = Vector2.RIGHT
+		var trailing_distance = maxf(kill_radius * 4.0, 800.0)
+		var pursuit_target = target_player.global_position - travel_direction * trailing_distance
+		global_position = global_position.move_toward(pursuit_target, pursuit_speed * delta)
+
 		var offset_to_player = target_player.global_position - global_position
 		var dist = offset_to_player.length()
 
@@ -56,9 +68,11 @@ func _process(delta: float) -> void:
 				alert_cooldown = 1.2
 
 		# Consumed if inside the event horizon kill radius
-		if dist <= kill_radius:
-			if target_player.has_method("take_damage"):
-				target_player.take_damage(99, "CONSUMED BY THE EVENT HORIZON")
+		if dist > kill_radius:
+			consumed_player = false
+		elif not consumed_player:
+			consumed_player = true
+			GameState.fail_level("CONSUMED BY THE EVENT HORIZON")
 
 	# 2. Pull nearby debris / asteroids toward singularity
 	var debris_list = get_tree().get_nodes_in_group("debris")

@@ -131,13 +131,18 @@ func _generate_level() -> void:
 	launch_gate.set_required_cells(world_info.get("fuel_cell_count", 0))
 	add_child(launch_gate)
 
-	# 3. Spawn Black Hole (opening space only — positioned behind the player on the left)
-	if world_info.get("has_black_hole", false):
+	# 3. The singularity follows each flight leg and is suspended for touchdown.
+	if world_info.get("has_black_hole", false) or GameState.current_world_idx > 0:
 		devourer = devourer_scene.instantiate()
-		devourer.position = world_info.get("black_hole_position", Vector2(500.0, 2000.0))
-		devourer.pull_radius = world_info.get("black_hole_pull_radius", 2200.0)
-		devourer.pull_strength = world_info.get("black_hole_pull_strength", 420.0)
-		devourer.kill_radius = world_info.get("black_hole_kill_radius", 180.0)
+		var default_black_hole_position = Vector2(
+			maxf(start_pos.x - 850.0, 80.0),
+			clampf(start_pos.y - 850.0, 100.0, level_bounds.end.y - 100.0)
+		)
+		devourer.position = world_info.get("black_hole_position", default_black_hole_position)
+		devourer.pull_radius = world_info.get("black_hole_pull_radius", 1700.0)
+		devourer.pull_strength = world_info.get("black_hole_pull_strength", 360.0)
+		devourer.kill_radius = world_info.get("black_hole_kill_radius", 140.0)
+		devourer.pursuit_speed = world_info.get("black_hole_pursuit_speed", 70.0)
 		devourer.target_player = player
 		add_child(devourer)
 
@@ -327,12 +332,16 @@ func _begin_planet_landing() -> void:
 	landing_started = true
 	player.set_physics_process(false)
 	player.velocity = Vector2.ZERO
+	if devourer and is_instance_valid(devourer):
+		devourer.is_active = false
 	var exhaust = player.get_node_or_null("ExhaustParticles")
 	if exhaust:
 		exhaust.emitting = true
 	landing_speed = 0.0
-	landing_surface_y = player.position.y + 520.0
-	_create_landing_pad(player.position.x, landing_surface_y)
+	landing_surface_y = clampf(player.position.y + 520.0, 700.0, level_bounds.end.y - 300.0)
+	var landing_x = clampf(player.position.x, 300.0, level_bounds.end.x - 300.0)
+	player.position.x = landing_x
+	_create_landing_pad(landing_x, landing_surface_y)
 	SoundManager.play("boost", 0.08)
 	GameState.show_toast("PLANET APPROACH", "Automatic landing burn engaged", 2.5)
 
@@ -394,10 +403,11 @@ func _build_surface_level() -> void:
 	launch_gate.name = "SurfaceExitRocket"
 	launch_gate.position = _surface_gate_position(config)
 	launch_gate.set_resources_needed(config.get("mandatory_count", 5))
+	launch_gate.boarding_started.connect(_on_surface_boarding_started)
 	launch_gate.takeoff_complete.connect(_on_surface_takeoff_complete)
 	surface_root.add_child(launch_gate)
 	camera.position = surface_astronaut.position
-	GameState.show_toast(config.get("surface_name", "PLANET SURFACE"), "Exit the rocket and recover the required samples", 4.0)
+	GameState.show_toast("WELCOME TO " + str(config.get("surface_name", "PLANET SURFACE")), "Exit the rocket and recover the required samples", 4.0)
 
 func _surface_profile(planet_id: String) -> Dictionary:
 	var profiles = {
@@ -468,6 +478,8 @@ func _create_surface_platform(platform_position: Vector2, platform_size: Vector2
 func _spawn_surface_astronaut(config: Dictionary) -> void:
 	surface_astronaut = surface_astronaut_scene.instantiate()
 	surface_astronaut.configure(config)
+	surface_astronaut.surface_width = config.get("surface_width", 4000.0)
+	surface_astronaut.surface_floor_y = surface_origin_y
 	var profile = _surface_profile(world_info.get("id", "earth"))
 	surface_astronaut.position = Vector2(player.position.x + profile.get("start", 200.0), surface_origin_y - 48.0)
 	surface_astronaut.astronaut_died.connect(_on_surface_astronaut_died)
@@ -489,19 +501,25 @@ func _spawn_surface_objectives(config: Dictionary) -> void:
 
 func _spawn_surface_hazards(config: Dictionary) -> void:
 	var effects = config.get("env_effects", [])
-	var hazard_kind = SurfaceHazard.HazardKind.FIRE
-	if effects.has(PlanetConfig.EnvEffect.ICE):
-		hazard_kind = SurfaceHazard.HazardKind.ICE_PATCH
+	var hazard_kind = -1
+	if effects.has(PlanetConfig.EnvEffect.ACID_RAIN):
+		hazard_kind = SurfaceHazard.HazardKind.ACID
 	elif effects.has(PlanetConfig.EnvEffect.TOXIC):
 		hazard_kind = SurfaceHazard.HazardKind.TOXIC
-	elif effects.has(PlanetConfig.EnvEffect.ACID_RAIN):
-		hazard_kind = SurfaceHazard.HazardKind.ACID
-	elif effects.has(PlanetConfig.EnvEffect.WIND):
+	elif effects.has(PlanetConfig.EnvEffect.FIRE) or effects.has(PlanetConfig.EnvEffect.HEAT_WAVES):
+		hazard_kind = SurfaceHazard.HazardKind.FIRE
+	elif effects.has(PlanetConfig.EnvEffect.ICE):
+		hazard_kind = SurfaceHazard.HazardKind.ICE_PATCH
+	elif effects.has(PlanetConfig.EnvEffect.WIND) or effects.has(PlanetConfig.EnvEffect.DUST_STORM):
 		hazard_kind = SurfaceHazard.HazardKind.WIND_GUST
+	if hazard_kind < 0:
+		return
+
+	var damage = maxf(config.get("hazard_damage", 0.0), 0.0)
 	for index in range(4):
 		var hazard = surface_hazard_scene.instantiate()
 		hazard.hazard_kind = hazard_kind
-		hazard.damage_per_tick = maxf(config.get("hazard_damage", 1.0), 1.0)
+		hazard.damage_per_tick = damage
 		hazard.zone_width = 180.0
 		hazard.position = Vector2(player.position.x + 900.0 + index * 720.0, surface_origin_y - 22.0)
 		surface_root.add_child(hazard)
@@ -517,8 +535,14 @@ func _update_surface_hud() -> void:
 	hud.update_radar(offset_to_gate.length(), offset_to_gate.angle(), surface_astronaut.has_all_resources, -1.0, surface_astronaut.resources_collected, surface_astronaut.resources_required)
 
 func _on_surface_astronaut_died(reason: String) -> void:
-	GameState.show_toast("SUIT FAILURE", reason + " - retrying planet", 2.5)
-	GameState.restart_level()
+	GameState.fail_level(reason)
+
+func _on_surface_boarding_started() -> void:
+	if surface_root:
+		for child in surface_root.get_children():
+			if child != launch_gate:
+				child.set_process(false)
+				child.set_physics_process(false)
 
 func _on_surface_takeoff_complete() -> void:
 	GameState.complete_level()

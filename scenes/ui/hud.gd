@@ -32,6 +32,7 @@ var toast_timer: float = 0.0
 var warning_flash: float = 0.0
 
 func _ready() -> void:
+	process_mode = Node.PROCESS_MODE_ALWAYS
 	toast_panel.visible = false
 	game_over_panel.visible = false
 
@@ -127,7 +128,8 @@ func _on_score_changed(s: int) -> void:
 func _update_weapons() -> void:
 	sword_icon.modulate = Color(0.3, 0.9, 1.0, 1.0) if GameState.has_sword else Color(0.3, 0.3, 0.3, 0.3)
 	blaster_icon.modulate = Color(0.3, 0.9, 1.0, 1.0) if GameState.has_blaster else Color(0.3, 0.3, 0.3, 0.3)
-	shield_icon.modulate = Color(0.3, 0.9, 1.0, 1.0) if GameState.has_shield else Color(0.3, 0.3, 0.3, 0.3)
+	shield_icon.text = "[Q] SHIELD: READY" if GameState.shield_charge_available else "[Q] SHIELD: SPENT"
+	shield_icon.modulate = Color(0.3, 0.9, 1.0, 1.0) if GameState.shield_charge_available else Color(0.3, 0.3, 0.3, 0.5)
 	lance_icon.modulate = Color(0.8, 0.4, 1.0, 1.0) if GameState.has_lance else Color(0.3, 0.3, 0.3, 0.3)
 
 func _on_toast_requested(title: String, subtitle: String, duration: float) -> void:
@@ -137,7 +139,7 @@ func _on_toast_requested(title: String, subtitle: String, duration: float) -> vo
 	toast_timer = duration
 
 func _on_player_died(reason: String) -> void:
-	game_over_reason.text = reason
+	game_over_reason.text = reason + "\nTRY AGAIN?"
 	game_over_panel.visible = true
 
 func _on_restart_pressed() -> void:

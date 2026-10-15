@@ -21,6 +21,8 @@ var friction: float = 0.9
 var wind_force: Vector2 = Vector2.ZERO
 var wind_variance: float = 0.0
 var oxygen_drain: float = 0.0
+var surface_width: float = 4000.0
+var surface_floor_y: float = 0.0
 
 var facing_dir: float = 1.0
 var is_on_ice: bool = false
@@ -34,6 +36,7 @@ var hp: int = 5
 var max_hp: int = 5
 var suit_integrity: float = 100.0  # Oxygen / suit protection
 var invulnerable_timer: float = 0.0
+var shield_active_timer: float = 0.0
 
 # ── Resources ──
 var resources_collected: int = 0
@@ -74,7 +77,15 @@ func configure(config: Dictionary) -> void:
 
 func _physics_process(delta: float) -> void:
 	# ── Timers ──
-	if invulnerable_timer > 0.0:
+	if shield_active_timer > 0.0:
+		shield_active_timer = maxf(shield_active_timer - delta, 0.0)
+	if Input.is_action_just_pressed("shield") and GameState.consume_shield_charge():
+		shield_active_timer = 1.8
+		SoundManager.play("shield", 0.05)
+
+	if shield_active_timer > 0.0:
+		sprite.modulate = Color(0.3, 0.9, 1.0, 0.85)
+	elif invulnerable_timer > 0.0:
 		invulnerable_timer -= delta
 		sprite.modulate.a = 0.4 if fmod(invulnerable_timer * 10.0, 1.0) > 0.5 else 1.0
 	else:
@@ -176,6 +187,9 @@ func _physics_process(delta: float) -> void:
 
 	# ── Move ──
 	move_and_slide()
+	if position.x < -100.0 or position.x > surface_width + 100.0 or position.y > surface_floor_y + 500.0:
+		take_damage(99, "LOST BEYOND THE SURFACE")
+		return
 
 	# ── Visor light pulse ──
 	if visor_light:
@@ -183,6 +197,9 @@ func _physics_process(delta: float) -> void:
 
 func _has_effect(effect: PlanetConfig.EnvEffect) -> bool:
 	return env_effects.has(effect)
+
+func apply_external_force(force: Vector2) -> void:
+	velocity += force
 
 # ═══════════════════════════════════════════════════════════════
 # RESOURCE COLLECTION
@@ -205,7 +222,7 @@ func collect_resource() -> void:
 # ═══════════════════════════════════════════════════════════════
 
 func take_damage(amount: int, reason: String = "HAZARD") -> void:
-	if invulnerable_timer > 0.0:
+	if invulnerable_timer > 0.0 or shield_active_timer > 0.0:
 		return
 	invulnerable_timer = 1.5
 	hp -= amount

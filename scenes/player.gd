@@ -31,7 +31,6 @@ var invulnerable_timer: float = 0.0
 var attack_cooldown: float = 0.0
 var shoot_cooldown: float = 0.0
 var shield_active_timer: float = 0.0
-var shield_cooldown: float = 0.0
 var lance_charge_time: float = 0.0
 
 # ── Level physics (set by game.gd per level) ──
@@ -83,7 +82,6 @@ func _physics_process(delta: float) -> void:
 	boost_cooldown -= delta
 	attack_cooldown -= delta
 	shoot_cooldown -= delta
-	shield_cooldown -= delta
 
 	if invulnerable_timer > 0.0:
 		invulnerable_timer -= delta
@@ -218,9 +216,8 @@ func _physics_process(delta: float) -> void:
 			lance_charge_time = 0.0
 
 	# Phase Shield
-	if Input.is_action_just_pressed("shield") and GameState.has_shield and shield_cooldown <= 0.0:
+	if Input.is_action_just_pressed("shield") and GameState.consume_shield_charge():
 		shield_active_timer = 1.8
-		shield_cooldown = 5.5
 		SoundManager.play("shield", 0.05)
 
 	# ── Move ──
