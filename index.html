@@ -2584,9 +2584,6 @@ function render(){
     case 'title':
       renderTitle();
       break;
-    case 'upgrades':
-      renderUpgradesMenu();
-      break;
     case 'manual':
       renderManual();
       break;
@@ -2686,7 +2683,7 @@ function renderWorldPlay(){
   }
 }
 
-/* ──────── Screens: Title, Upgrades, Manual, Pause, Victory, Dead ──────── */
+/* ──────── Screens: Title, Manual, Pause, Victory, Dead ──────── */
 function renderTitle(){
   drawBackground(PLANETS[0], G.t*30, 0, G.t);
   drawBlackHole({x: 680, y: 260}, 110, 0, 0, G.t);
@@ -2722,12 +2719,7 @@ function renderTitle(){
     G.toast = { a: 'SURFACE EVA DEPLOYED', b: 'W/Space = Thruster Fly · S = Down · A/D = Steer · Shift = Dash', t: 5.0 };
   }, {sz: 13, col: C.green});
 
-  uiButton('HANGAR & UPGRADES', 68, 412, 165, 36, () => {
-    SFX.click();
-    G.scene = 'upgrades';
-  }, {sz: 12});
-
-  uiButton('MANUAL & CONTROLS', 243, 412, 165, 36, () => {
+  uiButton('MANUAL & CONTROLS', 68, 412, 340, 36, () => {
     SFX.click();
     G.scene = 'manual';
   }, {sz: 12});
@@ -2751,60 +2743,6 @@ function renderTitle(){
   txt('MICROGRAVITY THRUSTERS READY', 740, 432, 10, C.green, 'center', F_U, 700, 1);
 
   txt('SEAMLESS PLANETARY ADVENTURE · 6 DISCOVERED WORLDS · SOUND: [M]', W - 24, H - 18, 11, C.dim, 'right', F_U, 600);
-}
-
-function renderUpgradesMenu(){
-  drawBackground(PLANETS[0], 0, 0, G.t);
-  ctx.fillStyle = 'rgba(5,7,26,0.85)';
-  ctx.fillRect(0, 0, W, H);
-
-  txt('ROCKET HANGAR & SUIT UPGRADES', W/2, 56, 24, C.gold, 'center', F_D, 700, 4);
-  txt('Available Fleet Credits: ' + G.credits, W/2, 86, 15, C.green, 'center', F_U, 700);
-
-  const costs = [100, 250, 500];
-  const items = [
-    { name: 'EXTENDED FUEL RESERVES', key: 'tankLv', desc: '+25% Max Thruster & Jetpack Fuel' },
-    { name: 'ION THRUSTER OVERCLOCK', key: 'thrustLv', desc: '+15% Main Thruster & Sprint Power' },
-    { name: 'THERMAL SHIELD RE-GEN', key: 'effLv', desc: '15% Reduced Burn & Hazard Resistance' }
-  ];
-
-  for(let i=0; i<3; i++){
-    const it = items[i];
-    const lv = G[it.key];
-    const cost = costs[lv];
-    const y = 130 + i * 105;
-
-    ctx.fillStyle = 'rgba(13,20,51,0.7)';
-    rr(W/2 - 280, y, 560, 85, 8);
-    ctx.fill();
-    ctx.strokeStyle = 'rgba(61,240,255,0.2)';
-    ctx.lineWidth = 1;
-    ctx.stroke();
-
-    txt(it.name, W/2 - 260, y + 28, 15, C.cyan, 'left', F_U, 700);
-    txt(it.desc, W/2 - 260, y + 48, 12, C.dim, 'left', F_U, 600);
-    txt('LEVEL: ' + lv + ' / 3', W/2 - 260, y + 68, 12, C.gold, 'left', F_U, 700);
-
-    const canBuy = lv < 3 && G.credits >= cost;
-    const btnText = lv >= 3 ? 'MAX LEVEL' : 'UPGRADE (' + cost + ' CR)';
-    uiButton(btnText, W/2 + 100, y + 24, 160, 38, () => {
-      if(canBuy){
-        G.credits -= cost;
-        G[it.key]++;
-        saveData();
-        SFX.boost();
-      }
-    }, {
-      disabled: !canBuy,
-      col: canBuy ? C.green : C.dim,
-      sz: 12
-    });
-  }
-
-  uiButton('RETURN TO MENU', W/2 - 120, H - 42, 240, 34, () => {
-    SFX.click();
-    G.scene = 'title';
-  });
 }
 
 function renderManual(){
