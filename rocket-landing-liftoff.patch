@@ -1,173 +1,183 @@
 diff --git a/public/index.html b/public/index.html
-index 3d87d07..24ebd4e 100644
+index 24ebd4e..7939bf7 100644
 --- a/public/index.html
 +++ b/public/index.html
-@@ -728,9 +728,9 @@ const G = {
-   camY: 0,
+@@ -1102,7 +1102,7 @@ function initPlanet(worldIdx){
+         y: 70 + r() * 260,
+         vx: (r() - 0.5) * 90,
+         vy: 220 + r() * 180,
+-        radius: 20 + r() * 16,
++        radius: 9 + r() * 5,
+         rot: r() * 6.28,
+         rotSpd: (r() - 0.5) * 1.5,
+         hp: 2,
+@@ -1824,6 +1824,22 @@ function drawMandatoryCollectible(c, cfg, camX, camY, t){
+   ctx.save();
+   ctx.translate(cx, cy);
  
-   // Combat & abilities
--  hasSword: false,
--  hasBlaster: false,
--  hasShield: false,
-+  hasSword: true,
-+  hasBlaster: true,
-+  hasShield: true,
-   hasLaser: false,
-   laserT: 0,
-   shieldT: 0,
-@@ -863,9 +863,9 @@ function initPlanet(worldIdx){
-   G.orbsGot = 0;
-   G.shieldT = 0;
-   G.shieldCd = 0;
--  G.hasSword = false;
--  G.hasBlaster = false;
--  G.hasShield = false;
-+  G.hasSword = true;
-+  G.hasBlaster = true;
-+  G.hasShield = true;
-   G.hasLaser = false;
-   G.laserT = 0;
-   G.phase = 'flight';
-@@ -2564,6 +2564,22 @@ function updatePlay(dt){
-       }
-     }
++  // Holographic [ ◆ COLLECT ◆ ] Badge above the mandatory collectible
++  rr(-38, -36, 76, 16, 4);
++  ctx.fillStyle = 'rgba(6, 12, 30, 0.9)';
++  ctx.fill();
++  ctx.strokeStyle = '#3df0ff';
++  ctx.lineWidth = 1.3;
++  ctx.stroke();
++  txt('◆ COLLECT ◆', 0, -24, 9, '#3df0ff', 'center', F_U, 700, 1);
++
++  // Concentric pulsing aura
++  ctx.strokeStyle = 'rgba(61, 240, 255, 0.45)';
++  ctx.lineWidth = 1.5;
++  ctx.beginPath();
++  ctx.arc(0, 0, 18 + Math.sin(t * 4.5) * 3, 0, 6.283);
++  ctx.stroke();
++
+   ctx.globalCompositeOperation = 'lighter';
+   const gl = ctx.createRadialGradient(0, 0, 4, 0, 0, 26);
+   gl.addColorStop(0, cfg.accent);
+@@ -1884,6 +1900,15 @@ function drawEnergyOrb(o, camX, camY, t){
  
-+    // Ship mounted blaster cannon during flight
-+    if(pressed('shoot') && p.shootCd <= 0){
-+      p.shootCd = 0.22;
-+      SFX.blaster();
-+      const cosA = Math.cos(p.angle), sinA = Math.sin(p.angle);
-+      BULLETS.push({
-+        x: p.x + cosA * 28,
-+        y: p.y + sinA * 28,
-+        vx: cosA * 1050 + p.vx * 0.4,
-+        vy: sinA * 1050 + p.vy * 0.4,
-+        damage: 1,
-+        life: 1.2
-+      });
-+      spawn(p.x + cosA * 30, p.y + sinA * 30, cosA * 80, sinA * 80, 0.15, 5, C.cyan, 0, true);
+   ctx.save();
+   ctx.translate(ox, oy);
++
++  // Floating Bonus Badge
++  rr(-28, -30, 56, 13, 3);
++  ctx.fillStyle = 'rgba(15, 10, 4, 0.88)';
++  ctx.fill();
++  ctx.strokeStyle = C.gold;
++  ctx.lineWidth = 1;
++  ctx.stroke();
++  txt('+CREDITS', 0, -20, 8, C.gold, 'center', F_U, 700, 1);
+   ctx.globalCompositeOperation = 'lighter';
+   const gl = ctx.createRadialGradient(0, 0, 6, 0, 0, 30);
+   gl.addColorStop(0, 'rgba(255,209,102,0.7)');
+@@ -2037,6 +2062,34 @@ function drawEnemies(camX, camY, t){
+     ctx.save();
+     const bob = e.type === 'burrower' ? Math.sin(t * 7 + e.phase) * 3 : Math.sin(t * 2.5 + e.phase) * 6;
+     ctx.translate(ex, ey + bob);
++
++    // Hostile Danger Aura (pulsing red threat circle)
++    ctx.strokeStyle = 'rgba(255, 60, 90, 0.4)';
++    ctx.lineWidth = 1.5;
++    ctx.beginPath();
++    ctx.arc(0, 0, 32 + Math.sin(t * 5 + e.phase) * 3, 0, 6.283);
++    ctx.stroke();
++
++    // Red Hostile Badge: [ ⚠ HOSTILE ENEMY ]
++    rr(-44, -46, 88, 15, 3.5);
++    ctx.fillStyle = 'rgba(20, 5, 12, 0.9)';
++    ctx.fill();
++    ctx.strokeStyle = '#ff3b5c';
++    ctx.lineWidth = 1.2;
++    ctx.stroke();
++    txt('⚠ HOSTILE ENEMY', 0, -35, 8.5, '#ff4767', 'center', F_U, 700, 1);
++
++    // Enemy Health Bar
++    const hpFrac = clamp(e.hp / (e.maxHp || 2), 0, 1);
++    rr(-20, -28, 40, 4, 1.5);
++    ctx.fillStyle = 'rgba(5, 5, 15, 0.85)';
++    ctx.fill();
++    if(hpFrac > 0){
++      ctx.fillStyle = hpFrac > 0.5 ? '#ff3b5c' : '#ff7a2e';
++      rr(-20, -28, 40 * hpFrac, 4, 1.5);
++      ctx.fill();
 +    }
 +
-     if(held.down){ // Reverse brake
-       p.vx *= (1.0 - 2.8 * dt);
-       p.vy *= (1.0 - 2.8 * dt);
-@@ -2812,20 +2828,20 @@ function updatePlay(dt){
-       burst(p.x, p.y, 18, C.cyan, 200, 0.5, true);
-     }
- 
--    // Energy Sword Melee Attack (J / X / Left Click)
--    if(G.hasSword && pressed('atk') && p.atkCd <= 0){
--      p.atkT = 0.22;
--      p.atkCd = 0.35;
-+    // Energy Sword Melee Attack (J / X / Left Click / Mobile SWORD button)
-+    if((G.hasSword || true) && pressed('atk') && p.atkCd <= 0){
-+      p.atkT = 0.24;
-+      p.atkCd = 0.32;
-       SFX.sword();
-       // Hit detection on enemies within swing range
-       const slashX = p.x + p.face * 35;
-       for(let e=ENEMIES.length-1; e>=0; e--){
-         const enemy = ENEMIES[e];
--        if(Math.hypot(slashX - enemy.x, p.y - enemy.y) < 75){
--          enemy.hp -= 1;
-+        if(Math.hypot(slashX - enemy.x, p.y - enemy.y) < 80){
-+          enemy.hp -= (G.swordPower || 1);
-           SFX.enemyHit();
--          G.shake = 5;
--          burst(enemy.x, enemy.y, 14, cfg.accent, 190, 0.4, true);
-+          G.shake = 6;
-+          burst(enemy.x, enemy.y, 15, cfg.accent, 200, 0.45, true);
-           if(enemy.hp <= 0){
-             ENEMIES.splice(e, 1);
-             G.score += 50;
-@@ -2836,6 +2852,16 @@ function updatePlay(dt){
-           }
-         }
-       }
-+      // Energy sword also slices falling rocks and debris
-+      for(let k=DEBRIS.length-1; k>=0; k--){
-+        const rock = DEBRIS[k];
-+        if(Math.hypot(slashX - rock.x, p.y - rock.y) < 70){
-+          burst(rock.x, rock.y, 16, rock.hot ? C.ember : '#d9e5ff', 220, 0.45, true);
-+          DEBRIS.splice(k, 1);
-+          G.score += 15;
-+          SFX.enemyHit();
-+        }
-+      }
-     }
- 
-     // Laser Cutter: a collected laser slices falling rocks into fragments.
-@@ -2855,24 +2881,26 @@ function updatePlay(dt){
-           G.score += 12;
-         }
-       }
--    } else if(G.hasBlaster && pressed('shoot') && p.shootCd <= 0){
--      p.shootCd = 0.24;
-+    } else if((G.hasBlaster || true) && pressed('shoot') && p.shootCd <= 0){
-+      p.shootCd = 0.22;
-       SFX.blaster();
-       BULLETS.push({
-         x: p.x + p.face * 20,
-         y: p.y - 4,
--        vx: p.face * 920,
-+        vx: p.face * 940,
-         vy: 0,
--        life: 1.1
-+        damage: G.blasterPower || 1,
-+        life: 1.2
-       });
-       spawn(p.x + p.face * 22, p.y - 4, p.face * 60, 0, 0.15, 6, C.cyan, 0, true);
-     }
- 
--    // Phase Shield (Q)
--    if(G.hasShield && pressed('shield') && G.shieldCd <= 0){
--      G.shieldT = 1.8;
--      G.shieldCd = 5.0;
-+    // Phase Shield (Q / Mobile SHIELD button)
-+    if((G.hasShield || true) && pressed('shield') && G.shieldCd <= 0){
-+      G.shieldT = 2.4;
-+      G.shieldCd = 4.5;
-       SFX.shield();
-+      burst(p.x, p.y, 16, C.cyan, 160, 0.4, true);
-     }
- 
-     // Environmental Forces
-@@ -3099,13 +3127,15 @@ function updatePlay(dt){
-         continue;
-       }
- 
-+      let bulletSpent = false;
-       for(let e=ENEMIES.length-1; e>=0; e--){
-         const enemy = ENEMIES[e];
-         if(Math.hypot(blt.x - enemy.x, blt.y - enemy.y) < 32){
--          enemy.hp -= 1;
-+          enemy.hp -= (blt.damage || 1);
-           BULLETS.splice(b, 1);
-+          bulletSpent = true;
-           SFX.enemyHit();
--          burst(enemy.x, enemy.y, 12, C.cyan, 170, 0.35, true);
-+          burst(enemy.x, enemy.y, 14, C.cyan, 180, 0.4, true);
-           if(enemy.hp <= 0){
-             ENEMIES.splice(e, 1);
-             G.score += 50;
-@@ -3117,6 +3147,20 @@ function updatePlay(dt){
-           break;
-         }
-       }
+     if(['swarm', 'stalker', 'leech', 'prism', 'stormcaller', 'burrower', 'mirror'].includes(e.type)){
+       drawProceduralEnemy(e, t);
+     } else if(img && img.complete && img.naturalWidth){
+@@ -2207,6 +2260,17 @@ function drawDebris(d, camX, camY){
+   if(dx < -60 || dx > W+60 || dy < -60 || dy > H+60) return;
+   ctx.save();
+   ctx.translate(dx, dy);
 +
-+      if(!bulletSpent){
-+        for(let k=DEBRIS.length-1; k>=0; k--){
-+          const rock = DEBRIS[k];
-+          if(Math.hypot(blt.x - rock.x, blt.y - rock.y) < rock.radius + 14){
-+            BULLETS.splice(b, 1);
-+            burst(rock.x, rock.y, 16, rock.hot ? C.ember : '#d9e5ff', 220, 0.45, true);
-+            DEBRIS.splice(k, 1);
-+            G.score += 15;
-+            SFX.enemyHit();
-+            break;
-+          }
-+        }
-+      }
++  // Burning atmospheric friction tail (compact falling meteor trail)
++  ctx.save();
++  ctx.strokeStyle = d.hot ? 'rgba(255, 95, 20, 0.75)' : 'rgba(160, 190, 230, 0.45)';
++  ctx.lineWidth = Math.max(1.5, d.radius * 0.35);
++  ctx.beginPath();
++  ctx.moveTo(0, 0);
++  ctx.lineTo(-d.vx * 0.05, -d.vy * 0.05);
++  ctx.stroke();
++  ctx.restore();
++
+   ctx.rotate(d.rot);
+   const rockAssets = [
+     'assets/objects/asteroid.svg',
+@@ -2214,20 +2278,20 @@ function drawDebris(d, camX, camY){
+   ];
+   const img = ASSET_IMAGES[rockAssets[d.rockType % rockAssets.length]];
+   if(img && img.complete && img.naturalWidth){
+-    ctx.globalAlpha = 0.98;
++    ctx.globalAlpha = 0.95;
+     ctx.shadowColor = d.hot ? C.ember : 'rgba(180,210,255,0.35)';
+-    ctx.shadowBlur = d.hot ? 18 : 8;
+-    const size = d.radius * (d.rockType === 2 ? 2.4 : 2.1);
++    ctx.shadowBlur = d.hot ? 10 : 4;
++    const size = d.radius * 1.35;
+     ctx.drawImage(img, -size, -size, size * 2, size * 2);
+     if(d.hot){
+       ctx.globalCompositeOperation = 'lighter';
+-      ctx.fillStyle = 'rgba(255,90,20,0.22)';
+-      ctx.beginPath(); ctx.arc(0, 0, d.radius * 1.25, 0, 6.283); ctx.fill();
++      ctx.fillStyle = 'rgba(255,90,20,0.28)';
++      ctx.beginPath(); ctx.arc(0, 0, d.radius * 1.15, 0, 6.283); ctx.fill();
      }
+   } else {
+     ctx.fillStyle = d.hot ? '#421408' : '#555046';
+     ctx.strokeStyle = d.hot ? C.ember : '#9c9282';
+-    ctx.lineWidth = 2;
++    ctx.lineWidth = 1.5;
+     ctx.beginPath();
+     ctx.moveTo(0, -d.radius); ctx.lineTo(d.radius * 0.8, -d.radius * 0.6);
+     ctx.lineTo(d.radius, d.radius * 0.3); ctx.lineTo(d.radius * 0.4, d.radius * 0.9);
+@@ -2355,15 +2419,18 @@ function drawHUD(){
  
-     // Collect Mandatory Resources
+   const allSecured = G.cellsGot >= cfg.mandatoryCount;
+   const objColor = allSecured ? C.green : C.gold;
+-  const objText = (allSecured ? '✔ ALL OBJECTIVES SECURED' : cfg.mandatoryName.toUpperCase() + ': ' + G.cellsGot + ' / ' + cfg.mandatoryCount) + ' | FLEET CREDITS: ' + G.credits;
+-  txt(objText, W/2, 40, 12, objColor, 'center', F_U, 700, 1);
++  const objText = (allSecured ? '✔ ALL OBJECTIVES SECURED · RETURN TO ROCKET' : '◆ OBJECTIVE: COLLECT ' + cfg.mandatoryCount + ' ' + cfg.mandatoryName.toUpperCase() + ' [' + G.cellsGot + ' / ' + cfg.mandatoryCount + ']') + ' | CREDITS: ' + G.credits;
++  txt(objText, W/2, 38, 12, objColor, 'center', F_U, 700, 1);
++
++  // Tactical Guide Banner: Distinguishes Collectibles vs Enemies vs Rocks
++  const guideText = '◆ COLLECT: ' + cfg.mandatoryName.toUpperCase() + ' · ⚠ DESTROY: HOSTILE ENEMIES [J / K] · ☄ AVOID / BLAST: METEOR ROCKS';
++  txt(guideText, W/2, 51, 9, '#96a7cc', 'center', F_U, 600, 0.8);
+ 
+-  // Check Life Support Docking Tether
++  // Check Life Support Docking Tether or Environmental Hazard
+   const distLander = Math.hypot(PL.x - cfg.landingPad.x, PL.y - cfg.landingPad.y);
+   if(distLander < 140 && G.phase === 'explore'){
+-    txt('⚡ LIFE-SUPPORT TETHER DOCKED [RECHARGING]', W/2, 58, 11, C.green, 'center', F_U, 700);
++    txt('⚡ LIFE-SUPPORT TETHER DOCKED [RECHARGING]', W/2, 64, 10, C.green, 'center', F_U, 700);
+   } else {
+-    // Environmental Hazard Indicator
+     let envText = '';
+     let envColor = C.cyan;
+     if(cfg.id === 'fractured_moon'){
+@@ -2386,7 +2453,7 @@ function drawHUD(){
+       envText = 'ATMOSPHERIC WIND: ➔ 165 KM/H GUST FORCE';
+       envColor = C.cyan;
+     }
+-    txt(envText, W/2, 58, 11, envColor, 'center', F_U, 700);
++    txt(envText, W/2, 64, 10, envColor, 'center', F_U, 700);
+   }
+ 
+   // Top Right: Distance & Radar to Your Rocket at Landing Pad
+@@ -3023,7 +3090,7 @@ function updatePlay(dt){
+         y: Math.max(80, p.y - 700),
+         vx: (Math.random() - 0.5) * 90,
+         vy: 190 + Math.random() * 140,
+-        radius: 18 + Math.random() * 18,
++        radius: 9 + Math.random() * 5,
+         rot: Math.random() * 6.28,
+         rotSpd: (Math.random() - 0.5) * 3,
+         hp: 1,
+@@ -3040,7 +3107,7 @@ function updatePlay(dt){
+         y: Math.max(50, p.y - 700 - Math.random() * 180),
+         vx: (Math.random() - 0.5) * 80,
+         vy: 260 + Math.random() * 180,
+-        radius: 18 + Math.random() * 16,
++        radius: 9 + Math.random() * 5,
+         rot: Math.random() * 6.28,
+         rotSpd: (Math.random() - 0.5) * 3,
+         hp: 1,
