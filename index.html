@@ -32,26 +32,45 @@ height:100%;height:100dvh;min-height:-webkit-fill-available;overflow:hidden;over
 @keyframes borderPulse{0%,100%{box-shadow:0 0 24px rgba(61,240,255,.1),inset 0 0 20px rgba(0,0,0,.4)}50%{box-shadow:0 0 36px rgba(61,240,255,.22),inset 0 0 20px rgba(0,0,0,.4)}}
 @keyframes loadGlow{0%,100%{text-shadow:0 0 20px rgba(61,240,255,.8),0 0 60px rgba(61,240,255,.4)}50%{text-shadow:0 0 30px rgba(61,240,255,1),0 0 80px rgba(61,240,255,.6)}}
 
-#stage{width:min(100%,calc((100vh - 54px) * 1.7778));width:min(100%,calc((100dvh - 54px) * 1.7778));aspect-ratio:16/9;max-width:100%;
-border:1px solid rgba(61,240,255,.28);border-radius:6px;position:relative;
-animation:borderPulse 4s ease-in-out infinite;background:#000;overflow:hidden;
+#stage{width:min(100%,calc((100vh - 56px) * 1.7778));width:min(100%,calc((100dvh - 56px) * 1.7778));aspect-ratio:16/9;max-width:100%;
+border:1px solid rgba(61,240,255,.32);border-radius:8px;position:relative;
+animation:borderPulse 4s ease-in-out infinite;background:#02040e;overflow:hidden;
+box-shadow:0 10px 36px rgba(0,0,0,.6), 0 0 24px rgba(61,240,255,.08);
 touch-action:none;-webkit-touch-callout:none;-webkit-user-select:none;user-select:none}
 
 #stage, #stage *{-webkit-touch-callout:none;-webkit-user-select:none;user-select:none}
 
-canvas{width:100%;height:100%;display:block;touch-action:none;-webkit-touch-callout:none;-webkit-user-select:none;user-select:none;background:#000;outline:none;border-radius:5px}
+/* Aerospace HUD corner brackets */
+.hud-corner{position:absolute;width:10px;height:10px;border:2px solid var(--cyan);pointer-events:none;z-index:16;opacity:0.65}
+.hud-corner-tl{top:6px;left:6px;border-right:none;border-bottom:none}
+.hud-corner-tr{top:6px;right:6px;border-left:none;border-bottom:none}
+.hud-corner-bl{bottom:6px;left:6px;border-right:none;border-top:none}
+.hud-corner-br{bottom:6px;right:6px;border-left:none;border-top:none}
 
-#orvex-header{width:min(100%,calc((100vh - 54px) * 1.7778));width:min(100%,calc((100dvh - 54px) * 1.7778));display:flex;align-items:center;justify-content:space-between;padding:4px 12px;background:rgba(13,20,51,.75);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border:1px solid rgba(61,240,255,.18);border-radius:8px;box-shadow:0 4px 16px rgba(0,0,0,.4);z-index:10}
+/* Hardware-accelerated CSS CRT scanlines */
+#stage.scanlines::after{
+  content:'';position:absolute;inset:0;pointer-events:none;z-index:15;
+  background:repeating-linear-gradient(0deg,rgba(0,0,0,.22) 0px,rgba(0,0,0,.22) 1px,transparent 1px,transparent 3px);
+  opacity:0.48;
+}
+
+canvas{width:100%;height:100%;display:block;touch-action:none;-webkit-touch-callout:none;-webkit-user-select:none;user-select:none;background:#000;outline:none;border-radius:7px}
+
+#orvex-header{width:min(100%,calc((100vh - 56px) * 1.7778));width:min(100%,calc((100dvh - 56px) * 1.7778));display:flex;align-items:center;justify-content:space-between;padding:5px 14px;background:rgba(9,14,34,.84);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border:1px solid rgba(61,240,255,.22);border-radius:10px;box-shadow:0 6px 20px rgba(0,0,0,.5);z-index:10}
+.brand-cluster{display:flex;align-items:center;gap:12px}
 .brand{display:flex;align-items:center;gap:8px;font:700 13px var(--display);letter-spacing:2px;color:var(--bone);text-decoration:none}
 .brand b{color:var(--cyan);font-weight:900}
-.brand-glyph{filter:drop-shadow(0 0 6px rgba(61,240,255,.5))}
-.title-pill{font:700 10px var(--ui);letter-spacing:3px;text-transform:uppercase;color:var(--cyan);background:rgba(59,42,122,.35);padding:3px 12px;border-radius:12px;border:1px solid rgba(61,240,255,.2)}
+.brand-glyph{filter:drop-shadow(0 0 6px rgba(61,240,255,.6))}
+.telemetry-badge{display:inline-flex;align-items:center;gap:5px;font:700 9.5px var(--ui);letter-spacing:1px;color:var(--green);background:rgba(61,255,136,.1);border:1px solid rgba(61,255,136,.25);padding:2px 8px;border-radius:10px}
+.badge-dot{width:6px;height:6px;border-radius:50%;background:var(--green);box-shadow:0 0 8px var(--green);animation:pulseDot 2s ease-in-out infinite}
+@keyframes pulseDot{0%,100%{opacity:1;transform:scale(1)}50%{opacity:0.35;transform:scale(0.8)}}
+
+.title-pill{font:700 10px var(--ui);letter-spacing:2.5px;text-transform:uppercase;color:var(--cyan);background:rgba(59,42,122,.38);padding:4px 14px;border-radius:12px;border:1px solid rgba(61,240,255,.24);box-shadow:0 0 10px rgba(61,240,255,.1)}
 .actions{display:flex;align-items:center;gap:8px}
 
-.godot-btn{display:flex;align-items:center;gap:6px;padding:3px 10px;background:rgba(71,140,230,.18);border:1px solid rgba(71,140,230,.35);border-radius:6px;color:#8cc4ff;font:600 11px var(--ui);letter-spacing:.5px;text-decoration:none;transition:all .15s}
-.godot-btn:hover{background:rgba(71,140,230,.32);border-color:#478ce6;color:#fff}
-#settings-btn,#fs-btn{width:28px;height:28px;background:rgba(61,240,255,.08);border:1px solid rgba(61,240,255,.25);border-radius:6px;color:var(--cyan);font-size:14px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .15s}
-#settings-btn:hover,#fs-btn:hover{background:rgba(61,240,255,.2);color:#fff}
+.header-tool-btn{width:30px;height:30px;background:rgba(61,240,255,.08);border:1px solid rgba(61,240,255,.25);border-radius:6px;color:var(--cyan);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .15s}
+.header-tool-btn:hover{background:rgba(61,240,255,.24);color:#fff;border-color:var(--cyan);box-shadow:0 0 10px rgba(61,240,255,.3)}
+.header-tool-btn.active{background:rgba(61,255,136,.18);border-color:var(--green);color:var(--green)}
 
 #touch{display:none;position:absolute;inset:0;width:auto;justify-content:space-between;align-items:flex-end;gap:12px;padding:max(10px,env(safe-area-inset-top)) max(14px,env(safe-area-inset-right)) max(12px,env(safe-area-inset-bottom)) max(14px,env(safe-area-inset-left));pointer-events:none;z-index:20;touch-action:none;-webkit-touch-callout:none;-webkit-user-select:none;user-select:none}
 .pad-left{display:flex;align-items:flex-end;pointer-events:none;touch-action:none;-webkit-touch-callout:none;-webkit-user-select:none;user-select:none}
@@ -129,18 +148,50 @@ html:fullscreen canvas{border-radius:0}
 </div>
 
 <header id="orvex-header">
-  <a class="brand" href="#" onclick="return false;">
-    <svg class="brand-glyph" viewBox="0 0 24 24" width="16" height="16" fill="none"><circle cx="12" cy="12" r="10" stroke="#3df0ff" stroke-width="2"/><circle cx="12" cy="12" r="4" fill="#ff7a2e"/></svg>
-    <span>SPACE <b>ODYSSEY</b></span>
-  </a>
+  <div class="brand-cluster">
+    <a class="brand" href="#" onclick="return false;">
+      <svg class="brand-glyph" viewBox="0 0 24 24" width="18" height="18" fill="none">
+        <circle cx="12" cy="12" r="10" stroke="#3df0ff" stroke-width="2"/>
+        <path d="M12 2a10 10 0 0 1 10 10" stroke="#ff7a2e" stroke-width="2.5" stroke-linecap="round"/>
+        <circle cx="12" cy="12" r="3.5" fill="#3df0ff"/>
+      </svg>
+      <span>SPACE <b>ODYSSEY</b></span>
+    </a>
+    <div class="telemetry-badge" id="telemetry-badge">
+      <span class="badge-dot"></span>
+      <span id="header-telemetry-fps">60 FPS · STABLE</span>
+    </div>
+  </div>
   <div class="title-pill" id="header-planet-title">INTERPLANETARY ODYSSEY</div>
   <div class="actions">
-    <button id="settings-btn" aria-label="Game Settings" title="Game Settings">⚙</button>
-    <button id="fs-btn" aria-label="Toggle Fullscreen" title="Toggle Fullscreen">⛶</button>
+    <button id="audio-toggle-btn" class="header-tool-btn active" aria-label="Toggle Audio" title="Mute/Unmute Audio">
+      <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+        <path d="M15.54 8.46a5 5 0 0 1 0 7.07"></path>
+        <path d="M19.07 4.93a10 10 0 0 1 0 14.14"></path>
+      </svg>
+    </button>
+    <button id="settings-btn" class="header-tool-btn" aria-label="Game Settings" title="Game Settings">
+      <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <line x1="4" y1="21" x2="4" y2="14"></line><line x1="4" y1="10" x2="4" y2="3"></line>
+        <line x1="12" y1="21" x2="12" y2="12"></line><line x1="12" y1="8" x2="12" y2="3"></line>
+        <line x1="20" y1="21" x2="20" y2="16"></line><line x1="20" y1="12" x2="20" y2="3"></line>
+        <line x1="1" y1="14" x2="7" y2="14"></line><line x1="9" y1="8" x2="15" y2="8"></line><line x1="17" y1="16" x2="23" y2="16"></line>
+      </svg>
+    </button>
+    <button id="fs-btn" class="header-tool-btn" aria-label="Toggle Fullscreen" title="Toggle Fullscreen">
+      <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"></path>
+      </svg>
+    </button>
   </div>
 </header>
 
 <div id="stage">
+  <div class="hud-corner hud-corner-tl"></div>
+  <div class="hud-corner hud-corner-tr"></div>
+  <div class="hud-corner hud-corner-bl"></div>
+  <div class="hud-corner hud-corner-br"></div>
   <canvas id="c" width="960" height="540" tabindex="0" aria-label="Space Odyssey"></canvas>
   <div id="touch">
     <div class="pad-left">
@@ -280,9 +331,15 @@ function applySettings(){
   if(touchEl){
     touchEl.style.opacity = (SETTINGS.touchOpacity / 100);
   }
+  const stageEl = document.getElementById('stage');
+  if(stageEl){
+    if(SETTINGS.scanlines) stageEl.classList.add('scanlines');
+    else stageEl.classList.remove('scanlines');
+  }
   if(typeof G !== 'undefined' && G){
     G.char = SETTINGS.pilot || G.char || 'arin';
   }
+  if(typeof updateAudioBtnIcon === 'function') updateAudioBtnIcon();
 }
 
 /* ──────── Full Asset Image Loader ──────── */
@@ -573,11 +630,12 @@ cv.addEventListener('dragstart', e => e.preventDefault());
 /* ──────── Particle & Visual FX System ──────── */
 const P = [];
 function spawn(x,y,vx,vy,life,size,col,grav,add){
-  if(P.length > 950) P.shift();
+  const maxP = (typeof SETTINGS !== 'undefined' && SETTINGS.particles === 'low') ? 80 : 240;
+  if(P.length >= maxP) P.shift();
   P.push({x,y,vx,vy,life,max:life,size,col,grav:grav||0,add:!!add,ox:x,oy:y});
 }
 function burst(x,y,n,col,spd,life,add){
-  if(typeof SETTINGS !== 'undefined' && SETTINGS.particles === 'low') n = Math.max(1, Math.round(n * 0.4));
+  if(typeof SETTINGS !== 'undefined' && SETTINGS.particles === 'low') n = Math.max(1, Math.round(n * 0.35));
   for(let i=0;i<n;i++){
     const a = Math.random()*6.283, s = spd * (0.3 + Math.random()*0.7);
     spawn(x,y,Math.cos(a)*s, Math.sin(a)*s, life*(0.5+Math.random()*0.5), 2+Math.random()*3, col, 0, add);
@@ -596,13 +654,32 @@ function updFx(dt){
 }
 function drawFx(camX, camY){
   ctx.save();
-  for(const p of P){
+  // Pass 1: standard source-over particles
+  ctx.globalCompositeOperation = 'source-over';
+  for(let i=0; i<P.length; i++){
+    const p = P[i];
+    if(p.add) continue;
+    const px = p.x - camX, py = p.y - camY;
+    if(px < -20 || px > W + 20 || py < -20 || py > H + 20) continue;
     const a = clamp(p.life / p.max, 0, 1);
-    ctx.globalAlpha = a * (p.add ? 0.9 : 1);
-    ctx.globalCompositeOperation = p.add ? 'lighter' : 'source-over';
+    ctx.globalAlpha = a;
     ctx.fillStyle = p.col;
     ctx.beginPath();
-    ctx.arc(p.x - camX, p.y - camY, p.size * clamp(p.life / p.max, 0.25, 1), 0, 6.283);
+    ctx.arc(px, py, p.size * clamp(p.life / p.max, 0.25, 1), 0, 6.283);
+    ctx.fill();
+  }
+  // Pass 2: additive lighter particles
+  ctx.globalCompositeOperation = 'lighter';
+  for(let i=0; i<P.length; i++){
+    const p = P[i];
+    if(!p.add) continue;
+    const px = p.x - camX, py = p.y - camY;
+    if(px < -20 || px > W + 20 || py < -20 || py > H + 20) continue;
+    const a = clamp(p.life / p.max, 0, 1);
+    ctx.globalAlpha = a * 0.9;
+    ctx.fillStyle = p.col;
+    ctx.beginPath();
+    ctx.arc(px, py, p.size * clamp(p.life / p.max, 0.25, 1), 0, 6.283);
     ctx.fill();
   }
   ctx.globalAlpha = 1;
@@ -1299,38 +1376,58 @@ const BG_STARS = Array.from({length: 120}, () => ({
   x: Math.random() * W, y: Math.random() * H, r: 0.8 + Math.random()*1.8, sp: 0.5 + Math.random()*2, ph: Math.random()*6.28
 }));
 
+const SKY_GRADS = {};
+function getSkyGrad(cfg){
+  if(!SKY_GRADS[cfg.id]){
+    const g = ctx.createLinearGradient(0, 0, 0, H);
+    g.addColorStop(0, cfg.sky[0]);
+    g.addColorStop(1, cfg.sky[1]);
+    SKY_GRADS[cfg.id] = g;
+  }
+  return SKY_GRADS[cfg.id];
+}
+
+const GLOW_CANVASES = {};
+function getGlowCanvas(cfg){
+  if(!GLOW_CANVASES[cfg.id]){
+    const gc = document.createElement('canvas');
+    gc.width = 520; gc.height = 520;
+    const gctx = gc.getContext('2d');
+    const rad = gctx.createRadialGradient(260, 260, 40, 260, 260, 260);
+    rad.addColorStop(0, cfg.accent + '22');
+    rad.addColorStop(1, 'rgba(0,0,0,0)');
+    gctx.fillStyle = rad;
+    gctx.beginPath();
+    gctx.arc(260, 260, 260, 0, 6.283);
+    gctx.fill();
+    GLOW_CANVASES[cfg.id] = gc;
+  }
+  return GLOW_CANVASES[cfg.id];
+}
+
 function drawBackground(cfg, camX, camY, t){
-  const g = ctx.createLinearGradient(0, 0, 0, H);
-  g.addColorStop(0, cfg.sky[0]);
-  g.addColorStop(1, cfg.sky[1]);
-  ctx.fillStyle = g;
+  ctx.fillStyle = getSkyGrad(cfg);
   ctx.fillRect(0, 0, W, H);
 
-  // Parallax starfield
+  // Parallax starfield - fast batch render
+  ctx.fillStyle = cfg.starCol || '#fff';
   for(let i=0; i<BG_STARS.length; i++){
     const s = BG_STARS[i];
     const sx = mod(s.x - camX * 0.05, W);
     const sy = mod(s.y - camY * 0.05, H);
     const alpha = 0.4 + 0.6 * (0.5 + 0.5*Math.sin(t*s.sp + s.ph));
     ctx.globalAlpha = alpha;
-    ctx.fillStyle = cfg.starCol || '#fff';
-    ctx.beginPath();
-    ctx.arc(sx, sy, s.r, 0, 6.283);
-    ctx.fill();
+    const sz = s.r * 1.8;
+    ctx.fillRect(sx - sz*0.5, sy - sz*0.5, sz, sz);
   }
   ctx.globalAlpha = 1;
 
-  // Distant planetary glow
+  // Distant planetary glow (cached offscreen canvas)
   const px = W * 0.7 - camX * 0.02, py = H * 0.3 - camY * 0.02;
   ctx.save();
   ctx.globalCompositeOperation = 'lighter';
-  const glow = ctx.createRadialGradient(px, py, 40, px, py, 260);
-  glow.addColorStop(0, cfg.accent + '22');
-  glow.addColorStop(1, 'rgba(0,0,0,0)');
-  ctx.fillStyle = glow;
-  ctx.beginPath();
-  ctx.arc(px, py, 260, 0, 6.283);
-  ctx.fill();
+  const gc = getGlowCanvas(cfg);
+  ctx.drawImage(gc, px - 260, py - 260, 520, 520);
   ctx.restore();
 
   // Background artwork
@@ -2361,8 +2458,9 @@ function drawHostileProjectile(b, x, y){
   ctx.translate(x, y);
   ctx.rotate(Math.atan2(b.vy, b.vx));
   ctx.globalCompositeOperation = 'lighter';
-  ctx.shadowColor = col;
-  ctx.shadowBlur = 14;
+  // Lightweight additive aura instead of software shadowBlur
+  ctx.fillStyle = col + '44';
+  ctx.beginPath(); ctx.arc(0, 0, size * 1.5, 0, 6.283); ctx.fill();
   ctx.fillStyle = col;
   if(b.kind === 'rock' || b.kind === 'ice_shard' || b.kind === 'gravity_rock'){
     ctx.beginPath();
@@ -2417,14 +2515,12 @@ function drawDebris(d, camX, camY){
   const img = ASSET_IMAGES[rockAssets[d.rockType % rockAssets.length]];
   if(img && img.complete && img.naturalWidth){
     ctx.globalAlpha = 0.95;
-    ctx.shadowColor = d.hot ? C.ember : 'rgba(180,210,255,0.35)';
-    ctx.shadowBlur = d.hot ? 10 : 4;
     const size = d.radius * 1.55;
     ctx.drawImage(img, -size, -size, size * 2, size * 2);
     if(d.hot){
       ctx.globalCompositeOperation = 'lighter';
-      ctx.fillStyle = 'rgba(255,90,20,0.28)';
-      ctx.beginPath(); ctx.arc(0, 0, d.radius * 1.15, 0, 6.283); ctx.fill();
+      ctx.fillStyle = 'rgba(255,90,20,0.32)';
+      ctx.beginPath(); ctx.arc(0, 0, d.radius * 1.25, 0, 6.283); ctx.fill();
     }
   } else {
     ctx.fillStyle = d.hot ? '#421408' : '#555046';
@@ -2456,8 +2552,13 @@ function drawHealthPacks(camX, camY, t){
     if(x < -40 || x > W + 40 || y < -40 || y > H + 40) continue;
 
     ctx.save();
-    ctx.shadowColor = C.green;
-    ctx.shadowBlur = 16;
+    // Fast additive glow halo without software shadowBlur
+    ctx.globalCompositeOperation = 'lighter';
+    ctx.fillStyle = 'rgba(61,255,136,0.18)';
+    ctx.beginPath();
+    ctx.arc(x, y, 26 + Math.sin(t * 4 + pack.pulse) * 3, 0, 6.283);
+    ctx.fill();
+
     ctx.strokeStyle = C.green;
     ctx.globalAlpha = 0.85;
     ctx.lineWidth = 2;
@@ -2465,6 +2566,7 @@ function drawHealthPacks(camX, camY, t){
     ctx.arc(x, y, 22 + Math.sin(t * 4 + pack.pulse) * 2, 0, 6.283);
     ctx.stroke();
     ctx.globalAlpha = 1;
+    ctx.globalCompositeOperation = 'source-over';
 
     if(img && img.complete && img.naturalWidth){
       ctx.drawImage(img, x - 18, y - 18, 36, 36);
@@ -2486,22 +2588,23 @@ function drawWeaponPickups(camX, camY, t){
     if(pickup.got) continue;
     const x = pickup.x - camX;
     const y = pickup.y - camY + Math.sin(t * 3 + pickup.pulse) * 5;
+    if(x < -50 || x > W + 50 || y < -50 || y > H + 50) continue;
     const src = 'assets/weapons/' + (pickup.type === 'sword' ? 'energy_sword' : pickup.type === 'blaster' || pickup.type === 'laser' ? 'plasma_blaster' : pickup.type === 'shield' ? 'phase_shield' : 'gravity_lance') + '.svg';
     const img = ASSET_IMAGES[src];
     ctx.save();
     ctx.globalCompositeOperation = 'lighter';
-    ctx.shadowColor = C.cyan;
-    ctx.shadowBlur = 18;
+    ctx.fillStyle = 'rgba(61,240,255,0.16)';
+    ctx.beginPath(); ctx.arc(x, y, 32 + Math.sin(t * 4 + pickup.pulse) * 3, 0, 6.283); ctx.fill();
     ctx.strokeStyle = C.cyan;
     ctx.lineWidth = 2;
-    ctx.beginPath(); ctx.arc(x, y, 30 + Math.sin(t * 4 + pickup.pulse) * 3, 0, 6.283); ctx.stroke();
+    ctx.beginPath(); ctx.arc(x, y, 28 + Math.sin(t * 4 + pickup.pulse) * 2, 0, 6.283); ctx.stroke();
+    ctx.globalCompositeOperation = 'source-over';
     if(img && img.complete && img.naturalWidth){
       ctx.drawImage(img, x - 22, y - 22, 44, 44);
     } else {
       ctx.fillStyle = C.cyan;
       ctx.fillRect(x - 14, y - 14, 28, 28);
     }
-    ctx.globalCompositeOperation = 'source-over';
     txt('COLLECT ' + weaponLabel(pickup.type), x, y - 38, 9, C.cyan, 'center', F_U, 700, 1);
     ctx.restore();
   }
@@ -3669,15 +3772,6 @@ function render(){
       renderDead();
       break;
   }
-
-  // Scanline overlay
-  if(typeof SETTINGS === 'undefined' || SETTINGS.scanlines){
-    ctx.save();
-    ctx.globalAlpha = 0.025;
-    ctx.fillStyle = '#000';
-    for(let y=0; y<H; y+=3) ctx.fillRect(0, y, W, 1);
-    ctx.restore();
-  }
 }
 
 function renderWorldPlay(){
@@ -3824,7 +3918,7 @@ function renderTitle(){
     G.scene = 'missions';
   }, {sz: 11, col: C.gold});
 
-  uiButton('⚙ SETTINGS', 300, 454, 108, 36, () => {
+  uiButton('SETTINGS', 300, 454, 108, 36, () => {
     SFX.click();
     G.lastScene = 'title';
     G.scene = 'settings';
@@ -4010,96 +4104,93 @@ function renderManual(){
 }
 
 /* ──────── Settings Actions & Controller ──────── */
-function cycleVolume(){
-  const vols = [100, 75, 50, 25, 0];
-  let idx = vols.indexOf(SETTINGS.volume);
-  if(idx === -1) idx = 0;
-  SETTINGS.volume = vols[(idx + 1) % vols.length];
-  if(SETTINGS.volume > 0 && SETTINGS.muted) SETTINGS.muted = false;
+function setVolumeDirect(val){
+  SETTINGS.volume = val;
+  SETTINGS.muted = (val === 0);
   saveSettings();
   SFX.click();
-  settingsFeedback = 'SFX Volume set to ' + SETTINGS.volume + '%';
-  settingsFeedbackT = 3.5;
+  settingsFeedback = 'SFX Volume calibrated to ' + val + '%';
+  settingsFeedbackT = 2.5;
+  if(typeof updateAudioBtnIcon === 'function') updateAudioBtnIcon();
 }
 
-function toggleMute(){
-  SETTINGS.muted = !SETTINGS.muted;
+function setMuteDirect(val){
+  SETTINGS.muted = !!val;
   saveSettings();
   SFX.click();
-  settingsFeedback = SETTINGS.muted ? 'Master audio muted 🔇' : 'Master audio unmuted 🔊';
-  settingsFeedbackT = 3.5;
+  settingsFeedback = SETTINGS.muted ? 'Master audio output: MUTED' : 'Master audio output: ACTIVE';
+  settingsFeedbackT = 2.5;
+  if(typeof updateAudioBtnIcon === 'function') updateAudioBtnIcon();
 }
 
-function toggleThrusterSound(){
-  SETTINGS.thrusterSound = !SETTINGS.thrusterSound;
+function setThrusterSoundDirect(val){
+  SETTINGS.thrusterSound = !!val;
   saveSettings();
   setThrusterRumble(false);
   SFX.click();
-  settingsFeedback = SETTINGS.thrusterSound ? 'Thruster sound enabled' : 'Thruster sound muted';
-  settingsFeedbackT = 3.5;
+  settingsFeedback = SETTINGS.thrusterSound ? 'Thruster engine rumble: ACTIVE' : 'Thruster engine rumble: MUTED';
+  settingsFeedbackT = 2.5;
 }
 
-function toggleScanlines(){
-  SETTINGS.scanlines = !SETTINGS.scanlines;
+function setScanlinesDirect(val){
+  SETTINGS.scanlines = !!val;
   saveSettings();
   SFX.click();
-  settingsFeedback = SETTINGS.scanlines ? 'CRT retro scanlines enabled' : 'CRT scanlines disabled';
-  settingsFeedbackT = 3.5;
+  settingsFeedback = SETTINGS.scanlines ? 'CRT scanline filter: ENABLED' : 'CRT scanline filter: OFF';
+  settingsFeedbackT = 2.5;
 }
 
-function cycleScreenShake(){
-  const shakes = ['full', 'reduced', 'off'];
-  let idx = shakes.indexOf(SETTINGS.screenShake);
-  if(idx === -1) idx = 0;
-  SETTINGS.screenShake = shakes[(idx + 1) % shakes.length];
+function setScreenShakeDirect(val){
+  SETTINGS.screenShake = val;
   saveSettings();
   SFX.click();
-  settingsFeedback = 'Screen shake impact set to ' + SETTINGS.screenShake.toUpperCase();
-  settingsFeedbackT = 3.5;
+  settingsFeedback = 'Screen shake impact: ' + (val === 'off' ? 'DISABLED' : (val === 'reduced' ? 'LOW (35%)' : 'FULL (100%)'));
+  settingsFeedbackT = 2.5;
 }
 
-function toggleParticles(){
-  SETTINGS.particles = SETTINGS.particles === 'high' ? 'low' : 'high';
+function setParticlesDirect(val){
+  SETTINGS.particles = val;
   saveSettings();
   SFX.click();
-  settingsFeedback = 'Particle density set to ' + (SETTINGS.particles === 'high' ? 'HIGH QUALITY' : 'LOW (PERF)');
-  settingsFeedbackT = 3.5;
+  settingsFeedback = 'Particle FX density: ' + (val === 'high' ? 'HIGH QUALITY' : 'LOW (PERF)');
+  settingsFeedbackT = 2.5;
 }
 
-function cycleTouchOpacity(){
-  const opacs = [100, 80, 60, 40];
-  let idx = opacs.indexOf(SETTINGS.touchOpacity);
-  if(idx === -1) idx = 0;
-  SETTINGS.touchOpacity = opacs[(idx + 1) % opacs.length];
+function setTouchOpacityDirect(val){
+  SETTINGS.touchOpacity = val;
   saveSettings();
   SFX.click();
-  settingsFeedback = 'Touch controls opacity set to ' + SETTINGS.touchOpacity + '%';
-  settingsFeedbackT = 3.5;
+  settingsFeedback = 'Mobile control pad opacity: ' + val + '%';
+  settingsFeedbackT = 2.5;
 }
 
-function togglePilot(){
-  SETTINGS.pilot = (SETTINGS.pilot === 'arin' ? 'mira' : 'arin');
-  G.char = SETTINGS.pilot;
+function setPilotDirect(val){
+  SETTINGS.pilot = val;
+  G.char = val;
   saveSettings();
   SFX.click();
-  settingsFeedback = 'Pilot switched to ' + (G.char === 'arin' ? 'ARIN (CYAN)' : 'MIRA (VIOLET)');
-  settingsFeedbackT = 3.5;
+  settingsFeedback = 'EVA suit designated: ' + (val === 'arin' ? 'ARIN (CYAN)' : 'MIRA (VIOLET)');
+  settingsFeedbackT = 2.5;
 }
 
-function toggleAutoBoard(){
-  SETTINGS.autoBoard = !SETTINGS.autoBoard;
+function setAutoBoardDirect(val){
+  SETTINGS.autoBoard = !!val;
   saveSettings();
   SFX.click();
-  settingsFeedback = SETTINGS.autoBoard ? 'Auto-board on proximity: ACTIVE' : 'Manual rocket board [E]: REQUIRED';
-  settingsFeedbackT = 3.5;
+  settingsFeedback = SETTINGS.autoBoard ? 'Rocket boarding protocol: AUTO PROXIMITY' : 'Rocket boarding protocol: MANUAL KEY [E]';
+  settingsFeedbackT = 2.5;
+}
+
+function toggleMute(){
+  setMuteDirect(!SETTINGS.muted);
 }
 
 function resetDefaults(){
   Object.assign(SETTINGS, DEFAULT_SETTINGS);
   saveSettings();
   SFX.click();
-  settingsFeedback = 'Settings restored to defaults';
-  settingsFeedbackT = 3.5;
+  settingsFeedback = 'Telemetry settings restored to defaults';
+  settingsFeedbackT = 2.5;
 }
 
 function resetExpedition(){
@@ -4107,8 +4198,8 @@ function resetExpedition(){
   G.score = 0;
   saveData();
   SFX.boom();
-  settingsFeedback = 'Expedition save data reset';
-  settingsFeedbackT = 3.5;
+  settingsFeedback = 'Expedition campaign data purged';
+  settingsFeedbackT = 2.5;
 }
 
 function returnFromSettings(){
@@ -4122,22 +4213,22 @@ function renderSettingsMenu(){
   ctx.fillRect(0, 0, W, H);
 
   // Subtitle and Title
-  txt('EXPEDITION HARDWARE & TELEMETRY CONFIGURATION', W/2, 36, 10.5, C.dim, 'center', F_U, 700, 3);
+  txt('EXPEDITION HARDWARE & TELEMETRY CONFIGURATION', W/2, 34, 10.5, C.dim, 'center', F_U, 700, 3);
 
   ctx.save();
   ctx.shadowColor = 'rgba(61,240,255,0.7)';
   ctx.shadowBlur = 18;
-  txt('SYSTEM SETTINGS', W/2, 62, 23, C.cyan, 'center', F_D, 700, 4);
+  txt('SYSTEM SETTINGS', W/2, 60, 23, C.cyan, 'center', F_D, 700, 4);
   ctx.restore();
 
   const colW = 276;
-  const colH = 345;
-  const y = 80;
+  const colH = 346;
+  const y = 78;
 
-  // ──── Column 1: Audio & Acoustics ────
+  // ──── Column 1: Audio Subsystem ────
   const x1 = 50;
   ctx.save();
-  ctx.fillStyle = 'rgba(11,20,51,0.78)';
+  ctx.fillStyle = 'rgba(11,20,51,0.82)';
   rr(x1, y, colW, colH, 10);
   ctx.fill();
   ctx.strokeStyle = 'rgba(61,240,255,0.28)';
@@ -4146,47 +4237,64 @@ function renderSettingsMenu(){
 
   // Header Badge
   ctx.fillStyle = 'rgba(61,240,255,0.12)';
-  rr(x1 + 14, y + 12, colW - 28, 28, 6);
+  rr(x1 + 14, y + 10, colW - 28, 26, 5);
   ctx.fill();
-  txt('🔊 AUDIO & ACOUSTICS', x1 + colW/2, y + 30, 12, C.cyan, 'center', F_U, 700, 1.5);
+  txt('[ SEC-01 // AUDIO SUBSYSTEM ]', x1 + colW/2, y + 27, 11, C.cyan, 'center', F_U, 700, 2);
 
   // Row 1: Volume
-  txt('SFX VOLUME LEVEL', x1 + 18, y + 64, 11, C.bone, 'left', F_U, 700);
-  txt('Synthesizer, lasers, alerts & telemetry', x1 + 18, y + 78, 9.5, C.dim, 'left', F_U, 500);
+  txt('SFX VOLUME LEVEL', x1 + 18, y + 58, 11, C.bone, 'left', F_U, 700);
+  txt('Synthesizer, lasers, alerts & telemetry', x1 + 18, y + 71, 9.5, C.dim, 'left', F_U, 500);
   ctx.fillStyle = 'rgba(255,255,255,0.08)';
-  rr(x1 + 18, y + 84, colW - 36, 5, 2);
+  rr(x1 + 18, y + 77, colW - 36, 4, 2);
   ctx.fill();
   if(SETTINGS.volume > 0){
     ctx.fillStyle = C.cyan;
-    rr(x1 + 18, y + 84, (colW - 36) * (SETTINGS.volume / 100), 5, 2);
+    rr(x1 + 18, y + 77, (colW - 36) * (SETTINGS.volume / 100), 4, 2);
     ctx.fill();
   }
-  uiButton('VOLUME: ' + SETTINGS.volume + '%', x1 + 18, y + 95, colW - 36, 32, cycleVolume, {
-    col: SETTINGS.volume > 0 ? C.cyan : C.dim,
-    sz: 12
-  });
+  const vLevels = [0, 25, 50, 75, 100];
+  for(let i=0; i<vLevels.length; i++){
+    const v = vLevels[i];
+    uiButton(v + '%', x1 + 18 + i * 49, y + 87, 44, 26, () => setVolumeDirect(v), {
+      sel: SETTINGS.volume === v && !SETTINGS.muted,
+      col: C.cyan,
+      sz: 10
+    });
+  }
 
-  // Row 2: Master Mute
-  txt('MASTER AUDIO STATE', x1 + 18, y + 150, 11, C.bone, 'left', F_U, 700);
-  txt('Instant mute all synthesized sound output', x1 + 18, y + 164, 9.5, C.dim, 'left', F_U, 500);
-  uiButton(SETTINGS.muted ? 'AUDIO: MUTED 🔇' : 'AUDIO: ACTIVE 🔊', x1 + 18, y + 175, colW - 36, 32, toggleMute, {
-    col: SETTINGS.muted ? C.ember : C.green,
-    sz: 12
+  // Row 2: Master Audio
+  txt('MASTER AUDIO OUTPUT', x1 + 18, y + 146, 11, C.bone, 'left', F_U, 700);
+  txt('Master bus mute for all game sound', x1 + 18, y + 159, 9.5, C.dim, 'left', F_U, 500);
+  uiButton('ACTIVE', x1 + 18, y + 172, 116, 26, () => setMuteDirect(false), {
+    sel: !SETTINGS.muted,
+    col: C.green,
+    sz: 11
+  });
+  uiButton('MUTED', x1 + 142, y + 172, 116, 26, () => setMuteDirect(true), {
+    sel: SETTINGS.muted,
+    col: C.ember,
+    sz: 11
   });
 
   // Row 3: Thruster Rumble
-  txt('THRUSTER ENGINE AUDIO', x1 + 18, y + 230, 11, C.bone, 'left', F_U, 700);
-  txt('Low-pass atmospheric & RCS engine rumble', x1 + 18, y + 244, 9.5, C.dim, 'left', F_U, 500);
-  uiButton(SETTINGS.thrusterSound ? 'ENGINE SOUND: ON' : 'ENGINE SOUND: MUTED', x1 + 18, y + 255, colW - 36, 32, toggleThrusterSound, {
-    col: SETTINGS.thrusterSound ? C.cyan : C.dim,
-    sz: 12
+  txt('THRUSTER ENGINE RUMBLE', x1 + 18, y + 232, 11, C.bone, 'left', F_U, 700);
+  txt('Low-pass atmospheric & RCS engine audio', x1 + 18, y + 245, 9.5, C.dim, 'left', F_U, 500);
+  uiButton('ENABLED', x1 + 18, y + 258, 116, 26, () => setThrusterSoundDirect(true), {
+    sel: SETTINGS.thrusterSound,
+    col: C.cyan,
+    sz: 11
+  });
+  uiButton('MUTED', x1 + 142, y + 258, 116, 26, () => setThrusterSoundDirect(false), {
+    sel: !SETTINGS.thrusterSound,
+    col: C.dim,
+    sz: 11
   });
   ctx.restore();
 
   // ──── Column 2: Visuals & Display ────
   const x2 = 342;
   ctx.save();
-  ctx.fillStyle = 'rgba(11,20,51,0.78)';
+  ctx.fillStyle = 'rgba(11,20,51,0.82)';
   rr(x2, y, colW, colH, 10);
   ctx.fill();
   ctx.strokeStyle = 'rgba(255,209,102,0.28)';
@@ -4195,40 +4303,62 @@ function renderSettingsMenu(){
 
   // Header Badge
   ctx.fillStyle = 'rgba(255,209,102,0.12)';
-  rr(x2 + 14, y + 12, colW - 28, 28, 6);
+  rr(x2 + 14, y + 10, colW - 28, 26, 5);
   ctx.fill();
-  txt('🖥️ VISUALS & DISPLAY', x2 + colW/2, y + 30, 12, C.gold, 'center', F_U, 700, 1.5);
+  txt('[ SEC-02 // OPTICAL & RENDER ]', x2 + colW/2, y + 27, 11, C.gold, 'center', F_U, 700, 2);
 
   // Row 1: Scanlines
-  txt('CRT SCANLINE FILTER', x2 + 18, y + 64, 11, C.bone, 'left', F_U, 700);
-  txt('Retro arcade CRT monitor scanline overlay', x2 + 18, y + 78, 9.5, C.dim, 'left', F_U, 500);
-  uiButton(SETTINGS.scanlines ? 'SCANLINES: ENABLED' : 'SCANLINES: OFF', x2 + 18, y + 95, colW - 36, 32, toggleScanlines, {
-    col: SETTINGS.scanlines ? C.gold : C.dim,
-    sz: 12
+  txt('CRT SCANLINE FILTER', x2 + 18, y + 58, 11, C.bone, 'left', F_U, 700);
+  txt('Hardware-accelerated retro CRT scanlines', x2 + 18, y + 71, 9.5, C.dim, 'left', F_U, 500);
+  uiButton('ENABLED', x2 + 18, y + 87, 116, 26, () => setScanlinesDirect(true), {
+    sel: SETTINGS.scanlines,
+    col: C.gold,
+    sz: 11
+  });
+  uiButton('OFF', x2 + 142, y + 87, 116, 26, () => setScanlinesDirect(false), {
+    sel: !SETTINGS.scanlines,
+    col: C.dim,
+    sz: 11
   });
 
   // Row 2: Screen Shake
-  txt('IMPACT SCREEN SHAKE', x2 + 18, y + 150, 11, C.bone, 'left', F_U, 700);
-  txt('Camera vibration during collisions & blasts', x2 + 18, y + 164, 9.5, C.dim, 'left', F_U, 500);
-  const shakeLabels = { full: 'SHAKE: FULL (100%)', reduced: 'SHAKE: REDUCED (35%)', off: 'SHAKE: DISABLED' };
-  uiButton(shakeLabels[SETTINGS.screenShake] || 'SHAKE: FULL', x2 + 18, y + 175, colW - 36, 32, cycleScreenShake, {
-    col: SETTINGS.screenShake === 'off' ? C.dim : C.gold,
-    sz: 12
+  txt('IMPACT SCREEN SHAKE', x2 + 18, y + 146, 11, C.bone, 'left', F_U, 700);
+  txt('Camera vibration on explosions & collisions', x2 + 18, y + 159, 9.5, C.dim, 'left', F_U, 500);
+  uiButton('OFF', x2 + 18, y + 172, 76, 26, () => setScreenShakeDirect('off'), {
+    sel: SETTINGS.screenShake === 'off',
+    col: C.dim,
+    sz: 10
+  });
+  uiButton('LOW 35%', x2 + 100, y + 172, 76, 26, () => setScreenShakeDirect('reduced'), {
+    sel: SETTINGS.screenShake === 'reduced',
+    col: C.gold,
+    sz: 9.5
+  });
+  uiButton('FULL 100%', x2 + 182, y + 172, 76, 26, () => setScreenShakeDirect('full'), {
+    sel: SETTINGS.screenShake === 'full',
+    col: C.gold,
+    sz: 9.5
   });
 
   // Row 3: Particles
-  txt('PARTICLE FX DENSITY', x2 + 18, y + 230, 11, C.bone, 'left', F_U, 700);
-  txt('Sparks, smoke, and thruster exhaust density', x2 + 18, y + 244, 9.5, C.dim, 'left', F_U, 500);
-  uiButton(SETTINGS.particles === 'high' ? 'PARTICLES: HIGH QUALITY' : 'PARTICLES: LOW (PERF)', x2 + 18, y + 255, colW - 36, 32, toggleParticles, {
-    col: SETTINGS.particles === 'high' ? C.gold : C.dim,
-    sz: 12
+  txt('PARTICLE FX DENSITY', x2 + 18, y + 232, 11, C.bone, 'left', F_U, 700);
+  txt('Sparks, smoke & exhaust density', x2 + 18, y + 245, 9.5, C.dim, 'left', F_U, 500);
+  uiButton('HIGH (AAA)', x2 + 18, y + 258, 116, 26, () => setParticlesDirect('high'), {
+    sel: SETTINGS.particles === 'high',
+    col: C.gold,
+    sz: 11
+  });
+  uiButton('LOW (PERF)', x2 + 142, y + 258, 116, 26, () => setParticlesDirect('low'), {
+    sel: SETTINGS.particles === 'low',
+    col: C.cyan,
+    sz: 11
   });
   ctx.restore();
 
   // ──── Column 3: Controls & Suit ────
   const x3 = 634;
   ctx.save();
-  ctx.fillStyle = 'rgba(11,20,51,0.78)';
+  ctx.fillStyle = 'rgba(11,20,51,0.82)';
   rr(x3, y, colW, colH, 10);
   ctx.fill();
   ctx.strokeStyle = 'rgba(61,255,136,0.28)';
@@ -4237,60 +4367,77 @@ function renderSettingsMenu(){
 
   // Header Badge
   ctx.fillStyle = 'rgba(61,255,136,0.12)';
-  rr(x3 + 14, y + 12, colW - 28, 28, 6);
+  rr(x3 + 14, y + 10, colW - 28, 26, 5);
   ctx.fill();
-  txt('🎮 CONTROLS & SUIT', x3 + colW/2, y + 30, 12, C.green, 'center', F_U, 700, 1.5);
+  txt('[ SEC-03 // AVIONICS & EVA ]', x3 + colW/2, y + 27, 11, C.green, 'center', F_U, 700, 2);
 
   // Row 1: Mobile Pad Opacity
-  txt('MOBILE BUTTON OPACITY', x3 + 18, y + 64, 11, C.bone, 'left', F_U, 700);
-  txt('Transparency of on-screen touch controls', x3 + 18, y + 78, 9.5, C.dim, 'left', F_U, 500);
-  uiButton('PAD OPACITY: ' + SETTINGS.touchOpacity + '%', x3 + 18, y + 95, colW - 36, 32, cycleTouchOpacity, {
-    col: C.green,
-    sz: 12
-  });
+  txt('MOBILE BUTTON OPACITY', x3 + 18, y + 58, 11, C.bone, 'left', F_U, 700);
+  txt('Transparency of on-screen touch controls', x3 + 18, y + 71, 9.5, C.dim, 'left', F_U, 500);
+  const opLevels = [40, 60, 80, 100];
+  for(let i=0; i<opLevels.length; i++){
+    const op = opLevels[i];
+    uiButton(op + '%', x3 + 18 + i * 61, y + 87, 56, 26, () => setTouchOpacityDirect(op), {
+      sel: SETTINGS.touchOpacity === op,
+      col: C.green,
+      sz: 10
+    });
+  }
 
   // Row 2: Pilot Suit
-  txt('DEFAULT ASTRONAUT SUIT', x3 + 18, y + 150, 11, C.bone, 'left', F_U, 700);
-  txt('EVA space suit model & HUD telemetry color', x3 + 18, y + 164, 9.5, C.dim, 'left', F_U, 500);
-  uiButton(G.char === 'arin' ? 'PILOT: ARIN (CYAN)' : 'PILOT: MIRA (VIOLET)', x3 + 18, y + 175, colW - 36, 32, togglePilot, {
-    col: G.char === 'arin' ? C.cyan : '#ff77cc',
-    sz: 12
+  txt('DEFAULT ASTRONAUT SUIT', x3 + 18, y + 146, 11, C.bone, 'left', F_U, 700);
+  txt('EVA space suit model & telemetry HUD hue', x3 + 18, y + 159, 9.5, C.dim, 'left', F_U, 500);
+  uiButton('ARIN // CYAN', x3 + 18, y + 172, 116, 26, () => setPilotDirect('arin'), {
+    sel: G.char === 'arin',
+    col: C.cyan,
+    sz: 10.5
+  });
+  uiButton('MIRA // VIOLET', x3 + 142, y + 172, 116, 26, () => setPilotDirect('mira'), {
+    sel: G.char === 'mira',
+    col: '#ff77cc',
+    sz: 10.5
   });
 
   // Row 3: Auto-Board Rocket
-  txt('ROCKET BOARDING PROTOCOL', x3 + 18, y + 230, 11, C.bone, 'left', F_U, 700);
-  txt('Automatic boarding when samples are collected', x3 + 18, y + 244, 9.5, C.dim, 'left', F_U, 500);
-  uiButton(SETTINGS.autoBoard ? 'BOARDING: AUTO PROXIMITY' : 'BOARDING: MANUAL KEY [E]', x3 + 18, y + 255, colW - 36, 32, toggleAutoBoard, {
-    col: SETTINGS.autoBoard ? C.green : C.dim,
-    sz: 12
+  txt('ROCKET BOARDING PROTOCOL', x3 + 18, y + 232, 11, C.bone, 'left', F_U, 700);
+  txt('Automatic boarding on proximity or manual', x3 + 18, y + 245, 9.5, C.dim, 'left', F_U, 500);
+  uiButton('AUTO PROXIMITY', x3 + 18, y + 258, 116, 26, () => setAutoBoardDirect(true), {
+    sel: SETTINGS.autoBoard,
+    col: C.green,
+    sz: 10
+  });
+  uiButton('MANUAL KEY [E]', x3 + 142, y + 258, 116, 26, () => setAutoBoardDirect(false), {
+    sel: !SETTINGS.autoBoard,
+    col: C.cyan,
+    sz: 10
   });
   ctx.restore();
 
   // Feedback Notification Banner
   const hasRecentFeedback = settingsFeedback && settingsFeedbackT > 0;
-  const statusMsg = hasRecentFeedback ? ('✔ ' + settingsFeedback) : 'Click any setting to customize · Preferences saved automatically';
+  const statusMsg = hasRecentFeedback ? ('[ TELEMETRY ] ' + settingsFeedback) : 'SELECT ANY PARAMETER TO CALIBRATE · PREFERENCES AUTOSAVED';
   ctx.save();
   ctx.fillStyle = 'rgba(7,10,26,0.92)';
-  rr(W/2 - 240, 434, 480, 24, 6);
+  rr(W/2 - 240, 436, 480, 24, 6);
   ctx.fill();
-  ctx.strokeStyle = hasRecentFeedback ? 'rgba(61,240,255,0.45)' : 'rgba(141,151,196,0.22)';
+  ctx.strokeStyle = hasRecentFeedback ? 'rgba(61,240,255,0.5)' : 'rgba(141,151,196,0.22)';
   ctx.lineWidth = 1;
   ctx.stroke();
-  txt(statusMsg, W/2, 450, 10.5, hasRecentFeedback ? C.cyan : C.dim, 'center', F_U, 600, 1);
+  txt(statusMsg, W/2, 452, 10.5, hasRecentFeedback ? C.cyan : C.dim, 'center', F_U, 600, 1.2);
   ctx.restore();
 
   // ──── Bottom Action Bar ────
-  uiButton('RESTORE DEFAULTS', 50, 470, 180, 36, resetDefaults, {
+  uiButton('RESTORE DEFAULTS', 50, 472, 180, 36, resetDefaults, {
     col: C.dim,
     sz: 11
   });
 
-  uiButton('RESET EXPEDITION DATA', 246, 470, 210, 36, resetExpedition, {
+  uiButton('PURGE EXPEDITION SAVE', 246, 472, 210, 36, resetExpedition, {
     col: C.ember,
     sz: 11
   });
 
-  uiButton('RETURN / SAVE [ESC]', 634, 470, 276, 36, returnFromSettings, {
+  uiButton('CONFIRM & RETURN [ESC]', 634, 472, 276, 36, returnFromSettings, {
     sel: true,
     col: C.cyan,
     sz: 13
@@ -4308,7 +4455,7 @@ function renderPause(){
     resumeGame();
   }, {sel: true});
 
-  uiButton('⚙ SETTINGS', W/2 - 130, H/2 - 6, 260, 36, () => {
+  uiButton('SYSTEM SETTINGS', W/2 - 130, H/2 - 6, 260, 36, () => {
     SFX.click();
     G.lastScene = 'pause';
     G.scene = 'settings';
@@ -4380,11 +4527,25 @@ function renderDead(){
 
 /* ──────── Main Simulation Loop ──────── */
 let lastT = 0;
+let fpsLastTime = 0;
+let fpsFrames = 0;
+
 function frame(ts){
   requestAnimationFrame(frame);
   const dt = Math.min(0.033, (ts - lastT)/1000 || 0);
   lastT = ts;
   G.t += dt;
+
+  fpsFrames++;
+  if(ts - fpsLastTime >= 500){
+    const fps = Math.round((fpsFrames * 1000) / (ts - fpsLastTime));
+    fpsFrames = 0;
+    fpsLastTime = ts;
+    const fpsBadge = document.getElementById('header-telemetry-fps');
+    if(fpsBadge){
+      fpsBadge.textContent = fps + ' FPS · ' + (fps >= 50 ? 'STABLE' : 'CALIBRATING');
+    }
+  }
 
   if(settingsFeedbackT > 0){
     settingsFeedbackT -= dt;
@@ -4392,8 +4553,7 @@ function frame(ts){
   }
 
   if(pressed('mute')){
-    SETTINGS.muted = !SETTINGS.muted;
-    saveSettings();
+    toggleMute();
   }
   if((pressed('pause') || pressed('esc')) && G.scene === 'settings'){
     returnFromSettings();
@@ -4415,24 +4575,21 @@ function frame(ts){
   pq = {};
 }
 
-/* ──────── Pointer Events ──────── */
-function toLogical(e){
+/* ──────── Pointer Events (Zero-Allocation) ──────── */
+function updateLogicalMouse(e){
   const r = cv.getBoundingClientRect();
-  return [ (e.clientX - r.left) * W / r.width, (e.clientY - r.top) * H / r.height ];
+  G.mx = (e.clientX - r.left) * W / r.width;
+  G.my = (e.clientY - r.top) * H / r.height;
 }
-cv.addEventListener('pointermove', e => {
-  const q = toLogical(e);
-  G.mx = q[0]; G.my = q[1];
-});
+cv.addEventListener('pointermove', updateLogicalMouse, {passive: true});
 cv.addEventListener('pointerdown', e => {
   audioInit();
   cv.focus();
-  const q = toLogical(e);
-  G.mx = q[0]; G.my = q[1];
+  updateLogicalMouse(e);
 
   for(let i=UI_BUTTONS.length-1; i>=0; i--){
     const u = UI_BUTTONS[i];
-    if(q[0] >= u.x && q[0] <= u.x + u.w && q[1] >= u.y && q[1] <= u.y + u.h){
+    if(G.mx >= u.x && G.mx <= u.x + u.w && G.my >= u.y && G.my <= u.y + u.h){
       u.fn();
       return;
     }
@@ -4447,6 +4604,36 @@ document.getElementById('fs-btn').addEventListener('click', () => {
     document.exitFullscreen().catch(()=>{});
   }
 });
+
+// Audio Mute Toggle via Header
+function updateAudioBtnIcon(){
+  const audioBtn = document.getElementById('audio-toggle-btn');
+  if(!audioBtn) return;
+  const isMuted = (typeof SETTINGS !== 'undefined' && SETTINGS.muted) || muted || (master && master.gain.value === 0);
+  if(isMuted){
+    audioBtn.classList.remove('active');
+    audioBtn.innerHTML = `<svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+      <line x1="23" y1="9" x2="17" y2="15"></line><line x1="17" y1="9" x2="23" y2="15"></line>
+    </svg>`;
+    audioBtn.title = "Unmute Audio";
+  } else {
+    audioBtn.classList.add('active');
+    audioBtn.innerHTML = `<svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+      <path d="M15.54 8.46a5 5 0 0 1 0 7.07"></path>
+      <path d="M19.07 4.93a10 10 0 0 1 0 14.14"></path>
+    </svg>`;
+    audioBtn.title = "Mute Audio";
+  }
+}
+const audioBtn = document.getElementById('audio-toggle-btn');
+if(audioBtn){
+  audioBtn.addEventListener('click', () => {
+    toggleMute();
+    updateAudioBtnIcon();
+  });
+}
 
 // Settings Toggle via Header
 const setBtn = document.getElementById('settings-btn');
