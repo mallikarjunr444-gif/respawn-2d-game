@@ -860,21 +860,14 @@ function initPlanet(worldIdx){
     kind: 'landing_pad'
   });
 
-  // Departure rocket launch gantry platform at far right
-  PLATFORMS.push({
-    x: cfg.departureRocket.x - 50,
-    y: cfg.departureRocket.y + cfg.departureRocket.h - 10,
-    w: cfg.departureRocket.w + 100,
-    h: 30,
-    kind: 'launch_pad'
-  });
+
 
   // Intermediate exploration platforms
   const platformCount = cfg.movingPlatforms ? 22 : 18;
   for(let q=0; q<platformCount; q++){
     const t = (q + 1) / (platformCount + 1);
     const startX = cfg.landingPad.x + 300;
-    const endX = cfg.departureRocket.x - 300;
+    const endX = cfg.width - 320;
     const px = lerp(startX, endX, t) + (r() - 0.5) * 160;
     const route = q % 3;
     const routeHeight = route === 0 ? 150 + r() * 170 : route === 1 ? 300 + r() * 220 : 520 + r() * 260;
@@ -900,7 +893,7 @@ function initPlanet(worldIdx){
   for(let i=0; i<cfg.mandatoryCount; i++){
     const t = (i + 1) / (cfg.mandatoryCount + 1);
     const startX = cfg.landingPad.x + 320;
-    const endX = cfg.departureRocket.x - 280;
+    const endX = cfg.width - 320;
     const px = lerp(startX, endX, t);
     const plat = PLATFORMS[3 + (i % (PLATFORMS.length - 3))];
     CELLS.push({
@@ -915,7 +908,7 @@ function initPlanet(worldIdx){
   for(let j=0; j<cfg.bonusCount; j++){
     const t = (j + 1) / (cfg.bonusCount + 1);
     const startX = cfg.landingPad.x + 400;
-    const endX = cfg.departureRocket.x - 400;
+    const endX = cfg.width - 400;
     const px = lerp(startX, endX, t) + (r() - 0.5) * 200;
     const plat = PLATFORMS[4 + ((j * 3) % (PLATFORMS.length - 3))];
     ORBS.push({
@@ -1191,20 +1184,11 @@ function drawTerrain(cfg, camX, camY){
       ctx.strokeStyle = C.cyan;
       ctx.lineWidth = 2.5;
       ctx.stroke();
-      txt('▲ LANDING ZONE ▲', px + p.w * 0.5, py + 18, 12, C.cyan, 'center', F_U, 700, 2);
+      txt('▲ ROCKET DOCKING ZONE ▲', px + p.w * 0.5, py + 18, 12, C.cyan, 'center', F_U, 700, 2);
       continue;
     }
 
-    if(p.kind === 'launch_pad'){
-      ctx.fillStyle = '#2a1a44';
-      rr(px, py, p.w, p.h, 6);
-      ctx.fill();
-      ctx.strokeStyle = C.gold;
-      ctx.lineWidth = 2.5;
-      ctx.stroke();
-      txt('★ EXTRACTION GANTRY ★', px + p.w * 0.5, py + 20, 12, C.gold, 'center', F_U, 700, 2);
-      continue;
-    }
+
 
     ctx.fillStyle = p.kind === 'crack' ? '#bdefff' : (p.kind === 'move' ? cfg.accent : terrainColor(cfg));
     ctx.globalAlpha = p.kind === 'crack' ? 0.82 : 0.9;
@@ -1319,25 +1303,6 @@ function drawRocketShip(p, camX, camY, t, scale = 1, isLanded = false){
 
   ctx.restore();
 }
-
-function drawExtractionGantry(cfg, camX, camY){
-  const rk = cfg.departureRocket;
-  const rx = rk.x - camX, ry = rk.y - camY;
-  if(rx < -200 || rx > W+200) return;
-
-  ctx.save();
-  ctx.translate(rx + rk.w * 0.5, ry + rk.h * 0.5);
-
-  // Launch pad support gantry tower (scaffold only - the personal rocket docks here)
-  ctx.strokeStyle = '#445275';
-  ctx.lineWidth = 3;
-  ctx.strokeRect(-55, -rk.h * 0.5, 110, rk.h);
-  for(let i=0; i<4; i++){
-    ctx.beginPath();
-    ctx.moveTo(-55, -rk.h * 0.5 + i*32);
-    ctx.lineTo(55, -rk.h * 0.5 + (i+1)*32);
-    ctx.stroke();
-  }
 
   // Halo pulse indicating extraction point
   const allGot = G.cellsGot >= cfg.mandatoryCount;
@@ -2255,22 +2220,21 @@ function drawHUD(){
     txt(envText, W/2, 58, 11, envColor, 'center', F_U, 700);
   }
 
-  // Top Right: Distance & Radar to Personal Rocket
-  const targetX = G.phase === 'flight' ? cfg.landingPad.x : cfg.departureRocket.x + cfg.departureRocket.w * 0.5;
-  const targetY = G.phase === 'flight' ? cfg.landingPad.y : cfg.departureRocket.y + cfg.departureRocket.h * 0.5;
-  const dx = targetX - PL.x, dy = targetY - PL.y;
+  // Top Right: Distance & Radar to Your Rocket at Landing Pad
+  const rocketX = cfg.landingPad.x;
+  const rocketY = cfg.landingPad.y - 12;
+  const dx = rocketX - PL.x, dy = rocketY - PL.y;
   const dist = Math.hypot(dx, dy);
   const arrow = getArrow(Math.atan2(dy, dx));
 
   let radarText = '';
   if(G.phase === 'flight'){
-    radarText = 'LANDING BEACON: ' + Math.floor(dist) + 'm ' + arrow;
-  } else if(G.personalRocket && G.personalRocket.travel < 1){
-    radarText = 'PERSONAL ROCKET INBOUND: ' + Math.ceil((1 - G.personalRocket.travel) * 8) + 's';
+    radarText = 'LANDING ZONE: ' + Math.floor(dist) + 'm ' + arrow;
   } else if(!allSecured){
-    radarText = 'PERSONAL ROCKET: ' + Math.floor(dist) + 'm ' + arrow + ' [LOCKED]';
+    const remaining = cfg.mandatoryCount - G.cellsGot;
+    radarText = 'YOUR ROCKET: ' + Math.floor(dist) + 'm ' + arrow + ' [' + remaining + ' MORE SAMPLES]';
   } else {
-    radarText = 'PERSONAL ROCKET: ' + Math.floor(dist) + 'm ' + arrow + ' [READY TO BOARD]';
+    radarText = 'YOUR ROCKET: ' + Math.floor(dist) + 'm ' + arrow + ' [READY TO BOARD]';
   }
   txt(radarText, W - 24, 26, 12, allSecured ? C.green : C.bone, 'right', F_U, 700);
 
@@ -2490,7 +2454,7 @@ function updatePlay(dt){
       burst(pad.x, pad.y, 24, C.cyan, 220, 0.7, true);
       G.toast = {
         a: 'ASTRONAUT DEPLOYED',
-        b: 'Your personal rocket is heading to extraction. Collect ' + cfg.mandatoryName + '.',
+        b: 'Explore the planet and collect ' + cfg.mandatoryName + '. Return to your rocket when complete.',
         t: 4.0
       };
     }
@@ -2512,15 +2476,12 @@ function updatePlay(dt){
   // 4. PHASE: PLANET EXPLORATION & OBJECTIVES (Realistic 2D Space Flight & Surface EVA)
   else if(G.phase === 'explore'){
     const ship = G.personalRocket;
-    if(ship){
-      ship.travel = Math.min(1, ship.travel + dt / 8);
-      const travelEase = ship.travel * ship.travel * (3 - 2 * ship.travel);
-      const rk = cfg.departureRocket;
-      ship.x = lerp(cfg.landingPad.x, rk.x + rk.w * 0.5, travelEase);
-      ship.y = lerp(cfg.landingPad.y - 12, rk.y + rk.h * 0.5, travelEase) - Math.sin(ship.travel * Math.PI) * 440;
-      ship.angle = -Math.PI * 0.5 * travelEase;
-      ship.scale = lerp(1.25, 1.55, travelEase);
-      ship.thrusting = ship.travel < 1;
+    if(ship && G.phase === 'explore'){
+      ship.x = cfg.landingPad.x;
+      ship.y = cfg.landingPad.y - 12;
+      ship.angle = 0;
+      ship.scale = 1.25;
+      ship.thrusting = false;
     }
 
     p.coyote = p.onGround ? 0.12 : Math.max(0, p.coyote - dt);
@@ -3007,18 +2968,19 @@ function updatePlay(dt){
       }
     }
 
-    // Board the same personal rocket that landed at the start of this planet
-    const rk = cfg.departureRocket;
-    const distRocket = Math.hypot(p.x - (rk.x + rk.w*0.5), p.y - (rk.y + rk.h*0.5));
+    // Board the same rocket stationed at the landing pad
+    const rocketX = cfg.landingPad.x;
+    const rocketY = cfg.landingPad.y - 12;
+    const distRocket = Math.hypot(p.x - rocketX, p.y - rocketY);
     const allCollected = G.cellsGot >= cfg.mandatoryCount;
 
-    if(distRocket < 90 && G.personalRocket && G.personalRocket.travel >= 1){
+    if(distRocket < 95){
       if(allCollected && (pressed('use') || pressed('thrust') || distRocket < 55)){
         G.phase = 'boarding';
         G.phaseTimer = 0;
         SFX.door();
         G.toast = {
-          a: 'BOARDING PERSONAL ROCKET',
+          a: 'BOARDING ROCKET',
           b: 'Systems pressurized. Engaging orbital ignition...',
           t: 3.5
         };
@@ -3036,12 +2998,12 @@ function updatePlay(dt){
     }
   }
 
-  // 5. PHASE: BOARDING PERSONAL ROCKET
+  // 5. PHASE: BOARDING ROCKET
   else if(G.phase === 'boarding'){
     G.phaseTimer += dt;
     p.vx *= 0.8; p.vy *= 0.8;
-    p.x = lerp(p.x, G.personalRocket.x, dt * 6);
-    p.y = lerp(p.y, G.personalRocket.y, dt * 6);
+    p.x = lerp(p.x, cfg.landingPad.x, dt * 6);
+    p.y = lerp(p.y, cfg.landingPad.y - 12, dt * 6);
     if(G.phaseTimer >= 1.0){
       G.phase = 'takeoff';
       G.phaseTimer = 0;
@@ -3205,8 +3167,7 @@ function renderWorldPlay(){
   for(let k=0; k<ORBS.length; k++) if(!ORBS[k].got) drawEnergyOrb(ORBS[k], G.camX, G.camY, G.t);
   drawWeaponPickups(G.camX, G.camY, G.t);
 
-  // Extraction gantry for the same rocket that brought the player here
-  drawExtractionGantry(cfg, G.camX, G.camY);
+
 
   // Enemies
   drawEnemies(G.camX, G.camY, G.t);
