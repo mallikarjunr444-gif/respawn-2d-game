@@ -27,6 +27,7 @@ var surface_resource_scene = preload("res://scenes/objects/surface_resource.tscn
 var surface_hazard_scene = preload("res://scenes/objects/surface_hazard.tscn")
 var surface_hazard_script = preload("res://scenes/objects/surface_hazard.gd")
 var exit_rocket_scene = preload("res://scenes/objects/exit_rocket.tscn")
+var voidling_scene = preload("res://scenes/enemies/voidling.tscn")
 
 # Hazard Scenes
 var wind_zone_scene = preload("res://scenes/objects/wind_zone.tscn")
