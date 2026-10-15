@@ -1,0 +1,3807 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Space Odyssey">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="format-detection" content="telephone=no">
+<meta name="description" content="Space Odyssey — Continuous planet-to-planet survival adventure across unique planetary environments.">
+<meta name="theme-color" content="#070a1a">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
+<title>Space Odyssey — Planetary Survival Adventure | Orvex Games</title>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ccircle cx='16' cy='16' r='14' fill='%23070a1a' stroke='%233df0ff' stroke-width='2'/%3E%3Ccircle cx='16' cy='16' r='6' fill='%23ff7a2e'/%3E%3Cpath d='M16 2v6M16 24v6M2 16h6M24 16h6' stroke='%233df0ff' stroke-width='2'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400;600;700&family=Syncopate:wght@700&family=Orbitron:wght@400;600;700;900&display=swap">
+<style>
+:root{--void:#050716;--navy:#0d1433;--violet:#3b2a7a;--cyan:#3df0ff;--ember:#ff7a2e;--gold:#ffd166;--green:#3dff88;--bone:#e9eefc;--dim:#8d97c4;
+--display:'Syncopate','Arial Black',sans-serif;--ui:'Chakra Petch','Segoe UI',system-ui,sans-serif;--orbit:'Orbitron',sans-serif;color-scheme:dark}
+*{margin:0;padding:0;box-sizing:border-box}
+
+body{background:var(--void);color:var(--bone);font-family:var(--ui);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;padding:4px 10px;
+background-image:radial-gradient(ellipse 80% 60% at 50% 100%, rgba(59,42,122,.2), transparent),
+radial-gradient(ellipse 60% 40% at 80% 20%, rgba(61,240,255,.08), transparent),
+radial-gradient(ellipse 50% 30% at 20% 30%, rgba(255,122,46,.06), transparent);
+height:100%;height:100dvh;min-height:-webkit-fill-available;overflow:hidden;overscroll-behavior:none;user-select:none;-webkit-user-select:none;touch-action:none}
+
+@keyframes borderPulse{0%,100%{box-shadow:0 0 24px rgba(61,240,255,.1),inset 0 0 20px rgba(0,0,0,.4)}50%{box-shadow:0 0 36px rgba(61,240,255,.22),inset 0 0 20px rgba(0,0,0,.4)}}
+@keyframes loadGlow{0%,100%{text-shadow:0 0 20px rgba(61,240,255,.8),0 0 60px rgba(61,240,255,.4)}50%{text-shadow:0 0 30px rgba(61,240,255,1),0 0 80px rgba(61,240,255,.6)}}
+
+#stage{width:min(100%,calc((100vh - 110px) * 1.7778));width:min(100%,calc((100dvh - 110px) * 1.7778));aspect-ratio:16/9;max-width:100%;
+border:1px solid rgba(61,240,255,.28);border-radius:6px;position:relative;
+animation:borderPulse 4s ease-in-out infinite;background:#000;overflow:hidden}
+
+canvas{width:100%;height:100%;display:block;touch-action:none;background:#000;outline:none;border-radius:5px}
+
+#orvex-header{width:min(100%,calc((100vh - 110px) * 1.7778));width:min(100%,calc((100dvh - 110px) * 1.7778));display:flex;align-items:center;justify-content:space-between;padding:4px 12px;background:rgba(13,20,51,.75);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border:1px solid rgba(61,240,255,.18);border-radius:8px;box-shadow:0 4px 16px rgba(0,0,0,.4);z-index:10}
+.brand{display:flex;align-items:center;gap:8px;font:700 13px var(--display);letter-spacing:2px;color:var(--bone);text-decoration:none}
+.brand b{color:var(--cyan);font-weight:900}
+.brand-glyph{filter:drop-shadow(0 0 6px rgba(61,240,255,.5))}
+.title-pill{font:700 10px var(--ui);letter-spacing:3px;text-transform:uppercase;color:var(--cyan);background:rgba(59,42,122,.35);padding:3px 12px;border-radius:12px;border:1px solid rgba(61,240,255,.2)}
+.actions{display:flex;align-items:center;gap:8px}
+
+.godot-btn{display:flex;align-items:center;gap:6px;padding:3px 10px;background:rgba(71,140,230,.18);border:1px solid rgba(71,140,230,.35);border-radius:6px;color:#8cc4ff;font:600 11px var(--ui);letter-spacing:.5px;text-decoration:none;transition:all .15s}
+.godot-btn:hover{background:rgba(71,140,230,.32);border-color:#478ce6;color:#fff}
+#fs-btn{width:28px;height:28px;background:rgba(61,240,255,.08);border:1px solid rgba(61,240,255,.25);border-radius:6px;color:var(--cyan);font-size:14px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .15s}
+#fs-btn:hover{background:rgba(61,240,255,.2);color:#fff}
+
+#touch{display:none;position:absolute;inset:0;width:auto;justify-content:space-between;align-items:flex-end;gap:10px;padding:max(10px,env(safe-area-inset-top)) max(14px,env(safe-area-inset-right)) max(14px,env(safe-area-inset-bottom)) max(14px,env(safe-area-inset-left));pointer-events:none;z-index:20}
+.pad-left,.pad-center,.pad-right{display:flex;gap:8px;align-items:flex-end;pointer-events:none}
+.pad-right{flex-wrap:wrap;max-width:230px;justify-content:flex-end}
+.dpad{display:grid;grid-template-columns:52px 52px 52px;grid-template-rows:52px 52px 52px;gap:6px;pointer-events:none}
+.dpad .tb[data-k="up"]{grid-column:2;grid-row:1}
+.dpad .tb[data-k="left"]{grid-column:1;grid-row:2}
+.dpad .tb[data-k="right"]{grid-column:3;grid-row:2}
+.dpad .tb[data-k="down"]{grid-column:2;grid-row:3}
+.tb{min-width:52px;height:52px;padding:0 8px;border-radius:12px;border:1px solid rgba(61,240,255,.28);background:rgba(13,20,51,.82);color:var(--bone);font:700 12px var(--ui);letter-spacing:.05em;touch-action:none;user-select:none;-webkit-user-select:none;cursor:pointer;pointer-events:auto;box-shadow:0 8px 18px rgba(0,0,0,.4)}
+.tb:active,.tb.on{background:#16306a;border-color:var(--cyan);color:var(--cyan)}
+.tb-dir{min-width:52px;font-size:16px}
+.tb-thrust{min-width:88px;height:58px;background:rgba(61,240,255,.2);border-color:var(--cyan);color:var(--cyan)}
+.tb-action{background:rgba(255,122,46,.2);border-color:var(--ember);color:var(--ember)}
+
+#shortcuts-bar{width:min(100%,calc((100vh - 110px) * 1.7778));width:min(100%,calc((100dvh - 110px) * 1.7778));display:flex;align-items:center;justify-content:center;gap:6px 10px;padding:3px 10px;background:rgba(13,20,51,.68);border:1px solid rgba(61,240,255,.16);border-radius:6px;font:600 11px var(--ui);color:var(--dim);letter-spacing:.02em;white-space:nowrap;overflow-x:auto;box-shadow:0 2px 10px rgba(0,0,0,.3)}
+.sc-item{display:inline-flex;align-items:center;gap:4px;flex-shrink:0}
+.sc-item kbd{display:inline-block;padding:1px 5px;font:700 10px var(--ui);color:var(--cyan);background:rgba(61,240,255,.12);border:1px solid rgba(61,240,255,.28);border-radius:4px;line-height:1.2}
+.sc-sep{color:rgba(61,240,255,.28);font-size:10px;flex-shrink:0}
+
+@media (pointer:coarse){#shortcuts-bar{display:none}}
+@media (pointer:coarse) and (orientation:landscape){
+  #touch{display:flex}
+  #orvex-header{display:none}
+  body{padding:0;gap:0}
+  #stage{width:100vw;height:100dvh;max-width:none;aspect-ratio:auto;border:0;border-radius:0;animation:none}
+  canvas{border-radius:0}
+}
+
+#rotate-lock{display:none;position:fixed;inset:0;z-index:200;flex-direction:column;align-items:center;justify-content:center;gap:14px;padding:28px;background:radial-gradient(circle at center,#0d1433 0%,#040614 78%);text-align:center}
+#rotate-lock strong{font:800 22px var(--orbit);letter-spacing:.12em;color:#fff}
+#rotate-lock p{max-width:320px;color:var(--dim);font:600 14px var(--ui);line-height:1.45}
+.rotate-glyph{width:72px;height:72px;border:3px solid var(--cyan);border-radius:14px;position:relative;animation:tiltPhone 1.6s ease-in-out infinite}
+.rotate-glyph:after{content:'';position:absolute;left:50%;top:8px;width:10px;height:10px;margin-left:-5px;border-radius:50%;background:var(--cyan)}
+@keyframes tiltPhone{0%,100%{transform:rotate(-18deg)}50%{transform:rotate(72deg)}}
+@media (pointer:coarse) and (orientation:portrait){
+  #rotate-lock{display:flex}
+  #stage,#orvex-header,#shortcuts-bar{display:none !important}
+}
+
+html:fullscreen,html:fullscreen body{width:100vw;height:100vh;background:#040614}
+html:fullscreen body{padding:0;gap:0;display:block}
+html:fullscreen #orvex-header,html:fullscreen #shortcuts-bar{display:none}
+html:fullscreen #stage{width:100vw;height:100vh;max-width:none;aspect-ratio:auto;border:0;border-radius:0;animation:none}
+html:fullscreen canvas{border-radius:0}
+
+#loader{position:absolute;inset:0;background:radial-gradient(circle at center,#0d1433 0%,#040614 75%);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;z-index:99;transition:opacity .5s ease,visibility .5s ease}
+#loader.done{opacity:0;visibility:hidden;pointer-events:none}
+.l-title{font:900 28px var(--orbit);color:#fff;letter-spacing:6px;animation:loadGlow 2.5s ease-in-out infinite}
+.l-title b{color:var(--cyan)}
+.l-sub{font:600 12px var(--ui);color:var(--dim);letter-spacing:3px}
+.l-bar{width:240px;height:4px;background:rgba(255,255,255,.08);border-radius:2px;overflow:hidden;border:1px solid rgba(61,240,255,.25)}
+.l-bar-fill{height:100%;width:0%;background:linear-gradient(90deg,var(--violet),var(--cyan));box-shadow:0 0 12px var(--cyan);transition:width .15s ease}
+.l-text{font:600 11px var(--ui);color:var(--dim);letter-spacing:2px}
+</style>
+</head>
+<body>
+
+<div id="loader">
+  <div class="l-title">SPACE <b>ODYSSEY</b></div>
+  <div class="l-sub">PLANETARY SURVIVAL SYSTEM</div>
+  <div class="l-bar"><div class="l-bar-fill" id="lbar"></div></div>
+  <div class="l-text" id="ltext">Initializing propulsion & navigation...</div>
+  <button id="lretry" onclick="location.reload()" style="display:none;margin-top:14px;padding:8px 20px;background:#3df0ff;color:#040614;font:700 12px 'Chakra Petch',sans-serif;border:none;border-radius:4px;cursor:pointer">RELOAD SYSTEM</button>
+</div>
+
+<div id="rotate-lock" aria-live="polite">
+  <div class="rotate-glyph" aria-hidden="true"></div>
+  <strong>TURN YOUR PHONE</strong>
+  <p>Space Odyssey is landscape-only on mobile. Rotate your device, then use the on-screen pads to fly, jump, and fight.</p>
+</div>
+
+<header id="orvex-header">
+  <a class="brand" href="#" onclick="return false;">
+    <svg class="brand-glyph" viewBox="0 0 24 24" width="16" height="16" fill="none"><circle cx="12" cy="12" r="10" stroke="#3df0ff" stroke-width="2"/><circle cx="12" cy="12" r="4" fill="#ff7a2e"/></svg>
+    <span>SPACE <b>ODYSSEY</b></span>
+  </a>
+  <div class="title-pill" id="header-planet-title">INTERPLANETARY ODYSSEY</div>
+  <div class="actions">
+    <button id="fs-btn" aria-label="Toggle Fullscreen" title="Toggle Fullscreen">⛶</button>
+  </div>
+</header>
+
+<div id="stage">
+  <canvas id="c" width="960" height="540" tabindex="0" aria-label="Space Odyssey"></canvas>
+  <div id="touch">
+    <div class="pad-left">
+      <div class="dpad">
+        <button class="tb tb-dir" data-k="up" aria-label="Up">▲</button>
+        <button class="tb tb-dir" data-k="left" aria-label="Left">◀</button>
+        <button class="tb tb-dir" data-k="right" aria-label="Right">▶</button>
+        <button class="tb tb-dir" data-k="down" aria-label="Down">▼</button>
+      </div>
+    </div>
+    <div class="pad-center">
+      <button class="tb tb-thrust" data-k="thrust">THRUST</button>
+    </div>
+    <div class="pad-right">
+      <button class="tb" data-k="boost">DASH</button>
+      <button class="tb tb-action" data-k="use">BOARD</button>
+      <button class="tb" data-k="atk">SWORD</button>
+      <button class="tb" data-k="shoot">BLAST</button>
+      <button class="tb" data-k="shield">SHIELD</button>
+      <button class="tb" data-k="pause">PAUSE</button>
+    </div>
+  </div>
+</div>
+
+<div id="shortcuts-bar" aria-label="Keyboard Shortcuts">
+  <span class="sc-item"><kbd>A</kbd><kbd>D</kbd> Move</span>
+  <span class="sc-sep">·</span>
+  <span class="sc-item"><kbd>W</kbd><kbd>SPACE</kbd> Jump / Thrust</span>
+  <span class="sc-sep">·</span>
+  <span class="sc-item"><kbd>S</kbd> Brake</span>
+  <span class="sc-sep">·</span>
+  <span class="sc-item"><kbd>SHIFT</kbd> Dash</span>
+  <span class="sc-sep">·</span>
+  <span class="sc-item"><kbd>J</kbd> Sword</span>
+  <span class="sc-sep">·</span>
+  <span class="sc-item"><kbd>K</kbd> Blaster</span>
+  <span class="sc-sep">·</span>
+  <span class="sc-item"><kbd>Q</kbd> Shield</span>
+  <span class="sc-sep">·</span>
+  <span class="sc-item"><kbd>E</kbd> Board Rocket</span>
+  <span class="sc-sep">·</span>
+  <span class="sc-item"><kbd>P</kbd> Pause</span>
+  <span class="sc-sep">·</span>
+  <span class="sc-item"><kbd>R</kbd> Retry</span>
+</div>
+
+<script>
+(()=>{
+'use strict';
+
+const W = 960, H = 540;
+const C = {
+  void: '#040614', navy: '#0b1432', cyan: '#3df0ff', ember: '#ff7a2e',
+  gold: '#ffd166', green: '#3dff88', bone: '#eaf0fc', dim: '#8e98c7',
+  red: '#ff3d5a', purple: '#ba68f8', teal: '#62ffd1', ice: '#6be7ff', toxic: '#b5ff40'
+};
+const F_D = "'Syncopate','Arial Black',sans-serif", F_U = "'Chakra Petch','Segoe UI',sans-serif", F_O = "'Orbitron',sans-serif";
+
+const cv = document.getElementById('c'), ctx = cv.getContext('2d');
+function fit(){
+  const r = Math.min(window.devicePixelRatio||1, 2);
+  const w = cv.clientWidth || W;
+  cv.width = Math.round(w * r);
+  cv.height = Math.round(w * r * H / W);
+}
+addEventListener('resize', fit);
+fit();
+
+const clamp = (v,a,b) => Math.max(a, Math.min(b,v));
+const lerp = (a,b,t) => a + (b-a)*t;
+const mod = (a,n) => ((a%n)+n)%n;
+
+/* ──────── Surface Y-Height Synchronizer ──────── */
+function getSurfaceY(wx, cfg){
+  if(!cfg) return 1500;
+  const pad = cfg.landingPad;
+  const wave = Math.sin(wx * 0.006) * 20 + Math.sin(wx * 0.016) * 8;
+  if(pad){
+    const distFromPad = Math.abs(wx - pad.x);
+    // Directly around the landing pad (within 140px), flatten terrain smoothly so pad and rocket sit cleanly on bedrock
+    const blend = clamp((distFromPad - 90) / 110, 0, 1);
+    return cfg.groundY + wave * blend;
+  }
+  return cfg.groundY + wave;
+}
+
+function rng(seed){
+  return function(){
+    seed |= 0; seed = seed + 0x6D2B79F5 | 0;
+    let t = Math.imul(seed ^ seed >>> 15, 1 | seed);
+    t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t;
+    return ((t ^ t >>> 14) >>> 0) / 4294967296;
+  };
+}
+function rr(x,y,w,h,r){
+  ctx.beginPath();
+  if(ctx.roundRect) ctx.roundRect(x,y,w,h,r);
+  else ctx.rect(x,y,w,h);
+}
+function txt(s,x,y,size,col,align,font,weight,ls){
+  ctx.font = (weight||600) + ' ' + size + 'px ' + (font||F_U);
+  ctx.fillStyle = col;
+  ctx.textAlign = align || 'left';
+  ctx.textBaseline = 'alphabetic';
+  try{ ctx.letterSpacing = (ls||0) + 'px'; }catch(e){}
+  ctx.fillText(s, x, y);
+  try{ ctx.letterSpacing = '0px'; }catch(e){}
+}
+function store(k,v){
+  try{
+    if(v === undefined) return JSON.parse(localStorage.getItem(k)||'null');
+    localStorage.setItem(k, JSON.stringify(v));
+  }catch(e){ return null; }
+}
+
+/* ──────── Full Asset Image Loader ──────── */
+const ASSET_IMAGES = {};
+[
+  'assets/planets/fractured_moon.svg',
+  'assets/planets/aether_7.svg',
+  'assets/planets/cinder_moon.svg',
+  'assets/planets/cryos.svg',
+  'assets/planets/vortex_prime.svg',
+  'assets/planets/earth.svg',
+  'assets/backgrounds/world1_fractured_moon.svg',
+  'assets/backgrounds/world2_aether7.svg',
+  'assets/backgrounds/world3_cinder_moon.svg',
+  'assets/backgrounds/world4_cryos.svg',
+  'assets/backgrounds/world5_vortex_prime.svg',
+  'assets/backgrounds/world6_earth.svg',
+  'assets/objects/rocket_ship.svg',
+  'assets/objects/health_pack.svg',
+  'assets/enemies/voidling.svg',
+  'assets/enemies/guardian_aether_sentinel.svg',
+  'assets/enemies/guardian_vortex.svg',
+  'assets/characters/arin_male.svg',
+  'assets/characters/mira_female.svg',
+  'assets/objects/crystal.svg',
+  'assets/objects/meteor.svg',
+  'assets/objects/asteroid.svg',
+  'assets/weapons/energy_sword.svg',
+  'assets/weapons/plasma_blaster.svg',
+  'assets/weapons/phase_shield.svg',
+  'assets/weapons/gravity_lance.svg'
+].forEach(src => {
+  const img = new Image();
+  img.src = src;
+  ASSET_IMAGES[src] = img;
+});
+
+/* ──────── Procedural Sci-Fi Synthesizer ──────── */
+let AC = null, master = null, thrusterGain = null, thrusterOsc = null, muted = false;
+function audioInit(){
+  if(AC) return;
+  try{
+    AC = new (window.AudioContext || window.webkitAudioContext)();
+    master = AC.createGain();
+    master.gain.value = muted ? 0 : 0.6;
+    master.connect(AC.destination);
+
+    thrusterOsc = AC.createOscillator();
+    const lp = AC.createBiquadFilter();
+    thrusterGain = AC.createGain();
+    thrusterOsc.type = 'triangle';
+    thrusterOsc.frequency.value = 52;
+    lp.type = 'lowpass';
+    lp.frequency.value = 170;
+    thrusterGain.gain.value = 0.0001;
+    thrusterOsc.connect(lp);
+    lp.connect(thrusterGain);
+    thrusterGain.connect(master);
+    thrusterOsc.start();
+  }catch(e){ AC = null; }
+}
+function setThrusterRumble(active){
+  if(!AC || !thrusterGain) return;
+  const target = active ? 0.09 : 0.0001;
+  thrusterGain.gain.setTargetAtTime(target, AC.currentTime, 0.05);
+}
+function tone(f,d,type,v,slide){
+  if(!AC || muted) return;
+  try{
+    const t = AC.currentTime, o = AC.createOscillator(), g = AC.createGain();
+    o.type = type || 'sine';
+    o.frequency.setValueAtTime(f, t);
+    if(slide) o.frequency.exponentialRampToValueAtTime(Math.max(20, f * slide), t + d);
+    g.gain.setValueAtTime(v || 0.15, t);
+    g.gain.exponentialRampToValueAtTime(0.0001, t + d);
+    o.connect(g); g.connect(master);
+    o.start(t); o.stop(t + d + 0.02);
+  }catch(e){}
+}
+function noise(d,v,fc){
+  if(!AC || muted) return;
+  try{
+    const n = Math.floor(AC.sampleRate * d), b = AC.createBuffer(1, n, AC.sampleRate), a = b.getChannelData(0);
+    for(let i=0; i<n; i++) a[i] = (Math.random()*2 - 1) * (1 - i/n);
+    const s = AC.createBufferSource(); s.buffer = b;
+    const f = AC.createBiquadFilter(); f.type = 'bandpass'; f.frequency.value = fc || 800;
+    const g = AC.createGain(); g.gain.value = v || 0.16;
+    s.connect(f); f.connect(g); g.connect(master);
+    s.start();
+  }catch(e){}
+}
+const SFX = {
+  boost(){ noise(0.25, 0.2, 1200); tone(140, 0.25, 'sawtooth', 0.14, 2.5); },
+  fuel(){ tone(580, 0.1, 'sine', 0.14, 1.4); setTimeout(()=>tone(880, 0.16, 'sine', 0.14, 1.2), 65); },
+  heal(){ tone(440, 0.12, 'sine', 0.16, 1.4); setTimeout(()=>tone(660, 0.14, 'triangle', 0.18, 1.3), 70); setTimeout(()=>tone(880, 0.22, 'sine', 0.2), 140); },
+  orb(){ tone(660, 0.12, 'triangle', 0.16, 1.3); setTimeout(()=>tone(990, 0.18, 'sine', 0.16, 1.5), 80); setTimeout(()=>tone(1320, 0.22, 'sine', 0.16), 160); },
+  warn(){ tone(480, 0.08, 'square', 0.12); setTimeout(()=>tone(380, 0.1, 'square', 0.12), 85); },
+  warp(){ noise(0.8, 0.35, 320); tone(90, 0.7, 'sine', 0.28, 6.5); },
+  hit(){ tone(180, 0.14, 'sawtooth', 0.15, 0.5); noise(0.1, 0.15, 500); },
+  boom(){ noise(0.65, 0.32, 220); tone(60, 0.55, 'sine', 0.26, 0.3); },
+  click(){ tone(540, 0.04, 'square', 0.06); },
+  sword(){ noise(0.14, 0.22, 1600); tone(680, 0.12, 'sawtooth', 0.18, 0.35); },
+  blaster(){ tone(920, 0.08, 'sawtooth', 0.15, 0.25); tone(460, 0.11, 'square', 0.09, 0.5); },
+  laser(){ tone(1500, 0.12, 'sawtooth', 0.13, 0.55); noise(0.12, 0.1, 2400); },
+  enemyAttack(){ tone(260, 0.12, 'square', 0.1, 1.8); noise(0.08, 0.08, 900); },
+  enemyHit(){ tone(210, 0.08, 'sawtooth', 0.12, 0.7); noise(0.06, 0.08, 520); },
+  enemyDefeat(){ noise(0.18, 0.16, 700); tone(520, 0.2, 'triangle', 0.14, 0.35); },
+  weapon(){ tone(740, 0.1, 'triangle', 0.15, 1.6); setTimeout(()=>tone(1180, 0.18, 'sine', 0.16, 1.2), 80); },
+  rock(){ noise(0.22, 0.2, 180); tone(95, 0.18, 'sawtooth', 0.16, 0.45); },
+  shield(){ tone(360, 0.22, 'sine', 0.14, 2.2); noise(0.12, 0.09, 1600); },
+  hostile(){ tone(120, 0.16, 'square', 0.14, 0.55); noise(0.1, 0.12, 300); },
+  land(){ tone(130, 0.3, 'sine', 0.25, 0.4); noise(0.35, 0.2, 450); },
+  takeoff(){ noise(0.95, 0.38, 260); tone(75, 0.85, 'sawtooth', 0.28, 3.5); },
+  door(){ tone(340, 0.14, 'sine', 0.12, 1.5); noise(0.18, 0.1, 950); },
+  resource(){ tone(520, 0.12, 'sine', 0.16, 1.4); setTimeout(()=>tone(780, 0.16, 'sine', 0.16, 1.3), 80); setTimeout(()=>tone(1100, 0.22, 'triangle', 0.18), 160); },
+  rcs(){ noise(0.09, 0.08, 2200); tone(85, 0.08, 'sine', 0.06); }
+};
+
+/* ──────── Input System ──────── */
+const MAP = {
+  arrowleft: ['left'], a: ['left'],
+  arrowright: ['right'], d: ['right'],
+  arrowup: ['up', 'thrust'], w: ['up', 'thrust'],
+  arrowdown: ['down'], s: ['down'],
+  ' ': ['thrust'],
+  shift: ['boost'],
+  e: ['use'], enter: ['use', 'enter'],
+  q: ['shield'],
+  j: ['atk'], x: ['atk'],
+  k: ['shoot'], z: ['shoot'],
+  p: ['pause'], escape: ['pause', 'esc'],
+  m: ['mute'], r: ['retry']
+};
+let held = {}, pq = {};
+const pressed = a => !!pq[a];
+function press(a){ if(!held[a]) pq[a]=true; held[a]=true; }
+function release(a){ held[a]=false; }
+
+addEventListener('keydown', e => {
+  const k = MAP[e.key.toLowerCase()];
+  if(!k) return;
+  if(['arrowleft','arrowright','arrowup','arrowdown',' '].includes(e.key.toLowerCase())) e.preventDefault();
+  audioInit();
+  if(!e.repeat) k.forEach(press);
+});
+addEventListener('keyup', e => {
+  const k = MAP[e.key.toLowerCase()];
+  if(k) k.forEach(release);
+});
+addEventListener('blur', () => { held={}; });
+
+document.querySelectorAll('.tb').forEach(b => {
+  const a = b.dataset.k;
+  b.addEventListener('pointerdown', e => {
+    e.preventDefault();
+    try{ b.setPointerCapture(e.pointerId); }catch(err){}
+    audioInit();
+    press(a);
+    b.classList.add('on');
+  });
+  const onUp = (e) => {
+    try{ b.releasePointerCapture(e.pointerId); }catch(err){}
+    release(a);
+    b.classList.remove('on');
+  };
+  b.addEventListener('pointerup', onUp);
+  b.addEventListener('pointercancel', onUp);
+});
+
+cv.addEventListener('mousedown', e => {
+  audioInit();
+  if(e.button === 0) press('atk');
+  else if(e.button === 2) press('shoot');
+});
+cv.addEventListener('mouseup', e => {
+  if(e.button === 0) release('atk');
+  else if(e.button === 2) release('shoot');
+});
+cv.addEventListener('contextmenu', e => e.preventDefault());
+
+['touchstart','touchend','pointerdown'].forEach(ev => {
+  window.addEventListener(ev, () => {
+    if(matchMedia('(pointer:coarse)').matches) requestLandscape();
+    if(AC && AC.state==='suspended') AC.resume().catch(()=>{});
+    else if(!AC) audioInit();
+  }, {passive:true});
+});
+
+/* ──────── Particle & Visual FX System ──────── */
+const P = [];
+function spawn(x,y,vx,vy,life,size,col,grav,add){
+  if(P.length > 950) P.shift();
+  P.push({x,y,vx,vy,life,max:life,size,col,grav:grav||0,add:!!add,ox:x,oy:y});
+}
+function burst(x,y,n,col,spd,life,add){
+  for(let i=0;i<n;i++){
+    const a = Math.random()*6.283, s = spd * (0.3 + Math.random()*0.7);
+    spawn(x,y,Math.cos(a)*s, Math.sin(a)*s, life*(0.5+Math.random()*0.5), 2+Math.random()*3, col, 0, add);
+  }
+}
+function updFx(dt){
+  for(let i=P.length-1;i>=0;i--){
+    const p = P[i];
+    p.life -= dt;
+    if(p.life <= 0){ P.splice(i,1); continue; }
+    p.ox = p.x; p.oy = p.y;
+    p.vy += p.grav * dt;
+    p.x += p.vx * dt;
+    p.y += p.vy * dt;
+  }
+}
+function drawFx(camX, camY){
+  ctx.save();
+  for(const p of P){
+    const a = clamp(p.life / p.max, 0, 1);
+    ctx.globalAlpha = a * (p.add ? 0.9 : 1);
+    ctx.globalCompositeOperation = p.add ? 'lighter' : 'source-over';
+    ctx.fillStyle = p.col;
+    ctx.beginPath();
+    ctx.arc(p.x - camX, p.y - camY, p.size * clamp(p.life / p.max, 0.25, 1), 0, 6.283);
+    ctx.fill();
+  }
+  ctx.globalAlpha = 1;
+  ctx.globalCompositeOperation = 'source-over';
+  ctx.restore();
+}
+
+/* ═════════════════════════════════════════════════════════════════
+   SPACE ODYSSEY — REUSABLE PLANETARY CONFIGURATION SYSTEM
+   Preserves original 6 existing planets & assets in the repository.
+   Maps each to genuine gameplay, physics, hazards, and missions.
+   ═════════════════════════════════════════════════════════════════ */
+const PLANETS = [
+  {
+    id: 'fractured_moon',
+    name: 'FRACTURED MOON',
+    type: 'ALIEN GRAVITY PLANET',
+    sub: 'Gravitational anomaly fields. Collect Ancient Artifacts across lunar ruins.',
+    width: 5300, height: 1950, groundY: 1560,
+    sky: ['#07051a', '#24104d'], accent: '#ba68f8', starCol: '#d7c4ff',
+    planetArt: 'assets/planets/fractured_moon.svg',
+    bgArt: 'assets/backgrounds/world1_fractured_moon.svg',
+    enemyType: 'voidling',
+    attackStyle: 'gravity_rock',
+    hasHole: true, holePos: {x: 180, y: 1240}, holePullR: 1250, holeForce: 190, holeKillR: 110,
+    gravity: 780, friction: 0.82, airDrag: 0.985, wind: {x: 0, y: 0},
+    mandatoryName: 'Ancient Artifacts', mandatoryCount: 7,
+    bonusName: 'Alien Energy Cores', bonusCount: 5,
+    gravityZones: 5, movingPlatforms: 5, enemies: 5,
+    landingPad: {x: 650, y: 1530, w: 220, h: 22},
+    rocketStart: {x: 200, y: 480, vx: 200, vy: 40, angle: 0.22},
+    departureRocket: {x: 4950, y: 1500, w: 90, h: 140}
+  },
+  {
+    id: 'aether_7',
+    name: 'AETHER-7',
+    type: 'FLOATING SKY PLANET',
+    sub: 'Floating cloud plateaus and powerful updrafts. Collect Atmospheric Crystals.',
+    width: 5800, height: 2200, groundY: 1820,
+    sky: ['#041429', '#17606a'], accent: '#62ffd1', starCol: '#c4fff4',
+    planetArt: 'assets/planets/aether_7.svg',
+    bgArt: 'assets/backgrounds/world2_aether7.svg',
+    enemyType: 'sentinel',
+    attackStyle: 'sky_shard',
+    gravity: 700, friction: 0.86, airDrag: 0.99, wind: {x: 35, y: 0},
+    mandatoryName: 'Atmospheric Crystals', mandatoryCount: 8,
+    bonusName: 'Navigation Modules', bonusCount: 6,
+    updrafts: 6, downdrafts: 2, movingPlatforms: 8, enemies: 4,
+    landingPad: {x: 650, y: 1790, w: 220, h: 22},
+    rocketStart: {x: 220, y: 550, vx: 210, vy: 45, angle: 0.2},
+    departureRocket: {x: 5450, y: 1120, w: 90, h: 140}
+  },
+  {
+    id: 'cinder_moon',
+    name: 'CINDER MOON',
+    type: 'VOLCANIC PLANET',
+    sub: 'Boiling lava trenches, fire jets, and falling hot rocks. Collect Thermal Cores.',
+    width: 5600, height: 2000, groundY: 1600,
+    sky: ['#1b0602', '#5c1707'], accent: '#ff7a2e', starCol: '#ffd1a4',
+    planetArt: 'assets/planets/cinder_moon.svg',
+    bgArt: 'assets/backgrounds/world3_cinder_moon.svg',
+    gravity: 920, friction: 0.83, airDrag: 0.982, wind: {x: 0, y: 0},
+    mandatoryName: 'Thermal Cores', mandatoryCount: 8,
+    attackStyle: 'gravity_rock',
+    bonusName: 'Rare Minerals', bonusCount: 5,
+    lavaPits: 7, fireJets: 8, heatZones: 6, fallingRocks: true, debris: 12,
+    landingPad: {x: 650, y: 1570, w: 220, h: 22},
+    rocketStart: {x: 200, y: 520, vx: 200, vy: 50, angle: 0.22},
+    departureRocket: {x: 5250, y: 1540, w: 90, h: 140}
+  },
+  {
+    id: 'cryos',
+    name: 'CRYOS',
+    type: 'FROZEN PLANET',
+    sub: 'Low-friction ice caves, cracking platforms, and sub-zero gusts. Collect Frozen Samples.',
+    width: 5700, height: 2050, groundY: 1640,
+    sky: ['#03122c', '#0b4d75'], accent: '#6be7ff', starCol: '#d7fbff',
+    planetArt: 'assets/planets/cryos.svg',
+    bgArt: 'assets/backgrounds/world4_cryos.svg',
+    gravity: 750, friction: 0.24, airDrag: 0.994, wind: {x: -70, y: 0},
+    mandatoryName: 'Frozen Samples', mandatoryCount: 9,
+    attackStyle: 'ice_shard',
+    bonusName: 'Cryo Energy Cells', bonusCount: 5,
+    iceGusts: 6, crackingPlatforms: 9, enemies: 4,
+    landingPad: {x: 650, y: 1610, w: 220, h: 22},
+    rocketStart: {x: 200, y: 540, vx: 200, vy: 45, angle: 0.22},
+    departureRocket: {x: 5350, y: 1580, w: 90, h: 140}
+  },
+  {
+    id: 'vortex_prime',
+    name: 'VORTEX PRIME',
+    type: 'TOXIC PLANET',
+    sub: 'Corrosive poison clouds and acid pools. Manage suit oxygen. Collect Scientific Samples.',
+    width: 5900, height: 2100, groundY: 1660,
+    sky: ['#07100e', '#224219'], accent: '#b5ff40', starCol: '#eaffc7',
+    planetArt: 'assets/planets/vortex_prime.svg',
+    bgArt: 'assets/backgrounds/world5_vortex_prime.svg',
+    enemyType: 'vortex',
+    attackStyle: 'toxic_glob',
+    gravity: 830, friction: 0.78, airDrag: 0.978, wind: {x: -110, y: 0},
+    mandatoryName: 'Scientific Samples', mandatoryCount: 9,
+    bonusName: 'Rare Toxic Minerals', bonusCount: 5,
+    oxygenDrain: 2.6, safeZones: 5, acidZones: 7, enemies: 5,
+    landingPad: {x: 650, y: 1630, w: 220, h: 22},
+    rocketStart: {x: 200, y: 550, vx: 200, vy: 45, angle: 0.22},
+    departureRocket: {x: 5550, y: 1600, w: 90, h: 140}
+  },
+  {
+    id: 'earth',
+    name: 'EARTH',
+    type: 'WIND PLANET & EXTRACTION BASE',
+    sub: 'Atmospheric re-entry gale winds and dust storm buffeting. Collect Energy Crystals.',
+    width: 5300, height: 1900, groundY: 1500,
+    sky: ['#031633', '#0b4c94'], accent: '#4fd3ff', starCol: '#e8fbff',
+    planetArt: 'assets/planets/earth.svg',
+    bgArt: 'assets/backgrounds/world6_earth.svg',
+    gravity: 870, friction: 0.88, airDrag: 0.985, wind: {x: 165, y: 0},
+    mandatoryName: 'Energy Crystals', mandatoryCount: 6,
+    bonusName: 'Fuel Reserves', bonusCount: 8,
+      dustStorms: true, windBuffet: true,
+    attackStyle: 'storm_bolt',
+    landingPad: {x: 650, y: 1470, w: 220, h: 22},
+    rocketStart: {x: 200, y: 500, vx: 200, vy: 40, angle: 0.22},
+    departureRocket: {x: 4950, y: 1440, w: 90, h: 140}
+  }
+];
+
+const ENDLESS_PLANET_NAMES = [
+  'NOVA REACH', 'UMBRA GARDENS', 'RADIANT VAULT', 'THUNDERWILD',
+  'GLASS HORIZON', 'ASHEN CROWN', 'TIDAL FORGE', 'MIRROR DEEP'
+];
+const ENDLESS_PLANET_TYPES = [
+  'CRYSTAL FRONTIER', 'NEBULA JUNGLE', 'SOLAR FORGE', 'ELECTRIC STORM WORLD',
+  'REFRACTION DESERT', 'VOLCANIC GRAVEYARD', 'TIDAL GRAVITY WORLD', 'VOID ICE CAVERN'
+];
+const ENDLESS_ENEMIES = [
+  'swarm', 'warden', 'stalker', 'leech', 'prism', 'stormcaller', 'burrower', 'mirror'
+];
+const ENDLESS_ATTACKS = [
+  'crystal_shard', 'acid_glob', 'gravity_rock', 'storm_bolt',
+  'mirror_beam', 'gravity_rock', 'gravity_rock', 'ice_shard'
+];
+const ENDLESS_PALETTES = [
+  ['#071b2b', '#124d58', '#62ffd1'], ['#120c2a', '#3d185f', '#ff6bd6'],
+  ['#241006', '#713117', '#ffd166'], ['#081b24', '#185d70', '#5ce1ff'],
+  ['#171326', '#49387d', '#d8b4ff'], ['#250803', '#7b2412', '#ff7a2e'],
+  ['#061b1b', '#12625c', '#7dffd8'], ['#08102a', '#1c2b69', '#8fb7ff']
+];
+
+function createEndlessPlanet(index){
+  const depth = Math.max(1, index - PLANETS.length + 1);
+  const slot = (depth - 1) % ENDLESS_PLANET_NAMES.length;
+  const cycle = Math.floor((depth - 1) / ENDLESS_PLANET_NAMES.length);
+  const palette = ENDLESS_PALETTES[slot];
+  const width = 5600 + Math.min(2200, cycle * 260) + (slot % 3) * 180;
+  const groundY = 1450 + (slot % 4) * 90;
+  const enemyType = ENDLESS_ENEMIES[slot];
+  return {
+    id: 'endless_' + depth,
+    name: ENDLESS_PLANET_NAMES[slot] + ' ' + (cycle + 1),
+    type: ENDLESS_PLANET_TYPES[slot],
+    sub: 'Procedural frontier sector ' + depth + '. Recover the signal core and reach extraction.',
+    width, height: groundY + 430, groundY,
+    sky: [palette[0], palette[1]], accent: palette[2], starCol: '#e8fbff',
+    planetArt: 'assets/planets/fractured_moon.svg',
+    bgArt: 'assets/backgrounds/world1_fractured_moon.svg',
+    enemyType,
+    attackStyle: ENDLESS_ATTACKS[slot],
+    gravity: 650 + (slot * 47) % 330,
+    friction: Math.max(0.3, 0.9 - (slot % 4) * 0.12),
+    airDrag: 0.982 + (slot % 3) * 0.004,
+    wind: {x: (slot % 2 ? -1 : 1) * (35 + (slot % 4) * 28), y: slot === 3 ? -35 : 0},
+    mandatoryName: ['Signal Cores', 'Lumen Seeds', 'Solar Relays', 'Storm Keys'][slot % 4],
+    mandatoryCount: 7 + Math.min(6, cycle + slot % 4),
+    bonusName: 'Frontier Relics', bonusCount: 5 + (slot % 4),
+    gravityZones: slot % 3 === 0 ? 4 + cycle : 0,
+    updrafts: slot % 3 === 1 ? 4 + (cycle % 3) : 0,
+    heatZones: slot === 2 ? 5 + cycle : 0,
+    acidZones: slot === 1 ? 4 + cycle : 0,
+    dustStorms: slot === 4,
+    lavaPits: slot === 5 ? 5 + cycle : 0,
+    iceGusts: slot === 7 ? 5 + cycle : 0,
+    enemies: 5 + Math.min(7, cycle + slot % 3),
+    debris: 8 + cycle * 2,
+    landingPad: {x: 620 + (slot % 4) * 35, y: groundY - 30, w: 220, h: 22},
+    rocketStart: {x: 170 + (slot % 3) * 30, y: 420 + (slot % 4) * 38, vx: 190 + (slot % 3) * 12, vy: 35, angle: 0.2},
+    departureRocket: {x: width - 430 - (slot % 3) * 80, y: groundY - 60 - (slot % 4) * 110, w: 90, h: 140},
+    endlessDepth: depth
+  };
+}
+
+function getPlanetConfig(index){
+  return PLANETS[index] || createEndlessPlanet(index);
+}
+
+function getEnemyRoster(cfg){
+  if(cfg.endlessDepth){
+    const rosters = [
+      ['swarm', 'stalker', 'prism'],
+      ['leech', 'mirror', 'stormcaller'],
+      ['burrower', 'stalker', 'swarm'],
+      ['stormcaller', 'prism', 'mirror'],
+      ['mirror', 'leech', 'stalker'],
+      ['burrower', 'swarm', 'prism'],
+      ['stalker', 'stormcaller', 'leech'],
+      ['mirror', 'burrower', 'stormcaller']
+    ];
+    return rosters[(cfg.endlessDepth - 1) % rosters.length];
+  }
+  const rosters = {
+    fractured_moon: ['voidling', 'stalker', 'prism'],
+    aether_7: ['sentinel', 'swarm', 'stormcaller'],
+    cinder_moon: ['burrower', 'stalker', 'voidling'],
+    cryos: ['sentinel', 'mirror', 'swarm'],
+    vortex_prime: ['vortex', 'leech', 'prism'],
+    earth: ['sentinel', 'stormcaller', 'stalker']
+  };
+  return rosters[cfg.id] || [cfg.enemyType || 'voidling'];
+}
+
+function isRocketSafeZone(x, y, cfg){
+  if(!cfg) return false;
+  if(G.personalRocket){
+    const d = Math.hypot(x - G.personalRocket.x, y - G.personalRocket.y);
+    if(d < 300) return true;
+  }
+  if(cfg.landingPad){
+    const pad = cfg.landingPad;
+    if(Math.hypot(x - pad.x, y - (pad.y - 18)) < 300) return true;
+  }
+  return false;
+}
+
+/* ──────── Global Game State ──────── */
+const G = {
+  scene: 'title', // title, play, pause, victory, dead
+  phase: 'flight', // flight -> landing -> exit -> explore -> boarding -> takeoff -> warp
+  worldIdx: 0,
+  char: 'arin', // arin (cyan) or mira (violet)
+  credits: 0,
+  bestScores: {},
+
+  // Upgrades
+  tankLv: 0,
+  thrustLv: 0,
+  effLv: 0,
+
+  // Runtime
+  fuel: 100,
+  hp: 3,
+  score: 0,
+  cellsGot: 0,
+  orbsGot: 0,
+  t: 0,
+  shake: 0,
+  toast: null,
+
+  // Camera
+  camX: 0,
+  camY: 0,
+
+  // Combat & abilities
+  hasSword: false,
+  hasBlaster: false,
+  hasShield: false,
+  hasLaser: false,
+  laserT: 0,
+  shieldT: 0,
+  shieldCd: 0,
+
+  phaseTimer: 0,
+  totalPlayTime: 0,
+  endless: false,
+  endlessDepth: 0,
+  personalRocket: null,
+  savedRun: null,
+  missionStats: {samples: 0, orbs: 0, enemies: 0, worlds: 0},
+  missionClaimed: {},
+
+  mx: -1, my: -1
+};
+
+const saved = store('space_odyssey_save_v2');
+if(saved){
+  if(saved.credits) G.credits = saved.credits;
+  if(saved.bestScores) G.bestScores = saved.bestScores;
+  if(saved.tankLv) G.tankLv = saved.tankLv;
+  if(saved.thrustLv) G.thrustLv = saved.thrustLv;
+  if(saved.effLv) G.effLv = saved.effLv;
+  if(saved.run) G.savedRun = saved.run;
+  if(saved.missionStats) G.missionStats = Object.assign(G.missionStats, saved.missionStats);
+  if(saved.missionClaimed) G.missionClaimed = saved.missionClaimed;
+  if(saved.run && saved.run.score) G.score = saved.run.score;
+}
+function saveData(){
+  store('space_odyssey_save_v2', {
+    credits: G.credits,
+    bestScores: G.bestScores,
+    tankLv: G.tankLv,
+    thrustLv: G.thrustLv,
+    effLv: G.effLv,
+    missionStats: G.missionStats,
+    missionClaimed: G.missionClaimed,
+    run: G.savedRun
+  });
+}
+
+const MISSIONS = [
+  {id: 'sample_runner', name: 'SAMPLE RUNNER', desc: 'Secure research samples across the frontier.', stat: 'samples', target: 25, reward: 150, col: C.cyan},
+  {id: 'relic_hunter', name: 'RELIC HUNTER', desc: 'Recover bonus energy orbs from risky routes.', stat: 'orbs', target: 15, reward: 125, col: C.gold},
+  {id: 'hostile_sweep', name: 'HOSTILE SWEEP', desc: 'Defeat hostile units threatening the fleet.', stat: 'enemies', target: 12, reward: 175, col: C.ember},
+  {id: 'deep_space', name: 'DEEP SPACE PILOT', desc: 'Advance through four planetary expeditions.', stat: 'worlds', target: 4, reward: 250, col: C.green}
+];
+
+function recordMissionStat(stat, amount = 1){
+  if(!G.missionStats[stat]) G.missionStats[stat] = 0;
+  G.missionStats[stat] += amount;
+  saveData();
+}
+
+function missionProgress(mission){
+  return clamp(G.missionStats[mission.stat] || 0, 0, mission.target);
+}
+
+function claimMission(mission){
+  if(G.missionClaimed[mission.id] || missionProgress(mission) < mission.target) return;
+  G.missionClaimed[mission.id] = true;
+  G.credits += mission.reward;
+  saveData();
+  G.toast = {a: 'MISSION REWARD SECURED', b: '+' + mission.reward + ' FLEET CREDITS · ' + mission.name, t: 3.2};
+  SFX.orb();
+}
+
+function saveCurrentRun(){
+  if(!LVL || !PL) return;
+  G.savedRun = {
+    worldIdx: G.worldIdx,
+    endless: G.endless,
+    score: G.score,
+    credits: G.credits,
+    totalPlayTime: G.totalPlayTime
+  };
+  saveData();
+}
+
+function clearSavedRun(){
+  G.savedRun = null;
+  saveData();
+}
+
+function continueSavedRun(){
+  if(!G.savedRun) return;
+  G.endless = !!G.savedRun.endless;
+  G.score = G.savedRun.score || 0;
+  G.credits = G.savedRun.credits || G.credits;
+  G.totalPlayTime = G.savedRun.totalPlayTime || 0;
+  const savedWorld = Math.max(0, G.savedRun.worldIdx || 0);
+  clearSavedRun();
+  initPlanet(savedWorld);
+  SFX.click();
+}
+
+function getMaxFuel(){ return 100 * (1 + G.tankLv * 0.25); }
+function getFuelPct(){ return (G.fuel / getMaxFuel()) * 100; }
+function getThrustMult(){ return 1 + G.thrustLv * 0.15; }
+function getBurnMult(){ return Math.max(0.4, 1 - G.effLv * 0.15); }
+
+/* ──────── Active World Entities ──────── */
+let PL = null;
+let LVL = null;
+let CELLS = [];
+let ORBS = [];
+let DEBRIS = [];
+let WEAPON_PICKUPS = [];
+let PLATFORMS = [];
+let ENEMIES = [];
+let HAZARDS = [];
+let HEALTH_PACKS = [];
+let BULLETS = [];
+let UI_BUTTONS = [];
+
+/* ──────── Planet Level Initializer ──────── */
+function initPlanet(worldIdx){
+  G.worldIdx = worldIdx;
+  const cfg = getPlanetConfig(worldIdx);
+  LVL = cfg;
+  G.endlessDepth = cfg.endlessDepth || 0;
+
+  document.getElementById('header-planet-title').textContent = cfg.name + ' · ' + cfg.type;
+
+  G.fuel = Math.max(G.fuel || 0, getMaxFuel() * 0.65);
+  G.oxygen = 100;
+  G.hp = 3;
+  G.cellsGot = 0;
+  G.orbsGot = 0;
+  G.shieldT = 0;
+  G.shieldCd = 0;
+  G.hasSword = false;
+  G.hasBlaster = false;
+  G.hasShield = false;
+  G.hasLaser = false;
+  G.laserT = 0;
+  G.phase = 'flight';
+  G.phaseTimer = 0;
+  G.personalRocket = {
+    x: cfg.landingPad.x,
+    y: cfg.landingPad.y - 12,
+    travel: 0,
+    angle: 0,
+    scale: 1.25,
+    thrusting: false
+  };
+
+  P.length = 0;
+  BULLETS = [];
+
+  PL = {
+    x: cfg.rocketStart.x,
+    y: cfg.rocketStart.y,
+    vx: cfg.rocketStart.vx,
+    vy: cfg.rocketStart.vy,
+    angle: cfg.rocketStart.angle || 0,
+    face: 1,
+    thrusting: false,
+    thrustingUp: false,
+    thrustingDown: false,
+    thrustingHoriz: 0,
+    boosting: false,
+    boostCd: 0,
+    boostT: 0,
+    inv: 1.0,
+    radius: 20,
+    onGround: false,
+    coyote: 0,
+    suit: 100,
+    oxygen: 100,
+    walkCycle: 0,
+    bodyTilt: 0,
+    atkT: 0,
+    atkCd: 0,
+    shootCd: 0
+  };
+
+  CELLS = [];
+  ORBS = [];
+  PLATFORMS = [];
+  ENEMIES = [];
+  HAZARDS = [];
+  DEBRIS = [];
+  WEAPON_PICKUPS = [];
+  HEALTH_PACKS = [];
+
+  const r = rng(310 + worldIdx * 43);
+
+  // Ground solid base
+  PLATFORMS.push({x: 0, y: cfg.groundY, w: cfg.width, h: cfg.height - cfg.groundY, kind: 'ground'});
+
+  // Landing pad platform at start
+  PLATFORMS.push({
+    x: cfg.landingPad.x - 40,
+    y: cfg.landingPad.y,
+    w: cfg.landingPad.w + 80,
+    h: 28,
+    kind: 'landing_pad'
+  });
+
+
+
+  // Intermediate exploration platforms
+  const platformCount = cfg.movingPlatforms ? 22 : 18;
+  for(let q=0; q<platformCount; q++){
+    const t = (q + 1) / (platformCount + 1);
+    const startX = cfg.landingPad.x + 300;
+    const endX = cfg.width - 320;
+    const px = lerp(startX, endX, t) + (r() - 0.5) * 160;
+    const route = q % 3;
+    const routeHeight = route === 0 ? 150 + r() * 170 : route === 1 ? 300 + r() * 220 : 520 + r() * 260;
+    const py = clamp(cfg.groundY - routeHeight - (cfg.updrafts ? r()*180 : 0), 360, cfg.groundY - 90);
+    const moving = cfg.movingPlatforms && q % 3 === 1;
+    const cracking = cfg.crackingPlatforms && (q % 2 === 0 || route === 2);
+
+    PLATFORMS.push({
+      x: px,
+      y: py,
+      w: 160 + r() * 110,
+      h: 22,
+      kind: cracking ? 'crack' : (moving ? 'move' : 'stone'),
+      ox: 0,
+      phase: r() * 6.28,
+      amp: moving ? 110 + r() * 90 : 0,
+      broke: false
+      ,route
+    });
+  }
+
+  // Mandatory Collectibles distribution (Reachable on platforms and exploration routes)
+  for(let i=0; i<cfg.mandatoryCount; i++){
+    const t = (i + 1) / (cfg.mandatoryCount + 1);
+    const startX = cfg.landingPad.x + 320;
+    const endX = cfg.width - 320;
+    const px = lerp(startX, endX, t);
+    const plat = PLATFORMS[3 + (i % (PLATFORMS.length - 3))];
+    CELLS.push({
+      x: plat ? plat.x + plat.w * 0.5 : px,
+      y: plat ? plat.y - 42 : cfg.groundY - 70 - r() * 260,
+      got: false,
+      rot: r() * 6.28
+    });
+  }
+
+
+  // Emergency Nano-Repair Health Packs (distributed on exploration platforms)
+  HEALTH_PACKS = [];
+  for(let h=0; h<3; h++){
+    const platIdx = 2 + ((h * 5 + 2) % (PLATFORMS.length - 2));
+    const plat = PLATFORMS[platIdx];
+    HEALTH_PACKS.push({
+      x: plat ? plat.x + plat.w * 0.5 : cfg.landingPad.x + 600 + h * 900,
+      y: plat ? plat.y - 32 : cfg.groundY - 60,
+      got: false,
+      pulse: Math.random() * 6.28
+    });
+  }
+
+  // Bonus Energy Orbs / Modules
+  for(let j=0; j<cfg.bonusCount; j++){
+    const t = (j + 1) / (cfg.bonusCount + 1);
+    const startX = cfg.landingPad.x + 400;
+    const endX = cfg.width - 400;
+    const px = lerp(startX, endX, t) + (r() - 0.5) * 200;
+    const plat = PLATFORMS[4 + ((j * 3) % (PLATFORMS.length - 3))];
+    ORBS.push({
+      x: plat ? plat.x + plat.w * 0.5 : px,
+      y: plat ? plat.y - 80 : cfg.groundY - 180 - r() * 320,
+      got: false,
+      rot: 0
+    });
+  }
+
+  // Hazards Configuration
+  if(cfg.updrafts){
+    for(let u=0; u<cfg.updrafts; u++){
+      HAZARDS.push({
+        type: u % 3 === 2 ? 'downdraft' : 'updraft',
+        x: lerp(900, cfg.width - 900, u / cfg.updrafts),
+        y: cfg.groundY - 450,
+        w: 280, h: 900,
+        fy: u % 3 === 2 ? 480 : -660
+      });
+    }
+  }
+
+  if(cfg.gravityZones){
+    for(let g=0; g<cfg.gravityZones; g++){
+      HAZARDS.push({
+        type: g % 2 ? 'lowgrav' : 'heavygrav',
+        x: lerp(850, cfg.width - 850, g / cfg.gravityZones),
+        y: cfg.groundY - 320 - (r() * 320),
+        r: 220
+      });
+    }
+  }
+  if(cfg.heatZones || cfg.acidZones){
+    const count = cfg.heatZones || cfg.acidZones;
+    for(let h=0; h<count; h++){
+      HAZARDS.push({
+        type: cfg.acidZones ? 'acid' : 'heat',
+        x: lerp(1000, cfg.width - 900, h / count),
+        y: cfg.groundY - 260 - (r() * 360),
+        r: 230,
+        drain: 3.5
+      });
+    }
+  }
+  if(cfg.lavaPits){
+    for(let l=0; l<cfg.lavaPits; l++){
+      HAZARDS.push({
+        type: 'lava',
+        x: lerp(900, cfg.width - 900, l / cfg.lavaPits),
+        y: cfg.groundY + 16,
+        w: 260 + r() * 140,
+        h: 70
+      });
+    }
+  }
+  if(cfg.fireJets){
+    for(let f=0; f<cfg.fireJets; f++){
+      HAZARDS.push({
+        type: 'firejet',
+        x: lerp(1050, cfg.width - 950, f / cfg.fireJets),
+        y: cfg.groundY,
+        phase: r() * 6.28
+      });
+    }
+  }
+  if(cfg.iceGusts){
+    for(let i=0; i<cfg.iceGusts; i++){
+      HAZARDS.push({
+        type: 'icegust',
+        x: lerp(900, cfg.width - 900, i / cfg.iceGusts),
+        y: cfg.groundY - 320 - (r() * 400),
+        w: 440, h: 260,
+        fx: -240
+      });
+    }
+  }
+  if(cfg.safeZones){
+    for(let s=0; s<cfg.safeZones; s++){
+      HAZARDS.push({
+        type: 'safe',
+        x: lerp(850, cfg.width - 850, s / cfg.safeZones),
+        y: cfg.groundY - 20,
+        r: 150
+      });
+    }
+  }
+  if(cfg.dustStorms){
+    HAZARDS.push({
+      type: 'storm',
+      x: cfg.width * 0.5,
+      y: cfg.groundY - 400,
+      r: cfg.width * 0.45
+    });
+  }
+
+  // Debris & Hot Rocks
+  if(cfg.debris || cfg.fallingRocks || cfg.endlessDepth){
+    const rockCount = cfg.debris || (8 + (worldIdx % 4));
+    for(let k=0; k<rockCount; k++){
+      let rockX = clamp(500 + r() * (cfg.width - 1000), 200, cfg.width - 200);
+      if(Math.abs(rockX - cfg.landingPad.x) < 420) rockX = cfg.landingPad.x + 460 + r() * 260;
+      DEBRIS.push({
+        x: clamp(rockX, 200, cfg.width - 200),
+        y: 70 + r() * 260,
+        vx: (r() - 0.5) * 90,
+        vy: 220 + r() * 180,
+        radius: 20 + r() * 16,
+        rot: r() * 6.28,
+        rotSpd: (r() - 0.5) * 1.5,
+        hp: 2,
+        hot: !!cfg.fallingRocks && (k % 2 === 0),
+        rockType: k % 4,
+        lethal: true
+      });
+    }
+  }
+
+  // Weapons are earned in the world by physically reaching their pickup.
+  const pickupTypes = ['sword', 'blaster', 'laser', 'shield', 'lance'];
+  const pickupType = pickupTypes[worldIdx % pickupTypes.length];
+  const pickupPlatform = PLATFORMS[3 + (worldIdx % Math.max(1, PLATFORMS.length - 3))];
+  WEAPON_PICKUPS.push({
+    type: pickupType,
+    x: pickupPlatform ? pickupPlatform.x + pickupPlatform.w * 0.5 : cfg.landingPad.x + 340,
+    y: pickupPlatform ? pickupPlatform.y - 42 : cfg.groundY - 80,
+    got: false,
+    pulse: r() * 6.28
+  });
+
+  // Enemies Placement
+  const enemyRoster = getEnemyRoster(cfg);
+  for(let e=0; e<(cfg.enemies || 0); e++){
+    const plat = PLATFORMS[4 + ((e * 4) % Math.max(1, PLATFORMS.length - 4))];
+    const enemyX = plat ? plat.x + plat.w * 0.5 : 1200 + e * 700;
+    const safeEnemyX = Math.abs(enemyX - cfg.landingPad.x) < 420 ? cfg.landingPad.x + 520 + e * 120 : enemyX;
+    ENEMIES.push({
+      type: enemyRoster[e % enemyRoster.length],
+      x: safeEnemyX,
+      y: plat ? plat.y - 32 : cfg.groundY - 42,
+      baseX: safeEnemyX,
+      baseY: plat ? plat.y - 32 : cfg.groundY - 42,
+      phase: r() * 6.28,
+      hp: 2,
+      facing: 1,
+      shotT: 1.5 + r() * 2.5,
+      orbitR: 70 + r() * 90,
+      speed: 0.6 + r() * 0.8
+    });
+  }
+
+  G.camX = PL.x - W/2;
+  G.camY = PL.y - H/2;
+  G.scene = 'play';
+  G.toast = {
+    a: cfg.name + ' · ' + cfg.type,
+    b: 'ROCKET FLIGHT: Steer & touch down onto the Landing Beacon.',
+    t: 4.5
+  };
+}
+
+/* ──────── Draw Background & Sky Parallax ──────── */
+const BG_STARS = Array.from({length: 120}, () => ({
+  x: Math.random() * W, y: Math.random() * H, r: 0.8 + Math.random()*1.8, sp: 0.5 + Math.random()*2, ph: Math.random()*6.28
+}));
+
+function drawBackground(cfg, camX, camY, t){
+  const g = ctx.createLinearGradient(0, 0, 0, H);
+  g.addColorStop(0, cfg.sky[0]);
+  g.addColorStop(1, cfg.sky[1]);
+  ctx.fillStyle = g;
+  ctx.fillRect(0, 0, W, H);
+
+  // Parallax starfield
+  for(let i=0; i<BG_STARS.length; i++){
+    const s = BG_STARS[i];
+    const sx = mod(s.x - camX * 0.05, W);
+    const sy = mod(s.y - camY * 0.05, H);
+    const alpha = 0.4 + 0.6 * (0.5 + 0.5*Math.sin(t*s.sp + s.ph));
+    ctx.globalAlpha = alpha;
+    ctx.fillStyle = cfg.starCol || '#fff';
+    ctx.beginPath();
+    ctx.arc(sx, sy, s.r, 0, 6.283);
+    ctx.fill();
+  }
+  ctx.globalAlpha = 1;
+
+  // Distant planetary glow
+  const px = W * 0.7 - camX * 0.02, py = H * 0.3 - camY * 0.02;
+  ctx.save();
+  ctx.globalCompositeOperation = 'lighter';
+  const glow = ctx.createRadialGradient(px, py, 40, px, py, 260);
+  glow.addColorStop(0, cfg.accent + '22');
+  glow.addColorStop(1, 'rgba(0,0,0,0)');
+  ctx.fillStyle = glow;
+  ctx.beginPath();
+  ctx.arc(px, py, 260, 0, 6.283);
+  ctx.fill();
+  ctx.restore();
+
+  // Background artwork
+  const bg = ASSET_IMAGES[cfg.bgArt];
+  if(bg && bg.complete && bg.naturalWidth){
+    ctx.save();
+    ctx.globalAlpha = 0.36;
+    ctx.drawImage(bg, -camX * 0.08, -camY * 0.04, W * 1.25, H * 1.25);
+    ctx.restore();
+  }
+
+  // Planet artwork sphere in the sky
+  const art = ASSET_IMAGES[cfg.planetArt];
+  if(art && art.complete && art.naturalWidth){
+    ctx.save();
+    ctx.globalAlpha = 0.85;
+    ctx.drawImage(art, W * 0.68 - camX * 0.025, H * 0.12 - camY * 0.02, 210, 210);
+    ctx.restore();
+  }
+}
+
+/* ──────── Draw Terrain & Platforms ──────── */
+function terrainColor(cfg){
+  if(cfg.id === 'cinder_moon') return '#2b0c05';
+  if(cfg.id === 'cryos') return '#113559';
+  if(cfg.id === 'vortex_prime') return '#162e15';
+  if(cfg.id === 'aether_7') return '#0e3a40';
+  if(cfg.id === 'earth') return '#163354';
+  return '#1b143a';
+}
+
+function drawTerrain(cfg, camX, camY){
+  const groundY = cfg.groundY - camY;
+  ctx.save();
+
+  // Surface bedrock gradient
+  const grad = ctx.createLinearGradient(0, groundY, 0, H);
+  grad.addColorStop(0, terrainColor(cfg));
+  grad.addColorStop(1, '#050713');
+  ctx.fillStyle = grad;
+  ctx.beginPath();
+  ctx.moveTo(-40, H + 40);
+  for(let x=-80; x<=W+120; x+=40){
+    const wx = x + camX;
+    const y = getSurfaceY(wx, cfg) - camY;
+    ctx.lineTo(x, y);
+  }
+  ctx.lineTo(W+60, H+40);
+  ctx.closePath();
+  ctx.fill();
+
+  // Top surface trim line in planet accent color (authoritative surface edge)
+  ctx.strokeStyle = cfg.accent;
+  ctx.lineWidth = 3;
+  ctx.beginPath();
+  for(let x=-80; x<=W+120; x+=25){
+    const wx = x + camX;
+    const y = getSurfaceY(wx, cfg) - camY;
+    if(x === -80) ctx.moveTo(x, y);
+    else ctx.lineTo(x, y);
+  }
+  ctx.stroke();
+
+  // Platforms
+  for(const p of PLATFORMS){
+    if(p.kind === 'ground' || p.broke) continue;
+    const px = p.x + (p.ox || 0) - camX;
+    const py = p.y - camY;
+    if(px < -p.w || px > W + p.w || py < -80 || py > H + 80) continue;
+
+    if(p.kind === 'landing_pad'){
+      ctx.fillStyle = '#18244c';
+      rr(px, py, p.w, p.h, 6);
+      ctx.fill();
+      ctx.strokeStyle = C.cyan;
+      ctx.lineWidth = 2.5;
+      ctx.stroke();
+      txt('▲ ROCKET DOCKING ZONE ▲', px + p.w * 0.5, py + 18, 12, C.cyan, 'center', F_U, 700, 2);
+      continue;
+    }
+
+
+
+    ctx.fillStyle = p.kind === 'crack' ? '#bdefff' : (p.kind === 'move' ? cfg.accent : terrainColor(cfg));
+    ctx.globalAlpha = p.kind === 'crack' ? 0.82 : 0.9;
+    rr(px, py, p.w, p.h, 6);
+    ctx.fill();
+    ctx.globalAlpha = 1;
+    ctx.strokeStyle = p.route === 2 ? '#ff6bd6' : p.route === 1 ? C.gold : cfg.accent;
+    ctx.lineWidth = 2;
+    ctx.stroke();
+
+    if(p.route === 2 && p.w > 180){
+      txt('RISK ROUTE', px + p.w * 0.5, py - 8, 8, '#ff6bd6', 'center', F_U, 700, 1);
+    }
+
+    if(p.kind === 'crack'){
+      ctx.strokeStyle = 'rgba(4,6,20,0.5)';
+      ctx.beginPath();
+      ctx.moveTo(px + p.w * 0.25, py + 3);
+      ctx.lineTo(px + p.w * 0.42, py + p.h - 3);
+      ctx.lineTo(px + p.w * 0.58, py + 5);
+      ctx.stroke();
+    }
+  }
+  ctx.restore();
+}
+
+/* ──────── Draw Landing Rocket & Departure Rocket ──────── */
+function drawRocketShip(p, camX, camY, t, scale = 1, isLanded = false){
+  const sx = p.x - camX, sy = p.y - camY;
+  ctx.save();
+  ctx.translate(sx, sy);
+  ctx.scale(scale, scale);
+  ctx.rotate(p.angle);
+
+  // Landing Struts if landed
+  if(isLanded){
+    ctx.strokeStyle = '#687898';
+    ctx.lineWidth = 3.5;
+    ctx.beginPath();
+    ctx.moveTo(-16, 12); ctx.lineTo(-28, 28); ctx.lineTo(-34, 28);
+    ctx.moveTo(16, 12); ctx.lineTo(28, 28); ctx.lineTo(34, 28);
+    ctx.stroke();
+  }
+
+  // Delta Wings
+  ctx.fillStyle = '#ff4757';
+  ctx.beginPath();
+  ctx.moveTo(-8, 8); ctx.lineTo(-24, 25); ctx.lineTo(-8, 25); ctx.lineTo(6, 10); ctx.closePath();
+  ctx.fill();
+  ctx.beginPath();
+  ctx.moveTo(-8, -8); ctx.lineTo(-24, -25); ctx.lineTo(-8, -25); ctx.lineTo(6, -10); ctx.closePath();
+  ctx.fill();
+
+  // Engine Nozzles
+  ctx.fillStyle = '#2f3542';
+  rr(-24, -7, 6, 14, 2);
+  ctx.fill();
+  ctx.fillStyle = p.thrusting ? '#ff7a2e' : '#ff4757';
+  rr(-27, -5, 4, 10, 1);
+  ctx.fill();
+
+  // Aerodynamic Fuselage
+  const hg = ctx.createLinearGradient(-20, -12, -20, 12);
+  hg.addColorStop(0, '#8a99b8');
+  hg.addColorStop(0.3, '#ffffff');
+  hg.addColorStop(0.7, '#e8f0fe');
+  hg.addColorStop(1, '#65738e');
+  ctx.fillStyle = hg;
+  ctx.beginPath();
+  ctx.moveTo(30, 0);
+  ctx.quadraticCurveTo(8, -13, -20, -10);
+  ctx.lineTo(-20, 10);
+  ctx.quadraticCurveTo(8, 13, 30, 0);
+  ctx.closePath();
+  ctx.fill();
+
+  // Red Racing Stripe
+  ctx.fillStyle = '#ff4757';
+  ctx.beginPath();
+  ctx.moveTo(4, -9); ctx.lineTo(10, -8); ctx.lineTo(8, 8); ctx.lineTo(2, 9); ctx.closePath();
+  ctx.fill();
+
+  // Cockpit Glass
+  const cg = ctx.createLinearGradient(6, -4, 20, 4);
+  cg.addColorStop(0, '#ffffff');
+  cg.addColorStop(0.35, C.cyan);
+  cg.addColorStop(1, '#0b2447');
+  ctx.fillStyle = cg;
+  ctx.beginPath();
+  ctx.ellipse(10, 0, 9, 4.5, 0, 0, 6.283);
+  ctx.fill();
+
+  // Specular Glint
+  ctx.fillStyle = '#ffffff';
+  ctx.beginPath();
+  ctx.ellipse(13, -1.5, 3.5, 1.2, -0.2, 0, 6.283);
+  ctx.fill();
+
+  // Phase Shield Bubble
+  if(G.shieldT > 0){
+    ctx.save();
+    ctx.globalCompositeOperation = 'lighter';
+    ctx.strokeStyle = C.cyan;
+    ctx.lineWidth = 3;
+    ctx.fillStyle = 'rgba(61,240,255,0.18)';
+    ctx.beginPath();
+    ctx.arc(0, 0, 36, 0, 6.283);
+    ctx.fill();
+    ctx.stroke();
+    ctx.restore();
+  }
+
+}
+
+
+
+/* ──────── Draw Astronaut Hero (High-Tech 2D EVA Space Suit) ──────── */
+function drawAstronautCharacter(p, camX, camY, t){
+  const cfg = LVL;
+  const sx = p.x - camX, sy = p.y - camY;
+
+  // 1. Umbilical Life-Support Docking Tether to the personal rocket (within 480px)
+  if(G.personalRocket){
+    const landerX = G.personalRocket.x, landerY = G.personalRocket.y;
+    const distToPad = Math.hypot(p.x - landerX, p.y - landerY);
+    if(distToPad < 480){
+      const lx = landerX - camX, ly = landerY - camY;
+      ctx.save();
+      const tetherAlpha = clamp(1.0 - distToPad / 480, 0, 0.7);
+      ctx.strokeStyle = `rgba(61,240,255,${tetherAlpha * 0.75})`;
+      ctx.lineWidth = 1.6;
+      ctx.setLineDash([6, 4]);
+      ctx.lineDashOffset = -t * 18;
+      ctx.beginPath();
+      ctx.moveTo(lx, ly);
+      const midX = (lx + sx) * 0.5, midY = Math.max(ly, sy) + distToPad * 0.12;
+      ctx.quadraticCurveTo(midX, midY, sx - p.face * 14, sy - 8);
+      ctx.stroke();
+      ctx.setLineDash([]);
+      const prog = (t * 1.5) % 1.0;
+      const nodeX = (1 - prog) * (1 - prog) * lx + 2 * (1 - prog) * prog * midX + prog * prog * (sx - p.face * 14);
+      const nodeY = (1 - prog) * (1 - prog) * ly + 2 * (1 - prog) * prog * midY + prog * prog * (sy - 8);
+      ctx.fillStyle = C.cyan;
+      ctx.beginPath();
+      ctx.arc(nodeX, nodeY, 2.5, 0, 6.283);
+      ctx.fill();
+      ctx.restore();
+    }
+  }
+
+  ctx.save();
+  const floatBob = p.onGround ? 0 : Math.sin(t * 3.4) * 2.8;
+  const bodyTilt = p.onGround ? (p.vx * 0.0003) : clamp(p.vx * 0.0012, -0.42, 0.42);
+
+  ctx.translate(sx, sy + floatBob);
+  ctx.scale(p.face, 1);
+  ctx.rotate(bodyTilt * p.face);
+
+  const fem = G.char === 'mira';
+  const suitWhite = fem ? '#f5eefc' : '#ebf3ff';
+  const suitShade = fem ? '#b8a6d4' : '#9bb5db';
+  const jointDark = fem ? '#24143a' : '#101d3b';
+  const accColor  = fem ? '#ff5ec4' : C.cyan;
+  const accDark   = fem ? '#b82088' : '#0b7da8';
+
+  // 2. Volumetric Helmet Headlight Beam
+  ctx.save();
+  const beamGrad = ctx.createRadialGradient(16, -14, 4, 140, -10, 160);
+  beamGrad.addColorStop(0, 'rgba(61,240,255,0.22)');
+  beamGrad.addColorStop(0.3, 'rgba(61,240,255,0.08)');
+  beamGrad.addColorStop(1, 'rgba(61,240,255,0)');
+  ctx.fillStyle = beamGrad;
+  ctx.beginPath();
+  ctx.moveTo(14, -14);
+  ctx.lineTo(190, -65);
+  ctx.lineTo(210, 35);
+  ctx.closePath();
+  ctx.fill();
+  ctx.restore();
+
+  // 3. MMU / SAFER Propulsion Backpack
+  ctx.fillStyle = jointDark;
+  rr(-22, -18, 14, 32, 4);
+  ctx.fill();
+  ctx.strokeStyle = '#34476c';
+  ctx.lineWidth = 1;
+  ctx.stroke();
+
+  // Twin Nitrogen / RCS Propellant Tanks
+  const tankGrad = ctx.createLinearGradient(-21, -16, -9, -16);
+  tankGrad.addColorStop(0, '#5a6e94');
+  tankGrad.addColorStop(0.5, '#b0c6ea');
+  tankGrad.addColorStop(1, '#334466');
+  ctx.fillStyle = tankGrad;
+  rr(-20, -16, 5, 26, 2.5); ctx.fill();
+  rr(-14, -16, 5, 26, 2.5); ctx.fill();
+
+  // Safety Yellow Ring bands
+  ctx.fillStyle = C.gold;
+  rr(-20, -10, 5, 2.5, 0.5); ctx.fill();
+  rr(-14, -10, 5, 2.5, 0.5); ctx.fill();
+  rr(-20, -1, 5, 2.5, 0.5); ctx.fill();
+  rr(-14, -1, 5, 2.5, 0.5); ctx.fill();
+
+  // Antenna on backpack
+  ctx.strokeStyle = '#8fa3c7';
+  ctx.lineWidth = 1.5;
+  ctx.beginPath();
+  ctx.moveTo(-16, -18); ctx.lineTo(-21, -30);
+  ctx.stroke();
+  ctx.fillStyle = Math.sin(t * 8) > 0 ? C.cyan : '#122544';
+  ctx.beginPath();
+  ctx.arc(-21, -30, 2.5, 0, 6.283);
+  ctx.fill();
+
+  // Dynamic RCS Thruster Plumes
+  // A. Bottom Main Thruster (fires downward when lifting/hovering)
+  const isUpThrust = (p.thrustingUp || held.up || held.thrust || (G.fuel > 0 && !p.onGround && p.vy < -40));
+  if(isUpThrust && G.fuel > 0){
+    const pLen = 22 + Math.random() * 14;
+    const pGrad = ctx.createLinearGradient(-15, 14, -15, 14 + pLen);
+    pGrad.addColorStop(0, '#ffffff');
+    pGrad.addColorStop(0.2, C.cyan);
+    pGrad.addColorStop(0.7, '#1b5fff');
+    pGrad.addColorStop(1, 'rgba(27,95,255,0)');
+    ctx.fillStyle = pGrad;
+    ctx.beginPath();
+    ctx.moveTo(-20, 14); ctx.lineTo(-9, 14); ctx.lineTo(-14.5, 14 + pLen);
+    ctx.closePath();
+    ctx.fill();
+    ctx.fillStyle = '#ffffff';
+    ctx.beginPath();
+    ctx.moveTo(-18, 14); ctx.lineTo(-11, 14); ctx.lineTo(-14.5, 14 + pLen * 0.45);
+    ctx.closePath();
+    ctx.fill();
+  }
+
+  // B. Top Reverse RCS Nozzles (fires upward when descending/braking)
+  const isDownThrust = (held.down && !p.onGround);
+  if(isDownThrust && G.fuel > 0){
+    ctx.fillStyle = 'rgba(61,240,255,0.85)';
+    ctx.beginPath();
+    ctx.moveTo(-19, -18); ctx.lineTo(-11, -18); ctx.lineTo(-15, -30 - Math.random() * 8);
+    ctx.closePath();
+    ctx.fill();
+  }
+
+  // C. Lateral RCS Thruster Nozzles
+  if(Math.abs(p.vx) > 80 && !p.onGround && G.fuel > 0){
+    ctx.fillStyle = 'rgba(61,240,255,0.7)';
+    ctx.beginPath();
+    ctx.moveTo(-22, -4); ctx.lineTo(-22, 4); ctx.lineTo(-32 - Math.random() * 6, 0);
+    ctx.closePath();
+    ctx.fill();
+  }
+
+  // D. Tactical Boost Flare
+  if(p.boostT > 0){
+    ctx.save();
+    ctx.globalCompositeOperation = 'lighter';
+    const bGrad = ctx.createRadialGradient(-16, 0, 2, -16, 0, 48);
+    bGrad.addColorStop(0, '#ffffff');
+    bGrad.addColorStop(0.3, accColor);
+    bGrad.addColorStop(0.7, '#ff7a2e');
+    bGrad.addColorStop(1, 'rgba(0,0,0,0)');
+    ctx.fillStyle = bGrad;
+    ctx.beginPath();
+    ctx.arc(-16, 0, 48, 0, 6.283);
+    ctx.fill();
+    ctx.restore();
+  }
+
+  // 4. Back Leg & Boot
+  const walk = p.walkCycle || 0;
+  const legSwing = p.onGround ? Math.sin(walk) * 8 : (Math.sin(t * 2.5) * 3 + 4);
+  const backLegX = -4 - legSwing * 0.6;
+  const backLegY = 12 + Math.abs(legSwing) * 0.3;
+
+  ctx.fillStyle = suitShade;
+  rr(backLegX - 4, backLegY, 8, 14, 4); ctx.fill();
+  ctx.fillStyle = jointDark;
+  rr(backLegX - 3, backLegY + 8, 6, 3, 1); ctx.fill();
+  ctx.fillStyle = '#223254';
+  rr(backLegX - 5, backLegY + 12, 11, 7, 2.5); ctx.fill();
+  ctx.fillStyle = accDark;
+  rr(backLegX - 5, backLegY + 17, 11, 2, 0.5); ctx.fill();
+
+  // 5. Torso
+  const torsoGrad = ctx.createLinearGradient(-10, -14, 12, 14);
+  torsoGrad.addColorStop(0, suitWhite);
+  torsoGrad.addColorStop(0.65, suitWhite);
+  torsoGrad.addColorStop(1, suitShade);
+  ctx.fillStyle = torsoGrad;
+  rr(-9, -15, 21, 27, 6);
+  ctx.fill();
+  ctx.strokeStyle = '#8fa3cc';
+  ctx.lineWidth = 1;
+  ctx.stroke();
+
+  // Mission Accent Stripes
+  ctx.fillStyle = accColor;
+  rr(-3, -15, 4, 27, 2); ctx.fill();
+  rr(4, -15, 2, 27, 1); ctx.fill();
+
+  // 6. Chest Display & Control Module (DCM)
+  ctx.fillStyle = jointDark;
+  rr(-2, -8, 14, 16, 3);
+  ctx.fill();
+  ctx.strokeStyle = '#3e527a';
+  ctx.lineWidth = 1;
+  ctx.stroke();
+
+  // ECG Heartbeat / Oxygen Monitor Screen
+  ctx.fillStyle = '#05111d';
+  rr(0, -6, 10, 7, 1.5);
+  ctx.fill();
+  ctx.strokeStyle = G.oxygen > 25 ? '#3dff88' : C.red;
+  ctx.lineWidth = 1.2;
+  ctx.beginPath();
+  ctx.moveTo(1, -2.5);
+  ctx.lineTo(3, -2.5);
+  ctx.lineTo(4.5, -5);
+  ctx.lineTo(6, -0.5);
+  ctx.lineTo(7.5, -2.5);
+  ctx.lineTo(9, -2.5);
+  ctx.stroke();
+
+  // DCM Status LEDs
+  ctx.fillStyle = C.green;
+  ctx.beginPath(); ctx.arc(1, 4, 1.2, 0, 6.283); ctx.fill();
+  ctx.fillStyle = accColor;
+  ctx.beginPath(); ctx.arc(5, 4, 1.2, 0, 6.283); ctx.fill();
+  ctx.fillStyle = C.gold;
+  ctx.beginPath(); ctx.arc(9, 4, 1.2, 0, 6.283); ctx.fill();
+
+  // Umbilical Hoses to Helmet
+  ctx.strokeStyle = '#62769c';
+  ctx.lineWidth = 2;
+  ctx.beginPath();
+  ctx.moveTo(8, -8); ctx.quadraticCurveTo(12, -12, 10, -16);
+  ctx.stroke();
+
+  // 7. Front Leg & Boot
+  const frontLegSwing = p.onGround ? -Math.sin(walk) * 8 : (-Math.sin(t * 2.5) * 3 - 3);
+  const frontLegX = 4 + frontLegSwing * 0.6;
+  const frontLegY = 12 + Math.abs(frontLegSwing) * 0.3;
+
+  ctx.fillStyle = suitWhite;
+  rr(frontLegX - 4, frontLegY, 8, 14, 4); ctx.fill();
+  ctx.strokeStyle = '#8fa3cc'; ctx.lineWidth = 1; ctx.stroke();
+  ctx.fillStyle = jointDark;
+  rr(frontLegX - 3, frontLegY + 8, 6, 3, 1); ctx.fill();
+  ctx.fillStyle = '#1c2844';
+  rr(frontLegX - 5, frontLegY + 12, 12, 7, 2.5); ctx.fill();
+  ctx.fillStyle = accColor;
+  rr(frontLegX - 5, frontLegY + 17, 12, 2.5, 0.8); ctx.fill();
+  if(p.onGround){
+    ctx.fillStyle = 'rgba(61,240,255,0.4)';
+    rr(frontLegX - 7, frontLegY + 19, 16, 2, 1); ctx.fill();
+  }
+
+  // 8. Helmet & Gold Specular Visor
+  ctx.fillStyle = jointDark;
+  rr(2, -18, 15, 4, 1.5); ctx.fill();
+
+  const helmGrad = ctx.createRadialGradient(9, -24, 3, 10, -22, 13);
+  helmGrad.addColorStop(0, '#ffffff');
+  helmGrad.addColorStop(0.7, suitWhite);
+  helmGrad.addColorStop(1, suitShade);
+  ctx.fillStyle = helmGrad;
+  ctx.beginPath();
+  ctx.arc(10, -22, 11.5, 0, 6.283);
+  ctx.fill();
+  ctx.strokeStyle = '#8ea4cb';
+  ctx.lineWidth = 1.2;
+  ctx.stroke();
+
+  const visorGrad = ctx.createLinearGradient(7, -30, 19, -15);
+  visorGrad.addColorStop(0, '#fff4a3');
+  visorGrad.addColorStop(0.25, '#ffc02e');
+  visorGrad.addColorStop(0.65, '#0a4275');
+  visorGrad.addColorStop(1, '#03142e');
+  ctx.fillStyle = visorGrad;
+  ctx.beginPath();
+  ctx.ellipse(13.5, -22, 7.5, 8.5, 0.1, 0, 6.283);
+  ctx.fill();
+  ctx.strokeStyle = '#ffe485';
+  ctx.lineWidth = 1;
+  ctx.stroke();
+
+  // Visor Specular Reflection Crescent
+  ctx.strokeStyle = 'rgba(255,255,255,0.85)';
+  ctx.lineWidth = 1.8;
+  ctx.beginPath();
+  ctx.arc(12.5, -23, 6, -1.8, -0.4);
+  ctx.stroke();
+
+  // Interior HUD Reticle Glow
+  ctx.fillStyle = 'rgba(61,240,255,0.6)';
+  ctx.beginPath();
+  ctx.arc(15, -22, 1.5, 0, 6.283);
+  ctx.fill();
+
+  // Headlight Bezel
+  ctx.fillStyle = '#ff7a2e';
+  rr(16, -16, 3, 3, 1); ctx.fill();
+
+  // 9. Arm & EVA Glove
+  const armAngle = p.atkT > 0 ? 0 : (p.onGround ? Math.sin(walk) * 0.4 : -0.2);
+  ctx.save();
+  ctx.translate(2, -8);
+  ctx.rotate(armAngle);
+  ctx.fillStyle = suitWhite;
+  ctx.beginPath(); ctx.arc(0, 0, 5, 0, 6.283); ctx.fill();
+  ctx.fillStyle = accColor;
+  ctx.beginPath(); ctx.arc(0, 0, 2, 0, 6.283); ctx.fill();
+  rr(-2, 0, 5, 12, 2.5); ctx.fill();
+  ctx.fillStyle = jointDark;
+  rr(-3, 9, 7, 6, 2); ctx.fill();
+  ctx.restore();
+
+  // 10. Energy Sword Attack
+  if(p.atkT > 0){
+    const swingProg = 1 - p.atkT / 0.22;
+    const a = lerp(-1.8, 1.4, swingProg);
+    ctx.save();
+    ctx.translate(6, -2);
+    ctx.rotate(a);
+
+    ctx.fillStyle = jointDark;
+    rr(0, -3, 10, 6, 2); ctx.fill();
+    ctx.fillStyle = accColor;
+    rr(8, -5, 3, 10, 1.5); ctx.fill();
+
+    ctx.strokeStyle = accColor;
+    ctx.lineWidth = 6;
+    ctx.beginPath();
+    ctx.moveTo(10, 0); ctx.lineTo(44, 0);
+    ctx.stroke();
+
+    ctx.strokeStyle = '#ffffff';
+    ctx.lineWidth = 2.5;
+    ctx.beginPath();
+    ctx.moveTo(10, 0); ctx.lineTo(42, 0);
+    ctx.stroke();
+
+    ctx.globalCompositeOperation = 'lighter';
+    ctx.strokeStyle = `rgba(${fem ? '255,94,196' : '61,240,255'},0.65)`;
+    ctx.lineWidth = 18;
+    ctx.beginPath();
+    ctx.arc(0, 0, 42, -0.7, 0.5);
+    ctx.stroke();
+    ctx.restore();
+  }
+
+  // 11. Phase Shield Hex Bubble
+  if(G.shieldT > 0){
+    ctx.save();
+    ctx.globalCompositeOperation = 'lighter';
+    const sGrad = ctx.createRadialGradient(0, 0, 10, 0, 0, 36);
+    sGrad.addColorStop(0, 'rgba(61,240,255,0.08)');
+    sGrad.addColorStop(0.75, 'rgba(61,240,255,0.28)');
+    sGrad.addColorStop(1, 'rgba(180,104,248,0.7)');
+    ctx.fillStyle = sGrad;
+    ctx.strokeStyle = C.cyan;
+    ctx.lineWidth = 2.5;
+    ctx.beginPath();
+    for(let a=0; a<6; a++){
+      const ang = (a * 60 + t * 45) * Math.PI / 180;
+      const hx = Math.cos(ang) * 36, hy = Math.sin(ang) * 36;
+      if(a === 0) ctx.moveTo(hx, hy);
+      else ctx.lineTo(hx, hy);
+    }
+    ctx.closePath();
+    ctx.fill();
+    ctx.stroke();
+    ctx.restore();
+  }
+
+  ctx.restore();
+}
+
+/* ──────── Draw Planet-Specific Collectibles ──────── */
+function drawMandatoryCollectible(c, cfg, camX, camY, t){
+  const cx = c.x - camX, cy = c.y - camY + Math.sin(t*3 + c.x)*5;
+  if(cx < -40 || cx > W+40 || cy < -40 || cy > H+40) return;
+
+  ctx.save();
+  ctx.translate(cx, cy);
+
+  ctx.globalCompositeOperation = 'lighter';
+  const gl = ctx.createRadialGradient(0, 0, 4, 0, 0, 26);
+  gl.addColorStop(0, cfg.accent);
+  gl.addColorStop(1, 'rgba(0,0,0,0)');
+  ctx.fillStyle = gl;
+  ctx.fillRect(-26, -26, 52, 52);
+
+  if(cfg.id === 'fractured_moon'){
+    ctx.rotate(t * 1.8);
+    ctx.fillStyle = C.purple;
+    ctx.beginPath();
+    ctx.moveTo(0, -14); ctx.lineTo(13, 0); ctx.lineTo(0, 14); ctx.lineTo(-13, 0); ctx.closePath();
+    ctx.fill();
+    ctx.strokeStyle = '#fff'; ctx.lineWidth = 2; ctx.stroke();
+    ctx.fillStyle = '#fff';
+    ctx.beginPath(); ctx.arc(0, 0, 4, 0, 6.283); ctx.fill();
+  } else if(cfg.id === 'aether_7'){
+    ctx.rotate(Math.sin(t*2)*0.2);
+    ctx.fillStyle = C.teal;
+    ctx.beginPath();
+    ctx.moveTo(0, -16); ctx.lineTo(10, -6); ctx.lineTo(6, 14); ctx.lineTo(-6, 14); ctx.lineTo(-10, -6); ctx.closePath();
+    ctx.fill();
+    ctx.strokeStyle = '#fff'; ctx.lineWidth = 1.5; ctx.stroke();
+  } else if(cfg.id === 'cinder_moon'){
+    ctx.rotate(t * 2.2);
+    const mg = ctx.createRadialGradient(0, 0, 2, 0, 0, 13);
+    mg.addColorStop(0, '#ffffff'); mg.addColorStop(0.4, '#ff9a2e'); mg.addColorStop(1, '#ff2200');
+    ctx.fillStyle = mg;
+    ctx.beginPath(); ctx.arc(0, 0, 13, 0, 6.283); ctx.fill();
+    ctx.strokeStyle = '#ffe08a'; ctx.lineWidth = 2; ctx.stroke();
+  } else if(cfg.id === 'cryos'){
+    ctx.fillStyle = C.ice;
+    rr(-6, -13, 12, 26, 3); ctx.fill();
+    ctx.strokeStyle = '#ffffff'; ctx.lineWidth = 2; ctx.stroke();
+    ctx.fillStyle = '#ffffff';
+    ctx.fillRect(-3, -7, 6, 14);
+  } else if(cfg.id === 'vortex_prime'){
+    ctx.fillStyle = C.toxic;
+    rr(-7, -12, 14, 24, 4); ctx.fill();
+    ctx.strokeStyle = '#eaffc7'; ctx.lineWidth = 2; ctx.stroke();
+    ctx.fillStyle = '#061608';
+    rr(-3, -8, 6, 16, 2); ctx.fill();
+  } else {
+    ctx.rotate(t * 1.5);
+    ctx.fillStyle = C.cyan;
+    ctx.beginPath();
+    ctx.moveTo(0, -15); ctx.lineTo(12, 0); ctx.lineTo(0, 15); ctx.lineTo(-12, 0); ctx.closePath();
+    ctx.fill();
+    ctx.strokeStyle = '#ffffff'; ctx.lineWidth = 2; ctx.stroke();
+  }
+
+  ctx.restore();
+}
+
+function drawEnergyOrb(o, camX, camY, t){
+  const ox = o.x - camX, oy = o.y - camY + Math.sin(t*2.5 + o.x)*6;
+  if(ox < -50 || ox > W+50 || oy < -50 || oy > H+50) return;
+
+  ctx.save();
+  ctx.translate(ox, oy);
+  ctx.globalCompositeOperation = 'lighter';
+  const gl = ctx.createRadialGradient(0, 0, 6, 0, 0, 30);
+  gl.addColorStop(0, 'rgba(255,209,102,0.7)');
+  gl.addColorStop(1, 'rgba(0,0,0,0)');
+  ctx.fillStyle = gl;
+  ctx.fillRect(-30, -30, 60, 60);
+
+  ctx.fillStyle = C.gold;
+  ctx.beginPath(); ctx.arc(0, 0, 12, 0, 6.283); ctx.fill();
+
+  ctx.rotate(t * 2);
+  ctx.strokeStyle = '#fff'; ctx.lineWidth = 2;
+  ctx.beginPath(); ctx.ellipse(0, 0, 20, 7, 0, 0, 6.283); ctx.stroke();
+  ctx.restore();
+}
+
+/* ──────── Draw Hazards ──────── */
+function drawHazards(haz, cfg, camX, camY, t){
+  for(const h of haz){
+    const hx = h.x - camX, hy = h.y - camY;
+    if(h.type === 'updraft' || h.type === 'downdraft' || h.type === 'icegust'){
+      if(hx < -h.w || hx > W+h.w || hy < -h.h || hy > H+h.h) continue;
+      ctx.save();
+      ctx.globalCompositeOperation = 'lighter';
+      const col = h.type === 'downdraft' ? 'rgba(120,120,255,0.1)' : (h.type === 'icegust' ? 'rgba(120,230,255,0.12)' : 'rgba(120,255,210,0.14)');
+      ctx.fillStyle = col;
+      rr(hx - h.w/2, hy - h.h/2, h.w, h.h, 12);
+      ctx.fill();
+      for(let i=0; i<6; i++){
+        const yy = hy - h.h/2 + ((t*100 + i*110) % h.h);
+        ctx.strokeStyle = h.type === 'downdraft' ? '#8f8cff' : C.cyan;
+        ctx.lineWidth = 1.5;
+        ctx.beginPath();
+        ctx.moveTo(hx - h.w/2 + 30 + i*40, yy);
+        ctx.lineTo(hx - h.w/2 + 30 + i*40, yy + (h.type === 'downdraft' ? 55 : -55));
+        ctx.stroke();
+      }
+      ctx.restore();
+    } else if(h.type === 'lowgrav' || h.type === 'heavygrav'){
+      ctx.save();
+      ctx.globalCompositeOperation = 'lighter';
+      const col = h.type === 'lowgrav' ? 'rgba(186,104,248,0.25)' : 'rgba(255,122,46,0.22)';
+      const gl = ctx.createRadialGradient(hx, hy, 20, hx, hy, h.r);
+      gl.addColorStop(0, col);
+      gl.addColorStop(1, 'rgba(0,0,0,0)');
+      ctx.fillStyle = gl;
+      ctx.beginPath(); ctx.arc(hx, hy, h.r, 0, 6.283); ctx.fill();
+      txt(h.type === 'lowgrav' ? 'LOW-G FIELD' : 'HEAVY-G FIELD', hx, hy - h.r + 20, 11, cfg.accent, 'center', F_U, 700);
+      ctx.restore();
+    } else if(h.type === 'lava'){
+      ctx.save();
+      ctx.globalCompositeOperation = 'lighter';
+      ctx.fillStyle = 'rgba(255,70,15,0.85)';
+      rr(hx - h.w/2, hy - h.h/2, h.w, h.h, 10);
+      ctx.fill();
+      ctx.fillStyle = 'rgba(255,210,60,0.45)';
+      for(let i=0;i<7;i++){
+        ctx.beginPath();
+        ctx.arc(hx - h.w/2 + i*h.w/6, hy - 12 + Math.sin(t*5+i)*7, 8, 0, 6.283);
+        ctx.fill();
+      }
+      ctx.restore();
+    } else if(h.type === 'firejet'){
+      const active = Math.sin(t * 2.8 + h.phase) > -0.2;
+      if(!active) continue;
+      ctx.save();
+      ctx.globalCompositeOperation = 'lighter';
+      const height = 150 + Math.sin(t*12+h.phase)*24;
+      const fg = ctx.createLinearGradient(hx, hy, hx, hy - height);
+      fg.addColorStop(0, 'rgba(255,230,80,0.85)');
+      fg.addColorStop(0.45, 'rgba(255,90,20,0.7)');
+      fg.addColorStop(1, 'rgba(255,20,60,0)');
+      ctx.fillStyle = fg;
+      ctx.beginPath();
+      ctx.moveTo(hx - 22, hy); ctx.quadraticCurveTo(hx, hy - height - 20, hx + 22, hy); ctx.closePath();
+      ctx.fill();
+      ctx.restore();
+    } else if(h.type === 'safe'){
+      ctx.save();
+      ctx.globalCompositeOperation = 'lighter';
+      const gl = ctx.createRadialGradient(hx, hy, 10, hx, hy, h.r);
+      gl.addColorStop(0, 'rgba(61,255,136,0.24)');
+      gl.addColorStop(1, 'rgba(0,0,0,0)');
+      ctx.fillStyle = gl;
+      ctx.beginPath(); ctx.arc(hx, hy, h.r, 0, 6.283); ctx.fill();
+      txt('OXYGEN SAFE DOME', hx, hy - h.r + 20, 11, C.green, 'center', F_U, 700);
+      ctx.restore();
+    } else if(h.type === 'heat' || h.type === 'acid'){
+      ctx.save();
+      ctx.globalCompositeOperation = 'lighter';
+      const col = h.type === 'heat' ? 'rgba(255,100,30,' : 'rgba(180,240,40,';
+      const gl = ctx.createRadialGradient(hx, hy, 10, hx, hy, h.r);
+      gl.addColorStop(0, col + '0.4)');
+      gl.addColorStop(1, 'rgba(0,0,0,0)');
+      ctx.fillStyle = gl;
+      ctx.beginPath(); ctx.arc(hx, hy, h.r, 0, 6.283); ctx.fill();
+      txt(h.type === 'heat' ? '⚠️ THERMAL ZONE' : '⚠️ TOXIC CLOUD', hx, hy - h.r + 20, 11, col + '0.9)', 'center', F_U, 700);
+      ctx.restore();
+    } else if(h.type === 'storm'){
+      ctx.save();
+      ctx.globalAlpha = 0.12 + Math.sin(t * 1.5) * 0.05;
+      ctx.fillStyle = '#ffaa66';
+      ctx.fillRect(0, 0, W, H);
+      ctx.restore();
+    }
+  }
+}
+
+/* ──────── Draw Black Hole Singularity (Fractured Moon) ──────── */
+function drawBlackHole(pos, killR, camX, camY, t){
+  const hx = pos.x - camX, hy = pos.y - camY;
+  ctx.save();
+  ctx.translate(hx, hy);
+
+  ctx.globalCompositeOperation = 'lighter';
+  const gl = ctx.createRadialGradient(0, 0, killR * 0.8, 0, 0, 520);
+  gl.addColorStop(0, 'rgba(255,140,40,0.85)');
+  gl.addColorStop(0.2, 'rgba(255,70,160,0.5)');
+  gl.addColorStop(0.5, 'rgba(130,40,255,0.22)');
+  gl.addColorStop(1, 'rgba(0,0,0,0)');
+  ctx.fillStyle = gl;
+  ctx.beginPath(); ctx.arc(0, 0, 520, 0, 6.283); ctx.fill();
+
+  ctx.save();
+  ctx.rotate(-t * 0.65);
+  const ringColors = ['#ff8833','#ff3388','#b044ff','#ffd700','#3df0ff'];
+  for(let i=0; i<5; i++){
+    ctx.strokeStyle = ringColors[i];
+    ctx.lineWidth = 14 - i * 2;
+    ctx.beginPath(); ctx.ellipse(0, 0, 150 + i*40, 48 + i*13, 0, 0, 6.283); ctx.stroke();
+  }
+  ctx.restore();
+
+  ctx.strokeStyle = 'rgba(255,235,190,0.75)';
+  ctx.lineWidth = 8;
+  ctx.beginPath(); ctx.arc(0, 0, killR + 12, 0, 6.283); ctx.stroke();
+
+  ctx.globalCompositeOperation = 'source-over';
+  ctx.fillStyle = '#010105';
+  ctx.beginPath(); ctx.arc(0, 0, killR, 0, 6.283); ctx.fill();
+  ctx.restore();
+}
+
+/* ──────── Draw Enemies & Combat Bullets ──────── */
+function drawEnemies(camX, camY, t){
+  for(const e of ENEMIES){
+    const ex = e.x - camX, ey = e.y - camY;
+    if(ex < -80 || ex > W+80 || ey < -80 || ey > H+80) continue;
+    const src = e.type === 'sentinel' ? 'assets/enemies/guardian_aether_sentinel.svg' : (e.type === 'vortex' ? 'assets/enemies/guardian_vortex.svg' : 'assets/enemies/voidling.svg');
+    const img = ASSET_IMAGES[src];
+    ctx.save();
+    const bob = e.type === 'burrower' ? Math.sin(t * 7 + e.phase) * 3 : Math.sin(t * 2.5 + e.phase) * 6;
+    ctx.translate(ex, ey + bob);
+    if(['swarm', 'stalker', 'leech', 'prism', 'stormcaller', 'burrower', 'mirror'].includes(e.type)){
+      drawProceduralEnemy(e, t);
+    } else if(img && img.complete && img.naturalWidth){
+      ctx.drawImage(img, -28, -28, 56, 56);
+    } else {
+      ctx.fillStyle = e.type === 'vortex' ? C.toxic : (e.type === 'sentinel' ? C.teal : C.purple);
+      ctx.beginPath(); ctx.arc(0, 0, 22, 0, 6.283); ctx.fill();
+    }
+    ctx.restore();
+  }
+}
+
+function drawProceduralEnemy(e, t){
+  const colors = {
+    swarm: ['#ff6bd6', '#ffd166'], stalker: ['#ff5577', '#ffb347'],
+    leech: ['#b5ff40', '#4dffb8'], prism: ['#d8b4ff', '#62ffd1'],
+    stormcaller: ['#6be7ff', '#8f8cff'], burrower: ['#ff7a2e', '#ffd166'],
+    mirror: ['#ffffff', '#8fb7ff']
+  }[e.type] || ['#ba68f8', '#3df0ff'];
+  ctx.save();
+  ctx.globalCompositeOperation = 'lighter';
+  ctx.shadowColor = colors[0];
+  ctx.shadowBlur = 12;
+  ctx.fillStyle = colors[0];
+  if(e.type === 'swarm'){
+    for(let i=0; i<3; i++){
+      const a = t * 2.2 + e.phase + i * 2.1;
+      ctx.beginPath(); ctx.arc(Math.cos(a) * 13, Math.sin(a) * 10, 8, 0, 6.283); ctx.fill();
+    }
+  } else if(e.type === 'prism' || e.type === 'mirror'){
+    ctx.rotate(t * (e.type === 'mirror' ? -1.2 : 1.6) + e.phase);
+    ctx.beginPath(); ctx.moveTo(0, -27); ctx.lineTo(22, 0); ctx.lineTo(0, 27); ctx.lineTo(-22, 0); ctx.closePath(); ctx.fill();
+    ctx.strokeStyle = colors[1]; ctx.lineWidth = 3; ctx.stroke();
+  } else if(e.type === 'stalker'){
+    ctx.beginPath(); ctx.moveTo(-24, 20); ctx.lineTo(0, -25); ctx.lineTo(24, 20); ctx.lineTo(0, 10); ctx.closePath(); ctx.fill();
+    ctx.fillStyle = colors[1]; ctx.fillRect(-4, -7, 8, 5);
+  } else if(e.type === 'stormcaller'){
+    ctx.beginPath(); ctx.arc(0, 0, 20, 0, 6.283); ctx.fill();
+    ctx.strokeStyle = colors[1]; ctx.lineWidth = 3;
+    ctx.beginPath(); ctx.moveTo(-30, -22); ctx.lineTo(-12, -6); ctx.lineTo(-25, 10); ctx.moveTo(30, -22); ctx.lineTo(12, -6); ctx.lineTo(25, 10); ctx.stroke();
+  } else if(e.type === 'burrower'){
+    ctx.beginPath(); ctx.ellipse(0, 4, 28, 17, 0, 0, 6.283); ctx.fill();
+    ctx.fillStyle = colors[1]; ctx.beginPath(); ctx.arc(0, -9, 7, 0, 6.283); ctx.fill();
+  } else {
+    ctx.beginPath(); ctx.arc(0, 0, 22, 0, 6.283); ctx.fill();
+    ctx.fillStyle = colors[1]; ctx.beginPath(); ctx.arc(7, -5, 5, 0, 6.283); ctx.fill();
+  }
+  ctx.restore();
+}
+
+function attackProfile(style){
+  const profiles = {
+    gravity_rock: {kind: 'gravity_rock', color: '#8d7e91', edge: '#d8b4ff', speed: 250, damage: 1, radius: 12},
+    sky_shard: {kind: 'sky_shard', color: '#62ffd1', edge: '#eaffff', speed: 330, damage: 1, radius: 8},
+    toxic_glob: {kind: 'toxic_glob', color: '#b5ff40', edge: '#eaffc7', speed: 210, damage: 1, radius: 10},
+    crystal_shard: {kind: 'crystal_shard', color: '#ff6bd6', edge: '#ffffff', speed: 300, damage: 1, radius: 9},
+    acid_glob: {kind: 'acid_glob', color: '#b5ff40', edge: '#fff27a', speed: 190, damage: 1, radius: 12},
+    storm_bolt: {kind: 'storm_bolt', color: '#6be7ff', edge: '#ffffff', speed: 420, damage: 1, radius: 6},
+    mirror_beam: {kind: 'mirror_beam', color: '#d8b4ff', edge: '#ffffff', speed: 360, damage: 1, radius: 7},
+    ice_shard: {kind: 'ice_shard', color: '#8fb7ff', edge: '#e8fbff', speed: 300, damage: 1, radius: 10}
+  };
+  return profiles[style] || profiles.gravity_rock;
+}
+
+function launchEnemyAttack(enemy, player, cfg){
+  const profile = attackProfile(cfg.attackStyle || 'gravity_rock');
+  const dx = player.x - enemy.x;
+  const dy = player.y - enemy.y;
+  const distance = Math.max(1, Math.hypot(dx, dy));
+  const lead = Math.min(0.55, distance / profile.speed * 0.35);
+  const aimX = player.x + player.vx * lead;
+  const aimY = player.y + player.vy * lead;
+  const aimDistance = Math.max(1, Math.hypot(aimX - enemy.x, aimY - enemy.y));
+  const spread = enemy.type === 'swarm' ? (Math.random() - 0.5) * 0.24 : 0;
+  const angle = Math.atan2(aimY - enemy.y, aimX - enemy.x) + spread;
+  BULLETS.push({
+    x: enemy.x, y: enemy.y,
+    vx: Math.cos(angle) * profile.speed,
+    vy: Math.sin(angle) * profile.speed,
+    life: Math.min(3.2, aimDistance / profile.speed + 1.4),
+    hostile: true,
+    kind: profile.kind,
+    color: profile.color,
+    edge: profile.edge,
+    radius: profile.radius,
+    damage: profile.damage
+  });
+  spawn(enemy.x, enemy.y, Math.cos(angle) * -30, Math.sin(angle) * -30, 0.25, profile.radius * 0.8, profile.color, 0, true);
+  SFX.enemyAttack();
+}
+
+function drawBullets(camX, camY){
+  ctx.save();
+  for(const b of BULLETS){
+    const bx = b.x - camX, by = b.y - camY;
+    if(b.hostile){
+      drawHostileProjectile(b, bx, by);
+    } else {
+      ctx.fillStyle = '#ffffff';
+      ctx.beginPath(); ctx.arc(bx, by, 3, 0, 6.283); ctx.fill();
+      ctx.strokeStyle = C.cyan;
+      ctx.lineWidth = 3;
+      ctx.beginPath(); ctx.moveTo(bx - b.vx * 0.04, by - b.vy * 0.04); ctx.lineTo(bx, by); ctx.stroke();
+    }
+  }
+  ctx.restore();
+}
+
+function drawLaserBeam(camX, camY){
+  if(!PL || PL.laserT <= 0) return;
+  const startX = PL.x + PL.face * 16 - camX;
+  const startY = PL.y - 5 - camY;
+  const endX = PL.x + PL.face * 330 - camX;
+  const endY = startY;
+  ctx.save();
+  ctx.globalCompositeOperation = 'lighter';
+  ctx.globalAlpha = clamp(PL.laserT / 0.16, 0, 1);
+  ctx.strokeStyle = '#ff365f';
+  ctx.lineWidth = 12;
+  ctx.beginPath(); ctx.moveTo(startX, startY); ctx.lineTo(endX, endY); ctx.stroke();
+  ctx.strokeStyle = '#fff3f7';
+  ctx.lineWidth = 3;
+  ctx.beginPath(); ctx.moveTo(startX, startY); ctx.lineTo(endX, endY); ctx.stroke();
+  ctx.restore();
+}
+
+function drawHostileProjectile(b, x, y){
+  const size = b.radius || 7;
+  const col = b.color || C.ember;
+  ctx.save();
+  ctx.translate(x, y);
+  ctx.rotate(Math.atan2(b.vy, b.vx));
+  ctx.globalCompositeOperation = 'lighter';
+  ctx.shadowColor = col;
+  ctx.shadowBlur = 14;
+  ctx.fillStyle = col;
+  if(b.kind === 'rock' || b.kind === 'ice_shard' || b.kind === 'gravity_rock'){
+    ctx.beginPath();
+    ctx.moveTo(size * 1.7, 0);
+    ctx.lineTo(size * 0.7, -size * 1.1);
+    ctx.lineTo(-size * 1.2, -size * 0.8);
+    ctx.lineTo(-size * 1.5, size * 0.6);
+    ctx.lineTo(size * 0.2, size * 1.3);
+    ctx.closePath();
+    ctx.fill();
+    ctx.strokeStyle = b.edge || '#ffffff';
+    ctx.lineWidth = 1.5;
+    ctx.stroke();
+    ctx.fillStyle = 'rgba(20,15,25,0.45)';
+    ctx.beginPath(); ctx.arc(-size * 0.35, -size * 0.15, size * 0.35, 0, 6.283); ctx.fill();
+  } else if(b.kind === 'crystal_shard' || b.kind === 'sky_shard'){
+    ctx.beginPath(); ctx.moveTo(size * 1.8, 0); ctx.lineTo(0, -size * 1.5); ctx.lineTo(-size * 1.3, 0); ctx.lineTo(0, size * 1.5); ctx.closePath(); ctx.fill();
+    ctx.strokeStyle = '#ffffff'; ctx.lineWidth = 1.5; ctx.stroke();
+  } else if(b.kind === 'toxic_glob' || b.kind === 'acid_glob'){
+    ctx.beginPath(); ctx.arc(0, 0, size, 0, 6.283); ctx.fill();
+    ctx.fillStyle = 'rgba(240,255,180,0.8)'; ctx.beginPath(); ctx.arc(-size * 0.3, -size * 0.35, size * 0.25, 0, 6.283); ctx.fill();
+  } else if(b.kind === 'mirror_beam'){
+    ctx.fillRect(-size * 2.2, -size * 0.45, size * 4.4, size * 0.9);
+    ctx.strokeStyle = '#ffffff'; ctx.lineWidth = 2; ctx.strokeRect(-size * 2.2, -size * 0.45, size * 4.4, size * 0.9);
+  } else {
+    ctx.beginPath(); ctx.arc(0, 0, size, 0, 6.283); ctx.fill();
+  }
+  ctx.restore();
+}
+
+function drawDebris(d, camX, camY){
+  const dx = d.x - camX, dy = d.y - camY;
+  if(dx < -60 || dx > W+60 || dy < -60 || dy > H+60) return;
+  ctx.save();
+  ctx.translate(dx, dy);
+  ctx.rotate(d.rot);
+  const rockAssets = [
+    'assets/objects/asteroid.svg',
+    'assets/objects/meteor.svg'
+  ];
+  const img = ASSET_IMAGES[rockAssets[d.rockType % rockAssets.length]];
+  if(img && img.complete && img.naturalWidth){
+    ctx.globalAlpha = 0.98;
+    ctx.shadowColor = d.hot ? C.ember : 'rgba(180,210,255,0.35)';
+    ctx.shadowBlur = d.hot ? 18 : 8;
+    const size = d.radius * (d.rockType === 2 ? 2.4 : 2.1);
+    ctx.drawImage(img, -size, -size, size * 2, size * 2);
+    if(d.hot){
+      ctx.globalCompositeOperation = 'lighter';
+      ctx.fillStyle = 'rgba(255,90,20,0.22)';
+      ctx.beginPath(); ctx.arc(0, 0, d.radius * 1.25, 0, 6.283); ctx.fill();
+    }
+  } else {
+    ctx.fillStyle = d.hot ? '#421408' : '#555046';
+    ctx.strokeStyle = d.hot ? C.ember : '#9c9282';
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.moveTo(0, -d.radius); ctx.lineTo(d.radius * 0.8, -d.radius * 0.6);
+    ctx.lineTo(d.radius, d.radius * 0.3); ctx.lineTo(d.radius * 0.4, d.radius * 0.9);
+    ctx.lineTo(-d.radius * 0.5, d.radius * 0.8); ctx.lineTo(-d.radius * 0.9, -d.radius * 0.2);
+    ctx.closePath();
+    ctx.fill(); ctx.stroke();
+  }
+  ctx.restore();
+}
+
+function weaponLabel(type){
+  return type === 'sword' ? 'ENERGY SWORD' : type === 'blaster' ? 'PLASMA BLASTER' : type === 'laser' ? 'LASER CUTTER' : type === 'shield' ? 'PHASE SHIELD' : 'GRAVITY LANCE';
+}
+
+
+/* ──────── Draw Emergency Health Packs ──────── */
+function drawHealthPacks(camX, camY, t){
+  const img = ASSET_IMAGES['assets/objects/health_pack.svg'];
+  for(let i=0; i<HEALTH_PACKS.length; i++){
+    const pack = HEALTH_PACKS[i];
+    if(pack.got) continue;
+    const x = pack.x - camX;
+    const y = pack.y - camY + Math.sin(t * 3.2 + pack.pulse) * 4;
+    if(x < -40 || x > W + 40 || y < -40 || y > H + 40) continue;
+
+    ctx.save();
+    ctx.shadowColor = C.green;
+    ctx.shadowBlur = 16;
+    ctx.strokeStyle = C.green;
+    ctx.globalAlpha = 0.85;
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.arc(x, y, 22 + Math.sin(t * 4 + pack.pulse) * 2, 0, 6.283);
+    ctx.stroke();
+    ctx.globalAlpha = 1;
+
+    if(img && img.complete && img.naturalWidth){
+      ctx.drawImage(img, x - 18, y - 18, 36, 36);
+    } else {
+      ctx.fillStyle = '#5dffb0';
+      rr(x - 12, y - 12, 24, 24, 6);
+      ctx.fill();
+      ctx.fillStyle = '#062';
+      ctx.fillRect(x - 2, y - 8, 4, 16);
+      ctx.fillRect(x - 8, y - 2, 16, 4);
+    }
+    txt('MEDKIT', x, y - 28, 9, '#5dffb0', 'center', F_U, 700, 1);
+    ctx.restore();
+  }
+}
+
+function drawWeaponPickups(camX, camY, t){
+  for(const pickup of WEAPON_PICKUPS){
+    if(pickup.got) continue;
+    const x = pickup.x - camX;
+    const y = pickup.y - camY + Math.sin(t * 3 + pickup.pulse) * 5;
+    const src = 'assets/weapons/' + (pickup.type === 'sword' ? 'energy_sword' : pickup.type === 'blaster' || pickup.type === 'laser' ? 'plasma_blaster' : pickup.type === 'shield' ? 'phase_shield' : 'gravity_lance') + '.svg';
+    const img = ASSET_IMAGES[src];
+    ctx.save();
+    ctx.globalCompositeOperation = 'lighter';
+    ctx.shadowColor = C.cyan;
+    ctx.shadowBlur = 18;
+    ctx.strokeStyle = C.cyan;
+    ctx.lineWidth = 2;
+    ctx.beginPath(); ctx.arc(x, y, 30 + Math.sin(t * 4 + pickup.pulse) * 3, 0, 6.283); ctx.stroke();
+    if(img && img.complete && img.naturalWidth){
+      ctx.drawImage(img, x - 22, y - 22, 44, 44);
+    } else {
+      ctx.fillStyle = C.cyan;
+      ctx.fillRect(x - 14, y - 14, 28, 28);
+    }
+    ctx.globalCompositeOperation = 'source-over';
+    txt('COLLECT ' + weaponLabel(pickup.type), x, y - 38, 9, C.cyan, 'center', F_U, 700, 1);
+    ctx.restore();
+  }
+}
+
+/* ──────── Planet-Specific HUD (Realistic Space Telemetry) ──────── */
+function drawHUD(){
+  const cfg = LVL;
+  const pct = getFuelPct();
+  const oxy = G.oxygen !== undefined ? G.oxygen : 100;
+
+  // Top Left: RCS Propellant & Oxygen Life Support
+  const fx = 24, fy = 16, fw = 185, fh = 10;
+  ctx.fillStyle = 'rgba(7,10,26,0.88)';
+  rr(fx-6, fy-4, fw+12, fh*2+30, 6);
+  ctx.fill();
+  ctx.strokeStyle = 'rgba(61,240,255,0.25)';
+  ctx.lineWidth = 1;
+  ctx.stroke();
+
+  // Fuel bar
+  rr(fx, fy+11, fw, fh, 2.5);
+  ctx.fillStyle = 'rgba(255,255,255,0.1)';
+  ctx.fill();
+  const fuelColor = pct > 50 ? C.green : pct > 25 ? C.gold : C.red;
+  ctx.fillStyle = fuelColor;
+  rr(fx, fy+11, fw * clamp(pct/100, 0, 1), fh, 2.5);
+  ctx.fill();
+  txt('RCS PROPELLANT: ' + Math.floor(pct) + '%', fx, fy+8, 10, fuelColor, 'left', F_U, 700);
+
+  // Oxygen bar
+  const oxyColor = oxy > 40 ? C.cyan : oxy > 20 ? C.gold : C.red;
+  rr(fx, fy+32, fw, fh, 2.5);
+  ctx.fillStyle = 'rgba(255,255,255,0.1)';
+  ctx.fill();
+  ctx.fillStyle = oxyColor;
+  rr(fx, fy+32, fw * clamp(oxy/100, 0, 1), fh, 2.5);
+  ctx.fill();
+  txt('SUIT OXYGEN: ' + Math.floor(oxy) + '%', fx, fy+29, 10, oxyColor, 'left', F_U, 700);
+
+  // Hull / Shield Integrity Pips
+  const px = 245, py = 24;
+  for(let i=0; i<3; i++){
+    ctx.fillStyle = i < G.hp ? C.cyan : 'rgba(255,255,255,0.15)';
+    rr(px + i*24, py, 18, 12, 3);
+    ctx.fill();
+  }
+  txt('HULL INTEGRITY', px, py - 6, 10, C.dim, 'left', F_U, 600);
+
+  // Center: Planet Name, Gravity & Dynamic Objective Tracker
+  const gravG = (cfg.gravity / 980).toFixed(2);
+  txt(cfg.name + ' · ' + cfg.type + ' [' + gravG + 'G]', W/2, 22, 14, cfg.accent, 'center', F_O, 700, 2);
+
+  const allSecured = G.cellsGot >= cfg.mandatoryCount;
+  const objColor = allSecured ? C.green : C.gold;
+  const objText = (allSecured ? '✔ ALL OBJECTIVES SECURED' : cfg.mandatoryName.toUpperCase() + ': ' + G.cellsGot + ' / ' + cfg.mandatoryCount) + ' | FLEET CREDITS: ' + G.credits;
+  txt(objText, W/2, 40, 12, objColor, 'center', F_U, 700, 1);
+
+  // Check Life Support Docking Tether
+  const distLander = Math.hypot(PL.x - cfg.landingPad.x, PL.y - cfg.landingPad.y);
+  if(distLander < 140 && G.phase === 'explore'){
+    txt('⚡ LIFE-SUPPORT TETHER DOCKED [RECHARGING]', W/2, 58, 11, C.green, 'center', F_U, 700);
+  } else {
+    // Environmental Hazard Indicator
+    let envText = '';
+    let envColor = C.cyan;
+    if(cfg.id === 'fractured_moon'){
+      envText = 'GRAVITY DISTORTION: ANOMALIES ACTIVE';
+      envColor = C.purple;
+    } else if(cfg.id === 'aether_7'){
+      envText = 'VERTICAL UPDRAFT CHANNELS DETECTED';
+      envColor = C.teal;
+    } else if(cfg.id === 'cinder_moon'){
+      envText = 'VOLCANIC HEAT & LAVA HAZARD ACTIVE';
+      envColor = C.ember;
+    } else if(cfg.id === 'cryos'){
+      envText = 'GLACIAL TRACTION: SUB-ZERO SLIPPERY ICE';
+      envColor = C.ice;
+    } else if(cfg.id === 'vortex_prime'){
+      const suitPct = Math.floor(PL.suit);
+      envText = 'SUIT PROTECTION: ' + suitPct + '% (SEEK SAFE DOMES)';
+      envColor = suitPct > 35 ? C.toxic : C.red;
+    } else if(cfg.id === 'earth'){
+      envText = 'ATMOSPHERIC WIND: ➔ 165 KM/H GUST FORCE';
+      envColor = C.cyan;
+    }
+    txt(envText, W/2, 58, 11, envColor, 'center', F_U, 700);
+  }
+
+  // Top Right: Distance & Radar to Your Rocket at Landing Pad
+  const rocketX = cfg.landingPad.x;
+  const rocketY = cfg.landingPad.y - 12;
+  const dx = rocketX - PL.x, dy = rocketY - PL.y;
+  const dist = Math.hypot(dx, dy);
+  const arrow = getArrow(Math.atan2(dy, dx));
+
+  let radarText = '';
+  if(G.phase === 'flight'){
+    radarText = 'LANDING ZONE: ' + Math.floor(dist) + 'm ' + arrow;
+  } else if(!allSecured){
+    const remaining = cfg.mandatoryCount - G.cellsGot;
+    radarText = 'YOUR ROCKET: ' + Math.floor(dist) + 'm ' + arrow + ' [' + remaining + ' MORE SAMPLES]';
+  } else {
+    radarText = 'YOUR ROCKET: ' + Math.floor(dist) + 'm ' + arrow + ' [READY TO BOARD]';
+  }
+  txt(radarText, W - 24, 26, 12, allSecured ? C.green : C.bone, 'right', F_U, 700);
+
+  uiButton('PAUSE', 704, 68, 72, 28, () => {
+    G.scene = 'pause';
+    setThrusterRumble(false);
+    SFX.click();
+  }, {sz: 10, col: C.cyan});
+  uiButton('EXIT', 782, 68, 62, 28, () => {
+    exitToMenu();
+  }, {sz: 10, col: C.ember});
+  uiButton('MAIN MENU', 850, 68, 86, 28, () => {
+    exitToMenu();
+  }, {sz: 10, col: C.gold});
+
+  // Bottom Toast Notifications
+  if(G.toast && G.toast.t > 0){
+    const a = clamp(Math.min(G.toast.t, 1), 0, 1);
+    ctx.save();
+    ctx.globalAlpha = a;
+    rr(W/2 - 260, H - 76, 520, 50, 8);
+    ctx.fillStyle = 'rgba(7,10,26,0.92)';
+    ctx.fill();
+    ctx.strokeStyle = cfg.accent;
+    ctx.lineWidth = 1.5;
+    ctx.stroke();
+    txt(G.toast.a, W/2, H - 54, 14, C.gold, 'center', F_D, 700, 1);
+    txt(G.toast.b, W/2, H - 36, 11, C.bone, 'center', F_U, 600, 1);
+    ctx.restore();
+  }
+}
+
+function getArrow(angle){
+  let deg = angle * 180 / Math.PI;
+  if(deg < 0) deg += 360;
+  if(deg >= 337.5 || deg < 22.5) return '➔';
+  if(deg >= 22.5 && deg < 67.5) return '➘';
+  if(deg >= 67.5 && deg < 112.5) return '⬇';
+  if(deg >= 112.5 && deg < 157.5) return '↙';
+  if(deg >= 157.5 && deg < 202.5) return '⬅';
+  if(deg >= 202.5 && deg < 247.5) return '↖';
+  if(deg >= 247.5 && deg < 292.5) return '⬆';
+  return '➚';
+}
+
+function resumeGame(){
+  G.scene = 'play';
+  SFX.click();
+}
+
+function exitToMenu(){
+  saveCurrentRun();
+  setThrusterRumble(false);
+  G.scene = 'title';
+  G.phase = 'flight';
+  SFX.click();
+}
+
+
+function requestLandscape(){
+  const ori = screen.orientation || screen.mozOrientation || screen.msOrientation;
+  if(ori && ori.lock){
+    ori.lock('landscape').catch(()=>{});
+  }
+}
+
+function requestGameFullscreen(){
+  if(matchMedia('(pointer:coarse)').matches) requestLandscape();
+  if(document.fullscreenElement || !document.documentElement.requestFullscreen) return;
+  document.documentElement.requestFullscreen().catch(() => {});
+}
+
+function advanceToNextPlanet(){
+  const nextIdx = G.worldIdx + 1;
+  G.endless = nextIdx >= PLANETS.length;
+  recordMissionStat('worlds');
+  clearSavedRun();
+  initPlanet(nextIdx);
+  G.toast = {
+    a: G.endless ? 'ENDLESS FRONTIER SECTOR ' + G.endlessDepth : 'NEXT PLANET REACHED',
+    b: LVL.name + ' · ' + LVL.type,
+    t: 4.0
+  };
+  SFX.warp();
+}
+
+/* ──────── UI Button Helper ──────── */
+function uiButton(label, x, y, w, h, fn, opts){
+  opts = opts || {};
+  const disabled = !!opts.disabled;
+  const hov = !disabled && G.mx >= x && G.mx <= x + w && G.my >= y && G.my <= y + h;
+  if(!disabled) UI_BUTTONS.push({x, y, w, h, fn});
+
+  ctx.save();
+  rr(x, y, w, h, opts.r || 8);
+  const bg = ctx.createLinearGradient(x, y, x, y+h);
+  if(disabled){
+    bg.addColorStop(0, 'rgba(38,45,72,0.45)');
+    bg.addColorStop(1, 'rgba(7,10,26,0.72)');
+  } else if(hov || opts.sel){
+    bg.addColorStop(0, 'rgba(61,240,255,0.25)');
+    bg.addColorStop(1, 'rgba(13,20,51,0.95)');
+  } else {
+    bg.addColorStop(0, 'rgba(16,24,60,0.85)');
+    bg.addColorStop(1, 'rgba(7,10,26,0.95)');
+  }
+  ctx.fillStyle = bg;
+  ctx.fill();
+  ctx.strokeStyle = disabled ? 'rgba(141,151,196,0.18)' : ((hov || opts.sel) ? (opts.col || C.cyan) : 'rgba(141,151,196,0.35)');
+  ctx.lineWidth = (hov || opts.sel) ? 2 : 1;
+  ctx.stroke();
+  txt(label, x + w/2, y + h/2 + 5, opts.sz || 14, disabled ? C.dim : ((hov || opts.sel) ? (opts.col || C.cyan) : C.bone), 'center', F_U, 700);
+  ctx.restore();
+}
+
+/* ═════════════════════════════════════════════════════════════════
+   CONTINUOUS GAMEPLAY LOOP SIMULATION STEP
+   ROCKET FLIGHT -> LANDING -> EXIT -> EXPLORATION -> BOARDING ->
+   TAKEOFF -> WARP TO NEXT PLANET
+   ═════════════════════════════════════════════════════════════════ */
+function updatePlay(dt){
+  const p = PL, cfg = LVL;
+  G.shake = Math.max(0, G.shake - dt * 25);
+  if(G.toast && G.toast.t > 0) G.toast.t -= dt;
+  p.boostCd -= dt;
+  p.inv -= dt;
+  p.atkT -= dt;
+  p.atkCd -= dt;
+  p.shootCd -= dt;
+  p.laserT = Math.max(0, (p.laserT || 0) - dt);
+  G.shieldCd -= dt;
+  if(G.shieldT > 0) G.shieldT -= dt;
+
+  // Steering & Input
+  let steerDir = 0;
+  if(held.left) steerDir -= 1;
+  if(held.right) steerDir += 1;
+
+  const wantThrust = held.up || held.thrust || pressed('thrust');
+  const hasFuel = G.fuel > 0;
+
+  // 1. PHASE: ROCKET FLIGHT (Descent into landing beacon)
+  if(G.phase === 'flight'){
+    p.angle += steerDir * 3.8 * dt;
+    p.face = Math.cos(p.angle) >= 0 ? 1 : -1;
+
+    p.thrusting = wantThrust;
+    setThrusterRumble(wantThrust && hasFuel);
+
+    if(wantThrust){
+      const power = 740 * getThrustMult();
+      const cosA = Math.cos(p.angle), sinA = Math.sin(p.angle);
+      p.vx += cosA * power * dt;
+      p.vy += sinA * power * dt;
+      G.fuel = Math.max(0, G.fuel - 2.8 * getBurnMult() * dt);
+      for(let i=0; i<3; i++){
+        spawn(p.x - cosA * 20, p.y - sinA * 20, -cosA * 240 + (Math.random()-0.5)*50, -sinA * 240 + (Math.random()-0.5)*50, 0.28, 4.5, Math.random()<0.5?C.cyan:'#ff9a2e', 0, true);
+      }
+    }
+
+    if(held.down){ // Reverse brake
+      p.vx *= (1.0 - 2.8 * dt);
+      p.vy *= (1.0 - 2.8 * dt);
+    }
+
+    // Gentle planetary atmospheric gravity
+    p.vy += cfg.gravity * 0.45 * dt;
+    p.vx *= cfg.airDrag || 0.985;
+    p.vy *= cfg.airDrag || 0.985;
+
+    p.x += p.vx * dt;
+    p.y += p.vy * dt;
+
+    // Automatic landing corridor: once the rocket is close to the beacon,
+    // take over horizontal alignment and descend onto the pad surface.
+    const pad = cfg.landingPad;
+    const enteringLandingCorridor = p.x >= pad.x - 300 || p.y >= pad.y - 850;
+    if(enteringLandingCorridor){
+      G.phase = 'landing';
+      G.phaseTimer = 0;
+      p.vx = clamp(p.vx, -180, 180);
+      p.vy = Math.max(0, p.vy);
+      setThrusterRumble(false);
+      G.toast = {
+        a: 'AUTOMATIC LANDING BURN',
+        b: 'Aligning with the landing zone on ' + cfg.name,
+        t: 2.5
+      };
+    }
+  }
+
+  // 2. PHASE: LANDING SEQUENCE
+  else if(G.phase === 'landing'){
+    G.phaseTimer += dt;
+    const pad = cfg.landingPad;
+    const targetY = pad.y - p.radius;
+    const previousBottom = p.y + p.radius;
+    const horizontalStep = clamp((pad.x - p.x) * 4.5 * dt, -260 * dt, 260 * dt);
+    p.x += horizontalStep;
+    p.vx = horizontalStep / Math.max(dt, 0.001);
+    p.vy = Math.min(360, p.vy + cfg.gravity * 0.35 * dt);
+    p.y += p.vy * dt;
+
+    // The landing pad is the authoritative collision surface. The rocket
+    // only settles after crossing its top edge while descending.
+    const crossedPadTop = previousBottom <= pad.y && p.y + p.radius >= pad.y;
+    const alignedWithPad = Math.abs(p.x - pad.x) <= pad.w * 0.5 + p.radius;
+    if(crossedPadTop && alignedWithPad){
+      p.y = targetY;
+      p.vx = 0;
+      p.vy = 0;
+      p.onGround = true;
+    }
+
+    p.x = lerp(p.x, pad.x, dt * 2.5);
+    if(p.onGround) p.y = lerp(p.y, targetY, dt * 5);
+    p.angle = lerp(p.angle, 0, dt * 10);
+    if(p.onGround && G.phaseTimer >= 1.2){
+      G.phase = 'exit';
+      G.phaseTimer = 0;
+      SFX.door();
+      p.x = pad.x + 35;
+      p.y = pad.y - 26;
+      p.vx = 80;
+      p.vy = -160;
+      SFX.land();
+      burst(pad.x + 35, pad.y - 26, 24, C.cyan, 220, 0.7, true);
+      G.toast = {
+        a: 'ASTRONAUT DEPLOYED',
+        b: 'Explore the planet and collect ' + cfg.mandatoryName + '. Return to your rocket when complete.',
+        t: 4.0
+      };
+    }
+  }
+
+  // 3. PHASE: EXIT HATCH (Smooth astronaut deployment onto planetary bedrock)
+  else if(G.phase === 'exit'){
+    G.phaseTimer += dt;
+    p.vy += cfg.gravity * dt;
+    p.x += p.vx * dt;
+    p.y += p.vy * dt;
+    const pad = cfg.landingPad;
+    const surfaceFloor = getSurfaceY(p.x, cfg) - 26;
+    const padFloor = (p.x >= pad.x - 40 && p.x <= pad.x + pad.w + 40) ? (pad.y - 26) : surfaceFloor;
+    const targetFloor = Math.min(padFloor, surfaceFloor);
+    if(p.y >= targetFloor && p.vy >= 0){
+      p.y = targetFloor;
+      p.vy = 0;
+      p.onGround = true;
+      G.phase = 'explore';
+    }
+  }
+
+  // 4. PHASE: PLANET EXPLORATION & OBJECTIVES (Realistic 2D Space Flight & Surface EVA)
+  else if(G.phase === 'explore'){
+    const ship = G.personalRocket;
+    if(ship && G.phase === 'explore'){
+      ship.x = cfg.landingPad.x;
+      ship.y = cfg.landingPad.y - 12;
+      ship.angle = 0;
+      ship.scale = 1.25;
+      ship.thrusting = false;
+    }
+
+    p.coyote = p.onGround ? 0.12 : Math.max(0, p.coyote - dt);
+    p.thrustingUp = false;
+    p.thrustingDown = false;
+    p.thrustingHoriz = 0;
+
+    // A. Life Support System (Oxygen & Tether Docking)
+    G.oxygen = G.oxygen !== undefined ? G.oxygen : 100;
+    const o2Drain = (cfg.oxygenDrain || 0.45) * dt;
+    G.oxygen = Math.max(0, G.oxygen - o2Drain);
+
+    // Docking with the personal rocket replenishes life support and propellant nearby
+    if(ship){
+      const distLander = Math.hypot(p.x - ship.x, p.y - ship.y);
+      if(distLander < 140){
+        G.oxygen = Math.min(100, G.oxygen + 35 * dt);
+        G.fuel = Math.min(getMaxFuel(), G.fuel + 28 * dt);
+        if(Math.random() < 0.08) spawn(ship.x + (Math.random()-0.5)*30, ship.y - 20, 0, -30, 0.3, 2, C.cyan, 0, true);
+      }
+    }
+
+    // Critical Oxygen Asphyxiation Warning
+    if(G.oxygen <= 0){
+      p.o2DmgT = (p.o2DmgT || 0) + dt;
+      if(p.o2DmgT > 2.0){
+        p.o2DmgT = 0;
+        G.hp -= 1;
+        SFX.hit();
+        G.shake = 8;
+        G.toast = { a: 'CRITICAL LIFE SUPPORT', b: 'SUIT OXYGEN DEPLETED IN VACUUM!', t: 2.2 };
+        if(G.hp <= 0) { die('SUIT OXYGEN DEPLETED IN THE VACUUM'); return; }
+      }
+    }
+
+    // B. Ground Walking vs Space Flight Kinematics
+    if(p.onGround){
+      // Surface locomotion
+      p.walkCycle = (p.walkCycle || 0) + Math.abs(p.vx) * dt * 0.022;
+      const friction = cfg.friction || 0.82;
+      const accel = cfg.id === 'cryos' ? 750 : 2100;
+
+      if(steerDir !== 0){
+        p.vx += steerDir * accel * dt;
+        p.face = steerDir;
+      } else {
+        p.vx *= Math.pow(friction, dt * 18);
+      }
+      p.vx = clamp(p.vx, -450, 450);
+
+      // Surface Jump / Liftoff into Space Flight
+      if((pressed('up') || pressed('thrust')) && (p.onGround || p.coyote > 0)){
+        p.vy = -540;
+        p.onGround = false;
+        p.coyote = 0;
+        SFX.boost();
+        burst(p.x, p.y + 16, 12, '#ffffff', 120, 0.35);
+      }
+    } else {
+      // Free Space Flight / Microgravity EVA with MMU Thruster Pack
+      p.walkCycle = (p.walkCycle || 0) + dt * 2.0;
+
+      // 1. Upward Thrusters (Counteract gravity / Fly upward)
+      if(wantThrust && hasFuel){
+        p.thrustingUp = true;
+        const upPower = 940 * getThrustMult();
+        p.vy -= upPower * dt;
+        G.fuel = Math.max(0, G.fuel - 1.8 * getBurnMult() * dt);
+        if(Math.random() < 0.7){
+          SFX.rcs();
+          spawn(p.x - p.face*14, p.y + 14, -p.face*30 + (Math.random()-0.5)*40, 160 + Math.random()*70, 0.25, 4, C.cyan, 0, true);
+        }
+      }
+
+      // 2. Downward Reverse RCS (Altitude descent control)
+      if(held.down && hasFuel){
+        p.thrustingDown = true;
+        p.vy += 650 * getThrustMult() * dt;
+        G.fuel = Math.max(0, G.fuel - 1.2 * getBurnMult() * dt);
+        if(Math.random() < 0.6){
+          SFX.rcs();
+          spawn(p.x - p.face*14, p.y - 18, -p.face*20 + (Math.random()-0.5)*30, -140 - Math.random()*60, 0.2, 3, C.cyan, 0, true);
+        }
+      }
+
+      // 3. Lateral RCS Thrusters (Horizontal space maneuvering)
+      if(steerDir !== 0 && hasFuel){
+        p.thrustingHoriz = steerDir;
+        p.vx += steerDir * 840 * dt;
+        p.face = steerDir;
+        G.fuel = Math.max(0, G.fuel - 0.7 * getBurnMult() * dt);
+      } else {
+        // Space Momentum Conservation (Newton's 1st Law)
+        if(held.down){ // Active Retrograde Braking / SAS
+          p.vx *= (1.0 - 4.2 * dt);
+        } else {
+          // Low drag vacuum drift
+          p.vx *= Math.pow(cfg.airDrag || 0.994, dt * 60);
+        }
+      }
+
+      p.vx = clamp(p.vx, -620, 620);
+      p.vy = clamp(p.vy, -660, 660);
+    }
+
+    // Tactical Dash / Emergency MMU Burn (Shift)
+    if(pressed('boost') && p.boostCd <= 0 && G.fuel >= 6){
+      p.boostCd = 1.2;
+      p.boostT = 0.28;
+      G.fuel -= 6;
+      p.inv = Math.max(p.inv, 0.4);
+      p.vx = p.face * 820;
+      SFX.boost();
+      G.shake = 6;
+      burst(p.x, p.y, 18, C.cyan, 200, 0.5, true);
+    }
+
+    // Energy Sword Melee Attack (J / X / Left Click)
+    if(G.hasSword && pressed('atk') && p.atkCd <= 0){
+      p.atkT = 0.22;
+      p.atkCd = 0.35;
+      SFX.sword();
+      // Hit detection on enemies within swing range
+      const slashX = p.x + p.face * 35;
+      for(let e=ENEMIES.length-1; e>=0; e--){
+        const enemy = ENEMIES[e];
+        if(Math.hypot(slashX - enemy.x, p.y - enemy.y) < 75){
+          enemy.hp -= 1;
+          SFX.enemyHit();
+          G.shake = 5;
+          burst(enemy.x, enemy.y, 14, cfg.accent, 190, 0.4, true);
+          if(enemy.hp <= 0){
+            ENEMIES.splice(e, 1);
+            G.score += 50;
+            G.credits += 25;
+            recordMissionStat('enemies');
+            SFX.enemyDefeat();
+            burst(enemy.x, enemy.y, 25, cfg.accent, 260, 0.6, true);
+          }
+        }
+      }
+    }
+
+    // Laser Cutter: a collected laser slices falling rocks into fragments.
+    if(G.hasLaser && pressed('shoot') && p.shootCd <= 0){
+      p.shootCd = 0.28;
+      p.laserT = 0.16;
+      SFX.laser();
+      const laserStartX = p.x + p.face * 16;
+      const laserEndX = laserStartX + p.face * 330;
+      for(let k=DEBRIS.length-1; k>=0; k--){
+        const rock = DEBRIS[k];
+        const withinBeam = rock.x >= Math.min(laserStartX, laserEndX) - rock.radius && rock.x <= Math.max(laserStartX, laserEndX) + rock.radius;
+        const aligned = Math.abs(rock.y - (p.y - 5)) <= rock.radius + 18;
+        if(withinBeam && aligned){
+          burst(rock.x, rock.y, 18, rock.hot ? C.ember : '#d9e5ff', 230, 0.45, true);
+          DEBRIS.splice(k, 1);
+          G.score += 12;
+        }
+      }
+    } else if(G.hasBlaster && pressed('shoot') && p.shootCd <= 0){
+      p.shootCd = 0.24;
+      SFX.blaster();
+      BULLETS.push({
+        x: p.x + p.face * 20,
+        y: p.y - 4,
+        vx: p.face * 920,
+        vy: 0,
+        life: 1.1
+      });
+      spawn(p.x + p.face * 22, p.y - 4, p.face * 60, 0, 0.15, 6, C.cyan, 0, true);
+    }
+
+    // Phase Shield (Q)
+    if(G.hasShield && pressed('shield') && G.shieldCd <= 0){
+      G.shieldT = 1.8;
+      G.shieldCd = 5.0;
+      SFX.shield();
+    }
+
+    // Environmental Forces
+    p.vy += cfg.gravity * dt;
+    if(cfg.wind){
+      p.vx += cfg.wind.x * dt;
+      p.vy += cfg.wind.y * dt;
+    }
+    p.vx *= cfg.airDrag || 0.985;
+    p.vy *= cfg.airDrag || 0.985;
+
+    // Platform and surface collisions
+    const prevY = p.y;
+    p.x += p.vx * dt;
+    p.y += p.vy * dt;
+
+    for(const plat of PLATFORMS){
+      if(plat.kind === 'move') plat.ox = Math.sin(G.t * 1.4 + plat.phase) * plat.amp;
+    }
+    p.onGround = false;
+
+    // A. Elevated platforms & landing pad
+    for(const plat of PLATFORMS){
+      if(plat.kind === 'ground' || plat.broke) continue;
+      const px = plat.x + (plat.ox || 0);
+      const withinX = (p.x + 12 > px) && (p.x - 12 < px + plat.w);
+      const feetY = p.y + 26;
+      const prevFeetY = prevY + 26;
+      if(withinX && p.vy >= 0){
+        if((prevFeetY <= plat.y + 12 && feetY >= plat.y) || (feetY >= plat.y && feetY <= plat.y + 16)){
+          p.y = plat.y - 26;
+          p.vy = 0;
+          p.onGround = true;
+          if(plat.kind === 'move') p.x += Math.cos(G.t * 1.4 + plat.phase) * plat.amp * 1.4 * dt;
+          if(plat.kind === 'crack'){
+            plat.crackT = (plat.crackT || 0) + dt;
+            if(plat.crackT > 0.75){
+              plat.broke = true;
+              burst(p.x, p.y + 18, 18, '#bdefff', 180, 0.55, true);
+            }
+          }
+        }
+      }
+    }
+
+    // B. Authoritative Planetary Surface collision (boots rest visibly directly on top of the purple line)
+    const surfaceFloor = getSurfaceY(p.x, cfg) - 26;
+    if(p.y >= surfaceFloor){
+      p.y = surfaceFloor;
+      p.vy = Math.min(0, p.vy);
+      p.onGround = true;
+    }
+
+    // Black Hole remnant pull (Fractured Moon only)
+    if(cfg.hasHole){
+      const hx = cfg.holePos.x, hy = cfg.holePos.y;
+      const distHole = Math.hypot(hx - p.x, hy - p.y);
+      if(distHole < cfg.holePullR && distHole > 0){
+        const pullFactor = Math.pow(Math.max(0, 1.0 - (distHole / cfg.holePullR)), 1.3);
+        const force = Math.min(cfg.holeForce * pullFactor, 360);
+        p.vx += ((hx - p.x) / distHole) * force * dt;
+        p.vy += ((hy - p.y) / distHole) * force * dt;
+      }
+      if(distHole <= cfg.holeKillR){
+        die('CONSUMED BY EVENT HORIZON SINGULARITY');
+        return;
+      }
+    }
+
+    // Hazards update
+    for(const h of HAZARDS){
+      if(h.type === 'updraft' || h.type === 'downdraft' || h.type === 'icegust'){
+        if(Math.abs(p.x - h.x) < h.w/2 && Math.abs(p.y - h.y) < h.h/2){
+          p.vy += (h.fy || 0) * dt;
+          p.vx += (h.fx || 0) * dt;
+        }
+      } else if(h.type === 'lowgrav' || h.type === 'heavygrav'){
+        const d = Math.hypot(p.x - h.x, p.y - h.y);
+        if(d < h.r){
+          p.vy += (h.type === 'lowgrav' ? -cfg.gravity * 0.72 : cfg.gravity * 0.95) * dt;
+        }
+      } else if(h.type === 'heat' || h.type === 'acid'){
+        const d = Math.hypot(p.x - h.x, p.y - h.y);
+        if(d < h.r){
+          G.fuel = Math.max(0, G.fuel - h.drain * dt);
+          if(h.type === 'acid') p.suit = Math.max(0, p.suit - (cfg.oxygenDrain || 1.5) * dt);
+          if(G.fuel <= 0 && p.inv <= 0 && G.shieldT <= 0){
+            hurt(1, 'ENVIRONMENTAL RADIATION BREACH');
+          }
+        }
+      } else if(h.type === 'lava'){
+        if(Math.abs(p.x - h.x) < h.w/2 && Math.abs(p.y - h.y) < h.h/2 && p.inv <= 0 && G.shieldT <= 0){
+          hurt(1, 'MOLTEN LAVA BREACH');
+        }
+      } else if(h.type === 'firejet'){
+        const active = Math.sin(G.t * 2.8 + h.phase) > -0.2;
+        if(active && Math.abs(p.x - h.x) < 32 && p.y > h.y - 180 && p.y < h.y + 20 && p.inv <= 0 && G.shieldT <= 0){
+          hurt(1, 'FIRE JET IMPACT');
+        }
+      } else if(h.type === 'safe'){
+        const d = Math.hypot(p.x - h.x, p.y - h.y);
+        if(d < h.r){
+          p.suit = Math.min(100, p.suit + 24 * dt);
+        }
+      }
+    }
+
+    // Toxic Atmosphere Suit Oxygen Drain (Vortex Prime)
+    if(cfg.oxygenDrain && !HAZARDS.some(h => h.type === 'safe' && Math.hypot(p.x - h.x, p.y - h.y) < h.r)){
+      p.suit = Math.max(0, p.suit - cfg.oxygenDrain * dt);
+      if(p.suit <= 0 && p.inv <= 0 && G.shieldT <= 0){
+        hurt(1, 'SUIT OXYGEN DEPLETED');
+      }
+    }
+
+    // Falling Hot Rocks (Cinder Moon)
+    if(cfg.fallingRocks && Math.floor(G.t * 1.6) !== Math.floor((G.t - dt) * 1.6) && !isRocketSafeZone(p.x, p.y, cfg)){
+      DEBRIS.push({
+        x: clamp(p.x + (Math.random() - 0.5) * 800, 200, cfg.width - 200),
+        y: Math.max(80, p.y - 700),
+        vx: (Math.random() - 0.5) * 90,
+        vy: 190 + Math.random() * 140,
+        radius: 18 + Math.random() * 18,
+        rot: Math.random() * 6.28,
+        rotSpd: (Math.random() - 0.5) * 3,
+        hp: 1,
+        hot: true,
+        rockType: 1,
+        lethal: true
+      });
+    }
+
+    // Every planet receives a readable meteor shower from above.
+    if(Math.floor(G.t * 1.15) !== Math.floor((G.t - dt) * 1.15) && DEBRIS.length < 18 && !isRocketSafeZone(p.x, p.y, cfg)){
+      DEBRIS.push({
+        x: clamp(p.x + (Math.random() - 0.5) * 1100, 180, cfg.width - 180),
+        y: Math.max(50, p.y - 700 - Math.random() * 180),
+        vx: (Math.random() - 0.5) * 80,
+        vy: 260 + Math.random() * 180,
+        radius: 18 + Math.random() * 16,
+        rot: Math.random() * 6.28,
+        rotSpd: (Math.random() - 0.5) * 3,
+        hp: 1,
+        hot: cfg.id === 'cinder_moon' || cfg.id === 'endless_3' || cfg.id === 'endless_6',
+        rockType: Math.floor(Math.random() * 3),
+        lethal: true
+      });
+    }
+
+    // Debris physics & collision
+    for(let k=DEBRIS.length-1; k>=0; k--){
+      const d = DEBRIS[k];
+      d.x += d.vx * dt;
+      d.y += d.vy * dt;
+      d.rot += d.rotSpd * dt;
+      if(Math.hypot(p.x - d.x, p.y - d.y) < p.radius + d.radius && !isRocketSafeZone(p.x, p.y, cfg)){
+        if(p.inv <= 0 && G.shieldT <= 0){
+          rockImpact(d.hot ? 'FALLING LAVA ROCK IMPACT' : 'FALLING SPACE ROCK IMPACT');
+        }
+        burst(d.x, d.y, 24, d.hot ? C.ember : '#c8d2e8', 220, 0.55, true);
+        DEBRIS.splice(k, 1);
+        continue;
+      }
+      if(d.y > cfg.groundY + 120) DEBRIS.splice(k, 1);
+    }
+
+    // Enemy movement, special attacks, and collision
+    for(let e=ENEMIES.length-1; e>=0; e--){
+      const enemy = ENEMIES[e];
+      const type = enemy.type;
+      const orbit = Math.sin(G.t * enemy.speed + enemy.phase);
+      if(type === 'stalker'){
+        enemy.x += clamp(p.x - enemy.x, -90, 90) * dt * 0.55;
+        enemy.y = enemy.baseY || enemy.y;
+      } else if(type === 'burrower'){
+        enemy.x = enemy.baseX + orbit * 150;
+        enemy.y = cfg.groundY - 38 - Math.max(0, orbit) * 70;
+      } else if(type === 'stormcaller'){
+        enemy.x = enemy.baseX + orbit * 110;
+        enemy.y = enemy.baseY - 90 + Math.cos(G.t * 1.3 + enemy.phase) * 65;
+      } else if(type === 'leech'){
+        enemy.x = enemy.baseX + Math.cos(G.t * enemy.speed + enemy.phase) * 120;
+        enemy.y = enemy.baseY + Math.sin(G.t * enemy.speed * 1.4 + enemy.phase) * 90;
+      } else if(type === 'mirror'){
+        enemy.x = enemy.baseX + Math.sin(G.t * enemy.speed + enemy.phase) * 130;
+        enemy.y = enemy.baseY + Math.cos(G.t * enemy.speed + enemy.phase) * 45;
+      } else {
+        enemy.x = enemy.baseX + Math.sin(G.t * enemy.speed + enemy.phase) * 90;
+        enemy.y = enemy.baseY + Math.sin(G.t * 2.1 + enemy.phase) * 34;
+      }
+      enemy.shotT -= dt;
+      const attackDistance = Math.hypot(p.x - enemy.x, p.y - enemy.y);
+      if(enemy.shotT <= 0 && attackDistance < 1150 && !isRocketSafeZone(p.x, p.y, cfg)){
+        enemy.shotT = Math.max(1.35, 3.4 - Math.min(1.4, (cfg.endlessDepth || 0) * 0.08));
+        launchEnemyAttack(enemy, p, cfg);
+      }
+      const d = Math.hypot(p.x - enemy.x, p.y - enemy.y);
+      if(d < p.radius + 28){
+        if(p.boostT > 0 || G.shieldT > 0){
+          ENEMIES.splice(e, 1);
+          G.score += 60;
+          burst(enemy.x, enemy.y, 24, cfg.accent, 220, 0.55, true);
+        } else if(p.inv <= 0){
+          hurt(1, 'HOSTILE CONTACT: ' + enemy.type.toUpperCase());
+        }
+      }
+    }
+
+    // Bullets update & enemy collision
+    for(let b=BULLETS.length-1; b>=0; b--){
+      const blt = BULLETS[b];
+      blt.life -= dt;
+      blt.x += blt.vx * dt;
+      blt.y += blt.vy * dt;
+      if(blt.life <= 0){ BULLETS.splice(b, 1); continue; }
+
+      if(blt.hostile){
+        if(Math.hypot(blt.x - p.x, blt.y - p.y) < p.radius + 10 && p.inv <= 0 && G.shieldT <= 0 && !isRocketSafeZone(p.x, p.y, cfg)){
+          BULLETS.splice(b, 1);
+          hurt(blt.damage || 1, 'ENERGY IMPACT: ' + (blt.kind || 'HOSTILE PROJECTILE').toUpperCase());
+          SFX.hostile();
+          burst(p.x, p.y, 10, C.ember, 150, 0.35, true);
+        }
+        continue;
+      }
+
+      for(let e=ENEMIES.length-1; e>=0; e--){
+        const enemy = ENEMIES[e];
+        if(Math.hypot(blt.x - enemy.x, blt.y - enemy.y) < 32){
+          enemy.hp -= 1;
+          BULLETS.splice(b, 1);
+          SFX.enemyHit();
+          burst(enemy.x, enemy.y, 12, C.cyan, 170, 0.35, true);
+          if(enemy.hp <= 0){
+            ENEMIES.splice(e, 1);
+            G.score += 50;
+            G.credits += 25;
+            recordMissionStat('enemies');
+            SFX.enemyDefeat();
+            burst(enemy.x, enemy.y, 25, cfg.accent, 260, 0.6, true);
+          }
+          break;
+        }
+      }
+    }
+
+    // Collect Mandatory Resources
+    for(let i=0; i<CELLS.length; i++){
+      const c = CELLS[i];
+      if(!c.got){
+        const d = Math.hypot(p.x - c.x, p.y - c.y);
+        if(d < 170 && d > 0){
+          c.x = lerp(c.x, p.x, dt * 5.5);
+          c.y = lerp(c.y, p.y, dt * 5.5);
+        }
+        if(d < 42){
+          c.got = true;
+          G.cellsGot++;
+          recordMissionStat('samples');
+          G.oxygen = Math.min(100, (G.oxygen || 100) + 15);
+          G.score += 25;
+          G.credits += 20;
+          SFX.resource();
+          burst(c.x, c.y, 18, cfg.accent, 200, 0.6, true);
+          if(G.cellsGot >= cfg.mandatoryCount){
+            SFX.orb();
+            G.toast = {
+              a: 'ALL OBJECTIVES COMPLETE!',
+              b: 'All ' + cfg.mandatoryCount + ' ' + cfg.mandatoryName + ' secured. Return to your personal rocket to launch.',
+              t: 4.5
+            };
+          }
+        }
+      }
+    }
+
+    // Collect Bonus Energy Orbs
+    for(let j=0; j<ORBS.length; j++){
+      const o = ORBS[j];
+      if(!o.got){
+        const d = Math.hypot(p.x - o.x, p.y - o.y);
+        if(d < 160 && d > 0){
+          o.x = lerp(o.x, p.x, dt * 5.0);
+          o.y = lerp(o.y, p.y, dt * 5.0);
+        }
+        if(d < 42){
+          o.got = true;
+          G.orbsGot++;
+          recordMissionStat('orbs');
+          G.fuel = Math.min(getMaxFuel(), G.fuel + 35);
+          G.oxygen = Math.min(100, (G.oxygen || 100) + 25);
+          G.score += 40;
+          G.credits += 15;
+          SFX.orb();
+          burst(o.x, o.y, 20, C.gold, 220, 0.7, true);
+        }
+      }
+    }
+
+    // Weapon pickups must be reached by the astronaut before the controls work.
+    for(const pickup of WEAPON_PICKUPS){
+      if(pickup.got) continue;
+      if(Math.hypot(p.x - pickup.x, p.y - pickup.y) < 48){
+        pickup.got = true;
+        if(pickup.type === 'sword') G.hasSword = true;
+        if(pickup.type === 'blaster') G.hasBlaster = true;
+        if(pickup.type === 'laser') G.hasLaser = true;
+        if(pickup.type === 'shield') G.hasShield = true;
+        if(pickup.type === 'lance') G.hasLance = true;
+        G.score += 35;
+        G.credits += 15;
+        SFX.weapon();
+        burst(pickup.x, pickup.y, 22, C.cyan, 190, 0.6, true);
+        G.toast = {
+          a: weaponLabel(pickup.type) + ' ACQUIRED',
+          b: 'Weapon systems online. Continue the planetary mission.',
+          t: 3.2
+        };
+      }
+    }
+
+
+    // Collect Health Packs (Emergency Nano-Repair)
+    for(const pack of HEALTH_PACKS){
+      if(pack.got) continue;
+      if(Math.hypot(p.x - pack.x, p.y - pack.y) < 44){
+        pack.got = true;
+        const healed = G.hp < 3;
+        G.hp = Math.min(3, G.hp + 1);
+        G.oxygen = 100;
+        p.suit = 100;
+        G.score += 25;
+        G.credits += 10;
+        SFX.heal();
+        burst(pack.x, pack.y, 20, '#5dffb0', 200, 0.6, true);
+        G.toast = {
+          a: healed ? 'HEALTH PACK COLLECTED' : 'MEDKIT ABSORBED',
+          b: healed ? 'Hull integrity restored (+1 HP). Suit life support refilled.' : 'Hull is at maximum. Life support refilled.',
+          t: 3.0
+        };
+      }
+    }
+
+    // Board the same rocket stationed at the landing pad
+    const rocketX = cfg.landingPad.x;
+    const rocketY = cfg.landingPad.y - 12;
+    const distRocket = Math.hypot(p.x - rocketX, p.y - rocketY);
+    const allCollected = G.cellsGot >= cfg.mandatoryCount;
+
+    if(distRocket < 95){
+      if(allCollected && (pressed('use') || pressed('thrust') || distRocket < 55)){
+        G.phase = 'boarding';
+        G.phaseTimer = 0;
+        SFX.door();
+        G.toast = {
+          a: 'BOARDING ROCKET',
+          b: 'Systems pressurized. Engaging orbital ignition...',
+          t: 3.5
+        };
+      } else if(!allCollected && (pressed('use') || distRocket < 65)){
+        if(!G.toast || G.toast.t <= 0.5){
+          SFX.warn();
+          const remaining = cfg.mandatoryCount - G.cellsGot;
+          G.toast = {
+            a: 'ROCKET SEALED',
+            b: 'Retrieve ' + remaining + ' more ' + cfg.mandatoryName + ' before launch.',
+            t: 2.8
+          };
+        }
+      }
+    }
+  }
+
+  // 5. PHASE: BOARDING ROCKET
+  else if(G.phase === 'boarding'){
+    G.phaseTimer += dt;
+    p.vx *= 0.8; p.vy *= 0.8;
+    p.x = lerp(p.x, cfg.landingPad.x, dt * 6);
+    p.y = lerp(p.y, cfg.landingPad.y - 12, dt * 6);
+    if(G.phaseTimer >= 1.0){
+      G.phase = 'takeoff';
+      G.phaseTimer = 0;
+      SFX.takeoff();
+    }
+  }
+
+  // 6. PHASE: TAKEOFF VERTICAL LAUNCH
+  else if(G.phase === 'takeoff'){
+    G.phaseTimer += dt;
+    G.shake = 14;
+    const ship = G.personalRocket;
+    // Rotate nose smoothly upward for vertical orbital ascent
+    ship.angle = lerp(ship.angle || 0, -Math.PI / 2, dt * 5.5);
+    // Launch rocket upwards
+    ship.y -= 380 * dt * (1 + G.phaseTimer * 2.5);
+    ship.thrusting = true;
+    p.x = ship.x;
+    p.y = ship.y;
+
+    // Heavy main engine exhaust plumes blasting downward
+    const cosA = Math.cos(ship.angle), sinA = Math.sin(ship.angle);
+    const nozzleX = ship.x - cosA * 26;
+    const nozzleY = ship.y - sinA * 26;
+    for(let i=0; i<5; i++){
+      spawn(
+        nozzleX + (Math.random()-0.5)*18,
+        nozzleY + (Math.random()-0.5)*18,
+        -cosA * (320 + Math.random()*160) + (Math.random()-0.5)*70,
+        -sinA * (320 + Math.random()*160) + (Math.random()-0.5)*70,
+        0.38, 6.5,
+        Math.random()<0.5?'#ff9a2e':(Math.random()<0.3?'#ffffff':C.cyan),
+        0, true
+      );
+    }
+
+    if(G.phaseTimer >= 2.2){
+      G.phase = 'warp';
+      G.phaseTimer = 0;
+      SFX.warp();
+    }
+  }
+
+  // 7. PHASE: COSMIC WARP TO NEXT PLANET
+  else if(G.phase === 'warp'){
+    G.phaseTimer += dt;
+    G.shake = 8;
+    const nextIdx = G.worldIdx + 1;
+    if(G.phaseTimer >= 1.8){
+      // The handcrafted campaign flows directly into an endless frontier.
+      advanceToNextPlanet();
+    }
+  }
+
+  // Boundaries clamping (strictly kept above planetary ground line)
+  p.x = clamp(p.x, 30, cfg.width - 30);
+  p.y = clamp(p.y, 30, (G.phase === 'explore' || G.phase === 'exit') ? (getSurfaceY(p.x, cfg) - 26) : (cfg.height - 30));
+
+  // Smooth camera tracking
+  const targetCamX = clamp(p.x - W/2, 0, cfg.width - W);
+  const targetCamY = clamp(p.y - H/2, 0, cfg.height - H);
+  G.camX = lerp(G.camX, targetCamX, dt * 5.0);
+  G.camY = lerp(G.camY, targetCamY, dt * 5.0);
+
+  updFx(dt);
+}
+
+function hurt(amount, reason){
+  if(PL.inv > 0 || G.shieldT > 0) return;
+  PL.inv = 1.2;
+  G.shake = 10;
+
+  if(G.fuel > 20){
+    G.fuel -= 20;
+    SFX.hit();
+    G.toast = { a: 'EMERGENCY SHIELD VENT', b: '-20% Fuel absorbed catastrophic breach', t: 2.2 };
+  } else {
+    G.hp -= amount;
+    if(G.hp <= 0){
+      die(reason || 'SUIT INTEGRITY COLLAPSE');
+    } else {
+      SFX.hit();
+    }
+  }
+}
+
+function rockImpact(reason){
+  PL.inv = 1.2;
+  G.shake = 14;
+  G.hp = Math.max(0, G.hp - 1);
+  SFX.rock();
+  G.toast = {a: 'ROCK IMPACT', b: reason + ' · HULL -1', t: 2.2};
+  if(G.hp <= 0) die(reason);
+}
+
+function die(why){
+  setThrusterRumble(false);
+  G.deadWhy = why;
+  G.scene = 'dead';
+  G.shake = 18;
+  G.toast = {a: 'LEVEL FAILED', b: 'Try again from the start of ' + LVL.name + '.', t: 3.0};
+  SFX.boom();
+}
+
+/* ──────── Main Render Dispatcher ──────── */
+function render(){
+  ctx.setTransform(cv.width/W, 0, 0, cv.height/H, 0, 0);
+  ctx.clearRect(0, 0, W, H);
+  UI_BUTTONS = [];
+
+  switch(G.scene){
+    case 'title':
+      renderTitle();
+      break;
+    case 'upgrades':
+      renderUpgradesMenu();
+      break;
+    case 'missions':
+      renderMissionsMenu();
+      break;
+    case 'manual':
+      renderManual();
+      break;
+    case 'play':
+      renderWorldPlay();
+      drawHUD();
+      break;
+    case 'pause':
+      renderWorldPlay();
+      renderPause();
+      break;
+    case 'victory':
+      renderVictory();
+      break;
+    case 'dead':
+      renderDead();
+      break;
+  }
+
+  // Scanline overlay
+  ctx.save();
+  ctx.globalAlpha = 0.025;
+  ctx.fillStyle = '#000';
+  for(let y=0; y<H; y+=3) ctx.fillRect(0, y, W, 1);
+  ctx.restore();
+}
+
+function renderWorldPlay(){
+  const cfg = LVL;
+  const shakeX = (Math.random() - 0.5) * G.shake;
+  const shakeY = (Math.random() - 0.5) * G.shake;
+
+  ctx.save();
+  ctx.translate(shakeX, shakeY);
+
+  drawBackground(cfg, G.camX, G.camY, G.t);
+
+  // Black Hole (Fractured Moon)
+  if(cfg.hasHole){
+    drawBlackHole(cfg.holePos, cfg.holeKillR, G.camX, G.camY, G.t);
+  }
+
+  // Terrain & Platforms
+  drawTerrain(cfg, G.camX, G.camY);
+
+  // Hazards
+  drawHazards(HAZARDS, cfg, G.camX, G.camY, G.t);
+
+  // Debris & Hot Rocks
+  for(let i=0; i<DEBRIS.length; i++) drawDebris(DEBRIS[i], G.camX, G.camY);
+
+  // Collectibles
+  for(let j=0; j<CELLS.length; j++) if(!CELLS[j].got) drawMandatoryCollectible(CELLS[j], cfg, G.camX, G.camY, G.t);
+  for(let k=0; k<ORBS.length; k++) if(!ORBS[k].got) drawEnergyOrb(ORBS[k], G.camX, G.camY, G.t);
+  drawWeaponPickups(G.camX, G.camY, G.t);
+  drawHealthPacks(G.camX, G.camY, G.t);
+
+
+
+  // Enemies
+  drawEnemies(G.camX, G.camY, G.t);
+
+  // Bullets
+  drawBullets(G.camX, G.camY);
+  drawLaserBeam(G.camX, G.camY);
+
+  // FX Particles
+  drawFx(G.camX, G.camY);
+
+  // The single personal rocket follows the astronaut from touchdown through takeoff (strictly 1 rocket)
+  if(G.phase === 'flight' || G.phase === 'landing'){
+    drawRocketShip(PL, G.camX, G.camY, G.t, 1.25, false);
+  } else if(G.phase !== 'warp' && G.personalRocket){
+    drawRocketShip(
+      G.personalRocket,
+      G.camX,
+      G.camY,
+      G.t,
+      G.personalRocket.scale,
+      G.phase !== 'takeoff'
+    );
+  }
+
+  if(G.phase === 'exit' || G.phase === 'explore'){
+    drawAstronautCharacter(PL, G.camX, G.camY, G.t);
+  }
+
+  ctx.restore();
+
+  // Cosmic Warp Visual Effect
+  if(G.phase === 'warp'){
+    ctx.save();
+    ctx.globalCompositeOperation = 'lighter';
+    ctx.strokeStyle = 'rgba(61,240,255,0.7)';
+    ctx.lineWidth = 2.5;
+    for(let i=0; i<40; i++){
+      const x = (i * 27 + G.t * 600) % W;
+      const y = (i * 37) % H;
+      ctx.beginPath();
+      ctx.moveTo(x - 90, y); ctx.lineTo(x + 90, y); ctx.stroke();
+    }
+    const nextPlanet = getPlanetConfig(G.worldIdx + 1);
+    txt('HYPERDRIVE ENGAGED ➔ DESTINATION: ' + nextPlanet.name, W/2, H/2 - 20, 20, C.cyan, 'center', F_O, 900, 3);
+    txt('APPROACHING PLANETARY ORBIT', W/2, H/2 + 15, 13, C.bone, 'center', F_U, 700, 2);
+    uiButton('ADVANCE TO NEXT PLANET', W/2 - 145, H/2 + 48, 290, 40, () => {
+      advanceToNextPlanet();
+    }, {sel: true, col: C.green, sz: 13});
+    ctx.restore();
+  }
+}
+
+/* ──────── Screens: Title, Upgrades, Manual, Pause, Victory, Dead ──────── */
+function renderTitle(){
+  drawBackground(PLANETS[0], G.t*30, 0, G.t);
+  drawBlackHole({x: 850, y: 190}, 95, 0, 0, G.t);
+
+  ctx.save();
+  ctx.shadowColor = 'rgba(61,240,255,0.8)';
+  ctx.shadowBlur = 24;
+  txt('SPACE', 64, 160, 58, C.bone, 'left', F_D, 700, 8);
+  txt('ODYSSEY', 64, 226, 58, C.cyan, 'left', F_D, 700, 8);
+  ctx.shadowBlur = 0;
+  ctx.restore();
+
+  txt('PLANET-TO-PLANET CONTINUOUS SURVIVAL ADVENTURE', 68, 258, 13, C.ember, 'left', F_U, 700, 3);
+
+  txt('PILOT: ' + (G.char==='arin'?'ARIN (CYAN SUIT)':'MIRA (VIOLET SUIT)'), 68, 288, 13, G.char==='arin'?C.cyan:'#ff77cc', 'left', F_U, 700);
+  uiButton('SWITCH PILOT', 290, 272, 120, 26, () => {
+    G.char = G.char === 'arin' ? 'mira' : 'arin';
+    SFX.click();
+  }, {sz: 11});
+
+  txt('MISSION CONTROL', 68, 306, 11, C.dim, 'left', F_U, 700, 2);
+
+  uiButton('PLAY CAMPAIGN', 68, 316, 340, 42, () => {
+    SFX.click();
+    clearSavedRun();
+    G.score = 0;
+    requestGameFullscreen();
+    initPlanet(0);
+  }, {sel: true, sz: 14});
+
+  uiButton('HOW TO PLAY', 68, 366, 340, 38, () => {
+    SFX.click();
+    G.scene = 'manual';
+  }, {sz: 13, col: C.cyan});
+
+  uiButton('ENDLESS FRONTIER', 68, 412, 340, 34, () => {
+    SFX.click();
+    clearSavedRun();
+    G.score = 0;
+    G.endless = true;
+    requestGameFullscreen();
+    initPlanet(PLANETS.length);
+  }, {sz: 12, col: C.gold});
+
+  uiButton('HANGAR & UPGRADES', 68, 454, 165, 36, () => {
+    SFX.click();
+    G.scene = 'upgrades';
+  }, {sz: 12});
+
+  uiButton('MISSIONS', 243, 454, 165, 36, () => {
+    SFX.click();
+    G.scene = 'missions';
+  }, {sz: 12, col: C.gold});
+
+  txt('RCS PROPULSION ONLINE', 466, 306, 10, C.green, 'left', F_U, 700, 1);
+  txt('6 DISCOVERED WORLDS · ENDLESS FRONTIER', 466, 324, 10, C.dim, 'left', F_U, 600, 1);
+  txt('COLLECT SAMPLES  ·  CHOOSE YOUR ROUTE', 466, 342, 10, C.dim, 'left', F_U, 600, 1);
+  txt('RETURN TO THE ROCKET TO ADVANCE', 466, 360, 10, C.gold, 'left', F_U, 700, 1);
+
+  if(G.savedRun){
+    const savedName = getPlanetConfig(G.savedRun.worldIdx || 0).name;
+    uiButton('CONTINUE SAVED EXPEDITION · ' + savedName, 68, 496, 340, 28, () => {
+      requestGameFullscreen();
+      continueSavedRun();
+    }, {sz: 10, col: C.green});
+  }
+
+  // Live Animated Astronaut Showcase on Title Screen
+  const previewAstronaut = {
+    x: 740,
+    y: 310 + Math.sin(G.t * 2.5) * 10,
+    vx: Math.cos(G.t * 1.5) * 60,
+    vy: Math.sin(G.t * 2) * 30,
+    face: 1,
+    onGround: false,
+    thrustingUp: Math.sin(G.t * 3.5) > -0.1,
+    thrustingDown: false,
+    atkT: 0,
+    boostT: 0
+  };
+  drawAstronautCharacter(previewAstronaut, 0, 0, G.t);
+  txt(G.char === 'arin' ? 'PILOT: ARIN' : 'PILOT: MIRA', 740, 395, 14, G.char === 'arin' ? C.cyan : '#ff77cc', 'center', F_U, 700, 2);
+  txt('2D HIGH-TECH EVA SPACE SUIT', 740, 414, 11, C.bone, 'center', F_U, 600, 1);
+  txt('MICROGRAVITY THRUSTERS READY', 740, 432, 10, C.green, 'center', F_U, 700, 1);
+
+  txt('SEAMLESS PLANETARY ADVENTURE · 6 DISCOVERED WORLDS · SOUND: [M]', W - 24, H - 18, 11, C.dim, 'right', F_U, 600);
+}
+
+function renderUpgradesMenu(){
+  drawBackground(PLANETS[0], 0, 0, G.t);
+  ctx.fillStyle = 'rgba(5,7,26,0.85)';
+  ctx.fillRect(0, 0, W, H);
+
+  uiButton('BACK TO MAIN MENU', 42, 28, 170, 32, () => {
+    SFX.click();
+    G.scene = 'title';
+  }, {sz: 11, col: C.cyan});
+  uiButton('MISSION BOARD', W - 212, 28, 170, 32, () => {
+    SFX.click();
+    G.scene = 'missions';
+  }, {sz: 11, col: C.gold});
+  txt('ROCKET HANGAR', W/2, 50, 12, C.dim, 'center', F_U, 700, 3);
+  txt('SYSTEMS & UPGRADES', W/2, 78, 25, C.gold, 'center', F_D, 700, 4);
+  txt('FLEET CREDIT LEDGER  ·  ' + G.credits + ' CR', W/2, 106, 14, C.green, 'center', F_U, 700, 1);
+
+  const costs = [100, 250, 500];
+  const items = [
+    { name: 'EXTENDED FUEL RESERVES', key: 'tankLv', desc: '+25% Max Thruster & Jetpack Fuel' },
+    { name: 'ION THRUSTER OVERCLOCK', key: 'thrustLv', desc: '+15% Main Thruster & Sprint Power' },
+    { name: 'THERMAL SHIELD RE-GEN', key: 'effLv', desc: '15% Reduced Burn & Hazard Resistance' }
+  ];
+
+  for(let i=0; i<3; i++){
+    const it = items[i];
+    const lv = G[it.key];
+    const cost = costs[lv];
+    const y = 130 + i * 105;
+
+    ctx.fillStyle = 'rgba(13,20,51,0.7)';
+    rr(W/2 - 280, y, 560, 85, 8);
+    ctx.fill();
+    ctx.strokeStyle = 'rgba(61,240,255,0.2)';
+    ctx.lineWidth = 1;
+    ctx.stroke();
+
+    txt(it.name, W/2 - 260, y + 28, 15, C.cyan, 'left', F_U, 700);
+    txt(it.desc, W/2 - 260, y + 48, 12, C.dim, 'left', F_U, 600);
+    txt('LEVEL: ' + lv + ' / 3', W/2 - 260, y + 68, 12, C.gold, 'left', F_U, 700);
+    txt('●'.repeat(lv) + '○'.repeat(3 - lv), W/2 - 125, y + 68, 12, lv > 0 ? C.green : C.dim, 'left', F_U, 700);
+
+    const canBuy = lv < 3 && G.credits >= cost;
+    const btnText = lv >= 3 ? 'MAX LEVEL' : canBuy ? 'UPGRADE  ·  ' + cost + ' CR' : 'NEED ' + cost + ' CR';
+    uiButton(btnText, W/2 + 100, y + 24, 160, 38, () => {
+      if(canBuy){
+        G.credits -= cost;
+        G[it.key]++;
+        saveData();
+        SFX.boost();
+      }
+    }, {
+      disabled: !canBuy,
+      col: canBuy ? C.green : C.dim,
+      sz: 12
+    });
+  }
+
+  uiButton('RETURN TO MENU', W/2 - 120, H - 42, 240, 34, () => {
+    SFX.click();
+    G.scene = 'title';
+  });
+}
+
+function renderMissionsMenu(){
+  drawBackground(PLANETS[0], 0, 0, G.t);
+  ctx.fillStyle = 'rgba(5,7,26,0.88)';
+  ctx.fillRect(0, 0, W, H);
+
+  uiButton('BACK TO MAIN MENU', 42, 28, 170, 32, () => {
+    SFX.click();
+    G.scene = 'title';
+  }, {sz: 11, col: C.cyan});
+  txt('FLEET OPERATIONS', W/2, 50, 12, C.dim, 'center', F_U, 700, 3);
+  txt('MISSION BOARD', W/2, 78, 25, C.gold, 'center', F_D, 700, 4);
+  txt('COMPLETE OBJECTIVES IN ANY EXPEDITION · CLAIM REWARDS HERE', W/2, 104, 11, C.green, 'center', F_U, 700, 1);
+
+  for(let i=0; i<MISSIONS.length; i++){
+    const mission = MISSIONS[i];
+    const progress = missionProgress(mission);
+    const complete = progress >= mission.target;
+    const claimed = !!G.missionClaimed[mission.id];
+    const x = 58 + (i % 2) * 432;
+    const y = 128 + Math.floor(i / 2) * 145;
+
+    ctx.fillStyle = 'rgba(13,20,51,0.78)';
+    rr(x, y, 388, 116, 8);
+    ctx.fill();
+    ctx.strokeStyle = claimed ? 'rgba(61,255,136,0.45)' : mission.col + '55';
+    ctx.lineWidth = 1.5;
+    ctx.stroke();
+
+    txt(mission.name, x + 20, y + 26, 15, mission.col, 'left', F_U, 700);
+    txt(mission.desc, x + 20, y + 48, 11, C.dim, 'left', F_U, 600);
+    txt('PROGRESS  ' + progress + ' / ' + mission.target, x + 20, y + 74, 11, C.bone, 'left', F_U, 700);
+    ctx.fillStyle = 'rgba(255,255,255,0.08)';
+    rr(x + 20, y + 84, 190, 7, 3);
+    ctx.fill();
+    ctx.fillStyle = claimed ? C.green : mission.col;
+    rr(x + 20, y + 84, 190 * (progress / mission.target), 7, 3);
+    ctx.fill();
+
+    const label = claimed ? 'CLAIMED' : complete ? 'CLAIM  ·  ' + mission.reward + ' CR' : 'IN PROGRESS';
+    uiButton(label, x + 230, y + 61, 136, 34, () => claimMission(mission), {
+      disabled: !complete || claimed,
+      col: claimed ? C.green : mission.col,
+      sz: 11
+    });
+  }
+
+  uiButton('RETURN TO HANGAR', W/2 - 120, H - 42, 240, 34, () => {
+    SFX.click();
+    G.scene = 'upgrades';
+  }, {col: C.cyan});
+}
+
+function renderManual(){
+  drawBackground(PLANETS[0], 0, 0, G.t);
+  ctx.fillStyle = 'rgba(5,7,26,0.88)';
+  ctx.fillRect(0, 0, W, H);
+
+  txt('HOW TO PLAY', W/2, 50, 26, C.cyan, 'center', F_D, 700, 3);
+  txt('SPACE ODYSSEY FIELD GUIDE', W/2, 76, 12, C.gold, 'center', F_U, 700, 2);
+
+  const lines = [
+    'MISSION LOOP  |  Fly to the beacon  →  land automatically  →  explore on foot  →  collect every sample  →  board the departure rocket.',
+    'MOVE  |  A / D or Arrow Keys steer.  W / Space uses thrusters and jumps.  Shift performs a dash.',
+    'SURVIVE  |  Falling rocks and enemies damage hull health.  The landing rocket is a safe zone.  P / Esc pauses.',
+    'FIGHT  |  J uses the Energy Sword.  K fires the Blaster or Laser Cutter after you collect the weapon.  Q raises the shield.',
+    'EXPLORE  |  Lower routes are safer.  Elevated RISK ROUTES are harder but reveal weapons, bonus orbs, and shortcuts.',
+    'OBJECTIVES  |  Samples must be collected by hand.  The departure rocket stays locked until every required sample is secured.',
+    'FAILURE  |  Choose TRY AGAIN FROM LEVEL START, or press R.  MAIN MENU saves your expedition so you can continue later.',
+    'WORLDS  |  Each planet changes gravity, hazards, enemies, atmosphere, routes, and weapon placement. Endless sectors follow the campaign.'
+  ];
+
+  for(let i=0; i<lines.length; i++){
+    txt(lines[i], 44, 112 + i * 42, 11.2, i === 0 ? C.green : C.bone, 'left', F_U, 600);
+  }
+
+  uiButton('BACK TO MAIN MENU', W/2 - 130, H - 42, 260, 34, () => {
+    SFX.click();
+    G.scene = 'title';
+  });
+}
+
+function renderPause(){
+  ctx.fillStyle = 'rgba(5,7,26,0.78)';
+  ctx.fillRect(0, 0, W, H);
+
+  txt('EXPEDITION PAUSED', W/2, H/2 - 90, 28, C.cyan, 'center', F_D, 700, 4);
+  txt('CURRENT DESTINATION: ' + LVL.name, W/2, H/2 - 55, 14, C.gold, 'center', F_U, 700);
+
+  uiButton('PLAY / RESUME', W/2 - 130, H/2 - 30, 260, 40, () => {
+    resumeGame();
+  }, {sel: true});
+
+  uiButton('RETRY PLANET [R]', W/2 - 130, H/2 + 20, 260, 38, () => {
+    SFX.click();
+    initPlanet(G.worldIdx);
+  });
+
+  uiButton('EXPEDITION DIRECTIVES', W/2 - 130, H/2 + 68, 260, 36, () => {
+    SFX.click();
+    G.scene = 'manual';
+  });
+
+  uiButton('ABORT TO MAIN MENU', W/2 - 130, H/2 + 114, 260, 36, () => {
+    exitToMenu();
+  });
+
+  uiButton('EXIT EXPEDITION', W/2 - 130, H/2 + 158, 260, 34, () => {
+    exitToMenu();
+  }, {col: C.ember, sz: 12});
+}
+
+function renderVictory(){
+  drawBackground(PLANETS[5], 0, 0, G.t);
+  ctx.fillStyle = 'rgba(5,7,26,0.85)';
+  ctx.fillRect(0, 0, W, H);
+
+  ctx.save();
+  ctx.shadowColor = 'rgba(61,255,136,0.8)';
+  ctx.shadowBlur = 24;
+  txt('SPACE ODYSSEY COMPLETE', W/2, 120, 32, C.green, 'center', F_D, 900, 6);
+  ctx.restore();
+
+  txt('EXPEDITION SUCCESSFUL — EXTRACTION COMMAND REACHED', W/2, 160, 15, C.cyan, 'center', F_U, 700, 2);
+  txt('You conquered all 6 planetary worlds across the cosmos.', W/2, 190, 13, C.bone, 'center', F_U, 600);
+
+  const statY = 240;
+  txt('FINAL EXPEDITION SCORE: ' + G.score, W/2, statY, 18, C.gold, 'center', F_O, 700);
+  txt('FLEET CREDITS SECURED: ' + G.credits, W/2, statY + 34, 15, C.green, 'center', F_U, 700);
+  txt('HONORED PILOT: ' + (G.char==='arin'?'ARIN':'MIRA'), W/2, statY + 68, 13, C.bone, 'center', F_U, 600);
+
+  uiButton('BEGIN NEW ODYSSEY', W/2 - 150, statY + 115, 300, 48, () => {
+    SFX.click();
+    initPlanet(0);
+  }, {sel: true, sz: 16});
+}
+
+function renderDead(){
+  ctx.fillStyle = 'rgba(15,3,8,0.84)';
+  ctx.fillRect(0, 0, W, H);
+
+  txt('LEVEL FAILED', W/2, H/2 - 80, 32, C.red, 'center', F_D, 900, 4);
+  txt('TRY AGAIN FROM LEVEL START', W/2, H/2 - 52, 13, C.gold, 'center', F_U, 700, 2);
+  txt(G.deadWhy || 'SUIT INTEGRITY COLLAPSE', W/2, H/2 - 40, 14, C.bone, 'center', F_U, 700);
+  txt('Current Planet: ' + LVL.name, W/2, H/2 - 15, 13, C.dim, 'center', F_U, 600);
+
+  uiButton('TRY AGAIN FROM START [R]', W/2 - 150, H/2 + 20, 300, 44, () => {
+    SFX.click();
+    initPlanet(G.worldIdx);
+  }, {sel: true});
+
+  uiButton('ABORT TO MENU', W/2 - 130, H/2 + 76, 260, 38, () => {
+    SFX.click();
+    G.scene = 'title';
+  });
+}
+
+/* ──────── Main Simulation Loop ──────── */
+let lastT = 0;
+function frame(ts){
+  requestAnimationFrame(frame);
+  const dt = Math.min(0.033, (ts - lastT)/1000 || 0);
+  lastT = ts;
+  G.t += dt;
+
+  if(pressed('mute')){
+    muted = !muted;
+    if(master) master.gain.value = muted ? 0 : 0.6;
+  }
+  if(pressed('pause') && G.scene === 'play'){
+    G.scene = 'pause';
+    setThrusterRumble(false);
+    SFX.click();
+  }
+  if(pressed('retry') && (G.scene === 'dead' || G.scene === 'play')){
+    initPlanet(G.worldIdx);
+    SFX.click();
+  }
+
+  if(G.scene === 'play'){
+    updatePlay(dt);
+  }
+
+  render();
+  pq = {};
+}
+
+/* ──────── Pointer Events ──────── */
+function toLogical(e){
+  const r = cv.getBoundingClientRect();
+  return [ (e.clientX - r.left) * W / r.width, (e.clientY - r.top) * H / r.height ];
+}
+cv.addEventListener('pointermove', e => {
+  const q = toLogical(e);
+  G.mx = q[0]; G.my = q[1];
+});
+cv.addEventListener('pointerdown', e => {
+  audioInit();
+  cv.focus();
+  const q = toLogical(e);
+  G.mx = q[0]; G.my = q[1];
+
+  for(let i=UI_BUTTONS.length-1; i>=0; i--){
+    const u = UI_BUTTONS[i];
+    if(q[0] >= u.x && q[0] <= u.x + u.w && q[1] >= u.y && q[1] <= u.y + u.h){
+      u.fn();
+      return;
+    }
+  }
+});
+
+// Fullscreen Toggle
+document.getElementById('fs-btn').addEventListener('click', () => {
+  if(!document.fullscreenElement){
+    requestGameFullscreen();
+  } else {
+    document.exitFullscreen().catch(()=>{});
+  }
+});
+
+// Loading screen
+let loadProg = 0;
+function tickLoad(){
+  loadProg = Math.min(100, loadProg + 10 + (Math.random()*15|0));
+  const lb = document.getElementById('lbar');
+  const lt = document.getElementById('ltext');
+  if(lb) lb.style.width = loadProg + '%';
+  if(lt && loadProg < 100) lt.textContent = 'Calibrating thrusters & planetary telemetry... ' + loadProg + '%';
+  if(loadProg >= 100){
+    if(lt) lt.textContent = 'PROPULSION & NAVIGATION ONLINE';
+    setTimeout(() => {
+      const ld = document.getElementById('loader');
+      if(ld) ld.classList.add('done');
+      setTimeout(() => {
+        if(ld) ld.style.display = 'none';
+        cv.focus();
+      }, 450);
+    }, 200);
+  } else {
+    setTimeout(tickLoad, 40);
+  }
+}
+tickLoad();
+
+setTimeout(() => {
+  const ld = document.getElementById('loader');
+  if(ld && !ld.classList.contains('done')){
+    ld.classList.add('done');
+    setTimeout(() => { if(ld) ld.style.display = 'none'; cv.focus(); }, 400);
+  }
+}, 2500);
+
+requestAnimationFrame(frame);
+
+})();
+</script>
+</body>
+</html>

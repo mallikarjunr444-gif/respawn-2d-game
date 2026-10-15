@@ -3176,15 +3176,28 @@ function updatePlay(dt){
     G.phaseTimer += dt;
     G.shake = 14;
     const ship = G.personalRocket;
+    // Rotate nose smoothly upward for vertical orbital ascent
+    ship.angle = lerp(ship.angle || 0, -Math.PI / 2, dt * 5.5);
     // Launch rocket upwards
     ship.y -= 380 * dt * (1 + G.phaseTimer * 2.5);
     ship.thrusting = true;
     p.x = ship.x;
     p.y = ship.y;
 
-    // Heavy main engine exhaust plumes
+    // Heavy main engine exhaust plumes blasting downward
+    const cosA = Math.cos(ship.angle), sinA = Math.sin(ship.angle);
+    const nozzleX = ship.x - cosA * 26;
+    const nozzleY = ship.y - sinA * 26;
     for(let i=0; i<5; i++){
-      spawn(ship.x + (Math.random()-0.5)*20, ship.y + 42, (Math.random()-0.5)*80, 280 + Math.random()*120, 0.45, 6.5, Math.random()<0.5?'#ff9a2e':'#ffffff', 0, true);
+      spawn(
+        nozzleX + (Math.random()-0.5)*18,
+        nozzleY + (Math.random()-0.5)*18,
+        -cosA * (320 + Math.random()*160) + (Math.random()-0.5)*70,
+        -sinA * (320 + Math.random()*160) + (Math.random()-0.5)*70,
+        0.38, 6.5,
+        Math.random()<0.5?'#ff9a2e':(Math.random()<0.3?'#ffffff':C.cyan),
+        0, true
+      );
     }
 
     if(G.phaseTimer >= 2.2){
