@@ -1301,22 +1301,9 @@ function drawRocketShip(p, camX, camY, t, scale = 1, isLanded = false){
     ctx.restore();
   }
 
-  ctx.restore();
 }
 
-  // Halo pulse indicating extraction point
-  const allGot = G.cellsGot >= cfg.mandatoryCount;
-  ctx.globalCompositeOperation = 'lighter';
-  const halo = ctx.createRadialGradient(0, 0, 10, 0, 0, 100);
-  halo.addColorStop(0, allGot ? 'rgba(61,255,136,0.35)' : 'rgba(255,122,46,0.25)');
-  halo.addColorStop(1, 'rgba(0,0,0,0)');
-  ctx.fillStyle = halo;
-  ctx.beginPath();
-  ctx.arc(0, 0, 100, 0, 6.283);
-  ctx.fill();
 
-  ctx.restore();
-}
 
 /* ──────── Draw Astronaut Hero (High-Tech 2D EVA Space Suit) ──────── */
 function drawAstronautCharacter(p, camX, camY, t){
