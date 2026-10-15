@@ -1,242 +1,173 @@
 diff --git a/public/index.html b/public/index.html
-index 6fd2754..3d87d07 100644
+index 3d87d07..24ebd4e 100644
 --- a/public/index.html
 +++ b/public/index.html
-@@ -872,9 +872,9 @@ function initPlanet(worldIdx){
-   G.phaseTimer = 0;
-   G.personalRocket = {
-     x: cfg.landingPad.x,
--    y: cfg.landingPad.y - 12,
-+    y: cfg.landingPad.y - 38,
-     travel: 0,
--    angle: 0,
-+    angle: -Math.PI / 2,
-     scale: 1.25,
-     thrusting: false
-   };
-@@ -1309,14 +1309,47 @@ function drawRocketShip(p, camX, camY, t, scale = 1, isLanded = false){
-   ctx.scale(scale, scale);
-   ctx.rotate(p.angle);
+@@ -728,9 +728,9 @@ const G = {
+   camY: 0,
  
--  // Landing Struts if landed
-+  // Deployable Heavy-Duty Planetary Landing Legs (extend symmetrically from base when landing or landed)
-   if(isLanded){
--    ctx.strokeStyle = '#687898';
--    ctx.lineWidth = 3.5;
-+    ctx.strokeStyle = '#8fa3cc';
-+    ctx.lineWidth = 3;
-+    ctx.lineCap = 'round';
-+
-+    // Left Tripod Leg
-+    ctx.beginPath();
-+    ctx.moveTo(-12, -8);
-+    ctx.lineTo(-28, -20);
-+    ctx.lineTo(-30, -22);
-+    ctx.stroke();
-+    // Left Shock Absorber Piston
-+    ctx.strokeStyle = '#4e628a';
-+    ctx.lineWidth = 2;
-+    ctx.beginPath();
-+    ctx.moveTo(-6, -5); ctx.lineTo(-22, -15);
-+    ctx.stroke();
-+    // Left Foot Pad (titanium ground deck pad)
-+    ctx.fillStyle = '#c5d7ed';
-+    rr(-32, -26, 4, 8, 1.5);
-+    ctx.fill();
-+
-+    // Right Tripod Leg
-+    ctx.strokeStyle = '#8fa3cc';
-+    ctx.lineWidth = 3;
-     ctx.beginPath();
--    ctx.moveTo(-16, 12); ctx.lineTo(-28, 28); ctx.lineTo(-34, 28);
--    ctx.moveTo(16, 12); ctx.lineTo(28, 28); ctx.lineTo(34, 28);
-+    ctx.moveTo(-12, 8);
-+    ctx.lineTo(-28, 20);
-+    ctx.lineTo(-30, 22);
-     ctx.stroke();
-+    // Right Shock Absorber Piston
-+    ctx.strokeStyle = '#4e628a';
-+    ctx.lineWidth = 2;
-+    ctx.beginPath();
-+    ctx.moveTo(-6, 5); ctx.lineTo(-22, 15);
-+    ctx.stroke();
-+    // Right Foot Pad
-+    ctx.fillStyle = '#c5d7ed';
-+    rr(-32, 18, 4, 8, 1.5);
-+    ctx.fill();
-   }
- 
-   // Delta Wings
-@@ -1336,6 +1369,31 @@ function drawRocketShip(p, camX, camY, t, scale = 1, isLanded = false){
-   rr(-27, -5, 4, 10, 1);
-   ctx.fill();
- 
-+  // Dynamic Main Engine Exhaust Plume (blasts straight downward when upright)
-+  if(p.thrusting){
-+    const plumeLen = 28 + Math.random() * 16;
-+    const flg = ctx.createLinearGradient(-27, 0, -27 - plumeLen, 0);
-+    flg.addColorStop(0, '#ffffff');
-+    flg.addColorStop(0.2, C.cyan);
-+    flg.addColorStop(0.6, '#ff6622');
-+    flg.addColorStop(1, 'rgba(255,50,0,0)');
-+    ctx.fillStyle = flg;
-+    ctx.beginPath();
-+    ctx.moveTo(-27, -5);
-+    ctx.lineTo(-27 - plumeLen, 0);
-+    ctx.lineTo(-27, 5);
-+    ctx.closePath();
-+    ctx.fill();
-+
-+    ctx.fillStyle = '#ffffff';
-+    ctx.beginPath();
-+    ctx.moveTo(-27, -2.5);
-+    ctx.lineTo(-27 - plumeLen * 0.45, 0);
-+    ctx.lineTo(-27, 2.5);
-+    ctx.closePath();
-+    ctx.fill();
-+  }
-+
-   // Aerodynamic Fuselage
-   const hg = ctx.createLinearGradient(-20, -12, -20, 12);
-   hg.addColorStop(0, '#8a99b8');
-@@ -2333,7 +2391,7 @@ function drawHUD(){
- 
-   // Top Right: Distance & Radar to Your Rocket at Landing Pad
-   const rocketX = cfg.landingPad.x;
--  const rocketY = cfg.landingPad.y - 12;
-+  const rocketY = cfg.landingPad.y - 38;
-   const dx = rocketX - PL.x, dy = rocketY - PL.y;
-   const dist = Math.hypot(dx, dy);
-   const arrow = getArrow(Math.atan2(dy, dx));
-@@ -2537,44 +2595,76 @@ function updatePlay(dt){
+   // Combat & abilities
+-  hasSword: false,
+-  hasBlaster: false,
+-  hasShield: false,
++  hasSword: true,
++  hasBlaster: true,
++  hasShield: true,
+   hasLaser: false,
+   laserT: 0,
+   shieldT: 0,
+@@ -863,9 +863,9 @@ function initPlanet(worldIdx){
+   G.orbsGot = 0;
+   G.shieldT = 0;
+   G.shieldCd = 0;
+-  G.hasSword = false;
+-  G.hasBlaster = false;
+-  G.hasShield = false;
++  G.hasSword = true;
++  G.hasBlaster = true;
++  G.hasShield = true;
+   G.hasLaser = false;
+   G.laserT = 0;
+   G.phase = 'flight';
+@@ -2564,6 +2564,22 @@ function updatePlay(dt){
+       }
      }
-   }
  
--  // 2. PHASE: LANDING SEQUENCE
-+  // 2. PHASE: LANDING SEQUENCE (Authentic vertical rocket landing with retro-burn)
-   else if(G.phase === 'landing'){
-     G.phaseTimer += dt;
-     const pad = cfg.landingPad;
--    const targetY = pad.y - p.radius;
--    const previousBottom = p.y + p.radius;
-+    const targetY = pad.y - 38;
-+    const previousBottom = p.y + 38;
-     const horizontalStep = clamp((pad.x - p.x) * 4.5 * dt, -260 * dt, 260 * dt);
-     p.x += horizontalStep;
-     p.vx = horizontalStep / Math.max(dt, 0.001);
--    p.vy = Math.min(360, p.vy + cfg.gravity * 0.35 * dt);
-+
-+    // Smoothly orient nose straight UP into the sky (-Math.PI/2) and engines DOWN towards pad
-+    p.angle = lerp(p.angle, -Math.PI / 2, dt * 5.0);
-+
-+    // Controlled deceleration descent
-+    p.vy = Math.min(220, p.vy + cfg.gravity * 0.25 * dt);
-+    if(p.y > pad.y - 200){
-+      p.vy = lerp(p.vy, 45, dt * 4.0);
++    // Ship mounted blaster cannon during flight
++    if(pressed('shoot') && p.shootCd <= 0){
++      p.shootCd = 0.22;
++      SFX.blaster();
++      const cosA = Math.cos(p.angle), sinA = Math.sin(p.angle);
++      BULLETS.push({
++        x: p.x + cosA * 28,
++        y: p.y + sinA * 28,
++        vx: cosA * 1050 + p.vx * 0.4,
++        vy: sinA * 1050 + p.vy * 0.4,
++        damage: 1,
++        life: 1.2
++      });
++      spawn(p.x + cosA * 30, p.y + sinA * 30, cosA * 80, sinA * 80, 0.15, 5, C.cyan, 0, true);
 +    }
-     p.y += p.vy * dt;
++
+     if(held.down){ // Reverse brake
+       p.vx *= (1.0 - 2.8 * dt);
+       p.vy *= (1.0 - 2.8 * dt);
+@@ -2812,20 +2828,20 @@ function updatePlay(dt){
+       burst(p.x, p.y, 18, C.cyan, 200, 0.5, true);
+     }
  
--    // The landing pad is the authoritative collision surface. The rocket
--    // only settles after crossing its top edge while descending.
--    const crossedPadTop = previousBottom <= pad.y && p.y + p.radius >= pad.y;
--    const alignedWithPad = Math.abs(p.x - pad.x) <= pad.w * 0.5 + p.radius;
-+    // Retro-rocket landing burn (cushions vertical touchdown with flame & smoke onto the pad)
-+    if(!p.onGround){
-+      p.thrusting = true;
-+      if(Math.random() < 0.85){
-+        SFX.rcs();
-+        const nozzleX = p.x;
-+        const nozzleY = p.y + 30;
-+        spawn(
-+          nozzleX + (Math.random()-0.5)*14,
-+          nozzleY,
-+          (Math.random()-0.5)*35,
-+          150 + Math.random()*120,
-+          0.22, 5.0,
-+          Math.random() < 0.6 ? C.cyan : '#ff9a2e',
-+          0, true
-+        );
+-    // Energy Sword Melee Attack (J / X / Left Click)
+-    if(G.hasSword && pressed('atk') && p.atkCd <= 0){
+-      p.atkT = 0.22;
+-      p.atkCd = 0.35;
++    // Energy Sword Melee Attack (J / X / Left Click / Mobile SWORD button)
++    if((G.hasSword || true) && pressed('atk') && p.atkCd <= 0){
++      p.atkT = 0.24;
++      p.atkCd = 0.32;
+       SFX.sword();
+       // Hit detection on enemies within swing range
+       const slashX = p.x + p.face * 35;
+       for(let e=ENEMIES.length-1; e>=0; e--){
+         const enemy = ENEMIES[e];
+-        if(Math.hypot(slashX - enemy.x, p.y - enemy.y) < 75){
+-          enemy.hp -= 1;
++        if(Math.hypot(slashX - enemy.x, p.y - enemy.y) < 80){
++          enemy.hp -= (G.swordPower || 1);
+           SFX.enemyHit();
+-          G.shake = 5;
+-          burst(enemy.x, enemy.y, 14, cfg.accent, 190, 0.4, true);
++          G.shake = 6;
++          burst(enemy.x, enemy.y, 15, cfg.accent, 200, 0.45, true);
+           if(enemy.hp <= 0){
+             ENEMIES.splice(e, 1);
+             G.score += 50;
+@@ -2836,6 +2852,16 @@ function updatePlay(dt){
+           }
+         }
+       }
++      // Energy sword also slices falling rocks and debris
++      for(let k=DEBRIS.length-1; k>=0; k--){
++        const rock = DEBRIS[k];
++        if(Math.hypot(slashX - rock.x, p.y - rock.y) < 70){
++          burst(rock.x, rock.y, 16, rock.hot ? C.ember : '#d9e5ff', 220, 0.45, true);
++          DEBRIS.splice(k, 1);
++          G.score += 15;
++          SFX.enemyHit();
++        }
 +      }
-+    }
-+
-+    // Touchdown on landing pad surface
-+    const crossedPadTop = previousBottom <= pad.y && p.y + 38 >= pad.y;
-+    const alignedWithPad = Math.abs(p.x - pad.x) <= pad.w * 0.5 + 30;
-     if(crossedPadTop && alignedWithPad){
-       p.y = targetY;
-       p.vx = 0;
-       p.vy = 0;
-+      p.angle = -Math.PI / 2;
-       p.onGround = true;
-+      p.thrusting = false;
-+      burst(pad.x, pad.y, 22, '#d9e8ff', 160, 0.45, true);
-+      SFX.land();
-+    }
-+
-+    p.x = lerp(p.x, pad.x, dt * 3.0);
-+    if(p.onGround){
-+      p.y = lerp(p.y, targetY, dt * 6.0);
-+      p.angle = -Math.PI / 2;
      }
  
--    p.x = lerp(p.x, pad.x, dt * 2.5);
--    if(p.onGround) p.y = lerp(p.y, targetY, dt * 5);
--    p.angle = lerp(p.angle, 0, dt * 10);
-     if(p.onGround && G.phaseTimer >= 1.0){
-       G.phase = 'exit';
-       G.phaseTimer = 0;
-       SFX.door();
--      p.x = pad.x + 45;
-+      p.x = pad.x + 48;
-       p.y = pad.y - 26;
-       p.vx = 0;
-       p.vy = 0;
-       p.onGround = true;
-       p.face = 1;
--      SFX.land();
--      burst(pad.x + 45, pad.y - 12, 18, C.cyan, 160, 0.5, true);
-+      burst(pad.x + 48, pad.y - 12, 18, C.cyan, 160, 0.5, true);
-       G.toast = {
-         a: 'ASTRONAUT DEPLOYED',
-         b: 'Explore the planet and collect ' + cfg.mandatoryName + '. Return to your rocket when complete.',
-@@ -2601,8 +2691,8 @@ function updatePlay(dt){
-     const ship = G.personalRocket;
-     if(ship && G.phase === 'explore'){
-       ship.x = cfg.landingPad.x;
--      ship.y = cfg.landingPad.y - 12;
--      ship.angle = 0;
-+      ship.y = cfg.landingPad.y - 38;
-+      ship.angle = -Math.PI / 2;
-       ship.scale = 1.25;
-       ship.thrusting = false;
+     // Laser Cutter: a collected laser slices falling rocks into fragments.
+@@ -2855,24 +2881,26 @@ function updatePlay(dt){
+           G.score += 12;
+         }
+       }
+-    } else if(G.hasBlaster && pressed('shoot') && p.shootCd <= 0){
+-      p.shootCd = 0.24;
++    } else if((G.hasBlaster || true) && pressed('shoot') && p.shootCd <= 0){
++      p.shootCd = 0.22;
+       SFX.blaster();
+       BULLETS.push({
+         x: p.x + p.face * 20,
+         y: p.y - 4,
+-        vx: p.face * 920,
++        vx: p.face * 940,
+         vy: 0,
+-        life: 1.1
++        damage: G.blasterPower || 1,
++        life: 1.2
+       });
+       spawn(p.x + p.face * 22, p.y - 4, p.face * 60, 0, 0.15, 6, C.cyan, 0, true);
      }
-@@ -3128,7 +3218,7 @@ function updatePlay(dt){
  
-     // Board the same rocket stationed at the landing pad
-     const rocketX = cfg.landingPad.x;
--    const rocketY = cfg.landingPad.y - 12;
-+    const rocketY = cfg.landingPad.y - 38;
-     const distRocket = Math.hypot(p.x - rocketX, p.y - rocketY);
-     const allCollected = G.cellsGot >= cfg.mandatoryCount;
+-    // Phase Shield (Q)
+-    if(G.hasShield && pressed('shield') && G.shieldCd <= 0){
+-      G.shieldT = 1.8;
+-      G.shieldCd = 5.0;
++    // Phase Shield (Q / Mobile SHIELD button)
++    if((G.hasShield || true) && pressed('shield') && G.shieldCd <= 0){
++      G.shieldT = 2.4;
++      G.shieldCd = 4.5;
+       SFX.shield();
++      burst(p.x, p.y, 16, C.cyan, 160, 0.4, true);
+     }
  
-@@ -3161,7 +3251,7 @@ function updatePlay(dt){
-     G.phaseTimer += dt;
-     p.vx *= 0.8; p.vy *= 0.8;
-     p.x = lerp(p.x, cfg.landingPad.x, dt * 6);
--    p.y = lerp(p.y, cfg.landingPad.y - 12, dt * 6);
-+    p.y = lerp(p.y, cfg.landingPad.y - 38, dt * 6);
-     if(G.phaseTimer >= 1.0){
-       G.phase = 'takeoff';
-       G.phaseTimer = 0;
-@@ -3355,8 +3445,10 @@ function renderWorldPlay(){
-   drawFx(G.camX, G.camY);
+     // Environmental Forces
+@@ -3099,13 +3127,15 @@ function updatePlay(dt){
+         continue;
+       }
  
-   // The single personal rocket follows the astronaut from touchdown through takeoff (strictly 1 rocket)
--  if(G.phase === 'flight' || G.phase === 'landing'){
-+  if(G.phase === 'flight'){
-     drawRocketShip(PL, G.camX, G.camY, G.t, 1.25, false);
-+  } else if(G.phase === 'landing'){
-+    drawRocketShip(PL, G.camX, G.camY, G.t, 1.25, true);
-   } else if(G.phase !== 'warp' && G.personalRocket){
-     drawRocketShip(
-       G.personalRocket,
++      let bulletSpent = false;
+       for(let e=ENEMIES.length-1; e>=0; e--){
+         const enemy = ENEMIES[e];
+         if(Math.hypot(blt.x - enemy.x, blt.y - enemy.y) < 32){
+-          enemy.hp -= 1;
++          enemy.hp -= (blt.damage || 1);
+           BULLETS.splice(b, 1);
++          bulletSpent = true;
+           SFX.enemyHit();
+-          burst(enemy.x, enemy.y, 12, C.cyan, 170, 0.35, true);
++          burst(enemy.x, enemy.y, 14, C.cyan, 180, 0.4, true);
+           if(enemy.hp <= 0){
+             ENEMIES.splice(e, 1);
+             G.score += 50;
+@@ -3117,6 +3147,20 @@ function updatePlay(dt){
+           break;
+         }
+       }
++
++      if(!bulletSpent){
++        for(let k=DEBRIS.length-1; k>=0; k--){
++          const rock = DEBRIS[k];
++          if(Math.hypot(blt.x - rock.x, blt.y - rock.y) < rock.radius + 14){
++            BULLETS.splice(b, 1);
++            burst(rock.x, rock.y, 16, rock.hot ? C.ember : '#d9e5ff', 220, 0.45, true);
++            DEBRIS.splice(k, 1);
++            G.score += 15;
++            SFX.enemyHit();
++            break;
++          }
++        }
++      }
+     }
+ 
+     // Collect Mandatory Resources

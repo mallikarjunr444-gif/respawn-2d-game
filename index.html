@@ -728,9 +728,9 @@ const G = {
   camY: 0,
 
   // Combat & abilities
-  hasSword: false,
-  hasBlaster: false,
-  hasShield: false,
+  hasSword: true,
+  hasBlaster: true,
+  hasShield: true,
   hasLaser: false,
   laserT: 0,
   shieldT: 0,
@@ -863,9 +863,9 @@ function initPlanet(worldIdx){
   G.orbsGot = 0;
   G.shieldT = 0;
   G.shieldCd = 0;
-  G.hasSword = false;
-  G.hasBlaster = false;
-  G.hasShield = false;
+  G.hasSword = true;
+  G.hasBlaster = true;
+  G.hasShield = true;
   G.hasLaser = false;
   G.laserT = 0;
   G.phase = 'flight';
@@ -2564,6 +2564,22 @@ function updatePlay(dt){
       }
     }
 
+    // Ship mounted blaster cannon during flight
+    if(pressed('shoot') && p.shootCd <= 0){
+      p.shootCd = 0.22;
+      SFX.blaster();
+      const cosA = Math.cos(p.angle), sinA = Math.sin(p.angle);
+      BULLETS.push({
+        x: p.x + cosA * 28,
+        y: p.y + sinA * 28,
+        vx: cosA * 1050 + p.vx * 0.4,
+        vy: sinA * 1050 + p.vy * 0.4,
+        damage: 1,
+        life: 1.2
+      });
+      spawn(p.x + cosA * 30, p.y + sinA * 30, cosA * 80, sinA * 80, 0.15, 5, C.cyan, 0, true);
+    }
+
     if(held.down){ // Reverse brake
       p.vx *= (1.0 - 2.8 * dt);
       p.vy *= (1.0 - 2.8 * dt);
@@ -2812,20 +2828,20 @@ function updatePlay(dt){
       burst(p.x, p.y, 18, C.cyan, 200, 0.5, true);
     }
 
-    // Energy Sword Melee Attack (J / X / Left Click)
-    if(G.hasSword && pressed('atk') && p.atkCd <= 0){
-      p.atkT = 0.22;
-      p.atkCd = 0.35;
+    // Energy Sword Melee Attack (J / X / Left Click / Mobile SWORD button)
+    if((G.hasSword || true) && pressed('atk') && p.atkCd <= 0){
+      p.atkT = 0.24;
+      p.atkCd = 0.32;
       SFX.sword();
       // Hit detection on enemies within swing range
       const slashX = p.x + p.face * 35;
       for(let e=ENEMIES.length-1; e>=0; e--){
         const enemy = ENEMIES[e];
-        if(Math.hypot(slashX - enemy.x, p.y - enemy.y) < 75){
-          enemy.hp -= 1;
+        if(Math.hypot(slashX - enemy.x, p.y - enemy.y) < 80){
+          enemy.hp -= (G.swordPower || 1);
           SFX.enemyHit();
-          G.shake = 5;
-          burst(enemy.x, enemy.y, 14, cfg.accent, 190, 0.4, true);
+          G.shake = 6;
+          burst(enemy.x, enemy.y, 15, cfg.accent, 200, 0.45, true);
           if(enemy.hp <= 0){
             ENEMIES.splice(e, 1);
             G.score += 50;
@@ -2834,6 +2850,16 @@ function updatePlay(dt){
             SFX.enemyDefeat();
             burst(enemy.x, enemy.y, 25, cfg.accent, 260, 0.6, true);
           }
+        }
+      }
+      // Energy sword also slices falling rocks and debris
+      for(let k=DEBRIS.length-1; k>=0; k--){
+        const rock = DEBRIS[k];
+        if(Math.hypot(slashX - rock.x, p.y - rock.y) < 70){
+          burst(rock.x, rock.y, 16, rock.hot ? C.ember : '#d9e5ff', 220, 0.45, true);
+          DEBRIS.splice(k, 1);
+          G.score += 15;
+          SFX.enemyHit();
         }
       }
     }
@@ -2855,24 +2881,26 @@ function updatePlay(dt){
           G.score += 12;
         }
       }
-    } else if(G.hasBlaster && pressed('shoot') && p.shootCd <= 0){
-      p.shootCd = 0.24;
+    } else if((G.hasBlaster || true) && pressed('shoot') && p.shootCd <= 0){
+      p.shootCd = 0.22;
       SFX.blaster();
       BULLETS.push({
         x: p.x + p.face * 20,
         y: p.y - 4,
-        vx: p.face * 920,
+        vx: p.face * 940,
         vy: 0,
-        life: 1.1
+        damage: G.blasterPower || 1,
+        life: 1.2
       });
       spawn(p.x + p.face * 22, p.y - 4, p.face * 60, 0, 0.15, 6, C.cyan, 0, true);
     }
 
-    // Phase Shield (Q)
-    if(G.hasShield && pressed('shield') && G.shieldCd <= 0){
-      G.shieldT = 1.8;
-      G.shieldCd = 5.0;
+    // Phase Shield (Q / Mobile SHIELD button)
+    if((G.hasShield || true) && pressed('shield') && G.shieldCd <= 0){
+      G.shieldT = 2.4;
+      G.shieldCd = 4.5;
       SFX.shield();
+      burst(p.x, p.y, 16, C.cyan, 160, 0.4, true);
     }
 
     // Environmental Forces
@@ -3099,13 +3127,15 @@ function updatePlay(dt){
         continue;
       }
 
+      let bulletSpent = false;
       for(let e=ENEMIES.length-1; e>=0; e--){
         const enemy = ENEMIES[e];
         if(Math.hypot(blt.x - enemy.x, blt.y - enemy.y) < 32){
-          enemy.hp -= 1;
+          enemy.hp -= (blt.damage || 1);
           BULLETS.splice(b, 1);
+          bulletSpent = true;
           SFX.enemyHit();
-          burst(enemy.x, enemy.y, 12, C.cyan, 170, 0.35, true);
+          burst(enemy.x, enemy.y, 14, C.cyan, 180, 0.4, true);
           if(enemy.hp <= 0){
             ENEMIES.splice(e, 1);
             G.score += 50;
@@ -3115,6 +3145,20 @@ function updatePlay(dt){
             burst(enemy.x, enemy.y, 25, cfg.accent, 260, 0.6, true);
           }
           break;
+        }
+      }
+
+      if(!bulletSpent){
+        for(let k=DEBRIS.length-1; k>=0; k--){
+          const rock = DEBRIS[k];
+          if(Math.hypot(blt.x - rock.x, blt.y - rock.y) < rock.radius + 14){
+            BULLETS.splice(b, 1);
+            burst(rock.x, rock.y, 16, rock.hot ? C.ember : '#d9e5ff', 220, 0.45, true);
+            DEBRIS.splice(k, 1);
+            G.score += 15;
+            SFX.enemyHit();
+            break;
+          }
         }
       }
     }
