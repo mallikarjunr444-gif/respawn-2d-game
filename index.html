@@ -617,8 +617,16 @@ function getEnemyRoster(cfg){
 }
 
 function isRocketSafeZone(x, y, cfg){
-  const pad = cfg.landingPad;
-  return Math.hypot(x - pad.x, y - (pad.y - 18)) < 340;
+  if(!cfg) return false;
+  if(G.personalRocket){
+    const d = Math.hypot(x - G.personalRocket.x, y - G.personalRocket.y);
+    if(d < 300) return true;
+  }
+  if(cfg.landingPad){
+    const pad = cfg.landingPad;
+    if(Math.hypot(x - pad.x, y - (pad.y - 18)) < 300) return true;
+  }
+  return false;
 }
 
 /* ──────── Global Game State ──────── */
@@ -662,6 +670,7 @@ const G = {
   totalPlayTime: 0,
   endless: false,
   endlessDepth: 0,
+  personalRocket: null,
   savedRun: null,
   missionStats: {samples: 0, orbs: 0, enemies: 0, worlds: 0},
   missionClaimed: {},
@@ -790,6 +799,14 @@ function initPlanet(worldIdx){
   G.laserT = 0;
   G.phase = 'flight';
   G.phaseTimer = 0;
+  G.personalRocket = {
+    x: cfg.landingPad.x,
+    y: cfg.landingPad.y - 12,
+    travel: 0,
+    angle: 0,
+    scale: 1.25,
+    thrusting: false
+  };
 
   P.length = 0;
   BULLETS = [];
@@ -1303,7 +1320,7 @@ function drawRocketShip(p, camX, camY, t, scale = 1, isLanded = false){
   ctx.restore();
 }
 
-function drawDepartureRocket(cfg, camX, camY, t){
+function drawExtractionGantry(cfg, camX, camY){
   const rk = cfg.departureRocket;
   const rx = rk.x - camX, ry = rk.y - camY;
   if(rx < -200 || rx > W+200) return;
@@ -1311,7 +1328,7 @@ function drawDepartureRocket(cfg, camX, camY, t){
   ctx.save();
   ctx.translate(rx + rk.w * 0.5, ry + rk.h * 0.5);
 
-  // Launch pad support gantry tower
+  // Launch pad support gantry tower (scaffold only - the personal rocket docks here)
   ctx.strokeStyle = '#445275';
   ctx.lineWidth = 3;
   ctx.strokeRect(-55, -rk.h * 0.5, 110, rk.h);
@@ -1321,12 +1338,6 @@ function drawDepartureRocket(cfg, camX, camY, t){
     ctx.lineTo(55, -rk.h * 0.5 + (i+1)*32);
     ctx.stroke();
   }
-
-  // Draw vertical rocket standing on pad
-  ctx.save();
-  ctx.rotate(-Math.PI / 2);
-  drawRocketShip({x: 0, y: 0, angle: 0, thrusting: G.phase === 'takeoff'}, 0, 0, t, 1.55, true);
-  ctx.restore();
 
   // Halo pulse indicating extraction point
   const allGot = G.cellsGot >= cfg.mandatoryCount;
@@ -1347,9 +1358,9 @@ function drawAstronautCharacter(p, camX, camY, t){
   const cfg = LVL;
   const sx = p.x - camX, sy = p.y - camY;
 
-  // 1. Umbilical Life-Support Docking Tether to Lander (within 480px)
-  if(cfg && cfg.landingPad){
-    const landerX = cfg.landingPad.x, landerY = cfg.landingPad.y - 18;
+  // 1. Umbilical Life-Support Docking Tether to the personal rocket (within 480px)
+  if(G.personalRocket){
+    const landerX = G.personalRocket.x, landerY = G.personalRocket.y;
     const distToPad = Math.hypot(p.x - landerX, p.y - landerY);
     if(distToPad < 480){
       const lx = landerX - camX, ly = landerY - camY;
@@ -2244,9 +2255,9 @@ function drawHUD(){
     txt(envText, W/2, 58, 11, envColor, 'center', F_U, 700);
   }
 
-  // Top Right: Distance & Radar to Departure Rocket
-  const targetX = G.phase === 'flight' ? cfg.landingPad.x : cfg.departureRocket.x;
-  const targetY = G.phase === 'flight' ? cfg.landingPad.y : cfg.departureRocket.y;
+  // Top Right: Distance & Radar to Personal Rocket
+  const targetX = G.phase === 'flight' ? cfg.landingPad.x : cfg.departureRocket.x + cfg.departureRocket.w * 0.5;
+  const targetY = G.phase === 'flight' ? cfg.landingPad.y : cfg.departureRocket.y + cfg.departureRocket.h * 0.5;
   const dx = targetX - PL.x, dy = targetY - PL.y;
   const dist = Math.hypot(dx, dy);
   const arrow = getArrow(Math.atan2(dy, dx));
@@ -2254,10 +2265,12 @@ function drawHUD(){
   let radarText = '';
   if(G.phase === 'flight'){
     radarText = 'LANDING BEACON: ' + Math.floor(dist) + 'm ' + arrow;
+  } else if(G.personalRocket && G.personalRocket.travel < 1){
+    radarText = 'PERSONAL ROCKET INBOUND: ' + Math.ceil((1 - G.personalRocket.travel) * 8) + 's';
   } else if(!allSecured){
-    radarText = 'DEPARTURE ROCKET: ' + Math.floor(dist) + 'm ' + arrow + ' [LOCKED]';
+    radarText = 'PERSONAL ROCKET: ' + Math.floor(dist) + 'm ' + arrow + ' [LOCKED]';
   } else {
-    radarText = 'DEPARTURE ROCKET: ' + Math.floor(dist) + 'm ' + arrow + ' [READY TO BOARD]';
+    radarText = 'PERSONAL ROCKET: ' + Math.floor(dist) + 'm ' + arrow + ' [READY TO BOARD]';
   }
   txt(radarText, W - 24, 26, 12, allSecured ? C.green : C.bone, 'right', F_U, 700);
 
@@ -2477,7 +2490,7 @@ function updatePlay(dt){
       burst(pad.x, pad.y, 24, C.cyan, 220, 0.7, true);
       G.toast = {
         a: 'ASTRONAUT DEPLOYED',
-        b: 'Collect ' + cfg.mandatoryCount + ' ' + cfg.mandatoryName + ' across the terrain.',
+        b: 'Your personal rocket is heading to extraction. Collect ' + cfg.mandatoryName + '.',
         t: 4.0
       };
     }
@@ -2498,6 +2511,18 @@ function updatePlay(dt){
 
   // 4. PHASE: PLANET EXPLORATION & OBJECTIVES (Realistic 2D Space Flight & Surface EVA)
   else if(G.phase === 'explore'){
+    const ship = G.personalRocket;
+    if(ship){
+      ship.travel = Math.min(1, ship.travel + dt / 8);
+      const travelEase = ship.travel * ship.travel * (3 - 2 * ship.travel);
+      const rk = cfg.departureRocket;
+      ship.x = lerp(cfg.landingPad.x, rk.x + rk.w * 0.5, travelEase);
+      ship.y = lerp(cfg.landingPad.y - 12, rk.y + rk.h * 0.5, travelEase) - Math.sin(ship.travel * Math.PI) * 440;
+      ship.angle = -Math.PI * 0.5 * travelEase;
+      ship.scale = lerp(1.25, 1.55, travelEase);
+      ship.thrusting = ship.travel < 1;
+    }
+
     p.coyote = p.onGround ? 0.12 : Math.max(0, p.coyote - dt);
     p.thrustingUp = false;
     p.thrustingDown = false;
@@ -2508,12 +2533,14 @@ function updatePlay(dt){
     const o2Drain = (cfg.oxygenDrain || 0.45) * dt;
     G.oxygen = Math.max(0, G.oxygen - o2Drain);
 
-    // Tether Docking with Lander (automatic oxygen & propellant replenishment within 140px)
-    const distLander = Math.hypot(p.x - cfg.landingPad.x, p.y - (cfg.landingPad.y - 18));
-    if(distLander < 140){
-      G.oxygen = Math.min(100, G.oxygen + 35 * dt);
-      G.fuel = Math.min(getMaxFuel(), G.fuel + 28 * dt);
-      if(Math.random() < 0.08) spawn(cfg.landingPad.x + (Math.random()-0.5)*30, cfg.landingPad.y - 20, 0, -30, 0.3, 2, C.cyan, 0, true);
+    // Docking with the personal rocket replenishes life support and propellant nearby
+    if(ship){
+      const distLander = Math.hypot(p.x - ship.x, p.y - ship.y);
+      if(distLander < 140){
+        G.oxygen = Math.min(100, G.oxygen + 35 * dt);
+        G.fuel = Math.min(getMaxFuel(), G.fuel + 28 * dt);
+        if(Math.random() < 0.08) spawn(ship.x + (Math.random()-0.5)*30, ship.y - 20, 0, -30, 0.3, 2, C.cyan, 0, true);
+      }
     }
 
     // Critical Oxygen Asphyxiation Warning
@@ -2927,7 +2954,7 @@ function updatePlay(dt){
             SFX.orb();
             G.toast = {
               a: 'ALL OBJECTIVES COMPLETE!',
-              b: 'All ' + cfg.mandatoryCount + ' ' + cfg.mandatoryName + ' secured. Return to the Departure Rocket to launch.',
+              b: 'All ' + cfg.mandatoryCount + ' ' + cfg.mandatoryName + ' secured. Return to your personal rocket to launch.',
               t: 4.5
             };
           }
@@ -2980,18 +3007,18 @@ function updatePlay(dt){
       }
     }
 
-    // Check Boarding Departure Rocket at far end
+    // Board the same personal rocket that landed at the start of this planet
     const rk = cfg.departureRocket;
     const distRocket = Math.hypot(p.x - (rk.x + rk.w*0.5), p.y - (rk.y + rk.h*0.5));
     const allCollected = G.cellsGot >= cfg.mandatoryCount;
 
-    if(distRocket < 90){
+    if(distRocket < 90 && G.personalRocket && G.personalRocket.travel >= 1){
       if(allCollected && (pressed('use') || pressed('thrust') || distRocket < 55)){
         G.phase = 'boarding';
         G.phaseTimer = 0;
         SFX.door();
         G.toast = {
-          a: 'BOARDING DEPARTURE ROCKET',
+          a: 'BOARDING PERSONAL ROCKET',
           b: 'Systems pressurized. Engaging orbital ignition...',
           t: 3.5
         };
@@ -3000,7 +3027,7 @@ function updatePlay(dt){
           SFX.warn();
           const remaining = cfg.mandatoryCount - G.cellsGot;
           G.toast = {
-            a: 'SYSTEMS LOCKED',
+            a: 'ROCKET SEALED',
             b: 'Retrieve ' + remaining + ' more ' + cfg.mandatoryName + ' before launch.',
             t: 2.8
           };
@@ -3009,13 +3036,12 @@ function updatePlay(dt){
     }
   }
 
-  // 5. PHASE: BOARDING DEPARTURE ROCKET
+  // 5. PHASE: BOARDING PERSONAL ROCKET
   else if(G.phase === 'boarding'){
     G.phaseTimer += dt;
-    const rk = cfg.departureRocket;
     p.vx *= 0.8; p.vy *= 0.8;
-    p.x = lerp(p.x, rk.x + rk.w*0.5, dt * 6);
-    p.y = lerp(p.y, rk.y + rk.h*0.5, dt * 6);
+    p.x = lerp(p.x, G.personalRocket.x, dt * 6);
+    p.y = lerp(p.y, G.personalRocket.y, dt * 6);
     if(G.phaseTimer >= 1.0){
       G.phase = 'takeoff';
       G.phaseTimer = 0;
@@ -3027,15 +3053,16 @@ function updatePlay(dt){
   else if(G.phase === 'takeoff'){
     G.phaseTimer += dt;
     G.shake = 14;
-    const rk = cfg.departureRocket;
+    const ship = G.personalRocket;
     // Launch rocket upwards
-    rk.y -= 380 * dt * (1 + G.phaseTimer * 2.5);
-    p.x = rk.x + rk.w * 0.5;
-    p.y = rk.y + rk.h * 0.5;
+    ship.y -= 380 * dt * (1 + G.phaseTimer * 2.5);
+    ship.thrusting = true;
+    p.x = ship.x;
+    p.y = ship.y;
 
     // Heavy main engine exhaust plumes
     for(let i=0; i<5; i++){
-      spawn(rk.x + rk.w*0.5 + (Math.random()-0.5)*20, rk.y + rk.h, (Math.random()-0.5)*80, 280 + Math.random()*120, 0.45, 6.5, Math.random()<0.5?'#ff9a2e':'#ffffff', 0, true);
+      spawn(ship.x + (Math.random()-0.5)*20, ship.y + 42, (Math.random()-0.5)*80, 280 + Math.random()*120, 0.45, 6.5, Math.random()<0.5?'#ff9a2e':'#ffffff', 0, true);
     }
 
     if(G.phaseTimer >= 2.2){
@@ -3178,8 +3205,8 @@ function renderWorldPlay(){
   for(let k=0; k<ORBS.length; k++) if(!ORBS[k].got) drawEnergyOrb(ORBS[k], G.camX, G.camY, G.t);
   drawWeaponPickups(G.camX, G.camY, G.t);
 
-  // Departure Rocket Gantry
-  drawDepartureRocket(cfg, G.camX, G.camY, G.t);
+  // Extraction gantry for the same rocket that brought the player here
+  drawExtractionGantry(cfg, G.camX, G.camY);
 
   // Enemies
   drawEnemies(G.camX, G.camY, G.t);
@@ -3191,15 +3218,21 @@ function renderWorldPlay(){
   // FX Particles
   drawFx(G.camX, G.camY);
 
-  // Landing Rocket (stationary on landing pad if astronaut has exited)
-  if(G.phase !== 'flight'){
-    drawRocketShip({x: cfg.landingPad.x, y: cfg.landingPad.y - 12, angle: 0, thrusting: false}, G.camX, G.camY, G.t, 1.25, true);
-  }
-
-  // Player Character / Rocket
+  // The single personal rocket follows the astronaut from touchdown through takeoff (strictly 1 rocket)
   if(G.phase === 'flight' || G.phase === 'landing'){
     drawRocketShip(PL, G.camX, G.camY, G.t, 1.25, false);
-  } else if(G.phase === 'exit' || G.phase === 'explore'){
+  } else if(G.phase !== 'warp' && G.personalRocket){
+    drawRocketShip(
+      G.personalRocket,
+      G.camX,
+      G.camY,
+      G.t,
+      G.personalRocket.scale,
+      G.phase !== 'takeoff'
+    );
+  }
+
+  if(G.phase === 'exit' || G.phase === 'explore'){
     drawAstronautCharacter(PL, G.camX, G.camY, G.t);
   }
 
